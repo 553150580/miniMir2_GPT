@@ -46,6 +46,71 @@ test('金币补时仅保存原报价和整数秒，重连保持同一操作的�
     }
 });
 
+function mirrorExchange() {
+    return { id: 40034, value: {
+        packCount: 7, expectedPrice: Long.fromString('9007199254740993', false),
+        expectedItemId: 0x80000002, expectedPackQuantity: Long.fromString('9007199254740995', false),
+        operation: { opId: id(18), commandSeq: Long.MAX_UNSIGNED_VALUE,
+            expectedRevision: Long.fromString('9007199254741001', true), expectedRuleVersion: Long.fromInt(30, true) },
+    } };
+}
+
+test('镜像兑换重载原报价、物品每包数量和操作，未知提交后保持 40034 的原协议字节', () => {
+    const storage = new MemoryStorage(), original = mirrorExchange(), first = new PendingOperations(storage, key);
+    first.set('roleA', original);
+    const persisted = storage.getItem(key), saved = JSON.parse(persisted).operations[0].value;
+    assert.deepEqual(saved.expectedPrice, { $type: 'Long', value: '9007199254740993', unsigned: false });
+    assert.deepEqual(saved.expectedPackQuantity, { $type: 'Long', value: '9007199254740995', unsigned: false });
+    const reattached = new PendingOperations(storage, key);
+    const restored = reattached.get('roleA');
+    assert.deepEqual(restored, original);
+    assert.equal(restored.id, 40034);
+    assert.equal(restored.value.expectedPrice.unsigned, false);
+    assert.equal(restored.value.expectedPackQuantity.unsigned, false);
+    assert.equal(restored.value.operation.commandSeq.unsigned, true);
+    const encode = value => pb.MirrorArenaExchangeRequest.encode({
+        pack_count: value.packCount, expected_price: value.expectedPrice, expected_item_id: value.expectedItemId,
+        expected_pack_quantity: value.expectedPackQuantity, operation: {
+            op_id: value.operation.opId, command_seq: value.operation.commandSeq,
+            expected_revision: value.operation.expectedRevision, expected_rule_version: value.operation.expectedRuleVersion,
+        },
+    }).finish();
+    const originalBytes = encode(original.value);
+    assert.deepEqual(encode(restored.value), originalBytes);
+    reattached.set('roleA', original);
+    for (const changed of [
+        { packCount: 8 }, { expectedItemId: 35 }, { expectedPrice: original.value.expectedPrice.add(1) },
+        { expectedPackQuantity: original.value.expectedPackQuantity.add(1) },
+    ]) {
+        assert.throws(() => reattached.set('roleA', { ...original, value: { ...original.value, ...changed } }), { code: 'PENDING_EXISTS' });
+        assert.deepEqual(encode(reattached.get('roleA').value), originalBytes);
+        assert.equal(storage.getItem(key), persisted);
+    }
+});
+
+test('镜像兑换拒绝半套报价、非法数量和损坏的本地 Long，禁止生成替代请求', () => {
+    const original = mirrorExchange(), invalid = { code: 'INVALID_OPERATION' };
+    for (const change of [
+        { packCount: 0 }, { packCount: 101 }, { packCount: 0.5 }, { expectedItemId: 0 }, { expectedItemId: 0x100000000 },
+        { expectedPrice: undefined }, { expectedItemId: undefined }, { expectedPackQuantity: undefined },
+        { expectedPrice: 9007199254740992 }, { expectedPrice: Long.NEG_ONE }, { expectedPrice: Long.ONE.toUnsigned() },
+        { expectedPackQuantity: Long.ZERO }, { expectedPackQuantity: Long.ONE.toUnsigned() }, { addedPoints: Long.ONE },
+    ]) {
+        const journal = new PendingOperations();
+        assert.throws(() => journal.set('roleA', { ...original, value: { ...original.value, ...change } }), invalid);
+        assert.equal(journal.get('roleA'), null);
+    }
+    const storage = new MemoryStorage(), journal = new PendingOperations(storage, key);
+    journal.set('roleA', original);
+    const corrupt = JSON.parse(storage.getItem(key));
+    corrupt.operations[0].value.expectedPackQuantity.unsigned = true;
+    const raw = JSON.stringify(corrupt);
+    storage.setItem(key, raw);
+    assert.throws(() => new PendingOperations(storage, key), { code: 'CORRUPT_STORAGE' });
+    assert.throws(() => journal.set('roleA', original), { code: 'CORRUPT_STORAGE' });
+    assert.equal(storage.getItem(key), raw);
+});
+
 test('技能学习未决保存原书与原经济身份，拒绝补造等级、数量、错误ID或凭据', () => {
     const storage = new MemoryStorage(), original = { id: 40010, value: { itemInstanceId: id(7), skillId: 1, operation: pending().value.operation } };
     new PendingOperations(storage,key).set('roleA', original);

@@ -47,10 +47,12 @@ type AssetRequest struct {
 	Vendor           *pb.VendorCommitRequest // NPC 买卖或修理的报价提交参数。
 	VendorShop       string                  // 房间根据 NPC 与当前地图确定的商店身份。
 
-	TaskCodex            *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
-	ChallengeRewardID    string                    // 领取的原挑战待领编号。
-	SkillSlotIDs         []uint32                  // 四个有序技能槽，零为合法空位。
-	ExpectedSkillSlotIDs []uint32                  // 客户端编辑前看到的四槽，缺省时比较角色修订。
+	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
+	ChallengeRewardID    string                         // 领取的原挑战待领编号。
+	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
+	ExpectedSkillSlotIDs []uint32                       // 客户端编辑前看到的四槽，缺省时比较角色修订。
+	MirrorExchange       *pb.MirrorArenaExchangeRequest // 兑换份数与确认页上的权威商品条款。
+	MirrorExchangeGate   uint32                         // 原普通场景是否允许一次新的兑换，重放先核对回执。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -157,7 +159,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if r.Revision == math.MaxInt64 || q.SourceSeq == 0 && r.EconomicSeq == math.MaxInt64 || q.SourceSeq > 0 && r.SourceSeq == math.MaxInt64 {
 			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
 		}
-		if !sequenceValid || !matchesAssetRevision(r, &s.Cfg.Fixture, q) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
+		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
+		if q.Kind == AssetMirrorArenaExchange {
+			// 普通收益可推进角色修订。兑换仍核对下个经济序号、原报价，并用交易中读到的修订及余额提交。
+			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
+		}
+		if !sequenceValid || !revisionValid || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
 			return Fail(p.CodeOperationConflict, "操作序列/版本变化，请刷新后保留原操作身份")
 		}
 		// oldRevision 保存修订号，用于当前步骤中的原状态修订号。
@@ -182,8 +189,14 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
 		var hostingPurchase *HostingPurchaseReceipt        // 首次补时确认的原价格、扣款与到账。
+		var mirrorExchange *MirrorExchangeReceipt          // 首次兑换确认的原扣分、余量与绑定羽毛。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
+		case AssetMirrorArenaExchange:
+			r, mirrorExchange, businessCode, e = s.exchangeMirrorFeather(tc, r, q, opID)
+			if e != nil {
+				return e
+			}
 		case AssetVendor:
 			r, businessCode, vendor, e = s.commitVendor(tc, a, r, q)
 			if e != nil {
@@ -314,6 +327,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		op.HostingClaim = hostingClaim
 		op.HostingPurchase = hostingPurchase
+		op.MirrorExchange = mirrorExchange
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -377,6 +391,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["rule_version"] = hostingPurchase.Quote.RuleVersion
 			audit["config_hash"] = hostingPurchase.Quote.ConfigHash
 		}
+		if mirrorExchange != nil {
+			audit["mirror_arena_exchange"] = mirrorExchange
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
 		}
@@ -392,6 +411,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.Pending = result.ErrorCode == p.CodeOperationPending
 	} else {
 		result.HostingPurchase = receipt.HostingPurchase.Proto()
+		result.MirrorArenaExchange = receipt.MirrorExchange.Proto()
 	}
 	return out, result, receipt, e
 }

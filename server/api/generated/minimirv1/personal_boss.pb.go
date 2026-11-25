@@ -591,8 +591,10 @@ type ChallengePendingReward struct {
 	Items          []*ItemView            `protobuf:"bytes,4,rep,name=items,proto3" json:"items,omitempty"`
 	SourceKind     string                 `protobuf:"bytes,5,opt,name=source_kind,json=sourceKind,proto3" json:"source_kind,omitempty"`
 	SourceRank     uint32                 `protobuf:"varint,6,opt,name=source_rank,json=sourceRank,proto3" json:"source_rank,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 镜像赛季结算冻结的绑定元宝，使用钱包最小单位。
+	BoundYuanbaoUnits int64 `protobuf:"varint,7,opt,name=bound_yuanbao_units,json=boundYuanbaoUnits,proto3" json:"bound_yuanbao_units,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *ChallengePendingReward) Reset() {
@@ -663,6 +665,13 @@ func (x *ChallengePendingReward) GetSourceKind() string {
 func (x *ChallengePendingReward) GetSourceRank() uint32 {
 	if x != nil {
 		return x.SourceRank
+	}
+	return 0
+}
+
+func (x *ChallengePendingReward) GetBoundYuanbaoUnits() int64 {
+	if x != nil {
+		return x.BoundYuanbaoUnits
 	}
 	return 0
 }
@@ -903,7 +912,7 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\rminimum_level\x18\x05 \x01(\rR\fminimumLevel\x12\x1b\n" +
 	"\tcan_enter\x18\x06 \x01(\bR\bcanEnter\x12-\n" +
 	"\x12eligibility_reason\x18\a \x01(\rR\x11eligibilityReason\x12/\n" +
-	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\xef\x01\n" +
+	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\x9f\x02\n" +
 	"\x16ChallengePendingReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12\x1f\n" +
 	"\vtemplate_id\x18\x02 \x01(\rR\n" +
@@ -913,7 +922,8 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\vsource_kind\x18\x05 \x01(\tR\n" +
 	"sourceKind\x12\x1f\n" +
 	"\vsource_rank\x18\x06 \x01(\rR\n" +
-	"sourceRank\"o\n" +
+	"sourceRank\x12.\n" +
+	"\x13bound_yuanbao_units\x18\a \x01(\x03R\x11boundYuanbaoUnits\"o\n" +
 	"\x14ClaimChallengeReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xe7\x02\n" +

@@ -23,11 +23,15 @@ import export_configs as configuration
 
 RULES = 'game_arena_rules'
 STREAKS = 'game_arena_streak_points'
+REWARDS = 'game_arena_rewards'
 SHANGHAI = timezone(timedelta(hours=8))
 SCENE_KIND = 6
 MAX_UINT32 = (1 << 32) - 1
 MAX_INT64 = (1 << 63) - 1
 TIMEOUT = 'effective_surviving_hp_ratio_defender_wins_tie'
+RANKING_TIEBREAK = 'earlier_last_challenge'
+SETTLEMENT_SEQUENCE = ['rank_rewards', 'score_to_exchange_1_to_1', 'clear_season_score']
+SETTLEMENT_RULES = ('ranking_tiebreak', 'settlement_sequence', 'exchange_balance_persists', 'participation_min_challenges')
 MATCH_POLICIES = {'same_job_level_window', 'cross_job_level_window'}
 PET_POLICIES = {'owner_death_ends_pet', 'surviving_pet_continues'}
 SPAWN_FIELDS = ('attacker_spawn', 'defender_spawn', 'attacker_pet_spawn', 'defender_pet_spawn')
@@ -103,7 +107,59 @@ def streak_points(tables, base):
     return [{'streak': wins, 'points': points} for wins, points in tiers]
 
 
-def project(tables, assembly, base_fixture):
+def project_settlement(tables, sample, base_fixture, arena_rule):
+    """验收用奖励量只能显式装配；结算顺序、参与门槛与兑换候选原值继续取唯一工作簿。"""
+    if any(row['record_status'] != 'historical' for row in tables[REWARDS]):
+        raise ValueError('竞技正式奖表已有当前记录，须按奖表核对并投影，不能用隔离奖励覆盖')
+    if not isinstance(sample, dict) or set(sample) not in ({'ranks', 'participation'}, {'ranks', 'participation', 'exchange'}):
+        raise ValueError('镜像赛季隔离装配需显式指定排名档、参与奖和可选的绑定兑换')
+    confirmed = lambda name: require_rule(tables, name, 'confirmed')
+    if (confirmed('ranking_tiebreak') != RANKING_TIEBREAK or confirmed('settlement_sequence') != SETTLEMENT_SEQUENCE
+            or confirmed('exchange_balance_persists') is not True):
+        raise ValueError('镜像赛季排名与结转规则和当前已支持的工作簿规则不同')
+    threshold = require_integer(confirmed('participation_min_challenges'), 1,
+                                min(MAX_UINT32, arena_rule['season_days'] * arena_rule['daily_limit']), '赛季参与场数')
+
+    def reward(grant):
+        if not isinstance(grant, dict) or set(grant) != {'bound_yuanbao_units'}:
+            raise ValueError('镜像赛季隔离奖仅允许已支持的绑定元宝最小整数单位')
+        return {'bound_yuanbao_units': require_integer(grant['bound_yuanbao_units'], 1, MAX_INT64, '赛季绑定元宝')}
+
+    participation = reward(sample['participation'])
+    ranks = sample['ranks']
+    if not isinstance(ranks, list) or not 0 < len(ranks) <= 32:
+        raise ValueError('镜像赛季隔离排名档数量不合法')
+    last = 0
+    validated = []
+    for rank in ranks:
+        if not isinstance(rank, dict) or set(rank) != {'first_rank', 'last_rank', 'reward'}:
+            raise ValueError('镜像赛季隔离排名档缺少开始名次、结束名次或奖励')
+        first_rank = require_integer(rank['first_rank'], last + 1, MAX_UINT32, '排名档起始名次')
+        last = require_integer(rank['last_rank'], first_rank, MAX_UINT32, '排名档末名')
+        grant = reward(rank['reward'])
+        if grant['bound_yuanbao_units'] + participation['bound_yuanbao_units'] > MAX_INT64:
+            raise ValueError('镜像赛季名次奖与参与奖汇总超过整数上限')
+        validated.append({'first_rank': first_rank, 'last_rank': last, 'reward': grant})
+    result = {'settlement': {'ranking_tiebreak': RANKING_TIEBREAK, 'participation_min_challenges': threshold,
+                             'ranks': validated, 'participation': participation}}
+
+    if 'exchange' in sample:
+        exchange = sample['exchange']
+        if not isinstance(exchange, dict) or set(exchange) != {'item_id', 'quantity'}:
+            raise ValueError('镜像兑换隔离输入只允许指定既有物品编号与单份数量')
+        if confirmed('feather_exchange_bound') is not True:
+            raise ValueError('镜像兑换不允许改变工作簿已定的来源绑定')
+        identity = require_integer(exchange['item_id'], 1, MAX_UINT32, '本轮隔离兑换物品编号')
+        item = next((row for row in base_fixture['items'] if row['id'] == identity), None)
+        if not item or item.get('is_equipment') is not False or item.get('stackable') is not True:
+            raise ValueError('镜像兑换须引用当前目录中已存在的可堆叠非装备物品')
+        quantity = require_integer(exchange['quantity'], 1, item['max_stack'], '单份兑换数量')
+        price = require_integer(require_rule(tables, 'feather_exchange_points', 'candidate'), 1, MAX_INT64, '候选兑换积分')
+        result['exchange'] = {'item_id': identity, 'price': price, 'quantity': quantity}
+    return result
+
+
+def project(tables, assembly, base_fixture, settlement_rewards=None):
     """编译显式隔离场景。工作簿提供制度，装配只提供本轮场景和待验证的候选选择。"""
     if not isinstance(assembly, dict) or set(assembly) != ASSEMBLY_FIELDS:
         raise ValueError('镜像竞技隔离装配需完整声明模板、场景、四个座位、零点、匹配和宠物规则')
@@ -161,6 +217,8 @@ def project(tables, assembly, base_fixture):
             'win_base_points': win_base, 'loss_points': require_integer(confirmed('loss_points'), 0, MAX_INT64, '进攻失败积分'),
             'streak_points': streak_points(tables, win_base), 'timeout_policy': timeout, 'match_policy': policy,
             'max_level_gap': require_integer(assembly['max_level_gap'], 0, MAX_UINT32, '候选等级差'), 'pet_death_policy': pet}
+    if settlement_rewards is not None:
+        rule.update(project_settlement(tables, settlement_rewards, base_fixture, rule))
     public_map = {'id': str(identity), 'name': grid['display_name'], 'resource_key': key, 'floor_map_id': str(floor_id),
                   'scene_kind': SCENE_KIND, 'width': width, 'height': height, 'blocked': deepcopy(grid['blocked']),
                   'player_spawn': dict(spawns['attacker_spawn']), 'monster_definition_ids': []}
@@ -189,12 +247,14 @@ def write_projection(path, value, check):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--assembly', required=True, type=Path, help='本轮显式场景装配 JSON')
+    parser.add_argument('--settlement-rewards', type=output_file, help='可选的 .work 隔离结算奖量与兑换测试物品装配 JSON')
     parser.add_argument('--fixture-out', required=True, type=output_file, help='独立运行规则输出文件')
     parser.add_argument('--public-out', type=output_file, help='可选的客户端公开目录输出文件')
     parser.add_argument('--check', action='store_true', help='只核对已经生成的投影')
     arguments = parser.parse_args()
     targets = [path for path in (arguments.fixture_out, arguments.public_out) if path is not None]
-    if len(set(targets)) != len(targets) or arguments.assembly.resolve() in targets:
+    sources = {arguments.assembly.resolve(), arguments.settlement_rewards} - {None}
+    if len(set(targets)) != len(targets) or sources.intersection(targets) or arguments.settlement_rewards == arguments.assembly.resolve():
         raise ValueError('镜像竞技隔离装配、服务端和客户端输出应使用不同文件')
     schema = configuration.load_json(ROOT / 'config/schema/catalog.json')
     tables, errors, _, _ = configuration.collect(schema)
@@ -207,7 +267,10 @@ def main():
     if fixture['_source_evidence']['workbook']['sha256'] != configuration.sha256(workbook):
         raise ValueError('默认开发夹具与当前唯一玩法工作簿版本不一致')
     assembly = configuration.load_json(arguments.assembly)
-    rule, public_map = project(tables, assembly, fixture)
+    rewards = configuration.load_json(arguments.settlement_rewards) if arguments.settlement_rewards else None
+    if arguments.settlement_rewards and rewards is None:
+        raise ValueError('显式镜像赛季奖励装配不能写成空值')
+    rule, public_map = project(tables, assembly, fixture, rewards)
     fixture['mirror_arena'] = rule
     fixture['_source_evidence']['mirror_arena'] = {
         'tables': [RULES, STREAKS], 'workbook_sha256': configuration.sha256(workbook),
@@ -216,6 +279,17 @@ def main():
         'scope': '隔离镜像候选，赛季日期、地图、匹配范围和宠物阵亡策略为本轮测试选择。',
         'candidate_rules': ['daily_opponents', 'battle_timeout_sec', 'timeout_resolution'],
     }
+    if arguments.settlement_rewards:
+        evidence = fixture['_source_evidence']['mirror_arena']
+        evidence['tables'].append(REWARDS)
+        evidence['season_settlement'] = {
+            'confirmed_rules': list(SETTLEMENT_RULES),
+            'reward_assembly_sha256': configuration.sha256(arguments.settlement_rewards),
+            'scope': '仅隔离验证绑定元宝派奖和结转。兑换物品来自现有目录的测试选择。',
+        }
+        if 'exchange' in rule:
+            evidence['candidate_rules'].append('feather_exchange_points')
+            evidence['season_settlement']['confirmed_rules'].append('feather_exchange_bound')
     write_projection(arguments.fixture_out, fixture, arguments.check)
     if arguments.public_out:
         public = configuration.load_json(BASE_PUBLIC)

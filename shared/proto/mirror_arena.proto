@@ -3,6 +3,7 @@ package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 
 import "common.proto";
+import "personal_boss.proto";
 import "world.proto";
 
 // 镜像竞技由原角色附着下发。对手只能选择服务端已签发的候选编号。
@@ -35,6 +36,27 @@ message MirrorArenaRecord {
   int64 finished_at_unix_ms = 8;
 }
 
+// 榜单由服务端按积分降序、最后挑战时刻升序裁定；客户端只展示原名次。
+message MirrorArenaStanding {
+  uint32 rank = 1;
+  string name = 2;
+  int64 points = 3;
+  uint32 matches = 4;
+  int64 last_match_at_unix_ms = 5;
+}
+
+// 已清账赛季的个人结果，保留清零前原积分与实际 1:1 结转。
+message MirrorArenaSeasonReceipt {
+  bytes season_id = 1;
+  int64 season_start_unix_ms = 2;
+  int64 season_end_unix_ms = 3;
+  int64 settled_at_unix_ms = 4;
+  uint32 rank = 5;
+  uint32 matches = 6;
+  int64 points = 7;
+  int64 exchange_credit = 8;
+}
+
 message MirrorArenaState {
   uint64 scene_epoch = 1;
   uint32 error_code = 2;
@@ -56,6 +78,25 @@ message MirrorArenaState {
   uint64 battle_map_id = 17;
   int64 battle_deadline_unix_ms = 18;
   uint64 rule_version = 19;
+  bool season_settlement_enabled = 20;
+  repeated MirrorArenaStanding standings = 21;
+  uint32 own_rank = 22;
+  MirrorArenaSeasonReceipt last_settlement = 23;
+  repeated ChallengePendingReward season_pending_rewards = 24;
+  bool season_pending_rewards_more = 25;
+  int64 exchange_points = 26;
+  int64 exchange_price = 27;
+  int64 exchange_pack_quantity = 28;
+  uint32 exchange_item_id = 29;
+}
+
+// 原报价字段只作比较，不决定成交的配置价格或物品身份。
+message MirrorArenaExchangeRequest {
+  uint32 pack_count = 1;
+  OperationContext operation = 2;
+  int64 expected_price = 3;
+  uint32 expected_item_id = 4;
+  int64 expected_pack_quantity = 5;
 }
 
 // 复用格子战斗观测。事件只供当前镜像场显示，不属于普通挂机世界。

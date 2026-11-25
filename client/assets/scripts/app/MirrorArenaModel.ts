@@ -21,6 +21,20 @@ export interface MirrorArenaLobby {
     readonly dailyLimit: number; readonly entriesUsed: number; readonly seasonPoints: string; readonly streak: number;
     readonly offers: readonly MirrorArenaOffer[]; readonly attackHistory: readonly MirrorArenaRecord[];
     readonly defenseHistory: readonly MirrorArenaRecord[]; readonly publishedDefenseVersion: string;
+    readonly season: MirrorSeasonLedger | null;
+}
+export interface MirrorStanding {
+    readonly rank: number; readonly name: string; readonly points: string; readonly matches: number; readonly lastMatchAtUnixMs: string;
+}
+export interface MirrorSeasonReward {
+    readonly id: string; readonly rewardId: Uint8Array; readonly name: string; readonly rank: number; readonly boundYuanbao: string;
+}
+export interface MirrorSeasonLedger {
+    readonly standings: readonly MirrorStanding[]; readonly ownRank: number;
+    readonly last: { readonly rank: number; readonly points: string; readonly credit: string; readonly matches: number } | null;
+    readonly rewards: readonly MirrorSeasonReward[]; readonly moreRewards: boolean;
+    readonly points: string;
+    readonly exchange: { readonly price: string; readonly itemId: number; readonly quantity: string } | null;
 }
 export interface MirrorBattle {
     readonly key: string; readonly challenge: MirrorArenaRecord; readonly phase: MirrorPhase;
@@ -107,6 +121,36 @@ function offer(value: unknown): MirrorArenaOffer {
         defenderJob: u32(row.defenderJob, 2), defenderLevel, defenseVersion: u64(row.defenseVersion, true) };
 }
 
+// 排名、待领和报价各自保留权威快照。旧协议或仅含战斗状态的帧不刷新结算视图。
+function readSeasonLedger(state: Record<string, unknown>): MirrorSeasonLedger | null {
+    if (!state.seasonSettlementEnabled && !state.lastSettlement && !state.seasonPendingRewardsMore &&
+        (!Array.isArray(state.seasonPendingRewards) || !state.seasonPendingRewards.length) &&
+        (state.exchangePoints == null || nonnegativeI64(state.exchangePoints) === '0')) return null;
+    const standings = list(state.standings ?? [], 20).map((value, index) => {
+        const row = fields(value), rank = u32(row.rank);
+        if (rank !== index + 1) throw new Error('镜像赛季榜单顺位无效');
+        return { rank, name: text(row.name), points: nonnegativeI64(row.points), matches: u32(row.matches),
+            lastMatchAtUnixMs: nonnegativeI64(row.lastMatchAtUnixMs, true) };
+    });
+    const rewards = unique(list(state.seasonPendingRewards ?? [], 20).map(value => {
+        const row = fields(value), id = mirrorID(row.rewardId), rank = u32(row.sourceRank);
+        const ranking = row.sourceKind === 'mirror_season_rank';
+        const name = ranking ? '赛季排名奖' : row.sourceKind === 'mirror_season_participation' ? '赛季参与奖' : '';
+        if (!id || !name || ranking !== (rank > 0)) throw new Error('镜像赛季奖励身份无效');
+        return { id, name, rewardId: new Uint8Array(row.rewardId as Uint8Array), rank, boundYuanbao: nonnegativeI64(row.boundYuanbaoUnits, true) };
+    }));
+    const last = state.lastSettlement == null ? null : fields(state.lastSettlement);
+    const points = nonnegativeI64(state.exchangePoints ?? '0');
+    const exchangePrice = nonnegativeI64(state.exchangePrice ?? '0');
+    const exchangeQuantity = nonnegativeI64(state.exchangePackQuantity ?? '0'), itemId = u32(state.exchangeItemId ?? 0);
+    const exchange = itemId || exchangePrice !== '0' || exchangeQuantity !== '0' ? { price: exchangePrice, quantity: exchangeQuantity, itemId } : null;
+    if (exchange && (!itemId || exchangePrice === '0' || exchangeQuantity === '0')) throw new Error('镜像兑换报价不完整');
+    if (last && (!mirrorID(last.seasonId) || !u32(last.rank) || nonnegativeI64(last.points) !== nonnegativeI64(last.exchangeCredit)))
+        throw new Error('镜像赛季原结转回执不一致');
+    return { standings, ownRank: u32(state.ownRank ?? 0), rewards, moreRewards: state.seasonPendingRewardsMore === true, points, exchange,
+        last: last && { rank: u32(last.rank), matches: u32(last.matches), points: nonnegativeI64(last.points), credit: nonnegativeI64(last.exchangeCredit) } };
+}
+
 // 仅解读当前附着的普通场景代次与版本；战斗阶段包可缺省次数和名单。
 export function readMirrorState(value: unknown, scene: string, rule: string): MirrorState | null {
     try {
@@ -122,7 +166,8 @@ export function readMirrorState(value: unknown, scene: string, rule: string): Mi
             seasonPoints: nonnegativeI64(state.seasonPoints), streak: u32(state.streak),
             publishedDefenseVersion: u64(state.publishedDefenseVersion),
             offers: unique(list(state.offers, 100).map(offer)),
-            attackHistory: unique(list(state.attackHistory, 100).map(record)), defenseHistory: unique(list(state.defenseHistory, 100).map(record)) };
+            attackHistory: unique(list(state.attackHistory, 100).map(record)), defenseHistory: unique(list(state.defenseHistory, 100).map(record)),
+            season: readSeasonLedger(state) };
         if (lobby.attackHistory.some(row => !row.outcome) || lobby.defenseHistory.some(row => !row.outcome) ||
             open && (seasonStartUnixMs === '0' || BigInt(seasonEndUnixMs) <= BigInt(seasonStartUnixMs)) || entriesUsed > dailyLimit ||
             errorCode && (open || phase || challenge) || !open && (dailyLimit || challenge || phase)) return null;

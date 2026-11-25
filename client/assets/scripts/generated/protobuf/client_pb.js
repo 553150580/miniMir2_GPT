@@ -802,6 +802,7 @@ $root.minimir = (function() {
              * @property {number|null} [error_code] OperationResult error_code
              * @property {boolean|null} [pending] OperationResult pending
              * @property {minimir.v1.HostingPurchaseReceipt.$Properties|null} [hosting_purchase] OperationResult hosting_purchase
+             * @property {minimir.v1.MirrorArenaExchangeReceipt.$Properties|null} [mirror_arena_exchange] OperationResult mirror_arena_exchange
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -882,6 +883,14 @@ $root.minimir = (function() {
             OperationResult.prototype.hosting_purchase = null;
 
             /**
+             * OperationResult mirror_arena_exchange.
+             * @member {minimir.v1.MirrorArenaExchangeReceipt.$Properties|null|undefined} mirror_arena_exchange
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.mirror_arena_exchange = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -925,6 +934,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.pending);
                 if (message.hosting_purchase != null && $Object.hasOwnProperty.call(message, "hosting_purchase"))
                     $root.minimir.v1.HostingPurchaseReceipt.encode(message.hosting_purchase, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.mirror_arena_exchange != null && $Object.hasOwnProperty.call(message, "mirror_arena_exchange"))
+                    $root.minimir.v1.MirrorArenaExchangeReceipt.encode(message.mirror_arena_exchange, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1033,6 +1044,12 @@ $root.minimir = (function() {
                             message.hosting_purchase = $root.minimir.v1.HostingPurchaseReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.hosting_purchase);
                             continue;
                         }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.mirror_arena_exchange = $root.minimir.v1.MirrorArenaExchangeReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.mirror_arena_exchange);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1101,6 +1118,11 @@ $root.minimir = (function() {
                     if (error)
                         return "hosting_purchase." + error;
                 }
+                if (message.mirror_arena_exchange != null && $Object.hasOwnProperty.call(message, "mirror_arena_exchange")) {
+                    var error = $root.minimir.v1.MirrorArenaExchangeReceipt.verify(message.mirror_arena_exchange, _depth + 1);
+                    if (error)
+                        return "mirror_arena_exchange." + error;
+                }
                 return null;
             };
 
@@ -1119,6 +1141,314 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.MirrorArenaExchangeReceipt = (function() {
+
+            /**
+             * Properties of a MirrorArenaExchangeReceipt.
+             * @typedef {Object} minimir.v1.MirrorArenaExchangeReceipt.$Properties
+             * @property {Long|null} [spent_points] MirrorArenaExchangeReceipt spent_points
+             * @property {Long|null} [remaining_points] MirrorArenaExchangeReceipt remaining_points
+             * @property {Uint8Array|null} [item_instance_id] MirrorArenaExchangeReceipt item_instance_id
+             * @property {number|null} [item_id] MirrorArenaExchangeReceipt item_id
+             * @property {Long|null} [quantity] MirrorArenaExchangeReceipt quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MirrorArenaExchangeReceipt.
+             * @memberof minimir.v1
+             * @interface IMirrorArenaExchangeReceipt
+             * @augments minimir.v1.MirrorArenaExchangeReceipt.$Properties
+             * @deprecated Use minimir.v1.MirrorArenaExchangeReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a MirrorArenaExchangeReceipt.
+             * @typedef {minimir.v1.MirrorArenaExchangeReceipt.$Properties} minimir.v1.MirrorArenaExchangeReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new MirrorArenaExchangeReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a MirrorArenaExchangeReceipt.
+             * @constructor
+             * @param {minimir.v1.MirrorArenaExchangeReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MirrorArenaExchangeReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MirrorArenaExchangeReceipt spent_points.
+             * @member {Long} spent_points
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @instance
+             */
+            MirrorArenaExchangeReceipt.prototype.spent_points = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaExchangeReceipt remaining_points.
+             * @member {Long} remaining_points
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @instance
+             */
+            MirrorArenaExchangeReceipt.prototype.remaining_points = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaExchangeReceipt item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @instance
+             */
+            MirrorArenaExchangeReceipt.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * MirrorArenaExchangeReceipt item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @instance
+             */
+            MirrorArenaExchangeReceipt.prototype.item_id = 0;
+
+            /**
+             * MirrorArenaExchangeReceipt quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @instance
+             */
+            MirrorArenaExchangeReceipt.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MirrorArenaExchangeReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MirrorArenaExchangeReceipt} MirrorArenaExchangeReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.MirrorArenaExchangeReceipt.$Shape): minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape;
+             *   (properties?: minimir.v1.MirrorArenaExchangeReceipt.$Properties): minimir.v1.MirrorArenaExchangeReceipt;
+             * }}
+             */
+            MirrorArenaExchangeReceipt.create = function(properties) {
+                return new MirrorArenaExchangeReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified MirrorArenaExchangeReceipt message. Does not implicitly {@link minimir.v1.MirrorArenaExchangeReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeReceipt.$Properties} message MirrorArenaExchangeReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaExchangeReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.spent_points != null && $Object.hasOwnProperty.call(message, "spent_points") && (typeof message.spent_points === "object" ? message.spent_points.low || message.spent_points.high : message.spent_points !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.spent_points);
+                if (message.remaining_points != null && $Object.hasOwnProperty.call(message, "remaining_points") && (typeof message.remaining_points === "object" ? message.remaining_points.low || message.remaining_points.high : message.remaining_points !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.remaining_points);
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.item_instance_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.item_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MirrorArenaExchangeReceipt message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaExchangeReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeReceipt.$Properties} message MirrorArenaExchangeReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaExchangeReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MirrorArenaExchangeReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape} MirrorArenaExchangeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaExchangeReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MirrorArenaExchangeReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.spent_points = value;
+                            else
+                                delete message.spent_points;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.remaining_points = value;
+                            else
+                                delete message.remaining_points;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MirrorArenaExchangeReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape} MirrorArenaExchangeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaExchangeReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MirrorArenaExchangeReceipt message.
+             * @function verify
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MirrorArenaExchangeReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.spent_points != null && $Object.hasOwnProperty.call(message, "spent_points"))
+                    if (!$util.isInteger(message.spent_points) && !(message.spent_points && $util.isInteger(message.spent_points.low) && $util.isInteger(message.spent_points.high)))
+                        return "spent_points: integer|Long expected";
+                if (message.remaining_points != null && $Object.hasOwnProperty.call(message, "remaining_points"))
+                    if (!$util.isInteger(message.remaining_points) && !(message.remaining_points && $util.isInteger(message.remaining_points.low) && $util.isInteger(message.remaining_points.high)))
+                        return "remaining_points: integer|Long expected";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MirrorArenaExchangeReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.MirrorArenaExchangeReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MirrorArenaExchangeReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MirrorArenaExchangeReceipt";
+            };
+
+            return MirrorArenaExchangeReceipt;
         })();
 
         v1.HostingQuoteResult = (function() {
@@ -35524,6 +35854,7 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.ItemView.$Properties>|null} [items] ChallengePendingReward items
              * @property {string|null} [source_kind] ChallengePendingReward source_kind
              * @property {number|null} [source_rank] ChallengePendingReward source_rank
+             * @property {Long|null} [bound_yuanbao_units] ChallengePendingReward bound_yuanbao_units
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -35605,6 +35936,14 @@ $root.minimir = (function() {
             ChallengePendingReward.prototype.source_rank = 0;
 
             /**
+             * ChallengePendingReward bound_yuanbao_units.
+             * @member {Long} bound_yuanbao_units
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ChallengePendingReward
@@ -35649,6 +35988,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 5, wireType 2 =*/42).string(message.source_kind);
                 if (message.source_rank != null && $Object.hasOwnProperty.call(message, "source_rank") && message.source_rank !== 0)
                     writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.source_rank);
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.bound_yuanbao_units);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -35759,6 +36100,15 @@ $root.minimir = (function() {
                                 delete message.source_rank;
                             continue;
                         }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_units = value;
+                            else
+                                delete message.bound_yuanbao_units;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -35831,6 +36181,9 @@ $root.minimir = (function() {
                 if (message.source_rank != null && $Object.hasOwnProperty.call(message, "source_rank"))
                     if (!$util.isInteger(message.source_rank))
                         return "source_rank: integer expected";
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
+                        return "bound_yuanbao_units: integer|Long expected";
                 return null;
             };
 
@@ -42140,6 +42493,691 @@ $root.minimir = (function() {
             return MirrorArenaRecord;
         })();
 
+        v1.MirrorArenaStanding = (function() {
+
+            /**
+             * Properties of a MirrorArenaStanding.
+             * @typedef {Object} minimir.v1.MirrorArenaStanding.$Properties
+             * @property {number|null} [rank] MirrorArenaStanding rank
+             * @property {string|null} [name] MirrorArenaStanding name
+             * @property {Long|null} [points] MirrorArenaStanding points
+             * @property {number|null} [matches] MirrorArenaStanding matches
+             * @property {Long|null} [last_match_at_unix_ms] MirrorArenaStanding last_match_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MirrorArenaStanding.
+             * @memberof minimir.v1
+             * @interface IMirrorArenaStanding
+             * @augments minimir.v1.MirrorArenaStanding.$Properties
+             * @deprecated Use minimir.v1.MirrorArenaStanding.$Properties instead.
+             */
+
+            /**
+             * Shape of a MirrorArenaStanding.
+             * @typedef {minimir.v1.MirrorArenaStanding.$Properties} minimir.v1.MirrorArenaStanding.$Shape
+             */
+
+            /**
+             * Constructs a new MirrorArenaStanding.
+             * @memberof minimir.v1
+             * @classdesc Represents a MirrorArenaStanding.
+             * @constructor
+             * @param {minimir.v1.MirrorArenaStanding.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MirrorArenaStanding = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MirrorArenaStanding rank.
+             * @member {number} rank
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @instance
+             */
+            MirrorArenaStanding.prototype.rank = 0;
+
+            /**
+             * MirrorArenaStanding name.
+             * @member {string} name
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @instance
+             */
+            MirrorArenaStanding.prototype.name = "";
+
+            /**
+             * MirrorArenaStanding points.
+             * @member {Long} points
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @instance
+             */
+            MirrorArenaStanding.prototype.points = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaStanding matches.
+             * @member {number} matches
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @instance
+             */
+            MirrorArenaStanding.prototype.matches = 0;
+
+            /**
+             * MirrorArenaStanding last_match_at_unix_ms.
+             * @member {Long} last_match_at_unix_ms
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @instance
+             */
+            MirrorArenaStanding.prototype.last_match_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MirrorArenaStanding instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {minimir.v1.MirrorArenaStanding.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MirrorArenaStanding} MirrorArenaStanding instance
+             * @type {{
+             *   (properties: minimir.v1.MirrorArenaStanding.$Shape): minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape;
+             *   (properties?: minimir.v1.MirrorArenaStanding.$Properties): minimir.v1.MirrorArenaStanding;
+             * }}
+             */
+            MirrorArenaStanding.create = function(properties) {
+                return new MirrorArenaStanding(properties);
+            };
+
+            /**
+             * Encodes the specified MirrorArenaStanding message. Does not implicitly {@link minimir.v1.MirrorArenaStanding.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {minimir.v1.MirrorArenaStanding.$Properties} message MirrorArenaStanding message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaStanding.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank") && message.rank !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.rank);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.points != null && $Object.hasOwnProperty.call(message, "points") && (typeof message.points === "object" ? message.points.low || message.points.high : message.points !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.points);
+                if (message.matches != null && $Object.hasOwnProperty.call(message, "matches") && message.matches !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.matches);
+                if (message.last_match_at_unix_ms != null && $Object.hasOwnProperty.call(message, "last_match_at_unix_ms") && (typeof message.last_match_at_unix_ms === "object" ? message.last_match_at_unix_ms.low || message.last_match_at_unix_ms.high : message.last_match_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.last_match_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MirrorArenaStanding message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaStanding.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {minimir.v1.MirrorArenaStanding.$Properties} message MirrorArenaStanding message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaStanding.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MirrorArenaStanding message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape} MirrorArenaStanding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaStanding.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MirrorArenaStanding();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.rank = value;
+                            else
+                                delete message.rank;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.points = value;
+                            else
+                                delete message.points;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.matches = value;
+                            else
+                                delete message.matches;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.last_match_at_unix_ms = value;
+                            else
+                                delete message.last_match_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MirrorArenaStanding message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape} MirrorArenaStanding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaStanding.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MirrorArenaStanding message.
+             * @function verify
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MirrorArenaStanding.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank"))
+                    if (!$util.isInteger(message.rank))
+                        return "rank: integer expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.points != null && $Object.hasOwnProperty.call(message, "points"))
+                    if (!$util.isInteger(message.points) && !(message.points && $util.isInteger(message.points.low) && $util.isInteger(message.points.high)))
+                        return "points: integer|Long expected";
+                if (message.matches != null && $Object.hasOwnProperty.call(message, "matches"))
+                    if (!$util.isInteger(message.matches))
+                        return "matches: integer expected";
+                if (message.last_match_at_unix_ms != null && $Object.hasOwnProperty.call(message, "last_match_at_unix_ms"))
+                    if (!$util.isInteger(message.last_match_at_unix_ms) && !(message.last_match_at_unix_ms && $util.isInteger(message.last_match_at_unix_ms.low) && $util.isInteger(message.last_match_at_unix_ms.high)))
+                        return "last_match_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MirrorArenaStanding
+             * @function getTypeUrl
+             * @memberof minimir.v1.MirrorArenaStanding
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MirrorArenaStanding.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MirrorArenaStanding";
+            };
+
+            return MirrorArenaStanding;
+        })();
+
+        v1.MirrorArenaSeasonReceipt = (function() {
+
+            /**
+             * Properties of a MirrorArenaSeasonReceipt.
+             * @typedef {Object} minimir.v1.MirrorArenaSeasonReceipt.$Properties
+             * @property {Uint8Array|null} [season_id] MirrorArenaSeasonReceipt season_id
+             * @property {Long|null} [season_start_unix_ms] MirrorArenaSeasonReceipt season_start_unix_ms
+             * @property {Long|null} [season_end_unix_ms] MirrorArenaSeasonReceipt season_end_unix_ms
+             * @property {Long|null} [settled_at_unix_ms] MirrorArenaSeasonReceipt settled_at_unix_ms
+             * @property {number|null} [rank] MirrorArenaSeasonReceipt rank
+             * @property {number|null} [matches] MirrorArenaSeasonReceipt matches
+             * @property {Long|null} [points] MirrorArenaSeasonReceipt points
+             * @property {Long|null} [exchange_credit] MirrorArenaSeasonReceipt exchange_credit
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MirrorArenaSeasonReceipt.
+             * @memberof minimir.v1
+             * @interface IMirrorArenaSeasonReceipt
+             * @augments minimir.v1.MirrorArenaSeasonReceipt.$Properties
+             * @deprecated Use minimir.v1.MirrorArenaSeasonReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a MirrorArenaSeasonReceipt.
+             * @typedef {minimir.v1.MirrorArenaSeasonReceipt.$Properties} minimir.v1.MirrorArenaSeasonReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new MirrorArenaSeasonReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a MirrorArenaSeasonReceipt.
+             * @constructor
+             * @param {minimir.v1.MirrorArenaSeasonReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MirrorArenaSeasonReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MirrorArenaSeasonReceipt season_id.
+             * @member {Uint8Array} season_id
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.season_id = $util.newBuffer([]);
+
+            /**
+             * MirrorArenaSeasonReceipt season_start_unix_ms.
+             * @member {Long} season_start_unix_ms
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.season_start_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaSeasonReceipt season_end_unix_ms.
+             * @member {Long} season_end_unix_ms
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.season_end_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaSeasonReceipt settled_at_unix_ms.
+             * @member {Long} settled_at_unix_ms
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.settled_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaSeasonReceipt rank.
+             * @member {number} rank
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.rank = 0;
+
+            /**
+             * MirrorArenaSeasonReceipt matches.
+             * @member {number} matches
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.matches = 0;
+
+            /**
+             * MirrorArenaSeasonReceipt points.
+             * @member {Long} points
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.points = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaSeasonReceipt exchange_credit.
+             * @member {Long} exchange_credit
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @instance
+             */
+            MirrorArenaSeasonReceipt.prototype.exchange_credit = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MirrorArenaSeasonReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaSeasonReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MirrorArenaSeasonReceipt} MirrorArenaSeasonReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.MirrorArenaSeasonReceipt.$Shape): minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape;
+             *   (properties?: minimir.v1.MirrorArenaSeasonReceipt.$Properties): minimir.v1.MirrorArenaSeasonReceipt;
+             * }}
+             */
+            MirrorArenaSeasonReceipt.create = function(properties) {
+                return new MirrorArenaSeasonReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified MirrorArenaSeasonReceipt message. Does not implicitly {@link minimir.v1.MirrorArenaSeasonReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaSeasonReceipt.$Properties} message MirrorArenaSeasonReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaSeasonReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.season_id != null && $Object.hasOwnProperty.call(message, "season_id") && message.season_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.season_id);
+                if (message.season_start_unix_ms != null && $Object.hasOwnProperty.call(message, "season_start_unix_ms") && (typeof message.season_start_unix_ms === "object" ? message.season_start_unix_ms.low || message.season_start_unix_ms.high : message.season_start_unix_ms !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.season_start_unix_ms);
+                if (message.season_end_unix_ms != null && $Object.hasOwnProperty.call(message, "season_end_unix_ms") && (typeof message.season_end_unix_ms === "object" ? message.season_end_unix_ms.low || message.season_end_unix_ms.high : message.season_end_unix_ms !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.season_end_unix_ms);
+                if (message.settled_at_unix_ms != null && $Object.hasOwnProperty.call(message, "settled_at_unix_ms") && (typeof message.settled_at_unix_ms === "object" ? message.settled_at_unix_ms.low || message.settled_at_unix_ms.high : message.settled_at_unix_ms !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.settled_at_unix_ms);
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank") && message.rank !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.rank);
+                if (message.matches != null && $Object.hasOwnProperty.call(message, "matches") && message.matches !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.matches);
+                if (message.points != null && $Object.hasOwnProperty.call(message, "points") && (typeof message.points === "object" ? message.points.low || message.points.high : message.points !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.points);
+                if (message.exchange_credit != null && $Object.hasOwnProperty.call(message, "exchange_credit") && (typeof message.exchange_credit === "object" ? message.exchange_credit.low || message.exchange_credit.high : message.exchange_credit !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.exchange_credit);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MirrorArenaSeasonReceipt message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaSeasonReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {minimir.v1.MirrorArenaSeasonReceipt.$Properties} message MirrorArenaSeasonReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaSeasonReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MirrorArenaSeasonReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape} MirrorArenaSeasonReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaSeasonReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MirrorArenaSeasonReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.season_id = value;
+                            else
+                                delete message.season_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.season_start_unix_ms = value;
+                            else
+                                delete message.season_start_unix_ms;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.season_end_unix_ms = value;
+                            else
+                                delete message.season_end_unix_ms;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.settled_at_unix_ms = value;
+                            else
+                                delete message.settled_at_unix_ms;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.rank = value;
+                            else
+                                delete message.rank;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.matches = value;
+                            else
+                                delete message.matches;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.points = value;
+                            else
+                                delete message.points;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.exchange_credit = value;
+                            else
+                                delete message.exchange_credit;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MirrorArenaSeasonReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape} MirrorArenaSeasonReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaSeasonReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MirrorArenaSeasonReceipt message.
+             * @function verify
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MirrorArenaSeasonReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.season_id != null && $Object.hasOwnProperty.call(message, "season_id"))
+                    if (!(message.season_id && typeof message.season_id.length === "number" || $util.isString(message.season_id)))
+                        return "season_id: buffer expected";
+                if (message.season_start_unix_ms != null && $Object.hasOwnProperty.call(message, "season_start_unix_ms"))
+                    if (!$util.isInteger(message.season_start_unix_ms) && !(message.season_start_unix_ms && $util.isInteger(message.season_start_unix_ms.low) && $util.isInteger(message.season_start_unix_ms.high)))
+                        return "season_start_unix_ms: integer|Long expected";
+                if (message.season_end_unix_ms != null && $Object.hasOwnProperty.call(message, "season_end_unix_ms"))
+                    if (!$util.isInteger(message.season_end_unix_ms) && !(message.season_end_unix_ms && $util.isInteger(message.season_end_unix_ms.low) && $util.isInteger(message.season_end_unix_ms.high)))
+                        return "season_end_unix_ms: integer|Long expected";
+                if (message.settled_at_unix_ms != null && $Object.hasOwnProperty.call(message, "settled_at_unix_ms"))
+                    if (!$util.isInteger(message.settled_at_unix_ms) && !(message.settled_at_unix_ms && $util.isInteger(message.settled_at_unix_ms.low) && $util.isInteger(message.settled_at_unix_ms.high)))
+                        return "settled_at_unix_ms: integer|Long expected";
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank"))
+                    if (!$util.isInteger(message.rank))
+                        return "rank: integer expected";
+                if (message.matches != null && $Object.hasOwnProperty.call(message, "matches"))
+                    if (!$util.isInteger(message.matches))
+                        return "matches: integer expected";
+                if (message.points != null && $Object.hasOwnProperty.call(message, "points"))
+                    if (!$util.isInteger(message.points) && !(message.points && $util.isInteger(message.points.low) && $util.isInteger(message.points.high)))
+                        return "points: integer|Long expected";
+                if (message.exchange_credit != null && $Object.hasOwnProperty.call(message, "exchange_credit"))
+                    if (!$util.isInteger(message.exchange_credit) && !(message.exchange_credit && $util.isInteger(message.exchange_credit.low) && $util.isInteger(message.exchange_credit.high)))
+                        return "exchange_credit: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MirrorArenaSeasonReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.MirrorArenaSeasonReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MirrorArenaSeasonReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MirrorArenaSeasonReceipt";
+            };
+
+            return MirrorArenaSeasonReceipt;
+        })();
+
         v1.MirrorArenaState = (function() {
 
             /**
@@ -42164,6 +43202,16 @@ $root.minimir = (function() {
              * @property {Long|null} [battle_map_id] MirrorArenaState battle_map_id
              * @property {Long|null} [battle_deadline_unix_ms] MirrorArenaState battle_deadline_unix_ms
              * @property {Long|null} [rule_version] MirrorArenaState rule_version
+             * @property {boolean|null} [season_settlement_enabled] MirrorArenaState season_settlement_enabled
+             * @property {Array.<minimir.v1.MirrorArenaStanding.$Properties>|null} [standings] MirrorArenaState standings
+             * @property {number|null} [own_rank] MirrorArenaState own_rank
+             * @property {minimir.v1.MirrorArenaSeasonReceipt.$Properties|null} [last_settlement] MirrorArenaState last_settlement
+             * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [season_pending_rewards] MirrorArenaState season_pending_rewards
+             * @property {boolean|null} [season_pending_rewards_more] MirrorArenaState season_pending_rewards_more
+             * @property {Long|null} [exchange_points] MirrorArenaState exchange_points
+             * @property {Long|null} [exchange_price] MirrorArenaState exchange_price
+             * @property {Long|null} [exchange_pack_quantity] MirrorArenaState exchange_pack_quantity
+             * @property {number|null} [exchange_item_id] MirrorArenaState exchange_item_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -42192,6 +43240,8 @@ $root.minimir = (function() {
                 this.offers = [];
                 this.attack_history = [];
                 this.defense_history = [];
+                this.standings = [];
+                this.season_pending_rewards = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -42351,6 +43401,86 @@ $root.minimir = (function() {
             MirrorArenaState.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * MirrorArenaState season_settlement_enabled.
+             * @member {boolean} season_settlement_enabled
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.season_settlement_enabled = false;
+
+            /**
+             * MirrorArenaState standings.
+             * @member {Array.<minimir.v1.MirrorArenaStanding.$Properties>} standings
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.standings = $util.emptyArray;
+
+            /**
+             * MirrorArenaState own_rank.
+             * @member {number} own_rank
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.own_rank = 0;
+
+            /**
+             * MirrorArenaState last_settlement.
+             * @member {minimir.v1.MirrorArenaSeasonReceipt.$Properties|null|undefined} last_settlement
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.last_settlement = null;
+
+            /**
+             * MirrorArenaState season_pending_rewards.
+             * @member {Array.<minimir.v1.ChallengePendingReward.$Properties>} season_pending_rewards
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.season_pending_rewards = $util.emptyArray;
+
+            /**
+             * MirrorArenaState season_pending_rewards_more.
+             * @member {boolean} season_pending_rewards_more
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.season_pending_rewards_more = false;
+
+            /**
+             * MirrorArenaState exchange_points.
+             * @member {Long} exchange_points
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.exchange_points = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaState exchange_price.
+             * @member {Long} exchange_price
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.exchange_price = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaState exchange_pack_quantity.
+             * @member {Long} exchange_pack_quantity
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.exchange_pack_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaState exchange_item_id.
+             * @member {number} exchange_item_id
+             * @memberof minimir.v1.MirrorArenaState
+             * @instance
+             */
+            MirrorArenaState.prototype.exchange_item_id = 0;
+
+            /**
              * Creates a new MirrorArenaState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.MirrorArenaState
@@ -42423,6 +43553,28 @@ $root.minimir = (function() {
                     writer.uint32(/* id 18, wireType 0 =*/144).int64(message.battle_deadline_unix_ms);
                 if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
                     writer.uint32(/* id 19, wireType 0 =*/152).uint64(message.rule_version);
+                if (message.season_settlement_enabled != null && $Object.hasOwnProperty.call(message, "season_settlement_enabled") && message.season_settlement_enabled !== false)
+                    writer.uint32(/* id 20, wireType 0 =*/160).bool(message.season_settlement_enabled);
+                if (message.standings != null && message.standings.length)
+                    for (var i = 0; i < message.standings.length; ++i)
+                        $root.minimir.v1.MirrorArenaStanding.encode(message.standings[i], writer.uint32(/* id 21, wireType 2 =*/170).fork(), _depth + 1).ldelim();
+                if (message.own_rank != null && $Object.hasOwnProperty.call(message, "own_rank") && message.own_rank !== 0)
+                    writer.uint32(/* id 22, wireType 0 =*/176).uint32(message.own_rank);
+                if (message.last_settlement != null && $Object.hasOwnProperty.call(message, "last_settlement"))
+                    $root.minimir.v1.MirrorArenaSeasonReceipt.encode(message.last_settlement, writer.uint32(/* id 23, wireType 2 =*/186).fork(), _depth + 1).ldelim();
+                if (message.season_pending_rewards != null && message.season_pending_rewards.length)
+                    for (var i = 0; i < message.season_pending_rewards.length; ++i)
+                        $root.minimir.v1.ChallengePendingReward.encode(message.season_pending_rewards[i], writer.uint32(/* id 24, wireType 2 =*/194).fork(), _depth + 1).ldelim();
+                if (message.season_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "season_pending_rewards_more") && message.season_pending_rewards_more !== false)
+                    writer.uint32(/* id 25, wireType 0 =*/200).bool(message.season_pending_rewards_more);
+                if (message.exchange_points != null && $Object.hasOwnProperty.call(message, "exchange_points") && (typeof message.exchange_points === "object" ? message.exchange_points.low || message.exchange_points.high : message.exchange_points !== 0))
+                    writer.uint32(/* id 26, wireType 0 =*/208).int64(message.exchange_points);
+                if (message.exchange_price != null && $Object.hasOwnProperty.call(message, "exchange_price") && (typeof message.exchange_price === "object" ? message.exchange_price.low || message.exchange_price.high : message.exchange_price !== 0))
+                    writer.uint32(/* id 27, wireType 0 =*/216).int64(message.exchange_price);
+                if (message.exchange_pack_quantity != null && $Object.hasOwnProperty.call(message, "exchange_pack_quantity") && (typeof message.exchange_pack_quantity === "object" ? message.exchange_pack_quantity.low || message.exchange_pack_quantity.high : message.exchange_pack_quantity !== 0))
+                    writer.uint32(/* id 28, wireType 0 =*/224).int64(message.exchange_pack_quantity);
+                if (message.exchange_item_id != null && $Object.hasOwnProperty.call(message, "exchange_item_id") && message.exchange_item_id !== 0)
+                    writer.uint32(/* id 29, wireType 0 =*/232).uint32(message.exchange_item_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -42645,6 +43797,91 @@ $root.minimir = (function() {
                                 delete message.rule_version;
                             continue;
                         }
+                    case 20: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.season_settlement_enabled = value;
+                            else
+                                delete message.season_settlement_enabled;
+                            continue;
+                        }
+                    case 21: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.standings && message.standings.length))
+                                message.standings = [];
+                            message.standings.push($root.minimir.v1.MirrorArenaStanding.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 22: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.own_rank = value;
+                            else
+                                delete message.own_rank;
+                            continue;
+                        }
+                    case 23: {
+                            if (wireType !== 2)
+                                break;
+                            message.last_settlement = $root.minimir.v1.MirrorArenaSeasonReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.last_settlement);
+                            continue;
+                        }
+                    case 24: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.season_pending_rewards && message.season_pending_rewards.length))
+                                message.season_pending_rewards = [];
+                            message.season_pending_rewards.push($root.minimir.v1.ChallengePendingReward.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 25: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.season_pending_rewards_more = value;
+                            else
+                                delete message.season_pending_rewards_more;
+                            continue;
+                        }
+                    case 26: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.exchange_points = value;
+                            else
+                                delete message.exchange_points;
+                            continue;
+                        }
+                    case 27: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.exchange_price = value;
+                            else
+                                delete message.exchange_price;
+                            continue;
+                        }
+                    case 28: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.exchange_pack_quantity = value;
+                            else
+                                delete message.exchange_pack_quantity;
+                            continue;
+                        }
+                    case 29: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.exchange_item_id = value;
+                            else
+                                delete message.exchange_item_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -42770,6 +44007,50 @@ $root.minimir = (function() {
                 if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
                     if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
                         return "rule_version: integer|Long expected";
+                if (message.season_settlement_enabled != null && $Object.hasOwnProperty.call(message, "season_settlement_enabled"))
+                    if (typeof message.season_settlement_enabled !== "boolean")
+                        return "season_settlement_enabled: boolean expected";
+                if (message.standings != null && $Object.hasOwnProperty.call(message, "standings")) {
+                    if (!$Array.isArray(message.standings))
+                        return "standings: array expected";
+                    for (var i = 0; i < message.standings.length; ++i) {
+                        var error = $root.minimir.v1.MirrorArenaStanding.verify(message.standings[i], _depth + 1);
+                        if (error)
+                            return "standings." + error;
+                    }
+                }
+                if (message.own_rank != null && $Object.hasOwnProperty.call(message, "own_rank"))
+                    if (!$util.isInteger(message.own_rank))
+                        return "own_rank: integer expected";
+                if (message.last_settlement != null && $Object.hasOwnProperty.call(message, "last_settlement")) {
+                    var error = $root.minimir.v1.MirrorArenaSeasonReceipt.verify(message.last_settlement, _depth + 1);
+                    if (error)
+                        return "last_settlement." + error;
+                }
+                if (message.season_pending_rewards != null && $Object.hasOwnProperty.call(message, "season_pending_rewards")) {
+                    if (!$Array.isArray(message.season_pending_rewards))
+                        return "season_pending_rewards: array expected";
+                    for (var i = 0; i < message.season_pending_rewards.length; ++i) {
+                        var error = $root.minimir.v1.ChallengePendingReward.verify(message.season_pending_rewards[i], _depth + 1);
+                        if (error)
+                            return "season_pending_rewards." + error;
+                    }
+                }
+                if (message.season_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "season_pending_rewards_more"))
+                    if (typeof message.season_pending_rewards_more !== "boolean")
+                        return "season_pending_rewards_more: boolean expected";
+                if (message.exchange_points != null && $Object.hasOwnProperty.call(message, "exchange_points"))
+                    if (!$util.isInteger(message.exchange_points) && !(message.exchange_points && $util.isInteger(message.exchange_points.low) && $util.isInteger(message.exchange_points.high)))
+                        return "exchange_points: integer|Long expected";
+                if (message.exchange_price != null && $Object.hasOwnProperty.call(message, "exchange_price"))
+                    if (!$util.isInteger(message.exchange_price) && !(message.exchange_price && $util.isInteger(message.exchange_price.low) && $util.isInteger(message.exchange_price.high)))
+                        return "exchange_price: integer|Long expected";
+                if (message.exchange_pack_quantity != null && $Object.hasOwnProperty.call(message, "exchange_pack_quantity"))
+                    if (!$util.isInteger(message.exchange_pack_quantity) && !(message.exchange_pack_quantity && $util.isInteger(message.exchange_pack_quantity.low) && $util.isInteger(message.exchange_pack_quantity.high)))
+                        return "exchange_pack_quantity: integer|Long expected";
+                if (message.exchange_item_id != null && $Object.hasOwnProperty.call(message, "exchange_item_id"))
+                    if (!$util.isInteger(message.exchange_item_id))
+                        return "exchange_item_id: integer expected";
                 return null;
             };
 
@@ -42788,6 +44069,313 @@ $root.minimir = (function() {
             };
 
             return MirrorArenaState;
+        })();
+
+        v1.MirrorArenaExchangeRequest = (function() {
+
+            /**
+             * Properties of a MirrorArenaExchangeRequest.
+             * @typedef {Object} minimir.v1.MirrorArenaExchangeRequest.$Properties
+             * @property {number|null} [pack_count] MirrorArenaExchangeRequest pack_count
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] MirrorArenaExchangeRequest operation
+             * @property {Long|null} [expected_price] MirrorArenaExchangeRequest expected_price
+             * @property {number|null} [expected_item_id] MirrorArenaExchangeRequest expected_item_id
+             * @property {Long|null} [expected_pack_quantity] MirrorArenaExchangeRequest expected_pack_quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MirrorArenaExchangeRequest.
+             * @memberof minimir.v1
+             * @interface IMirrorArenaExchangeRequest
+             * @augments minimir.v1.MirrorArenaExchangeRequest.$Properties
+             * @deprecated Use minimir.v1.MirrorArenaExchangeRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a MirrorArenaExchangeRequest.
+             * @typedef {minimir.v1.MirrorArenaExchangeRequest.$Properties} minimir.v1.MirrorArenaExchangeRequest.$Shape
+             */
+
+            /**
+             * Constructs a new MirrorArenaExchangeRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a MirrorArenaExchangeRequest.
+             * @constructor
+             * @param {minimir.v1.MirrorArenaExchangeRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MirrorArenaExchangeRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MirrorArenaExchangeRequest pack_count.
+             * @member {number} pack_count
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @instance
+             */
+            MirrorArenaExchangeRequest.prototype.pack_count = 0;
+
+            /**
+             * MirrorArenaExchangeRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @instance
+             */
+            MirrorArenaExchangeRequest.prototype.operation = null;
+
+            /**
+             * MirrorArenaExchangeRequest expected_price.
+             * @member {Long} expected_price
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @instance
+             */
+            MirrorArenaExchangeRequest.prototype.expected_price = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MirrorArenaExchangeRequest expected_item_id.
+             * @member {number} expected_item_id
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @instance
+             */
+            MirrorArenaExchangeRequest.prototype.expected_item_id = 0;
+
+            /**
+             * MirrorArenaExchangeRequest expected_pack_quantity.
+             * @member {Long} expected_pack_quantity
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @instance
+             */
+            MirrorArenaExchangeRequest.prototype.expected_pack_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MirrorArenaExchangeRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MirrorArenaExchangeRequest} MirrorArenaExchangeRequest instance
+             * @type {{
+             *   (properties: minimir.v1.MirrorArenaExchangeRequest.$Shape): minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape;
+             *   (properties?: minimir.v1.MirrorArenaExchangeRequest.$Properties): minimir.v1.MirrorArenaExchangeRequest;
+             * }}
+             */
+            MirrorArenaExchangeRequest.create = function(properties) {
+                return new MirrorArenaExchangeRequest(properties);
+            };
+
+            /**
+             * Encodes the specified MirrorArenaExchangeRequest message. Does not implicitly {@link minimir.v1.MirrorArenaExchangeRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeRequest.$Properties} message MirrorArenaExchangeRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaExchangeRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.pack_count != null && $Object.hasOwnProperty.call(message, "pack_count") && message.pack_count !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.pack_count);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.expected_price != null && $Object.hasOwnProperty.call(message, "expected_price") && (typeof message.expected_price === "object" ? message.expected_price.low || message.expected_price.high : message.expected_price !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.expected_price);
+                if (message.expected_item_id != null && $Object.hasOwnProperty.call(message, "expected_item_id") && message.expected_item_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.expected_item_id);
+                if (message.expected_pack_quantity != null && $Object.hasOwnProperty.call(message, "expected_pack_quantity") && (typeof message.expected_pack_quantity === "object" ? message.expected_pack_quantity.low || message.expected_pack_quantity.high : message.expected_pack_quantity !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.expected_pack_quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MirrorArenaExchangeRequest message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaExchangeRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {minimir.v1.MirrorArenaExchangeRequest.$Properties} message MirrorArenaExchangeRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MirrorArenaExchangeRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MirrorArenaExchangeRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape} MirrorArenaExchangeRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaExchangeRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MirrorArenaExchangeRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pack_count = value;
+                            else
+                                delete message.pack_count;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expected_price = value;
+                            else
+                                delete message.expected_price;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.expected_item_id = value;
+                            else
+                                delete message.expected_item_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expected_pack_quantity = value;
+                            else
+                                delete message.expected_pack_quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MirrorArenaExchangeRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape} MirrorArenaExchangeRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MirrorArenaExchangeRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MirrorArenaExchangeRequest message.
+             * @function verify
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MirrorArenaExchangeRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.pack_count != null && $Object.hasOwnProperty.call(message, "pack_count"))
+                    if (!$util.isInteger(message.pack_count))
+                        return "pack_count: integer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.expected_price != null && $Object.hasOwnProperty.call(message, "expected_price"))
+                    if (!$util.isInteger(message.expected_price) && !(message.expected_price && $util.isInteger(message.expected_price.low) && $util.isInteger(message.expected_price.high)))
+                        return "expected_price: integer|Long expected";
+                if (message.expected_item_id != null && $Object.hasOwnProperty.call(message, "expected_item_id"))
+                    if (!$util.isInteger(message.expected_item_id))
+                        return "expected_item_id: integer expected";
+                if (message.expected_pack_quantity != null && $Object.hasOwnProperty.call(message, "expected_pack_quantity"))
+                    if (!$util.isInteger(message.expected_pack_quantity) && !(message.expected_pack_quantity && $util.isInteger(message.expected_pack_quantity.low) && $util.isInteger(message.expected_pack_quantity.high)))
+                        return "expected_pack_quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MirrorArenaExchangeRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.MirrorArenaExchangeRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MirrorArenaExchangeRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MirrorArenaExchangeRequest";
+            };
+
+            return MirrorArenaExchangeRequest;
         })();
 
         v1.MirrorArenaCombatFrame = (function() {

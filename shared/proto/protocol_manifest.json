@@ -1116,6 +1116,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.12 金币购买托管时长"
+    },
+    {
+      "value": 40034,
+      "name": "MsgC2SMirrorArenaExchange",
+      "proto_message": "MirrorArenaExchangeRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.19 镜像赛季兑换"
     }
   ],
   "error_codes": [
@@ -1509,6 +1521,14 @@
       "display_zh": "绑定金币与普通金币合计不足",
       "status": "draft",
       "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3901,
+      "name": "CodeMirrorExchangeFunds",
+      "display_zh": "镜像兑换积分不足",
+      "status": "draft",
+      "source_ref": "最终策划案4.19",
       "active_in_scope": true
     }
   ]

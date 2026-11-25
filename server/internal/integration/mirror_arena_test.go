@@ -3,6 +3,7 @@ package integration
 
 import (
 	"bytes"
+	"slices"
 	"testing"
 	"time"
 
@@ -31,9 +32,11 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 			cfg.Fixture.Items[i].AttackBonus = 18
 		}
 	}
-	cfg.Fixture.Monsters[0].HP, cfg.Fixture.Monsters[0].AttackMin, cfg.Fixture.Monsters[0].AttackMax = 1, 0, 0
+	// 普通并行样本的弱怪从射程外接近，避免入场 ACK 与主动开挂机间先完成击杀。
+	weak := &cfg.Fixture.Monsters[0]
+	weak.HP, weak.AttackMin, weak.AttackMax, weak.Agility, weak.DefenceMin, weak.DefenceMax = 1, 0, 0, 0, 0, 0
 	spawn := cfg.Fixture.Map.PlayerSpawn
-	cfg.Fixture.Map.MonsterSpawns[0] = devconfig.Point{X: spawn.X + 1, Y: spawn.Y}
+	cfg.Fixture.Map.MonsterSpawns[0] = devconfig.Point{X: spawn.X + 4, Y: spawn.Y}
 	cfg, ctx, store := m1FieldServices(t, cfg)
 	endpoint, defenderToken, defenderKey := m1FieldRole(t, cfg, 1)
 	_, attackerToken, attackerKey := m1FieldRole(t, cfg, 0)
@@ -54,6 +57,12 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 	attacker := join(t, cfg.GameAddress, issue(t, endpoint, attackerToken, attackerKey))
 	defer func() { attacker.close() }()
 	attacker.auto(false, 1)
+	// 通过真实换图收束已受理的野外攻击、收益和磨损，在无普通战斗的同一城镇检查镜像资产。
+	townID := cfg.Fixture.TownTravel.DestinationMapIDs[0]
+	for _, player := range []*client{defender, attacker} {
+		travelToBaseline(player, 1, townID)
+		travelAcknowledge(player, true)
+	}
 	var weapon *pb.ItemView
 	for _, item := range attacker.inventory.Items {
 		if item.ItemId == 218 {
@@ -114,7 +123,7 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 	priorBinding := attacker.binding
 	attacker.close()
 	attacker = join(t, cfg.GameAddress, issue(t, endpoint, attackerToken, attackerKey))
-	if attacker.binding <= priorBinding || attacker.entry.RoomId == mirrorTestMap {
+	if attacker.binding <= priorBinding || attacker.entry.RoomId != townID {
 		t.Fatal("健康新票未换绑定，或普通挂机世界被镜像替换", attacker.entry)
 	}
 	// 等新附着上更晚的原场帧，确认即使战斗时重连也沿同一进攻与守方身体推进。
@@ -155,7 +164,9 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 		t.Fatal("最终次数和原赛季积分没有守恒", lobby)
 	}
 	defender = join(t, cfg.GameAddress, issue(t, endpoint, defenderToken, defenderKey))
-	defender.auto(false, 1)
+	if defender.entry.RoomId != townID || defender.hosting.GetAutoBattleEnabled() {
+		t.Fatal("原防守者未接回同一无怪城镇", defender.entry, defender.hosting)
+	}
 	other := mirrorArenaCall(defender, &pb.MirrorArenaRequest{Action: 1})
 	if other.EntriesUsed != 0 || other.SeasonPoints != 0 || other.Streak != 0 || other.PublishedDefenseVersion != 2 || len(other.DefenseHistory) == 0 {
 		t.Fatal("原守方未收到战报或被扣分、扣次数", other)
@@ -165,10 +176,22 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 	afterAttacker, err := store.Role(ctx, attackerID)
 	must(t, err)
 	for _, pair := range [][2]domain.Role{{beforeDefender, afterDefender}, {beforeAttacker, afterAttacker}} {
-		if pair[0].Wallet != pair[1].Wallet || pair[0].Experience != pair[1].Experience || pair[0].EconomicSeq != pair[1].EconomicSeq || pair[0].SourceSeq != pair[1].SourceSeq {
-			t.Fatal("镜像临时属性产生普通角色资产变动", pair[0].ID)
+		before, after := pair[0], pair[1]
+		if before.Wallet != after.Wallet || before.Level != after.Level || before.Experience != after.Experience || before.PendingExperience != after.PendingExperience ||
+			before.EconomicSeq != after.EconomicSeq || before.SourceSeq != after.SourceSeq || before.HostingSeconds != after.HostingSeconds ||
+			!slices.Equal(before.Items, after.Items) || !slices.Equal(before.Equipped, after.Equipped) ||
+			after.Revision != before.Revision+1 || after.SessionEpoch != before.SessionEpoch+1 {
+			var audit []bson.M
+			rows, err := store.DB.Collection("audit_outbox").Find(ctx, bson.M{"role_id": before.ID, "revision": bson.M{"$gt": before.Revision}})
+			must(t, err)
+			must(t, rows.All(ctx, &audit))
+			t.Fatalf("镜像期间角色%s持久资产有变化：版本 %d→%d，会话 %d→%d，钱包 %v→%v，等级 %d→%d，经验 %d→%d，经济序号 %d→%d，来源序号 %d→%d，背包相同 %t，装备相同 %t，审计 %v",
+				before.ID, before.Revision, after.Revision, before.SessionEpoch, after.SessionEpoch, before.Wallet, after.Wallet, before.Level, after.Level,
+				before.Experience, after.Experience, before.EconomicSeq, after.EconomicSeq, before.SourceSeq, after.SourceSeq,
+				slices.Equal(before.Items, after.Items), slices.Equal(before.Equipped, after.Equipped), audit)
 		}
 	}
+	t.Log("双方重新入场只推进会话与版本，原钱包、成长、背包、装备、扣时和流水保持")
 
 	// 另一个原角色在同一连接保留普通挂机，同时独立观察自己的镜像战斗。
 	_, concurrentToken, concurrentKey := m1FieldRole(t, cfg, 0)
@@ -199,9 +222,12 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 	must(t, err)
 	concurrent.auto(true, 1)
 	for deadline := time.Now().Add(8 * time.Second); ; {
-		current, err := store.Role(ctx, concurrentID)
+		kills, err := store.DB.Collection("operations").CountDocuments(ctx, bson.M{
+			"role_id": concurrentID, "kind": "settlement", "source_seq": bson.M{"$gt": beforeHunt.SourceSeq},
+			"settlement.map_id": cfg.Fixture.Map.ID, "settlement.monster_id": weak.ID, "settlement.kills": bson.M{"$gt": 0},
+		})
 		must(t, err)
-		if current.SourceSeq > beforeHunt.SourceSeq {
+		if kills > 0 {
 			break
 		}
 		if time.Now().After(deadline) {

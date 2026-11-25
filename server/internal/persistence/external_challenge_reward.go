@@ -64,7 +64,7 @@ func (s *Store) queryExternalChallengeRewards(ctx context.Context, role domain.R
 func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Role, id, operationID string) (domain.Role, *domain.ChallengePendingReward, uint32, error) {
 	filter := externalChallengeRewardFilter(role)
 	filter["_id"] = id
-	for _, name := range [...]string{worldBossRewardCollection, dungeonRewardCollection} {
+	for _, name := range [...]string{worldBossRewardCollection, dungeonRewardCollection, mirrorSeasonRewardCollection} {
 		collection := s.DB.Collection(name)
 		var row externalChallengeRewardRecord // 玩家只提供附件编号，原物品和归属从库中读取。
 		if err := collection.FindOne(ctx, filter).Decode(&row); err != nil {
@@ -73,11 +73,20 @@ func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Ro
 			}
 			return role, nil, 0, err
 		}
-		if row.RewardID != id || len(row.Items) == 0 || !validExternalRewardSource(name, row.SourceKind) {
+		mirror := name == mirrorSeasonRewardCollection
+		if row.RewardID != id || !validExternalRewardSource(name, row.SourceKind) ||
+			mirror && (!validMirrorSeasonAssets(row.MirrorAssets) || len(row.Items) != 0) || !mirror && (row.MirrorAssets != nil || len(row.Items) == 0) {
 			return role, nil, 0, Fail(p.CodeOperationConflict, "挑战待领附件的原身份不一致")
 		}
-		if len(row.Items) > role.Capacity-len(role.Items) {
+		if len(row.Items) > 0 && len(row.Items) > role.Capacity-len(role.Items) {
 			return role, nil, p.CodeEquipmentBagFull, nil
+		}
+		updatedRole := role
+		if mirror {
+			var err error
+			if updatedRole, err = grantMirrorSeasonAssets(role, row.MirrorAssets); err != nil {
+				return role, nil, 0, err
+			}
 		}
 		// 标记、入包、唯一回执和审计属于一个事务，满包时在这一步之前返回。
 		write, err := collection.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"claimed": true, "claim_operation": operationID,
@@ -88,8 +97,10 @@ func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Ro
 		if write.MatchedCount != 1 {
 			return role, nil, 0, Fail(p.CodeOperationPending, "挑战奖励领取结果待查证")
 		}
-		role.Items = append(slices.Clone(role.Items), row.Items...)
-		return role, &row.ChallengePendingReward, 0, nil
+		if len(row.Items) > 0 {
+			updatedRole.Items = append(slices.Clone(role.Items), row.Items...)
+		}
+		return updatedRole, &row.ChallengePendingReward, 0, nil
 	}
 	return role, nil, p.CodeOperationConflict, nil
 }
@@ -97,5 +108,6 @@ func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Ro
 // validExternalRewardSource 拒绝存储在错误来源集合的旧记录。
 func validExternalRewardSource(collection, source string) bool {
 	return collection == worldBossRewardCollection && (source == worldBossKillReward || source == worldBossTimeoutReward) ||
-		collection == dungeonRewardCollection && source == dungeonRewardSource
+		collection == dungeonRewardCollection && source == dungeonRewardSource ||
+		collection == mirrorSeasonRewardCollection && (source == mirrorRankRewardSource || source == mirrorParticipationRewardSource)
 }

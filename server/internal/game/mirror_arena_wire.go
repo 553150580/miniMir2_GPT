@@ -7,6 +7,7 @@ import (
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
+	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -19,11 +20,31 @@ func mirrorRecordPB(summary persistence.MirrorSummary) *pb.MirrorArenaRecord {
 		AwardedPoints: summary.Points, StartedAtUnixMs: optionalBossUnixMillis(summary.StartedAt), FinishedAtUnixMs: optionalBossUnixMillis(summary.FinishedAt)}
 }
 
-func mirrorLobbyState(r *room, info persistence.MirrorInfo, rule uint64) *pb.MirrorArenaState {
-	out := &pb.MirrorArenaState{SceneEpoch: r.Scene, Open: !info.SeasonStart.IsZero(), RuleVersion: rule,
+func mirrorLobbyState(r *room, info persistence.MirrorInfo, fixture *devconfig.Fixture) *pb.MirrorArenaState {
+	out := &pb.MirrorArenaState{SceneEpoch: r.Scene, Open: !info.SeasonStart.IsZero(), RuleVersion: fixture.RuleVersion,
 		SeasonStartUnixMs: optionalBossUnixMillis(info.SeasonStart), SeasonEndUnixMs: optionalBossUnixMillis(info.SeasonEnd),
 		DailyLimit: info.DailyLimit, EntriesUsed: info.EntriesUsed, SeasonPoints: info.SeasonPoints, Streak: info.Streak,
 		PublishedDefenseVersion: info.DefenseVersion}
+	if arena := fixture.MirrorArena; arena != nil {
+		out.SeasonSettlementEnabled = arena.Settlement != nil
+		if exchange := arena.Exchange; exchange != nil {
+			out.ExchangeItemId, out.ExchangePrice, out.ExchangePackQuantity = exchange.ItemID, exchange.Price, exchange.Quantity
+		}
+	}
+	out.OwnRank, out.ExchangePoints, out.SeasonPendingRewardsMore = info.OwnRank, info.ExchangePoints, info.SeasonPendingRewardsMore
+	for _, standing := range info.Rankings {
+		out.Standings = append(out.Standings, &pb.MirrorArenaStanding{Rank: standing.Rank, Name: standing.Name, Points: standing.Points,
+			Matches: standing.Matches, LastMatchAtUnixMs: optionalBossUnixMillis(standing.LastMatchAt)})
+	}
+	if last := info.LatestSettlement; last != nil {
+		out.LastSettlement = &pb.MirrorArenaSeasonReceipt{SeasonId: domain.Bytes(last.SeasonID),
+			SeasonStartUnixMs: optionalBossUnixMillis(last.SeasonStart), SeasonEndUnixMs: optionalBossUnixMillis(last.SeasonEnd),
+			SettledAtUnixMs: optionalBossUnixMillis(last.SettledAt), Rank: last.Rank, Matches: last.Matches,
+			Points: last.Points, ExchangeCredit: last.ExchangeCredit}
+	}
+	for _, reward := range info.SeasonPendingRewards {
+		out.SeasonPendingRewards = append(out.SeasonPendingRewards, pendingChallengeRewardPB(reward))
+	}
 	for _, offer := range info.Offers {
 		out.Offers = append(out.Offers, &pb.MirrorArenaOffer{OfferId: domain.Bytes(offer.ID), DefenderName: offer.DefenderName,
 			DefenderJob: offer.DefenderJob, DefenderLevel: offer.DefenderLevel, DefenseVersion: offer.DefenseVersion})

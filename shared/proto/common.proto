@@ -18,6 +18,15 @@ message OperationResult {
   uint32 error_code = 4;
   bool pending = 5;
   HostingPurchaseReceipt hosting_purchase = 6;
+  MirrorArenaExchangeReceipt mirror_arena_exchange = 7;
+}
+// 兑换只按服务端权威价格成交。同一原操作重放返回首次扣分与原绑定羽毛。
+message MirrorArenaExchangeReceipt {
+  int64 spent_points = 1;
+  int64 remaining_points = 2;
+  bytes item_instance_id = 3;
+  uint32 item_id = 4;
+  int64 quantity = 5;
 }
 // 报价冻结规则、档位、时长和两个钱包的扣款；仅成功的实时报价携带报价身份。
 message HostingQuoteResult {

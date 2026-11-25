@@ -21,7 +21,6 @@ func (s *Store) BeginMirrorChallenge(ctx context.Context, a Auth, req MirrorBegi
 	if !lowerHex(req.ChallengeID, 16) || !lowerHex(req.OfferID, 16) {
 		return out, Fail(p.CodeInvalidArgument, "镜像挑战缺少原操作号或当日凭证")
 	}
-	now := bossTime(time.Now())
 	err := s.guardedTx(ctx, a, func(tc context.Context) error {
 		out = MirrorChallenge{}
 		r, err := s.mirrorRole(tc, a)
@@ -58,6 +57,7 @@ func (s *Store) BeginMirrorChallenge(ctx context.Context, a Auth, req MirrorBegi
 			!validMirrorSnapshot(&s.Cfg.Fixture, r, req.AttackerSnapshot) {
 			return Fail(p.CodeOperationConflict, "攻方现场执行或原角色属性版本无效")
 		}
+		now := bossTime(time.Now())
 		cfg, seasonStart, seasonEnd, err := s.currentMirrorSeason(now)
 		if err != nil {
 			return err
@@ -104,6 +104,9 @@ func (s *Store) BeginMirrorChallenge(ctx context.Context, a Auth, req MirrorBegi
 		}
 		if score.Streak == math.MaxUint32 {
 			return Fail(p.CodeOperationConflict, "原进攻连胜版本已达上限")
+		}
+		if err := s.ensureMirrorSeason(tc, cfg, r.Origin, seasonStart, seasonEnd); err != nil {
+			return err
 		}
 		// 原角色与当前确认运行服共同作用域化客户端操作号和所选凭证。
 		// 持久保存原请求指纹与防守摘要，重试绝不再次预占或替换属性。
@@ -179,7 +182,7 @@ func (s *Store) FinishMirrorChallenge(ctx context.Context, a Auth, req MirrorFin
 			return Fail(p.CodeInvalidArgument, "原镜像挑战终态时间超出有效窗口")
 		}
 		record.Outcome, record.FinishedAt, record.FinishDigest = req.Outcome, req.FinishedAt, digest
-		if err := s.closeMirrorChallenge(tc, r, &record); err != nil {
+		if err := s.closeMirrorChallenge(tc, &record); err != nil {
 			return err
 		}
 		out = record.MirrorChallenge
@@ -258,7 +261,7 @@ func (s *Store) RecoverMirrorChallenge(ctx context.Context, a Auth) (MirrorChall
 			return Fail(p.CodeOperationConflict, "原镜像活动仍有效或不属于本运行服")
 		}
 		record.Outcome, record.FinishedAt = MirrorInterrupted, now
-		if err := s.closeMirrorChallenge(tc, r, &record); err != nil {
+		if err := s.closeMirrorChallenge(tc, &record); err != nil {
 			return err
 		}
 		out = record.MirrorChallenge
@@ -300,7 +303,7 @@ func (s *Store) readMirrorDefense(ctx context.Context, id string) (MirrorDefense
 }
 
 // closeMirrorChallenge 在同一事务竞争原唯一终态、释放活跃占位，并入积分或退还原日次数。
-func (s *Store) closeMirrorChallenge(ctx context.Context, r domain.Role, record *mirrorRecord) error {
+func (s *Store) closeMirrorChallenge(ctx context.Context, record *mirrorRecord) error {
 	if record.Outcome == MirrorInterrupted {
 		day, err := mirrorOptional[mirrorDay](ctx, s.DB.Collection(mirrorDayCollection), record.DayKey)
 		if err != nil {
@@ -323,7 +326,7 @@ func (s *Store) closeMirrorChallenge(ctx context.Context, r domain.Role, record 
 	if result.MatchedCount != 1 {
 		return Fail(p.CodeOperationConflict, "原镜像挑战已有其它唯一终态")
 	}
-	cleared, err := s.DB.Collection(mirrorActiveCollection).DeleteOne(ctx, bson.M{"_id": mirrorRoleKey(r.Origin, r.ID), "challenge_id": record.ChallengeID})
+	cleared, err := s.DB.Collection(mirrorActiveCollection).DeleteOne(ctx, bson.M{"_id": mirrorRoleKey(record.Origin, record.AttackerRoleID), "challenge_id": record.ChallengeID})
 	if err != nil {
 		return err
 	}
@@ -335,6 +338,14 @@ func (s *Store) closeMirrorChallenge(ctx context.Context, r domain.Role, record 
 
 // writeMirrorMatchScore 只更新原攻方并沿用已冻结的获胜与失败分，防守者的进攻连胜保持。
 func (s *Store) writeMirrorMatchScore(ctx context.Context, record *mirrorRecord) error {
+	scope := mirrorScope(record.RunID, record.Origin, record.SeasonStart)
+	journal, err := mirrorOptional[mirrorSeasonJournal](ctx, s.DB.Collection(mirrorSeasonJournalCollection), scope)
+	if err != nil {
+		return err
+	}
+	if journal.ID != "" && journal.Phase != mirrorSeasonCollecting {
+		return Fail(p.CodeOperationConflict, "原镜像赛季已冻结排名")
+	}
 	collection := s.DB.Collection(mirrorSeasonCollection)
 	score, err := mirrorOptional[mirrorSeasonScore](ctx, collection, record.ScoreKey)
 	if err != nil {
@@ -355,7 +366,7 @@ func (s *Store) writeMirrorMatchScore(ctx context.Context, record *mirrorRecord)
 	}
 	record.Points, record.SeasonPoints, record.Streak = points, total, streak
 	score.ID, score.RoleID = record.ScoreKey, record.AttackerRoleID
-	score.Scope = mirrorScope(record.RunID, record.Origin, record.SeasonStart)
+	score.Scope, score.Name = scope, record.AttackerName
 	score.Points, score.Streak, score.Matches, score.LastMatchAt = total, streak, score.Matches+1, record.FinishedAt
 	_, err = collection.ReplaceOne(ctx, bson.M{"_id": score.ID}, score, options.Replace().SetUpsert(true))
 	return err

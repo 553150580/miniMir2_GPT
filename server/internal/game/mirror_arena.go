@@ -135,7 +135,8 @@ func (w *worker) finishMirrorLobbyRead(bound skillPreviewBinding, request uint32
 		w.sendMirrorError(r, request, persistence.Code(err))
 		return
 	}
-	state := mirrorLobbyState(r, info, w.roomStore(r).Cfg.Fixture.RuleVersion)
+	fixture := &w.roomStore(r).Cfg.Fixture
+	state := mirrorLobbyState(r, info, fixture)
 	if run := r.mirrorMatch; run != nil && run.grant.ChallengeID != "" && run.auth == r.Auth {
 		mergeMirrorRun(state, run)
 	}

@@ -100,6 +100,9 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 func pendingChallengeRewardPB(reward domain.ChallengePendingReward) *pb.ChallengePendingReward {
 	entry := &pb.ChallengePendingReward{RewardId: domain.Bytes(reward.RewardID), TemplateId: reward.TemplateID,
 		EarnedAtUnixMs: reward.EarnedAt.UnixMilli(), SourceKind: reward.SourceKind, SourceRank: reward.SourceRank}
+	if assets := reward.MirrorAssets; assets != nil {
+		entry.BoundYuanbaoUnits = assets.BoundIngot
+	}
 	for _, item := range reward.Items {
 		entry.Items = append(entry.Items, item.Proto())
 	}

@@ -276,6 +276,184 @@ func (x *MirrorArenaRecord) GetFinishedAtUnixMs() int64 {
 	return 0
 }
 
+// 榜单由服务端按积分降序、最后挑战时刻升序裁定；客户端只展示原名次。
+type MirrorArenaStanding struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Rank              uint32                 `protobuf:"varint,1,opt,name=rank,proto3" json:"rank,omitempty"`
+	Name              string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Points            int64                  `protobuf:"varint,3,opt,name=points,proto3" json:"points,omitempty"`
+	Matches           uint32                 `protobuf:"varint,4,opt,name=matches,proto3" json:"matches,omitempty"`
+	LastMatchAtUnixMs int64                  `protobuf:"varint,5,opt,name=last_match_at_unix_ms,json=lastMatchAtUnixMs,proto3" json:"last_match_at_unix_ms,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *MirrorArenaStanding) Reset() {
+	*x = MirrorArenaStanding{}
+	mi := &file_mirror_arena_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MirrorArenaStanding) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MirrorArenaStanding) ProtoMessage() {}
+
+func (x *MirrorArenaStanding) ProtoReflect() protoreflect.Message {
+	mi := &file_mirror_arena_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MirrorArenaStanding.ProtoReflect.Descriptor instead.
+func (*MirrorArenaStanding) Descriptor() ([]byte, []int) {
+	return file_mirror_arena_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *MirrorArenaStanding) GetRank() uint32 {
+	if x != nil {
+		return x.Rank
+	}
+	return 0
+}
+
+func (x *MirrorArenaStanding) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *MirrorArenaStanding) GetPoints() int64 {
+	if x != nil {
+		return x.Points
+	}
+	return 0
+}
+
+func (x *MirrorArenaStanding) GetMatches() uint32 {
+	if x != nil {
+		return x.Matches
+	}
+	return 0
+}
+
+func (x *MirrorArenaStanding) GetLastMatchAtUnixMs() int64 {
+	if x != nil {
+		return x.LastMatchAtUnixMs
+	}
+	return 0
+}
+
+// 已清账赛季的个人结果，保留清零前原积分与实际 1:1 结转。
+type MirrorArenaSeasonReceipt struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	SeasonId          []byte                 `protobuf:"bytes,1,opt,name=season_id,json=seasonId,proto3" json:"season_id,omitempty"`
+	SeasonStartUnixMs int64                  `protobuf:"varint,2,opt,name=season_start_unix_ms,json=seasonStartUnixMs,proto3" json:"season_start_unix_ms,omitempty"`
+	SeasonEndUnixMs   int64                  `protobuf:"varint,3,opt,name=season_end_unix_ms,json=seasonEndUnixMs,proto3" json:"season_end_unix_ms,omitempty"`
+	SettledAtUnixMs   int64                  `protobuf:"varint,4,opt,name=settled_at_unix_ms,json=settledAtUnixMs,proto3" json:"settled_at_unix_ms,omitempty"`
+	Rank              uint32                 `protobuf:"varint,5,opt,name=rank,proto3" json:"rank,omitempty"`
+	Matches           uint32                 `protobuf:"varint,6,opt,name=matches,proto3" json:"matches,omitempty"`
+	Points            int64                  `protobuf:"varint,7,opt,name=points,proto3" json:"points,omitempty"`
+	ExchangeCredit    int64                  `protobuf:"varint,8,opt,name=exchange_credit,json=exchangeCredit,proto3" json:"exchange_credit,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *MirrorArenaSeasonReceipt) Reset() {
+	*x = MirrorArenaSeasonReceipt{}
+	mi := &file_mirror_arena_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MirrorArenaSeasonReceipt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MirrorArenaSeasonReceipt) ProtoMessage() {}
+
+func (x *MirrorArenaSeasonReceipt) ProtoReflect() protoreflect.Message {
+	mi := &file_mirror_arena_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MirrorArenaSeasonReceipt.ProtoReflect.Descriptor instead.
+func (*MirrorArenaSeasonReceipt) Descriptor() ([]byte, []int) {
+	return file_mirror_arena_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MirrorArenaSeasonReceipt) GetSeasonId() []byte {
+	if x != nil {
+		return x.SeasonId
+	}
+	return nil
+}
+
+func (x *MirrorArenaSeasonReceipt) GetSeasonStartUnixMs() int64 {
+	if x != nil {
+		return x.SeasonStartUnixMs
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetSeasonEndUnixMs() int64 {
+	if x != nil {
+		return x.SeasonEndUnixMs
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetSettledAtUnixMs() int64 {
+	if x != nil {
+		return x.SettledAtUnixMs
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetRank() uint32 {
+	if x != nil {
+		return x.Rank
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetMatches() uint32 {
+	if x != nil {
+		return x.Matches
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetPoints() int64 {
+	if x != nil {
+		return x.Points
+	}
+	return 0
+}
+
+func (x *MirrorArenaSeasonReceipt) GetExchangeCredit() int64 {
+	if x != nil {
+		return x.ExchangeCredit
+	}
+	return 0
+}
+
 type MirrorArenaState struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
 	SceneEpoch              uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
@@ -293,18 +471,28 @@ type MirrorArenaState struct {
 	PublishedDefenseVersion uint64                 `protobuf:"varint,13,opt,name=published_defense_version,json=publishedDefenseVersion,proto3" json:"published_defense_version,omitempty"`
 	Challenge               *MirrorArenaRecord     `protobuf:"bytes,14,opt,name=challenge,proto3" json:"challenge,omitempty"`
 	// 0 无场次，1 等待首帧，2 战斗中，3 正在确认结果，4 已确认结果。
-	BattleState          uint32 `protobuf:"varint,15,opt,name=battle_state,json=battleState,proto3" json:"battle_state,omitempty"`
-	BattleSceneEpoch     uint64 `protobuf:"varint,16,opt,name=battle_scene_epoch,json=battleSceneEpoch,proto3" json:"battle_scene_epoch,omitempty"`
-	BattleMapId          uint64 `protobuf:"varint,17,opt,name=battle_map_id,json=battleMapId,proto3" json:"battle_map_id,omitempty"`
-	BattleDeadlineUnixMs int64  `protobuf:"varint,18,opt,name=battle_deadline_unix_ms,json=battleDeadlineUnixMs,proto3" json:"battle_deadline_unix_ms,omitempty"`
-	RuleVersion          uint64 `protobuf:"varint,19,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	BattleState              uint32                    `protobuf:"varint,15,opt,name=battle_state,json=battleState,proto3" json:"battle_state,omitempty"`
+	BattleSceneEpoch         uint64                    `protobuf:"varint,16,opt,name=battle_scene_epoch,json=battleSceneEpoch,proto3" json:"battle_scene_epoch,omitempty"`
+	BattleMapId              uint64                    `protobuf:"varint,17,opt,name=battle_map_id,json=battleMapId,proto3" json:"battle_map_id,omitempty"`
+	BattleDeadlineUnixMs     int64                     `protobuf:"varint,18,opt,name=battle_deadline_unix_ms,json=battleDeadlineUnixMs,proto3" json:"battle_deadline_unix_ms,omitempty"`
+	RuleVersion              uint64                    `protobuf:"varint,19,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
+	SeasonSettlementEnabled  bool                      `protobuf:"varint,20,opt,name=season_settlement_enabled,json=seasonSettlementEnabled,proto3" json:"season_settlement_enabled,omitempty"`
+	Standings                []*MirrorArenaStanding    `protobuf:"bytes,21,rep,name=standings,proto3" json:"standings,omitempty"`
+	OwnRank                  uint32                    `protobuf:"varint,22,opt,name=own_rank,json=ownRank,proto3" json:"own_rank,omitempty"`
+	LastSettlement           *MirrorArenaSeasonReceipt `protobuf:"bytes,23,opt,name=last_settlement,json=lastSettlement,proto3" json:"last_settlement,omitempty"`
+	SeasonPendingRewards     []*ChallengePendingReward `protobuf:"bytes,24,rep,name=season_pending_rewards,json=seasonPendingRewards,proto3" json:"season_pending_rewards,omitempty"`
+	SeasonPendingRewardsMore bool                      `protobuf:"varint,25,opt,name=season_pending_rewards_more,json=seasonPendingRewardsMore,proto3" json:"season_pending_rewards_more,omitempty"`
+	ExchangePoints           int64                     `protobuf:"varint,26,opt,name=exchange_points,json=exchangePoints,proto3" json:"exchange_points,omitempty"`
+	ExchangePrice            int64                     `protobuf:"varint,27,opt,name=exchange_price,json=exchangePrice,proto3" json:"exchange_price,omitempty"`
+	ExchangePackQuantity     int64                     `protobuf:"varint,28,opt,name=exchange_pack_quantity,json=exchangePackQuantity,proto3" json:"exchange_pack_quantity,omitempty"`
+	ExchangeItemId           uint32                    `protobuf:"varint,29,opt,name=exchange_item_id,json=exchangeItemId,proto3" json:"exchange_item_id,omitempty"`
+	unknownFields            protoimpl.UnknownFields
+	sizeCache                protoimpl.SizeCache
 }
 
 func (x *MirrorArenaState) Reset() {
 	*x = MirrorArenaState{}
-	mi := &file_mirror_arena_proto_msgTypes[3]
+	mi := &file_mirror_arena_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -316,7 +504,7 @@ func (x *MirrorArenaState) String() string {
 func (*MirrorArenaState) ProtoMessage() {}
 
 func (x *MirrorArenaState) ProtoReflect() protoreflect.Message {
-	mi := &file_mirror_arena_proto_msgTypes[3]
+	mi := &file_mirror_arena_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +517,7 @@ func (x *MirrorArenaState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MirrorArenaState.ProtoReflect.Descriptor instead.
 func (*MirrorArenaState) Descriptor() ([]byte, []int) {
-	return file_mirror_arena_proto_rawDescGZIP(), []int{3}
+	return file_mirror_arena_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *MirrorArenaState) GetSceneEpoch() uint64 {
@@ -465,6 +653,153 @@ func (x *MirrorArenaState) GetRuleVersion() uint64 {
 	return 0
 }
 
+func (x *MirrorArenaState) GetSeasonSettlementEnabled() bool {
+	if x != nil {
+		return x.SeasonSettlementEnabled
+	}
+	return false
+}
+
+func (x *MirrorArenaState) GetStandings() []*MirrorArenaStanding {
+	if x != nil {
+		return x.Standings
+	}
+	return nil
+}
+
+func (x *MirrorArenaState) GetOwnRank() uint32 {
+	if x != nil {
+		return x.OwnRank
+	}
+	return 0
+}
+
+func (x *MirrorArenaState) GetLastSettlement() *MirrorArenaSeasonReceipt {
+	if x != nil {
+		return x.LastSettlement
+	}
+	return nil
+}
+
+func (x *MirrorArenaState) GetSeasonPendingRewards() []*ChallengePendingReward {
+	if x != nil {
+		return x.SeasonPendingRewards
+	}
+	return nil
+}
+
+func (x *MirrorArenaState) GetSeasonPendingRewardsMore() bool {
+	if x != nil {
+		return x.SeasonPendingRewardsMore
+	}
+	return false
+}
+
+func (x *MirrorArenaState) GetExchangePoints() int64 {
+	if x != nil {
+		return x.ExchangePoints
+	}
+	return 0
+}
+
+func (x *MirrorArenaState) GetExchangePrice() int64 {
+	if x != nil {
+		return x.ExchangePrice
+	}
+	return 0
+}
+
+func (x *MirrorArenaState) GetExchangePackQuantity() int64 {
+	if x != nil {
+		return x.ExchangePackQuantity
+	}
+	return 0
+}
+
+func (x *MirrorArenaState) GetExchangeItemId() uint32 {
+	if x != nil {
+		return x.ExchangeItemId
+	}
+	return 0
+}
+
+// 原报价字段只作比较，不决定成交的配置价格或物品身份。
+type MirrorArenaExchangeRequest struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	PackCount            uint32                 `protobuf:"varint,1,opt,name=pack_count,json=packCount,proto3" json:"pack_count,omitempty"`
+	Operation            *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	ExpectedPrice        int64                  `protobuf:"varint,3,opt,name=expected_price,json=expectedPrice,proto3" json:"expected_price,omitempty"`
+	ExpectedItemId       uint32                 `protobuf:"varint,4,opt,name=expected_item_id,json=expectedItemId,proto3" json:"expected_item_id,omitempty"`
+	ExpectedPackQuantity int64                  `protobuf:"varint,5,opt,name=expected_pack_quantity,json=expectedPackQuantity,proto3" json:"expected_pack_quantity,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *MirrorArenaExchangeRequest) Reset() {
+	*x = MirrorArenaExchangeRequest{}
+	mi := &file_mirror_arena_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MirrorArenaExchangeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MirrorArenaExchangeRequest) ProtoMessage() {}
+
+func (x *MirrorArenaExchangeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_mirror_arena_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MirrorArenaExchangeRequest.ProtoReflect.Descriptor instead.
+func (*MirrorArenaExchangeRequest) Descriptor() ([]byte, []int) {
+	return file_mirror_arena_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *MirrorArenaExchangeRequest) GetPackCount() uint32 {
+	if x != nil {
+		return x.PackCount
+	}
+	return 0
+}
+
+func (x *MirrorArenaExchangeRequest) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
+func (x *MirrorArenaExchangeRequest) GetExpectedPrice() int64 {
+	if x != nil {
+		return x.ExpectedPrice
+	}
+	return 0
+}
+
+func (x *MirrorArenaExchangeRequest) GetExpectedItemId() uint32 {
+	if x != nil {
+		return x.ExpectedItemId
+	}
+	return 0
+}
+
+func (x *MirrorArenaExchangeRequest) GetExpectedPackQuantity() int64 {
+	if x != nil {
+		return x.ExpectedPackQuantity
+	}
+	return 0
+}
+
 // 复用格子战斗观测。事件只供当前镜像场显示，不属于普通挂机世界。
 type MirrorArenaCombatFrame struct {
 	state            protoimpl.MessageState          `protogen:"open.v1"`
@@ -482,7 +817,7 @@ type MirrorArenaCombatFrame struct {
 
 func (x *MirrorArenaCombatFrame) Reset() {
 	*x = MirrorArenaCombatFrame{}
-	mi := &file_mirror_arena_proto_msgTypes[4]
+	mi := &file_mirror_arena_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -494,7 +829,7 @@ func (x *MirrorArenaCombatFrame) String() string {
 func (*MirrorArenaCombatFrame) ProtoMessage() {}
 
 func (x *MirrorArenaCombatFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_mirror_arena_proto_msgTypes[4]
+	mi := &file_mirror_arena_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -507,7 +842,7 @@ func (x *MirrorArenaCombatFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MirrorArenaCombatFrame.ProtoReflect.Descriptor instead.
 func (*MirrorArenaCombatFrame) Descriptor() ([]byte, []int) {
-	return file_mirror_arena_proto_rawDescGZIP(), []int{4}
+	return file_mirror_arena_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MirrorArenaCombatFrame) GetSceneEpoch() uint64 {
@@ -576,7 +911,7 @@ type MirrorArenaCombatObservation struct {
 
 func (x *MirrorArenaCombatObservation) Reset() {
 	*x = MirrorArenaCombatObservation{}
-	mi := &file_mirror_arena_proto_msgTypes[5]
+	mi := &file_mirror_arena_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -588,7 +923,7 @@ func (x *MirrorArenaCombatObservation) String() string {
 func (*MirrorArenaCombatObservation) ProtoMessage() {}
 
 func (x *MirrorArenaCombatObservation) ProtoReflect() protoreflect.Message {
-	mi := &file_mirror_arena_proto_msgTypes[5]
+	mi := &file_mirror_arena_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -601,7 +936,7 @@ func (x *MirrorArenaCombatObservation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MirrorArenaCombatObservation.ProtoReflect.Descriptor instead.
 func (*MirrorArenaCombatObservation) Descriptor() ([]byte, []int) {
-	return file_mirror_arena_proto_rawDescGZIP(), []int{5}
+	return file_mirror_arena_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MirrorArenaCombatObservation) GetMessageId() uint32 {
@@ -623,7 +958,7 @@ var File_mirror_arena_proto protoreflect.FileDescriptor
 const file_mirror_arena_proto_rawDesc = "" +
 	"\n" +
 	"\x12mirror_arena.proto\x12\n" +
-	"minimir.v1\x1a\fcommon.proto\x1a\vworld.proto\"\xb9\x01\n" +
+	"minimir.v1\x1a\fcommon.proto\x1a\x13personal_boss.proto\x1a\vworld.proto\"\xb9\x01\n" +
 	"\x12MirrorArenaRequest\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x16\n" +
@@ -645,7 +980,23 @@ const file_mirror_arena_proto_rawDesc = "" +
 	"\aoutcome\x18\x05 \x01(\rR\aoutcome\x12%\n" +
 	"\x0eawarded_points\x18\x06 \x01(\x03R\rawardedPoints\x12+\n" +
 	"\x12started_at_unix_ms\x18\a \x01(\x03R\x0fstartedAtUnixMs\x12-\n" +
-	"\x13finished_at_unix_ms\x18\b \x01(\x03R\x10finishedAtUnixMs\"\xd1\x06\n" +
+	"\x13finished_at_unix_ms\x18\b \x01(\x03R\x10finishedAtUnixMs\"\xa1\x01\n" +
+	"\x13MirrorArenaStanding\x12\x12\n" +
+	"\x04rank\x18\x01 \x01(\rR\x04rank\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
+	"\x06points\x18\x03 \x01(\x03R\x06points\x12\x18\n" +
+	"\amatches\x18\x04 \x01(\rR\amatches\x120\n" +
+	"\x15last_match_at_unix_ms\x18\x05 \x01(\x03R\x11lastMatchAtUnixMs\"\xb1\x02\n" +
+	"\x18MirrorArenaSeasonReceipt\x12\x1b\n" +
+	"\tseason_id\x18\x01 \x01(\fR\bseasonId\x12/\n" +
+	"\x14season_start_unix_ms\x18\x02 \x01(\x03R\x11seasonStartUnixMs\x12+\n" +
+	"\x12season_end_unix_ms\x18\x03 \x01(\x03R\x0fseasonEndUnixMs\x12+\n" +
+	"\x12settled_at_unix_ms\x18\x04 \x01(\x03R\x0fsettledAtUnixMs\x12\x12\n" +
+	"\x04rank\x18\x05 \x01(\rR\x04rank\x12\x18\n" +
+	"\amatches\x18\x06 \x01(\rR\amatches\x12\x16\n" +
+	"\x06points\x18\a \x01(\x03R\x06points\x12'\n" +
+	"\x0fexchange_credit\x18\b \x01(\x03R\x0eexchangeCredit\"\xff\n" +
+	"\n" +
 	"\x10MirrorArenaState\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1d\n" +
@@ -669,7 +1020,24 @@ const file_mirror_arena_proto_rawDesc = "" +
 	"\x12battle_scene_epoch\x18\x10 \x01(\x04R\x10battleSceneEpoch\x12\"\n" +
 	"\rbattle_map_id\x18\x11 \x01(\x04R\vbattleMapId\x125\n" +
 	"\x17battle_deadline_unix_ms\x18\x12 \x01(\x03R\x14battleDeadlineUnixMs\x12!\n" +
-	"\frule_version\x18\x13 \x01(\x04R\vruleVersion\"\x8e\x03\n" +
+	"\frule_version\x18\x13 \x01(\x04R\vruleVersion\x12:\n" +
+	"\x19season_settlement_enabled\x18\x14 \x01(\bR\x17seasonSettlementEnabled\x12=\n" +
+	"\tstandings\x18\x15 \x03(\v2\x1f.minimir.v1.MirrorArenaStandingR\tstandings\x12\x19\n" +
+	"\bown_rank\x18\x16 \x01(\rR\aownRank\x12M\n" +
+	"\x0flast_settlement\x18\x17 \x01(\v2$.minimir.v1.MirrorArenaSeasonReceiptR\x0elastSettlement\x12X\n" +
+	"\x16season_pending_rewards\x18\x18 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x14seasonPendingRewards\x12=\n" +
+	"\x1bseason_pending_rewards_more\x18\x19 \x01(\bR\x18seasonPendingRewardsMore\x12'\n" +
+	"\x0fexchange_points\x18\x1a \x01(\x03R\x0eexchangePoints\x12%\n" +
+	"\x0eexchange_price\x18\x1b \x01(\x03R\rexchangePrice\x124\n" +
+	"\x16exchange_pack_quantity\x18\x1c \x01(\x03R\x14exchangePackQuantity\x12(\n" +
+	"\x10exchange_item_id\x18\x1d \x01(\rR\x0eexchangeItemId\"\xfe\x01\n" +
+	"\x1aMirrorArenaExchangeRequest\x12\x1d\n" +
+	"\n" +
+	"pack_count\x18\x01 \x01(\rR\tpackCount\x12:\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12%\n" +
+	"\x0eexpected_price\x18\x03 \x01(\x03R\rexpectedPrice\x12(\n" +
+	"\x10expected_item_id\x18\x04 \x01(\rR\x0eexpectedItemId\x124\n" +
+	"\x16expected_pack_quantity\x18\x05 \x01(\x03R\x14expectedPackQuantity\"\x8e\x03\n" +
 	"\x16MirrorArenaCombatFrame\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12!\n" +
@@ -697,30 +1065,39 @@ func file_mirror_arena_proto_rawDescGZIP() []byte {
 	return file_mirror_arena_proto_rawDescData
 }
 
-var file_mirror_arena_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_mirror_arena_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_mirror_arena_proto_goTypes = []any{
 	(*MirrorArenaRequest)(nil),           // 0: minimir.v1.MirrorArenaRequest
 	(*MirrorArenaOffer)(nil),             // 1: minimir.v1.MirrorArenaOffer
 	(*MirrorArenaRecord)(nil),            // 2: minimir.v1.MirrorArenaRecord
-	(*MirrorArenaState)(nil),             // 3: minimir.v1.MirrorArenaState
-	(*MirrorArenaCombatFrame)(nil),       // 4: minimir.v1.MirrorArenaCombatFrame
-	(*MirrorArenaCombatObservation)(nil), // 5: minimir.v1.MirrorArenaCombatObservation
-	(*EntityState)(nil),                  // 6: minimir.v1.EntityState
-	(*GridPoint)(nil),                    // 7: minimir.v1.GridPoint
+	(*MirrorArenaStanding)(nil),          // 3: minimir.v1.MirrorArenaStanding
+	(*MirrorArenaSeasonReceipt)(nil),     // 4: minimir.v1.MirrorArenaSeasonReceipt
+	(*MirrorArenaState)(nil),             // 5: minimir.v1.MirrorArenaState
+	(*MirrorArenaExchangeRequest)(nil),   // 6: minimir.v1.MirrorArenaExchangeRequest
+	(*MirrorArenaCombatFrame)(nil),       // 7: minimir.v1.MirrorArenaCombatFrame
+	(*MirrorArenaCombatObservation)(nil), // 8: minimir.v1.MirrorArenaCombatObservation
+	(*ChallengePendingReward)(nil),       // 9: minimir.v1.ChallengePendingReward
+	(*OperationContext)(nil),             // 10: minimir.v1.OperationContext
+	(*EntityState)(nil),                  // 11: minimir.v1.EntityState
+	(*GridPoint)(nil),                    // 12: minimir.v1.GridPoint
 }
 var file_mirror_arena_proto_depIdxs = []int32{
-	1, // 0: minimir.v1.MirrorArenaState.offers:type_name -> minimir.v1.MirrorArenaOffer
-	2, // 1: minimir.v1.MirrorArenaState.attack_history:type_name -> minimir.v1.MirrorArenaRecord
-	2, // 2: minimir.v1.MirrorArenaState.defense_history:type_name -> minimir.v1.MirrorArenaRecord
-	2, // 3: minimir.v1.MirrorArenaState.challenge:type_name -> minimir.v1.MirrorArenaRecord
-	6, // 4: minimir.v1.MirrorArenaCombatFrame.entities:type_name -> minimir.v1.EntityState
-	5, // 5: minimir.v1.MirrorArenaCombatFrame.observations:type_name -> minimir.v1.MirrorArenaCombatObservation
-	7, // 6: minimir.v1.MirrorArenaCombatFrame.fire_wall_cells:type_name -> minimir.v1.GridPoint
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	1,  // 0: minimir.v1.MirrorArenaState.offers:type_name -> minimir.v1.MirrorArenaOffer
+	2,  // 1: minimir.v1.MirrorArenaState.attack_history:type_name -> minimir.v1.MirrorArenaRecord
+	2,  // 2: minimir.v1.MirrorArenaState.defense_history:type_name -> minimir.v1.MirrorArenaRecord
+	2,  // 3: minimir.v1.MirrorArenaState.challenge:type_name -> minimir.v1.MirrorArenaRecord
+	3,  // 4: minimir.v1.MirrorArenaState.standings:type_name -> minimir.v1.MirrorArenaStanding
+	4,  // 5: minimir.v1.MirrorArenaState.last_settlement:type_name -> minimir.v1.MirrorArenaSeasonReceipt
+	9,  // 6: minimir.v1.MirrorArenaState.season_pending_rewards:type_name -> minimir.v1.ChallengePendingReward
+	10, // 7: minimir.v1.MirrorArenaExchangeRequest.operation:type_name -> minimir.v1.OperationContext
+	11, // 8: minimir.v1.MirrorArenaCombatFrame.entities:type_name -> minimir.v1.EntityState
+	8,  // 9: minimir.v1.MirrorArenaCombatFrame.observations:type_name -> minimir.v1.MirrorArenaCombatObservation
+	12, // 10: minimir.v1.MirrorArenaCombatFrame.fire_wall_cells:type_name -> minimir.v1.GridPoint
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_mirror_arena_proto_init() }
@@ -729,6 +1106,7 @@ func file_mirror_arena_proto_init() {
 		return
 	}
 	file_common_proto_init()
+	file_personal_boss_proto_init()
 	file_world_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -736,7 +1114,7 @@ func file_mirror_arena_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_mirror_arena_proto_rawDesc), len(file_mirror_arena_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -238,6 +238,13 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         payload = { skillSlotIds: skillSlots(item.skillSlotIds), operation: operation(item.operation, stored) };
         // 旧未决记录不能增加字段，否则和服务端原操作指纹不一致。
         if (comparesSlots) payload.expectedSkillSlotIds = skillSlots(item.expectedSkillSlotIds);
+    } else if (id === 40034) {
+        const item = record(input.value, ['packCount', 'expectedPrice', 'expectedItemId', 'expectedPackQuantity', 'operation']);
+        const packs = uint32(item.packCount), expectedItemId = uint32(item.expectedItemId);
+        const expectedPrice = longValue(item.expectedPrice, stored), expectedPackQuantity = longValue(item.expectedPackQuantity, stored);
+        if (packs < 1 || packs > 100 || !expectedItemId || expectedPrice.unsigned || expectedPrice.isNegative() || expectedPrice.isZero() ||
+            expectedPackQuantity.unsigned || expectedPackQuantity.isNegative() || expectedPackQuantity.isZero()) return invalid('兑换需保留原价格、物品与数量');
+        payload = { packCount: packs, expectedPrice, expectedItemId, expectedPackQuantity, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

@@ -539,7 +539,10 @@ async function main() {
                 report.mirrorEntryHidden = await page.evaluate(() => {
                     const entry = cc.find('Canvas/Safe/UIMgr/Panels/Functions/Pages/Page0/MirrorArena');
                     const battle = cc.find('Canvas/Safe/MirrorArenaBattle');
-                    return !!entry && !!battle && !entry.active && !battle.active;
+                    const ledgerEntry = cc.find('Canvas/Safe/UIMgr/Panels/MirrorArena/SeasonLedger');
+                    const ledger = cc.find('Canvas/Safe/UIMgr/Panels/MirrorSeason');
+                    return !!entry && !!battle && !entry.active && !battle.active &&
+                        (!ledgerEntry || !ledgerEntry.active) && (!ledger || !ledger.active);
                 });
                 assert(report.mirrorEntryHidden, '默认规则暴露了镜像入口或战斗界面');
                 await page.touchscreen.tap(10, 200);

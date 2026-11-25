@@ -80,6 +80,8 @@ message ChallengePendingReward {
   repeated ItemView items = 4;
   string source_kind = 5;
   uint32 source_rank = 6;
+  // 镜像赛季结算冻结的绑定元宝，使用钱包最小单位。
+  int64 bound_yuanbao_units = 7;
 }
 
 // 领取整笔待领；库存不足时保留原记录。

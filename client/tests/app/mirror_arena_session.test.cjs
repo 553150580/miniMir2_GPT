@@ -34,6 +34,23 @@ function lobby(overrides = {}) {
     return { sceneEpoch: scene, ruleVersion: rule, open: true, seasonStartUnixMs: seasonStart,
         seasonEndUnixMs: deadline, dailyLimit: 5, entriesUsed: 1, offers: roster, ...overrides };
 }
+function seasonLedger(overrides = {}) {
+    const amount = long('9007199254741011');
+    return {
+        seasonSettlementEnabled: true, ownRank: 24, exchangePoints: amount.add(5),
+        standings: [
+            { rank: 1, name: '道士', points: amount.add(3), matches: 23, lastMatchAtUnixMs: seasonStart.add(20) },
+            { rank: 2, name: '法师', points: amount.add(1), matches: 19, lastMatchAtUnixMs: seasonStart.add(21) },
+        ],
+        lastSettlement: { seasonId: bytes(13), rank: 6, matches: 15, points: amount, exchangeCredit: amount },
+        seasonPendingRewards: [
+            { rewardId: bytes(14), sourceKind: 'mirror_season_rank', sourceRank: 6, boundYuanbaoUnits: amount.add(2) },
+            { rewardId: bytes(15), sourceKind: 'mirror_season_participation', sourceRank: 0, boundYuanbaoUnits: long(10) },
+        ],
+        seasonPendingRewardsMore: true, exchangePrice: amount.add(8), exchangeItemId: 35, exchangePackQuantity: amount.add(9),
+        ...overrides,
+    };
+}
 function battle(phase, overrides = {}) {
     return lobby({ dailyLimit: 0, entriesUsed: 0, offers: [], challenge: phase === 4 ? settled() : record(),
         battleState: phase, battleSceneEpoch: battleEpoch, battleMapId: battleMap, battleDeadlineUnixMs: deadline, ...overrides });
@@ -108,6 +125,94 @@ async function openLobby(f) {
     f.sent[0].reply(lobby());
     await query;
 }
+
+function readLobby(state) {
+    const packet = wire.decodePacket(wire.encodePacket(20026, 1, Long.UONE, state));
+    return model.readMirrorState(packet.value, scene.toString(), rule.toString());
+}
+
+test('真实镜像赛季协议保留榜外本人原顺位、两种待领标识和有符号 64 位积分', () => {
+    const facts = seasonLedger();
+    const packet = wire.decodePacket(wire.encodePacket(20026, 1, Long.UONE, lobby(facts)));
+    const parsed = model.readMirrorState(packet.value, scene.toString(), rule.toString());
+    assert(parsed?.lobby.season);
+    const season = parsed.lobby.season;
+    assert.equal(season.ownRank, 24);
+    assert.deepEqual(season.standings, facts.standings.map(row => ({
+        ...row, points: row.points.toString(), lastMatchAtUnixMs: row.lastMatchAtUnixMs.toString(),
+    })));
+    assert.deepEqual(season.last, { rank: 6, matches: 15, points: '9007199254741011', credit: '9007199254741011' });
+    assert.equal(season.points, '9007199254741016');
+    assert.equal(season.moreRewards, true);
+    assert.deepEqual(season.rewards, [
+        { id: model.mirrorID(bytes(14)), rewardId: bytes(14), name: '赛季排名奖', rank: 6, boundYuanbao: '9007199254741013' },
+        { id: model.mirrorID(bytes(15)), rewardId: bytes(15), name: '赛季参与奖', rank: 0, boundYuanbao: '10' },
+    ]);
+    assert.deepEqual(season.exchange, { price: '9007199254741019', itemId: 35, quantity: '9007199254741020' });
+    packet.value.seasonPendingRewards[0].rewardId[0] = 0;
+    assert.deepEqual(season.rewards[0].rewardId, bytes(14), '列表与原接收缓冲区不得共享奖励编号');
+    assert.equal(readLobby(lobby()).lobby.season, null);
+    const noQuote = readLobby(lobby(seasonLedger({ exchangePrice: undefined, exchangeItemId: undefined, exchangePackQuantity: undefined })));
+    assert.equal(noQuote.lobby.season.exchange, null);
+    assert.equal(noQuote.lobby.season.points, season.points);
+    // Go 的 protobuf 编码会省略零值。参与奖从缺省字段读回的名次仍是 0。
+    const defaultRank = readLobby(lobby(seasonLedger({
+        seasonPendingRewards: [{ ...facts.seasonPendingRewards[1], sourceRank: undefined }],
+    })));
+    assert.equal(defaultRank.lobby.season.rewards[0].rank, 0);
+});
+
+test('镜像赛季拒绝半套兑换报价、错误原榜与损坏的待领或结转身份', () => {
+    for (const name of ['exchangePrice', 'exchangeItemId', 'exchangePackQuantity']) {
+        assert.equal(readLobby(lobby(seasonLedger({ [name]: undefined }))), null, `半套报价漏掉 ${name}`);
+    }
+    const { standings, lastSettlement, seasonPendingRewards } = seasonLedger();
+    for (const [name, change] of [
+        ['榜单跳号', { standings: [{ ...standings[0], rank: 2 }] }],
+        ['榜单负积分', { standings: [{ ...standings[0], points: Long.NEG_ONE }] }],
+        ['错误待领奖源', { seasonPendingRewards: [{ ...seasonPendingRewards[0], sourceKind: 'personal_boss' }] }],
+        ['排名奖缺原名次', { seasonPendingRewards: [{ ...seasonPendingRewards[0], sourceRank: undefined }] }],
+        ['排名奖不能使用参与奖零名次', { seasonPendingRewards: [{ ...seasonPendingRewards[0], sourceRank: 0 }] }],
+        ['参与奖不能携带排名正数', { seasonPendingRewards: [{ ...seasonPendingRewards[1], sourceRank: 6 }] }],
+        ['待领重复身份', { seasonPendingRewards: [seasonPendingRewards[0], seasonPendingRewards[0]] }],
+        ['待领奖额无效', { seasonPendingRewards: [{ ...seasonPendingRewards[0], boundYuanbaoUnits: Long.ZERO }] }],
+        ['待领奖包零标识', { seasonPendingRewards: [{ ...seasonPendingRewards[0], rewardId: bytes(0) }] }],
+        ['结转标识错误', { lastSettlement: { ...lastSettlement, seasonId: bytes(0) } }],
+        ['结转和原积分不一致', { lastSettlement: { ...lastSettlement, exchangeCredit: Long.ONE } }],
+        ['总余额负数', { exchangePoints: Long.NEG_ONE }],
+        ['兑换价负数', { exchangePrice: Long.NEG_ONE }],
+        ['普通场景已变', { sceneEpoch: scene.add(1) }],
+        ['客户端规则已变', { ruleVersion: rule.add(1) }],
+    ]) {
+        assert.equal(readLobby(lobby(seasonLedger(change))), null, name);
+    }
+    const packet = wire.decodePacket(wire.encodePacket(20026, 1, Long.UONE, lobby(seasonLedger())));
+    packet.value.exchangePoints = 9007199254740992;
+    assert.equal(model.readMirrorState(packet.value, scene.toString(), rule.toString()), null);
+});
+
+test('半套赛季应答、战斗状态和迟到的旧角色赛季应答不能覆盖已经确认的账本', async t => {
+    const f = fixture(); t.after(f.cleanup);
+    f.session.setEnabled(true);
+    const first = f.session.query();
+    f.sent[0].reply(lobby(seasonLedger()));
+    await first;
+    const confirmed = f.session.snapshot.lobby.season;
+    const malformed = f.session.query();
+    f.sent[1].reply(lobby(seasonLedger({ exchangePackQuantity: undefined })));
+    await assert.rejects(malformed, /不一致/);
+    assert.equal(f.session.snapshot.lobby.season, confirmed);
+    const prepare = f.session.challenge(offerId);
+    f.sent[2].reply(battle(1));
+    await prepare;
+    assert.equal(f.session.snapshot.lobby.season, confirmed, '仅携带战斗状态的回包不应清空赛季信息');
+    const outstanding = f.session.query();
+    f.detach();
+    f.attach(1, 'origin:new-role');
+    f.sent[3].reply(lobby(seasonLedger()));
+    await assert.rejects(outstanding, /附着已变化/);
+    assert.equal(f.session.snapshot.lobby, null, '换角不得继承旧赛季余额与原奖包');
+});
 
 test('默认关闭、当前普通附着绑定、服务端关闭与发布保留原版本', async t => {
     const f = fixture(); t.after(f.cleanup);

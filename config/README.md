@@ -155,6 +155,8 @@ Excel数据区公式需要在表格引擎中重算保存后再导出；没有缓
 .\tools\dev.ps1 python3 tools/resources/prepare_mirror_arena.py --assembly .work/mirror/assembly.json --fixture-out .work/mirror/fixture.json --public-out .work/mirror/gameplay.json --check
 ```
 
+可通过 `--settlement-rewards .work/mirror/sample-rewards.json` 明确启用隔离赛季结算。样本只填非重叠的名次区间和参与奖的绑定元宝最小单位，资格、结转顺序与结转比例仍由编译器核对唯一工作簿。可另写 `exchange` 指定本轮已存在的绑定可堆叠物品编号和数量，费用来自工作簿候选值。正式羽毛及赛季奖表继续按产品数值确认流程登记。 [赛季装配](../tools/resources/prepare_mirror_arena.py)
+
 ## 修改规则
 
 - 添加记录：保持字段名不变，分配稳定ID，填入状态、来源和实际数据。

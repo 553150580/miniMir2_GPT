@@ -4,12 +4,13 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 129,
+  "message_count": 133,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "MirrorArenaExchangeReceipt",
     "HostingQuoteResult",
     "HostingPurchaseReceipt",
     "Heartbeat",
@@ -132,12 +133,15 @@
     "MirrorArenaRequest",
     "MirrorArenaOffer",
     "MirrorArenaRecord",
+    "MirrorArenaStanding",
+    "MirrorArenaSeasonReceipt",
     "MirrorArenaState",
+    "MirrorArenaExchangeRequest",
     "MirrorArenaCombatFrame",
     "MirrorArenaCombatObservation"
   ],
-  "int64_field_count": 302,
-  "int64_boundary_cases": 1010,
+  "int64_field_count": 318,
+  "int64_boundary_cases": 1074,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -174,6 +178,24 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MirrorArenaExchangeReceipt",
+      "field": "spent_points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaExchangeReceipt",
+      "field": "remaining_points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaExchangeReceipt",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "HostingQuoteResult",
@@ -1670,6 +1692,12 @@
       "cases": 4
     },
     {
+      "message": "ChallengePendingReward",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "PersonalBossHistoryEntry",
       "field": "rule_version",
       "type": "uint64",
@@ -1874,6 +1902,48 @@
       "cases": 4
     },
     {
+      "message": "MirrorArenaStanding",
+      "field": "points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaStanding",
+      "field": "last_match_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "season_start_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "season_end_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "settled_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "exchange_credit",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "MirrorArenaState",
       "field": "scene_epoch",
       "type": "uint64",
@@ -1928,6 +1998,36 @@
       "cases": 3
     },
     {
+      "message": "MirrorArenaState",
+      "field": "exchange_points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "exchange_price",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "exchange_pack_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaExchangeRequest",
+      "field": "expected_price",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaExchangeRequest",
+      "field": "expected_pack_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "MirrorArenaCombatFrame",
       "field": "scene_epoch",
       "type": "uint64",
@@ -1952,7 +2052,7 @@
       "cases": 4
     }
   ],
-  "bytes_field_count": 45,
+  "bytes_field_count": 47,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1967,6 +2067,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaExchangeReceipt",
+      "field": "item_instance_id",
       "repeated": false
     },
     {
@@ -2170,6 +2275,11 @@
       "repeated": false
     },
     {
+      "message": "MirrorArenaSeasonReceipt",
+      "field": "season_id",
+      "repeated": false
+    },
+    {
       "message": "MirrorArenaCombatFrame",
       "field": "challenge_id",
       "repeated": false
@@ -2186,7 +2296,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "c627a05ce5d10c029813838374c563c91cf8f51234e000f9a66abcf330a3e36b"
+      "sha256": "7de7d8412fb5b5299456ee8f81811eba9441b02dc2238db8a5e2b7bfbce1cfac"
     },
     {
       "path": "shared/proto/account.proto",
@@ -2206,7 +2316,7 @@
     },
     {
       "path": "shared/proto/personal_boss.proto",
-      "sha256": "dfcd79a3dff681373fad424e628658c4d086192e39d185b14f405620219da6df"
+      "sha256": "e80ecbe52c86e2d2931fee7fa2c1a61321ef0b799603eeac7b4574bd67476180"
     },
     {
       "path": "shared/proto/world_boss.proto",
@@ -2218,19 +2328,19 @@
     },
     {
       "path": "shared/proto/mirror_arena.proto",
-      "sha256": "23d013490ab570fe01b4f169bafc27b26754914feae3ad0fb4432b87994e11aa"
+      "sha256": "c227da59cb4afe8e27e539aeaf3f7aba1f05b518854dd7bed575322f36779478"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "7db1d7545dc27c93fda3250f22bdaba73b64f8c8eb32f686570c8d9a14c0b6ed",
-      "bytes": 2255273
+      "sha256": "8e9e780916edb6029bc80974ca032348397ea965c5553244b96b7736e84f5eac",
+      "bytes": 2344663
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "7e7b39554fca868bf0ef732f4cd316810d92aa41d9918c3b3d27a5f72bdd387e",
-      "bytes": 706717
+      "sha256": "86dde2e9a6620de8dded4b003c7bdba7b59dd8f5a96656a997d7b905e43081c8",
+      "bytes": 732667
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

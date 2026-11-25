@@ -3,6 +3,7 @@ import { List } from '../ui/List';
 import type { PopupView } from '../ui/PopupView';
 import type { UIMgr } from '../ui/UIMgr';
 import { GameConnection, newOperationId } from './GameConnection';
+import { GameMirrorSeason } from './GameMirrorSeason';
 import { protocolErrorMessage } from './GameErrors';
 import { attachmentKey, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity, TravelInteger } from './MapTravelModel';
@@ -13,8 +14,8 @@ type Snapshot = MirrorArenaSession['snapshot'];
 type Battle = NonNullable<Snapshot['battle']>;
 type Lobby = NonNullable<Snapshot['lobby']>;
 type Offer = Lobby['offers'][number];
-type Record = Lobby['attackHistory'][number];
-type Row = Offer | Record;
+type BattleRecord = Lobby['attackHistory'][number];
+type Row = Offer | BattleRecord;
 const tabs = ['Offers', 'AttackHistory', 'DefenseHistory'] as const;
 type Tab = typeof tabs[number];
 const jobs = ['战士', '法师', '道士'] as const;
@@ -31,6 +32,8 @@ interface MirrorArenaActions {
     readonly context: () => MirrorArenaHostContext | null;
     readonly releaseInput: () => void;
     readonly sound: () => void;
+    readonly asset: (id: 40030 | 40034, value: Record<string, unknown>) => Promise<void>;
+    readonly itemName: (id: number) => string | undefined;
 }
 
 const seasonFormat = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', month: 'numeric', day: 'numeric' });
@@ -40,7 +43,7 @@ function seasonDay(value: string): string {
     return time.valueOf() > 0 ? seasonFormat.format(time) : '';
 }
 
-function outcome(record: Record, defense = false): string {
+function outcome(record: BattleRecord, defense = false): string {
     if (record.outcome === 3) return '系统中断';
     if (record.outcome === 0) return '尚未结算';
     return (record.outcome === 1) !== defense ? '胜利' : '失败';
@@ -51,6 +54,7 @@ export class GameMirrorArena {
     private readonly list: List;
     private readonly transport: MirrorArenaSession;
     private readonly presentation: MirrorArenaPresentation;
+    private readonly season?: GameMirrorSeason;
     private readonly removeSubscription: () => void;
     private readonly listeners: Array<() => void> = [];
     private tab: Tab = 'Offers';
@@ -66,15 +70,30 @@ export class GameMirrorArena {
     private appliedSequence = '';
     private localError = '';
     private timeText = '';
+    private serverClock?: { key: string; sequence: string; sampledAt: number; serverMs: number };
     private disposed = false;
 
     constructor(private readonly entryButton: Node, private readonly panel: Node, private readonly overlay: Node,
-        private readonly ui: UIMgr, private readonly popup: PopupView, connection: GameConnection, private readonly actions: MirrorArenaActions) {
+        private readonly ui: UIMgr, private readonly popup: PopupView, connection: GameConnection, private readonly actions: MirrorArenaActions,
+        seasonPanel?: Node) {
         this.transport = new MirrorArenaSession(connection, actions.context, newOperationId);
         this.presentation = new MirrorArenaPresentation(overlay);
         const list = this.saved(panel, 'List').getComponent(List);
         if (!list) throw new Error('镜像竞技缺少保存的列表组件');
         this.list = list;
+        const seasonEntry = panel.getChildByName('SeasonLedger');
+        if (seasonEntry && seasonPanel) {
+            this.season = new GameMirrorSeason(seasonEntry, seasonPanel, ui, popup, {
+                snapshot: () => this.transport.snapshot, query: () => this.transport.query(),
+                scope: () => {
+                    const context = actions.context();
+                    return context ? attachmentKey(context.identity) : '';
+                },
+                claim: rewardId => actions.asset(40030, { rewardId }),
+                exchange: value => actions.asset(40034, value),
+                itemName: actions.itemName, sound: actions.sound,
+            });
+        }
         this.removeSubscription = this.transport.subscribe(state => this.receive(state));
         this.bind(entryButton, () => this.open());
         this.bind(this.saved(panel, 'Refresh'), () => this.request(() => this.transport.query()));
@@ -119,16 +138,19 @@ export class GameMirrorArena {
     update(dt: number): void {
         if (!this.visible) return;
         this.presentation.update(dt);
-        const battle = this.transport.snapshot.battle;
-        const left = battle?.phase === 2 ? Math.min(600, Math.max(0, Math.ceil((Number(battle.deadlineUnixMs) - Date.now()) / 1000))) : 0;
-        const text = battle?.phase === 2 ? `剩余 ${left} 秒` : '';
+        const battle = this.transport.snapshot.battle, clock = this.serverClock;
+        let text = '';
+        if (battle?.phase === 2 && clock?.key === battle.key) {
+            const remaining = Number(battle.deadlineUnixMs) - (clock.serverMs + performance.now() - clock.sampledAt);
+            text = `剩余 ${Math.max(0, Math.ceil(remaining / 1000))} 秒`;
+        }
         if (text !== this.timeText) { this.timeText = text; this.label(this.overlay, 'Header/Time', text); }
     }
 
     dispose(): void {
         this.disposed = true;
         this.removeSubscription();
-        this.transport.dispose(); this.presentation.dispose();
+        this.transport.dispose(); this.presentation.dispose(); this.season?.dispose();
         for (const remove of this.listeners) remove();
         this.listeners.length = 0;
     }
@@ -199,6 +221,7 @@ export class GameMirrorArena {
 
     private receive(state: Snapshot): void {
         if (this.disposed) return;
+        this.season?.refresh(state);
         if (this.panel.activeInHierarchy) this.renderLobby(state);
         const context = this.actions.context(), battle = state.battle;
         if (!context || !battle || this.watchingRole !== context.identity.role) {
@@ -215,6 +238,10 @@ export class GameMirrorArena {
             void this.mount(battle, context);
         }
         const frame = state.frame;
+        if (frame?.battleKey === battle.key && this.serverClock?.sequence !== frame.sequence) {
+            const serverMs = Number(frame.serverUnixMs);
+            if (Number.isSafeInteger(serverMs)) this.serverClock = { key: battle.key, sequence: frame.sequence, sampledAt: performance.now(), serverMs };
+        }
         if (frame && this.prepared === battle.key && frame.sequence !== this.appliedSequence && this.presentation.apply(frame)) {
             this.appliedSequence = frame.sequence;
         }
@@ -251,6 +278,7 @@ export class GameMirrorArena {
     private hideBattle(): void {
         this.overlay.active = false;
         this.mounting = ''; this.prepared = ''; this.appliedSequence = ''; this.localError = '';
+        this.serverClock = undefined;
         this.presentation.reset();
     }
 

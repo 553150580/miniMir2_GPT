@@ -373,4 +373,6 @@ async function main() {
     console.log('镜像触屏核对攻守实图、守方火球、原场重连、普通收益及唯一认输终态');
 }
 
-main().catch(error => { console.error(error.stack); process.exitCode = 1; });
+module.exports = { expected, output, endpoint, safe, lobby, confirm, wait, touch, label, login, openLobby, originalWorld, packet };
+
+if (require.main === module) main().catch(error => { console.error(error.stack); process.exitCode = 1; });

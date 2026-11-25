@@ -362,6 +362,9 @@ export namespace minimir {
             /** OperationResult hosting_purchase. */
             hosting_purchase?: (minimir.v1.HostingPurchaseReceipt.$Properties|null);
 
+            /** OperationResult mirror_arena_exchange. */
+            mirror_arena_exchange?: (minimir.v1.MirrorArenaExchangeReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -443,12 +446,135 @@ export namespace minimir {
                 /** OperationResult hosting_purchase */
                 hosting_purchase?: (minimir.v1.HostingPurchaseReceipt.$Properties|null);
 
+                /** OperationResult mirror_arena_exchange */
+                mirror_arena_exchange?: (minimir.v1.MirrorArenaExchangeReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a MirrorArenaExchangeReceipt.
+         * @deprecated Use minimir.v1.MirrorArenaExchangeReceipt.$Properties instead.
+         */
+        interface IMirrorArenaExchangeReceipt extends minimir.v1.MirrorArenaExchangeReceipt.$Properties {
+        }
+
+        /** Represents a MirrorArenaExchangeReceipt. */
+        class MirrorArenaExchangeReceipt {
+
+            /**
+             * Constructs a new MirrorArenaExchangeReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MirrorArenaExchangeReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MirrorArenaExchangeReceipt spent_points. */
+            spent_points: Long;
+
+            /** MirrorArenaExchangeReceipt remaining_points. */
+            remaining_points: Long;
+
+            /** MirrorArenaExchangeReceipt item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** MirrorArenaExchangeReceipt item_id. */
+            item_id: number;
+
+            /** MirrorArenaExchangeReceipt quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new MirrorArenaExchangeReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MirrorArenaExchangeReceipt instance
+             */
+            static create(properties: minimir.v1.MirrorArenaExchangeReceipt.$Shape): minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape;
+            static create(properties?: minimir.v1.MirrorArenaExchangeReceipt.$Properties): minimir.v1.MirrorArenaExchangeReceipt;
+
+            /**
+             * Encodes the specified MirrorArenaExchangeReceipt message. Does not implicitly {@link minimir.v1.MirrorArenaExchangeReceipt.verify|verify} messages.
+             * @param message MirrorArenaExchangeReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MirrorArenaExchangeReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MirrorArenaExchangeReceipt message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaExchangeReceipt.verify|verify} messages.
+             * @param message MirrorArenaExchangeReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MirrorArenaExchangeReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MirrorArenaExchangeReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape} MirrorArenaExchangeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape;
+
+            /**
+             * Decodes a MirrorArenaExchangeReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape} MirrorArenaExchangeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MirrorArenaExchangeReceipt & minimir.v1.MirrorArenaExchangeReceipt.$Shape;
+
+            /**
+             * Verifies a MirrorArenaExchangeReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MirrorArenaExchangeReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MirrorArenaExchangeReceipt {
+
+            /** Properties of a MirrorArenaExchangeReceipt. */
+            interface $Properties {
+
+                /** MirrorArenaExchangeReceipt spent_points */
+                spent_points?: (Long|null);
+
+                /** MirrorArenaExchangeReceipt remaining_points */
+                remaining_points?: (Long|null);
+
+                /** MirrorArenaExchangeReceipt item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** MirrorArenaExchangeReceipt item_id */
+                item_id?: (number|null);
+
+                /** MirrorArenaExchangeReceipt quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MirrorArenaExchangeReceipt. */
+            type $Shape = minimir.v1.MirrorArenaExchangeReceipt.$Properties;
         }
 
         /**
@@ -13454,6 +13580,9 @@ export namespace minimir {
             /** ChallengePendingReward source_rank. */
             source_rank: number;
 
+            /** ChallengePendingReward bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
             /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @param [properties] Properties to set
@@ -13534,6 +13663,9 @@ export namespace minimir {
 
                 /** ChallengePendingReward source_rank */
                 source_rank?: (number|null);
+
+                /** ChallengePendingReward bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -15926,6 +16058,264 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a MirrorArenaStanding.
+         * @deprecated Use minimir.v1.MirrorArenaStanding.$Properties instead.
+         */
+        interface IMirrorArenaStanding extends minimir.v1.MirrorArenaStanding.$Properties {
+        }
+
+        /** Represents a MirrorArenaStanding. */
+        class MirrorArenaStanding {
+
+            /**
+             * Constructs a new MirrorArenaStanding.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MirrorArenaStanding.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MirrorArenaStanding rank. */
+            rank: number;
+
+            /** MirrorArenaStanding name. */
+            name: string;
+
+            /** MirrorArenaStanding points. */
+            points: Long;
+
+            /** MirrorArenaStanding matches. */
+            matches: number;
+
+            /** MirrorArenaStanding last_match_at_unix_ms. */
+            last_match_at_unix_ms: Long;
+
+            /**
+             * Creates a new MirrorArenaStanding instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MirrorArenaStanding instance
+             */
+            static create(properties: minimir.v1.MirrorArenaStanding.$Shape): minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape;
+            static create(properties?: minimir.v1.MirrorArenaStanding.$Properties): minimir.v1.MirrorArenaStanding;
+
+            /**
+             * Encodes the specified MirrorArenaStanding message. Does not implicitly {@link minimir.v1.MirrorArenaStanding.verify|verify} messages.
+             * @param message MirrorArenaStanding message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MirrorArenaStanding.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MirrorArenaStanding message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaStanding.verify|verify} messages.
+             * @param message MirrorArenaStanding message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MirrorArenaStanding.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MirrorArenaStanding message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape} MirrorArenaStanding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape;
+
+            /**
+             * Decodes a MirrorArenaStanding message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape} MirrorArenaStanding
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MirrorArenaStanding & minimir.v1.MirrorArenaStanding.$Shape;
+
+            /**
+             * Verifies a MirrorArenaStanding message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MirrorArenaStanding
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MirrorArenaStanding {
+
+            /** Properties of a MirrorArenaStanding. */
+            interface $Properties {
+
+                /** MirrorArenaStanding rank */
+                rank?: (number|null);
+
+                /** MirrorArenaStanding name */
+                name?: (string|null);
+
+                /** MirrorArenaStanding points */
+                points?: (Long|null);
+
+                /** MirrorArenaStanding matches */
+                matches?: (number|null);
+
+                /** MirrorArenaStanding last_match_at_unix_ms */
+                last_match_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MirrorArenaStanding. */
+            type $Shape = minimir.v1.MirrorArenaStanding.$Properties;
+        }
+
+        /**
+         * Properties of a MirrorArenaSeasonReceipt.
+         * @deprecated Use minimir.v1.MirrorArenaSeasonReceipt.$Properties instead.
+         */
+        interface IMirrorArenaSeasonReceipt extends minimir.v1.MirrorArenaSeasonReceipt.$Properties {
+        }
+
+        /** Represents a MirrorArenaSeasonReceipt. */
+        class MirrorArenaSeasonReceipt {
+
+            /**
+             * Constructs a new MirrorArenaSeasonReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MirrorArenaSeasonReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MirrorArenaSeasonReceipt season_id. */
+            season_id: Uint8Array;
+
+            /** MirrorArenaSeasonReceipt season_start_unix_ms. */
+            season_start_unix_ms: Long;
+
+            /** MirrorArenaSeasonReceipt season_end_unix_ms. */
+            season_end_unix_ms: Long;
+
+            /** MirrorArenaSeasonReceipt settled_at_unix_ms. */
+            settled_at_unix_ms: Long;
+
+            /** MirrorArenaSeasonReceipt rank. */
+            rank: number;
+
+            /** MirrorArenaSeasonReceipt matches. */
+            matches: number;
+
+            /** MirrorArenaSeasonReceipt points. */
+            points: Long;
+
+            /** MirrorArenaSeasonReceipt exchange_credit. */
+            exchange_credit: Long;
+
+            /**
+             * Creates a new MirrorArenaSeasonReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MirrorArenaSeasonReceipt instance
+             */
+            static create(properties: minimir.v1.MirrorArenaSeasonReceipt.$Shape): minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape;
+            static create(properties?: minimir.v1.MirrorArenaSeasonReceipt.$Properties): minimir.v1.MirrorArenaSeasonReceipt;
+
+            /**
+             * Encodes the specified MirrorArenaSeasonReceipt message. Does not implicitly {@link minimir.v1.MirrorArenaSeasonReceipt.verify|verify} messages.
+             * @param message MirrorArenaSeasonReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MirrorArenaSeasonReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MirrorArenaSeasonReceipt message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaSeasonReceipt.verify|verify} messages.
+             * @param message MirrorArenaSeasonReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MirrorArenaSeasonReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MirrorArenaSeasonReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape} MirrorArenaSeasonReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape;
+
+            /**
+             * Decodes a MirrorArenaSeasonReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape} MirrorArenaSeasonReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MirrorArenaSeasonReceipt & minimir.v1.MirrorArenaSeasonReceipt.$Shape;
+
+            /**
+             * Verifies a MirrorArenaSeasonReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MirrorArenaSeasonReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MirrorArenaSeasonReceipt {
+
+            /** Properties of a MirrorArenaSeasonReceipt. */
+            interface $Properties {
+
+                /** MirrorArenaSeasonReceipt season_id */
+                season_id?: (Uint8Array|null);
+
+                /** MirrorArenaSeasonReceipt season_start_unix_ms */
+                season_start_unix_ms?: (Long|null);
+
+                /** MirrorArenaSeasonReceipt season_end_unix_ms */
+                season_end_unix_ms?: (Long|null);
+
+                /** MirrorArenaSeasonReceipt settled_at_unix_ms */
+                settled_at_unix_ms?: (Long|null);
+
+                /** MirrorArenaSeasonReceipt rank */
+                rank?: (number|null);
+
+                /** MirrorArenaSeasonReceipt matches */
+                matches?: (number|null);
+
+                /** MirrorArenaSeasonReceipt points */
+                points?: (Long|null);
+
+                /** MirrorArenaSeasonReceipt exchange_credit */
+                exchange_credit?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MirrorArenaSeasonReceipt. */
+            type $Shape = minimir.v1.MirrorArenaSeasonReceipt.$Properties;
+        }
+
+        /**
          * Properties of a MirrorArenaState.
          * @deprecated Use minimir.v1.MirrorArenaState.$Properties instead.
          */
@@ -16000,6 +16390,36 @@ export namespace minimir {
 
             /** MirrorArenaState rule_version. */
             rule_version: Long;
+
+            /** MirrorArenaState season_settlement_enabled. */
+            season_settlement_enabled: boolean;
+
+            /** MirrorArenaState standings. */
+            standings: minimir.v1.MirrorArenaStanding.$Properties[];
+
+            /** MirrorArenaState own_rank. */
+            own_rank: number;
+
+            /** MirrorArenaState last_settlement. */
+            last_settlement?: (minimir.v1.MirrorArenaSeasonReceipt.$Properties|null);
+
+            /** MirrorArenaState season_pending_rewards. */
+            season_pending_rewards: minimir.v1.ChallengePendingReward.$Properties[];
+
+            /** MirrorArenaState season_pending_rewards_more. */
+            season_pending_rewards_more: boolean;
+
+            /** MirrorArenaState exchange_points. */
+            exchange_points: Long;
+
+            /** MirrorArenaState exchange_price. */
+            exchange_price: Long;
+
+            /** MirrorArenaState exchange_pack_quantity. */
+            exchange_pack_quantity: Long;
+
+            /** MirrorArenaState exchange_item_id. */
+            exchange_item_id: number;
 
             /**
              * Creates a new MirrorArenaState instance using the specified properties.
@@ -16121,12 +16541,162 @@ export namespace minimir {
                 /** MirrorArenaState rule_version */
                 rule_version?: (Long|null);
 
+                /** MirrorArenaState season_settlement_enabled */
+                season_settlement_enabled?: (boolean|null);
+
+                /** MirrorArenaState standings */
+                standings?: (minimir.v1.MirrorArenaStanding.$Properties[]|null);
+
+                /** MirrorArenaState own_rank */
+                own_rank?: (number|null);
+
+                /** MirrorArenaState last_settlement */
+                last_settlement?: (minimir.v1.MirrorArenaSeasonReceipt.$Properties|null);
+
+                /** MirrorArenaState season_pending_rewards */
+                season_pending_rewards?: (minimir.v1.ChallengePendingReward.$Properties[]|null);
+
+                /** MirrorArenaState season_pending_rewards_more */
+                season_pending_rewards_more?: (boolean|null);
+
+                /** MirrorArenaState exchange_points */
+                exchange_points?: (Long|null);
+
+                /** MirrorArenaState exchange_price */
+                exchange_price?: (Long|null);
+
+                /** MirrorArenaState exchange_pack_quantity */
+                exchange_pack_quantity?: (Long|null);
+
+                /** MirrorArenaState exchange_item_id */
+                exchange_item_id?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of a MirrorArenaState. */
             type $Shape = minimir.v1.MirrorArenaState.$Properties;
+        }
+
+        /**
+         * Properties of a MirrorArenaExchangeRequest.
+         * @deprecated Use minimir.v1.MirrorArenaExchangeRequest.$Properties instead.
+         */
+        interface IMirrorArenaExchangeRequest extends minimir.v1.MirrorArenaExchangeRequest.$Properties {
+        }
+
+        /** Represents a MirrorArenaExchangeRequest. */
+        class MirrorArenaExchangeRequest {
+
+            /**
+             * Constructs a new MirrorArenaExchangeRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MirrorArenaExchangeRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MirrorArenaExchangeRequest pack_count. */
+            pack_count: number;
+
+            /** MirrorArenaExchangeRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** MirrorArenaExchangeRequest expected_price. */
+            expected_price: Long;
+
+            /** MirrorArenaExchangeRequest expected_item_id. */
+            expected_item_id: number;
+
+            /** MirrorArenaExchangeRequest expected_pack_quantity. */
+            expected_pack_quantity: Long;
+
+            /**
+             * Creates a new MirrorArenaExchangeRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MirrorArenaExchangeRequest instance
+             */
+            static create(properties: minimir.v1.MirrorArenaExchangeRequest.$Shape): minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape;
+            static create(properties?: minimir.v1.MirrorArenaExchangeRequest.$Properties): minimir.v1.MirrorArenaExchangeRequest;
+
+            /**
+             * Encodes the specified MirrorArenaExchangeRequest message. Does not implicitly {@link minimir.v1.MirrorArenaExchangeRequest.verify|verify} messages.
+             * @param message MirrorArenaExchangeRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MirrorArenaExchangeRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MirrorArenaExchangeRequest message, length delimited. Does not implicitly {@link minimir.v1.MirrorArenaExchangeRequest.verify|verify} messages.
+             * @param message MirrorArenaExchangeRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MirrorArenaExchangeRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MirrorArenaExchangeRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape} MirrorArenaExchangeRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape;
+
+            /**
+             * Decodes a MirrorArenaExchangeRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape} MirrorArenaExchangeRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MirrorArenaExchangeRequest & minimir.v1.MirrorArenaExchangeRequest.$Shape;
+
+            /**
+             * Verifies a MirrorArenaExchangeRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MirrorArenaExchangeRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MirrorArenaExchangeRequest {
+
+            /** Properties of a MirrorArenaExchangeRequest. */
+            interface $Properties {
+
+                /** MirrorArenaExchangeRequest pack_count */
+                pack_count?: (number|null);
+
+                /** MirrorArenaExchangeRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** MirrorArenaExchangeRequest expected_price */
+                expected_price?: (Long|null);
+
+                /** MirrorArenaExchangeRequest expected_item_id */
+                expected_item_id?: (number|null);
+
+                /** MirrorArenaExchangeRequest expected_pack_quantity */
+                expected_pack_quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MirrorArenaExchangeRequest. */
+            type $Shape = minimir.v1.MirrorArenaExchangeRequest.$Properties;
         }
 
         /**

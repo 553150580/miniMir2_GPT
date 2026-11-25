@@ -14,8 +14,9 @@ type ChallengePendingReward struct {
 	EarnedAt    time.Time `bson:"earned_at" json:"earned_at"`       // 原挑战实际确认的奖励时刻。
 	Items       []Item    `bson:"items" json:"items"`               // 已冻结实例、数量与绑定，不参与普通回收。
 
-	SourceRunID    uint64    `bson:"source_run_id,omitempty" json:"source_run_id,omitempty"`     // 世界奖励归属的原运行服，迁移后继续留存。
-	SourceRank     uint32    `bson:"source_rank,omitempty" json:"source_rank,omitempty"`         // 世界首领有效伤害榜的实际名次。
-	ConfigHash     string    `bson:"config_hash,omitempty" json:"config_hash,omitempty"`         // 生成世界附件的完整配置摘要。
-	PrivilegeUntil time.Time `bson:"privilege_until,omitempty" json:"privilege_until,omitempty"` // 世界首领奖励采用的原特权截止时间。
+	SourceRunID    uint64              `bson:"source_run_id,omitempty" json:"source_run_id,omitempty"`     // 世界奖励归属的原运行服，迁移后继续留存。
+	SourceRank     uint32              `bson:"source_rank,omitempty" json:"source_rank,omitempty"`         // 世界首领有效伤害榜的实际名次。
+	ConfigHash     string              `bson:"config_hash,omitempty" json:"config_hash,omitempty"`         // 生成世界附件的完整配置摘要。
+	PrivilegeUntil time.Time           `bson:"privilege_until,omitempty" json:"privilege_until,omitempty"` // 世界首领奖励采用的原特权截止时间。
+	MirrorAssets   *MirrorSeasonAssets `bson:"mirror_assets,omitempty" json:"mirror_assets,omitempty"`     // 镜像赛季确认时冻结的绑定元宝。
 }

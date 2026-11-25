@@ -93,6 +93,7 @@ const (
 	MsgC2SSetSkillSlots uint16 = 40031
 	MsgC2SHostingQuote uint16 = 40032
 	MsgS2CHostingQuote uint16 = 40033
+	MsgC2SMirrorArenaExchange uint16 = 40034
 )
 
 const (
@@ -145,4 +146,5 @@ const (
 	CodeHostingPurchaseQuoteStale uint32 = 3802
 	CodeHostingPurchaseBalance uint32 = 3803
 	CodeHostingPurchaseFunds uint32 = 3804
+	CodeMirrorExchangeFunds uint32 = 3901
 )

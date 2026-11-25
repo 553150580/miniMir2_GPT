@@ -153,7 +153,16 @@ func (s *Store) QueryMirrorArena(ctx context.Context, a Auth) (MirrorInfo, error
 			return err
 		}
 		out.DefenseHistory, err = s.mirrorHistory(tc, "defender_role_id", r, cfg.DefenseHistoryLimit)
-		return err
+		if err != nil {
+			return err
+		}
+		if cfg.Settlement != nil || cfg.Exchange != nil {
+			out.ExchangePoints, err = s.ReadMirrorExchangePoints(tc, r.Origin, r.ID)
+		}
+		if err != nil || cfg.Settlement == nil {
+			return err
+		}
+		return s.readMirrorSeasonView(tc, r, scope, score, &out)
 	})
 	return out, err
 }
@@ -293,6 +302,7 @@ func mirrorArenaIndexes() map[string][]mongo.IndexModel {
 		mirrorChallengeCollection: {
 			{Keys: bson.D{{Key: "origin", Value: 1}, {Key: "attacker_role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}},
 			{Keys: bson.D{{Key: "origin", Value: 1}, {Key: "defender_role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}},
+			{Keys: bson.D{{Key: "run_server_id", Value: 1}, {Key: "origin", Value: 1}, {Key: "season_start", Value: 1}, {Key: "outcome", Value: 1}}},
 		},
 		mirrorSeasonCollection: {{Keys: bson.D{{Key: "scope", Value: 1}, {Key: "points", Value: -1}, {Key: "last_match_at", Value: 1}, {Key: "role_id", Value: 1}}}},
 	}

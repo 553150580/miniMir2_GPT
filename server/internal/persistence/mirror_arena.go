@@ -101,17 +101,23 @@ type MirrorChallenge struct {
 
 // MirrorInfo 汇总当前角色的原运营日、必要候选和有限战报窗口。
 type MirrorInfo struct {
-	SeasonStart     time.Time        // 当前赛季起点。
-	SeasonEnd       time.Time        // 当前赛季结束边界。
-	DailyLimit      uint32           // 原配置中每日允许的次数。
-	EntriesUsed     uint32           // 原运营日的已完成或预占次数。
-	SeasonPoints    int64            // 原角色当前赛季已确认分数。
-	Streak          uint32           // 原角色当前进攻连胜。
-	DefenseVersion  uint64           // 当前赛季已发布且规则相符的防守版本。
-	Offers          []MirrorOffer    // 仅当前原角色可选的已发布候选。
-	AttackHistory   []MirrorSummary  // 最新的原进攻结果。
-	DefenseHistory  []MirrorSummary  // 最新的原防守结果。
-	ActiveChallenge *MirrorChallenge // 可用于同一原执行器对账，客户端不接收快照数据。
+	SeasonStart              time.Time                       // 当前赛季起点。
+	SeasonEnd                time.Time                       // 当前赛季结束边界。
+	DailyLimit               uint32                          // 原配置中每日允许的次数。
+	EntriesUsed              uint32                          // 原运营日的已完成或预占次数。
+	SeasonPoints             int64                           // 原角色当前赛季已确认分数。
+	Streak                   uint32                          // 原角色当前进攻连胜。
+	DefenseVersion           uint64                          // 当前赛季已发布且规则相符的防守版本。
+	Offers                   []MirrorOffer                   // 仅当前原角色可选的已发布候选。
+	AttackHistory            []MirrorSummary                 // 最新的原进攻结果。
+	DefenseHistory           []MirrorSummary                 // 最新的原防守结果。
+	ActiveChallenge          *MirrorChallenge                // 可用于同一原执行器对账，客户端不接收快照数据。
+	Rankings                 []MirrorStanding                // 当前赛季的有界排名投影。
+	OwnRank                  uint32                          // 当前角色的准确排名，尚未参赛为零。
+	ExchangePoints           int64                           // 当前角色独立兑换钱包的确认余额。
+	LatestSettlement         *MirrorSeasonReceipt            // 原永久入口角色最近一次已确认的赛季结转。
+	SeasonPendingRewards     []domain.ChallengePendingReward // 当前角色已确认的赛季附件。
+	SeasonPendingRewardsMore bool                            // 仍有后续赛季附件，先领取早期附件。
 }
 
 // MirrorBegin 绑定不透明候选和原快照，重复发起使用相同挑战编号和内容。
@@ -165,6 +171,7 @@ type mirrorSeasonScore struct {
 	ID          string    `bson:"_id"`           // 运行服、入口、赛季和永久角色组成的键。
 	Scope       string    `bson:"scope"`         // 原赛季排名的分区。
 	RoleID      string    `bson:"role_id"`       // 参赛角色永久编号。
+	Name        string    `bson:"name"`          // 最近一次有效进攻中保存的角色展示名。
 	Points      int64     `bson:"points"`        // 原赛季所有已确认攻方增加的分数。
 	Streak      uint32    `bson:"streak"`        // 原攻方最近的实战连胜。
 	Matches     uint32    `bson:"matches"`       // 已结算的有效进攻次数。

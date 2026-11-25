@@ -546,7 +546,9 @@ export class AppRoot extends Component {
                 },
                 releaseInput: this.releaseInput,
                 sound: () => this.tapSound?.(),
-            });
+                asset: (id, value) => this.economic(id, value),
+                itemName: id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name,
+            }, safe.getChildByPath('UIMgr/Panels/MirrorSeason') ?? undefined);
             this.cleanups.push(() => this.mirrorArena?.dispose());
         }
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error),

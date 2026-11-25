@@ -34,6 +34,8 @@ class TestMirrorArenaProjection(unittest.TestCase):
         self.assertEqual(rule['timeout_policy'], arena.TIMEOUT)
         self.assertNotIn('rewards', rule)
         self.assertNotIn('feather_exchange_points', rule)
+        self.assertNotIn('settlement', rule)
+        self.assertNotIn('exchange', rule)
         self.assertEqual(public_map['id'], '90001')
         self.assertEqual(public_map['floor_map_id'], '1')
         self.assertEqual(public_map['scene_kind'], 6)
@@ -58,6 +60,66 @@ class TestMirrorArenaProjection(unittest.TestCase):
         row['record_status'] = 'historical'
         with self.assertRaisesRegex(ValueError, 'battle_timeout_sec'):
             arena.project(tables, self.assembly, self.fixture)
+
+    def test_explicit_isolated_settlement_uses_confirmed_policy_and_optional_candidate_price(self):
+        sample = self.season_sample()
+        rule, public_map = arena.project(self.tables, self.assembly, self.fixture, sample)
+        self.assertFalse(self.tables[arena.REWARDS])
+        self.assertEqual(public_map['scene_kind'], 6)
+        self.assertEqual(rule['settlement'], {
+            'ranking_tiebreak': 'earlier_last_challenge', 'participation_min_challenges': 10,
+            'ranks': sample['ranks'], 'participation': sample['participation'],
+        })
+        self.assertEqual(rule['exchange'], {'item_id': 35, 'price': 250, 'quantity': 1})
+        sample['ranks'][0]['reward']['bound_yuanbao_units'] = 45
+        self.assertEqual(rule['settlement']['ranks'][0]['reward']['bound_yuanbao_units'], 17)
+        del sample['exchange']
+        without_exchange, _ = arena.project(self.tables, self.assembly, self.fixture, sample)
+        self.assertIn('settlement', without_exchange)
+        self.assertNotIn('exchange', without_exchange)
+        self.assertNotIn('mirror_arena', self.fixture)
+
+    def test_settlement_rejects_unverified_rank_rules_and_already_authored_workbook_rewards(self):
+        for key, value, status in (
+            ('ranking_tiebreak', 'later_last_challenge', 'confirmed'),
+            ('settlement_sequence', list(reversed(arena.SETTLEMENT_SEQUENCE)), 'confirmed'),
+            ('exchange_balance_persists', False, 'confirmed'),
+            ('participation_min_challenges', 76, 'confirmed'),
+            ('participation_min_challenges', 10, 'candidate'),
+            ('feather_exchange_bound', False, 'confirmed'),
+            ('feather_exchange_points', 250, 'unverified'),
+        ):
+            with self.subTest(key=key, status=status):
+                tables = deepcopy(self.tables)
+                row = next(row for row in tables[arena.RULES] if row['rule_key'] == key)
+                row.update(rule_value=value, record_status=status)
+                with self.assertRaises(ValueError):
+                    arena.project(tables, self.assembly, self.fixture, self.season_sample())
+        tables = deepcopy(self.tables)
+        tables[arena.REWARDS] = [{'record_status': 'candidate'}]
+        with self.assertRaisesRegex(ValueError, '竞技正式奖表已有当前记录'):
+            arena.project(tables, self.assembly, self.fixture, self.season_sample())
+
+    def test_settlement_rejects_unknown_assets_overlapping_ranges_and_unverified_exchange_item(self):
+        invalid = ({}, {'ranks': []}, {'participation': {'bound_gold': 1}}, {'participation': {'bound_yuanbao_units': True}},
+                   {'participation': {'bound_yuanbao_units': arena.MAX_INT64}},
+                   {'participation': {'bound_yuanbao_units': 3, 'title_id': 1}},
+                   {'exchange': {'item_id': 99999, 'quantity': 1}}, {'exchange': {'item_id': 35, 'quantity': 201}},
+                   {'exchange': {'item_id': 35, 'quantity': 1, 'price': 100}})
+        for value in invalid:
+            with self.subTest(sample=value), self.assertRaises(ValueError):
+                arena.project(self.tables, self.assembly, self.fixture, {**self.season_sample(), **value} if value else value)
+        sample = self.season_sample()
+        sample['ranks'][1]['first_rank'] = 1
+        with self.assertRaises(ValueError):
+            arena.project(self.tables, self.assembly, self.fixture, sample)
+
+    @staticmethod
+    def season_sample():
+        """数额和已有药水是隔离样例，未录入正式奖表或羽毛目录。"""
+        return {'ranks': [{'first_rank': 1, 'last_rank': 1, 'reward': {'bound_yuanbao_units': 17}},
+                          {'first_rank': 2, 'last_rank': 4, 'reward': {'bound_yuanbao_units': 2}}],
+                'participation': {'bound_yuanbao_units': 3}, 'exchange': {'item_id': 35, 'quantity': 1}}
 
 
 if __name__ == '__main__':

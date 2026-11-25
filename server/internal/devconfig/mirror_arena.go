@@ -37,53 +37,57 @@ type MirrorArenaStreakPoints struct {
 
 // MirrorArenaDefinition 保存唯一工作簿投影及本轮显式选择的隔离启动参数。
 type MirrorArenaDefinition struct {
-	Enabled             bool                      `json:"enabled"`               // 明确启用本开发候选。
-	TemplateID          uint32                    `json:"template_id"`           // 本独立战斗模板的编号。
-	DisplayName         string                    `json:"display_name"`          // 面向挑战者展示的名称。
-	Map                 MapTemplate               `json:"map"`                   // 不含普通刷怪、城镇或跨图服务的网格。
-	AttackerSpawn       Point                     `json:"attacker_spawn"`        // 进攻角色的固定落点。
-	DefenderSpawn       Point                     `json:"defender_spawn"`        // 防守镜像的固定落点。
-	AttackerPetSpawn    Point                     `json:"attacker_pet_spawn"`    // 存在进攻宠物时的固定落点。
-	DefenderPetSpawn    Point                     `json:"defender_pet_spawn"`    // 存在防守宠物时的固定落点。
-	SeasonAnchor        time.Time                 `json:"season_anchor"`         // 明确选择的首个上海运营日零点。
-	SeasonDays          uint32                    `json:"season_days"`           // 每个赛季持续的完整运营日数。
-	DailyLimit          uint32                    `json:"daily_limit"`           // 每角色每运营日的挑战次数上限。
-	OpponentLimit       uint32                    `json:"opponent_limit"`        // 每角色原运营日最多由系统分配的镜像数。
-	AttackHistoryLimit  uint32                    `json:"attack_history_limit"`  // 进攻战报的展示条数上限。
-	DefenseHistoryLimit uint32                    `json:"defense_history_limit"` // 被挑战战报的展示条数上限。
-	DurationMS          int64                     `json:"duration_ms"`           // 从首帧同步许可后计算的候选战斗时限。
-	WinBasePoints       int64                     `json:"win_base_points"`       // 普通进攻胜利的积分。
-	LossPoints          int64                     `json:"loss_points"`           // 进攻失败并清除连胜后的积分。
-	StreakPoints        []MirrorArenaStreakPoints `json:"streak_points"`         // 按连续获胜场数升序的得分档位。
-	TimeoutPolicy       string                    `json:"timeout_policy"`        // 采用工作簿登记的原超时比较规则。
-	MatchPolicy         string                    `json:"match_policy"`          // 隔离试测明确选择的一种职业范围。
-	MaxLevelGap         uint32                    `json:"max_level_gap"`         // 隔离试测固定等级差，不推算综合战力。
-	PetDeathPolicy      string                    `json:"pet_death_policy"`      // 隔离试测明确选择的主人阵亡后宠物规则。
+	Enabled             bool                         `json:"enabled"`               // 明确启用本开发候选。
+	TemplateID          uint32                       `json:"template_id"`           // 本独立战斗模板的编号。
+	DisplayName         string                       `json:"display_name"`          // 面向挑战者展示的名称。
+	Map                 MapTemplate                  `json:"map"`                   // 不含普通刷怪、城镇或跨图服务的网格。
+	AttackerSpawn       Point                        `json:"attacker_spawn"`        // 进攻角色的固定落点。
+	DefenderSpawn       Point                        `json:"defender_spawn"`        // 防守镜像的固定落点。
+	AttackerPetSpawn    Point                        `json:"attacker_pet_spawn"`    // 存在进攻宠物时的固定落点。
+	DefenderPetSpawn    Point                        `json:"defender_pet_spawn"`    // 存在防守宠物时的固定落点。
+	SeasonAnchor        time.Time                    `json:"season_anchor"`         // 明确选择的首个上海运营日零点。
+	SeasonDays          uint32                       `json:"season_days"`           // 每个赛季持续的完整运营日数。
+	DailyLimit          uint32                       `json:"daily_limit"`           // 每角色每运营日的挑战次数上限。
+	OpponentLimit       uint32                       `json:"opponent_limit"`        // 每角色原运营日最多由系统分配的镜像数。
+	AttackHistoryLimit  uint32                       `json:"attack_history_limit"`  // 进攻战报的展示条数上限。
+	DefenseHistoryLimit uint32                       `json:"defense_history_limit"` // 被挑战战报的展示条数上限。
+	DurationMS          int64                        `json:"duration_ms"`           // 从首帧同步许可后计算的候选战斗时限。
+	WinBasePoints       int64                        `json:"win_base_points"`       // 普通进攻胜利的积分。
+	LossPoints          int64                        `json:"loss_points"`           // 进攻失败并清除连胜后的积分。
+	StreakPoints        []MirrorArenaStreakPoints    `json:"streak_points"`         // 按连续获胜场数升序的得分档位。
+	TimeoutPolicy       string                       `json:"timeout_policy"`        // 采用工作簿登记的原超时比较规则。
+	MatchPolicy         string                       `json:"match_policy"`          // 隔离试测明确选择的一种职业范围。
+	MaxLevelGap         uint32                       `json:"max_level_gap"`         // 隔离试测固定等级差，不推算综合战力。
+	PetDeathPolicy      string                       `json:"pet_death_policy"`      // 隔离试测明确选择的主人阵亡后宠物规则。
+	Settlement          *MirrorArenaSeasonSettlement `json:"settlement,omitempty"`  // 隔离赛季派奖；未装配时不启用封账。
+	Exchange            *MirrorArenaExchangeRule     `json:"exchange,omitempty"`    // 单独启用的隔离积分兑换。
 }
 
 // MirrorArenaConfig 冻结只读的地图、时限、赛季和积分范围供模拟与账本共用。
 type MirrorArenaConfig struct {
-	TemplateID          uint32                    // 稳定的挑战模板编号。
-	DisplayName         string                    // 当前镜像模板的客户端名称。
-	Map                 MapTemplate               // 经过碰撞和连通性验证的战斗地图。
-	AttackerSpawn       Point                     // 进攻角色固定落点。
-	DefenderSpawn       Point                     // 防守镜像固定落点。
-	AttackerPetSpawn    Point                     // 进攻宠物固定落点。
-	DefenderPetSpawn    Point                     // 防守宠物固定落点。
-	SeasonAnchor        time.Time                 // 重复赛季序列的上海运营日起点。
-	SeasonDays          uint32                    // 每赛季的完整运营日数。
-	DailyLimit          uint32                    // 每日挑战次数上限。
-	OpponentLimit       uint32                    // 原运营日的系统候选数上限。
-	AttackHistoryLimit  uint32                    // 进攻战报展示的最大条数。
-	DefenseHistoryLimit uint32                    // 防守战报展示的最大条数。
-	Duration            time.Duration             // 单场首帧确认后可战斗的时长。
-	WinBasePoints       int64                     // 进攻胜利基础得分。
-	LossPoints          int64                     // 进攻失败得分。
-	StreakPoints        []MirrorArenaStreakPoints // 连胜达到各档时的实际胜利积分。
-	TimeoutPolicy       string                    // 超时结算依据。
-	MatchPolicy         string                    // 当前隔离候选是否允许跨职业。
-	MaxLevelGap         uint32                    // 当前候选允许的绝对等级差。
-	PetDeathPolicy      string                    // 主体阵亡后已参战宠物如何处理。
+	TemplateID          uint32                       // 稳定的挑战模板编号。
+	DisplayName         string                       // 当前镜像模板的客户端名称。
+	Map                 MapTemplate                  // 经过碰撞和连通性验证的战斗地图。
+	AttackerSpawn       Point                        // 进攻角色固定落点。
+	DefenderSpawn       Point                        // 防守镜像固定落点。
+	AttackerPetSpawn    Point                        // 进攻宠物固定落点。
+	DefenderPetSpawn    Point                        // 防守宠物固定落点。
+	SeasonAnchor        time.Time                    // 重复赛季序列的上海运营日起点。
+	SeasonDays          uint32                       // 每赛季的完整运营日数。
+	DailyLimit          uint32                       // 每日挑战次数上限。
+	OpponentLimit       uint32                       // 原运营日的系统候选数上限。
+	AttackHistoryLimit  uint32                       // 进攻战报展示的最大条数。
+	DefenseHistoryLimit uint32                       // 防守战报展示的最大条数。
+	Duration            time.Duration                // 单场首帧确认后可战斗的时长。
+	WinBasePoints       int64                        // 进攻胜利基础得分。
+	LossPoints          int64                        // 进攻失败得分。
+	StreakPoints        []MirrorArenaStreakPoints    // 连胜达到各档时的实际胜利积分。
+	TimeoutPolicy       string                       // 超时结算依据。
+	MatchPolicy         string                       // 当前隔离候选是否允许跨职业。
+	MaxLevelGap         uint32                       // 当前候选允许的绝对等级差。
+	PetDeathPolicy      string                       // 主体阵亡后已参战宠物如何处理。
+	Settlement          *MirrorArenaSeasonSettlement // 经过验证的只读赛季结算奖表。
+	Exchange            *MirrorArenaExchangeRule     // 经过验证的只读绑定兑换配置。
 }
 
 // SeasonAt 返回包含服务端事件时刻的半开赛季；首个赛季开始前没有可参加的赛季。
@@ -144,6 +148,9 @@ func (f *Fixture) ValidateMirrorArena() error {
 	if definition.TemplateID == 0 || strings.TrimSpace(definition.DisplayName) == "" || !f.validMirrorArenaMap(definition) {
 		return errors.New("镜像竞技缺少合法的独立地图、显示名称或连通落点")
 	}
+	if err := f.validateMirrorArenaSettlement(definition); err != nil {
+		return err
+	}
 	grid := cloneDungeonMap(definition.Map)
 	grid.PlayerSpawn, grid.PetSpawn = definition.AttackerSpawn, definition.AttackerPetSpawn
 	noTeleport, noPets := true, false
@@ -158,6 +165,11 @@ func (f *Fixture) ValidateMirrorArena() error {
 		Duration: time.Duration(definition.DurationMS) * time.Millisecond, WinBasePoints: definition.WinBasePoints,
 		LossPoints: definition.LossPoints, StreakPoints: slices.Clone(definition.StreakPoints), TimeoutPolicy: definition.TimeoutPolicy,
 		MatchPolicy: definition.MatchPolicy, MaxLevelGap: definition.MaxLevelGap, PetDeathPolicy: definition.PetDeathPolicy,
+		Settlement: definition.Settlement.clone(),
+	}
+	if definition.Exchange != nil {
+		exchange := *definition.Exchange
+		f.MirrorArena.Exchange = &exchange
 	}
 	return nil
 }
