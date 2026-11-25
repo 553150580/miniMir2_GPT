@@ -82,7 +82,7 @@ export class GameSkills {
     // 固定按钮保存在技能页；服务端库存确认前不改变槽位文字。
     private renderAttackSlots(input: SkillSnapshot): void {
         const slots = attackSkillSlotIDs(input.inventory?.skillSlotIds);
-        const available = !!input.canConfigureSlots && canQueueSkill(this.selected);
+        const selected = this.selected, available = !!input.canConfigureSlots && canQueueSkill(selected);
         for (const [index, id] of slots.entries()) {
             const button = this.panel.getChildByName(`AttackSlot${index + 1}`);
             const definition = input.definitions.find(skill => skill.id === id);
@@ -92,6 +92,16 @@ export class GameSkills {
             if (control) control.interactable = available;
         }
         this.setButton('ClearSlots', !!input.canConfigureSlots && slots.some(id => id !== 0));
+        const activeSlot = selected ? slots.indexOf(selected.definition.id) + 1 : 0;
+        let hint = '选择已学技能，再轻触槽位';
+        if (!input.ready || !input.inventory) hint = '技能槽正在同步';
+        else if (input.sceneKind !== 1 && input.sceneKind !== 2) hint = '回城镇或普通野外可调整技能槽';
+        else if (!input.canConfigureSlots) hint = '正在核对操作，请稍候';
+        else if (selected && !selected.learned) hint = '学习此技能后，再设置技能槽';
+        else if (selected && !available) hint = '此技能不能放入攻击槽';
+        else if (activeSlot) hint = `已在第 ${activeSlot} 槽，点同槽移除`;
+        else if (available) hint = '轻触槽位保存所选技能';
+        this.text('Hint', hint);
     }
 
     dispose(): void {

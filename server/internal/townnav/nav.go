@@ -495,14 +495,19 @@ func (t *Task) stepAllowed(from, to Point) bool {
 	return t.grid.StepAllowed(from, to)
 }
 
-// ResumeExactGoal 在占格对象离开时停用旧邻格路线，保留原任务及累计预算。
-// t 是调用该方法的任务实例，key 记录键。
-func (t *Task) ResumeExactGoal(key Key) bool {
-	if !t.sync(key) || t.goalRadius != 1 || t.state == NoPath || t.state == Limited {
+// SetAdjacentGoal 按目标的占位切换精确落格和邻格模式，保留原任务及累计预算。
+// key 校验本次导航身份，adjacent 表示终点被占时先靠近可达邻格。
+func (t *Task) SetAdjacentGoal(key Key, adjacent bool) bool {
+	if !t.sync(key) || adjacent == (t.goalRadius == 1) || t.state == NoPath || t.state == Limited {
 		return false
 	}
-	t.goalRadius = 0
-	t.stop(NeedsReplan, "原目标格已腾空，恢复精确寻路")
+	if adjacent {
+		t.goalRadius = 1
+		t.stop(NeedsReplan, "原目标格被占用，规划可达邻格")
+	} else {
+		t.goalRadius = 0
+		t.stop(NeedsReplan, "原目标格已腾空，恢复精确寻路")
+	}
 	return true
 }
 

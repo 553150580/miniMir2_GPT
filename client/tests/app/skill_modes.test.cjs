@@ -43,20 +43,25 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     }};
     const opened=[];
     const controller=new module.exports.GameSkills({getChildByPath:()=>panel},{show:(...args)=>opened.push(args)}),modes=state();
-    const input={ready:true,job:0,sceneEpoch:modes.sceneEpoch,modes,modesReceivedAt:Date.now(),definitions:[definition({id:7,name:'攻杀剑术',kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),definition(),definition({id:26,name:'烈火剑法',kind:'flaming_sword',activation_kind:'charge',target_kind:'attack_charge'})],inventory:{level:40,items:[],learnedSkills:[{skillId:7,level:0},{skillId:12,level:0},{skillId:26,level:0}]}};
+    const input={ready:true,job:0,sceneKind:1,canConfigureSlots:true,sceneEpoch:modes.sceneEpoch,modes,modesReceivedAt:Date.now(),definitions:[definition({id:7,name:'攻杀剑术',kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),definition(),definition({id:26,name:'烈火剑法',kind:'flaming_sword',activation_kind:'charge',target_kind:'attack_charge'})],inventory:{level:40,items:[],learnedSkills:[{skillId:7,level:0},{skillId:12,level:0},{skillId:26,level:0}],skillSlotIds:[0,0,0,0]}};
     controller.refresh(input);assert(texts.every(value=>value.split('\n').length<=3));assert.match(labels.get('Message').string,/攻击上限 \+5/);
-    assert.equal(labels.get('SkillAuto/Label').string,'被动生效');
+    assert.equal(labels.get('SkillAuto/Label').string,'被动生效');assert.match(labels.get('Hint').string,/不能放入/);
     controller.onSelected(1,model.skillRows(input)[1]);assert.equal(opened.length,0);
     assert.equal(labels.get('SkillAuto/Label').string,'随普攻');
+    assert.match(labels.get('Hint').string,/保存所选技能/);assert.equal(buttons.get('AttackSlot1').interactable,true);
+    controller.refresh({...input,inventory:{...input.inventory,skillSlotIds:[12,0,0,0]}});
+    assert.match(labels.get('Hint').string,/第 1 槽.*移除/);
+    controller.refresh({...input,canConfigureSlots:false});
+    assert.match(labels.get('Hint').string,/正在核对/);assert.equal(buttons.get('AttackSlot1').interactable,false);
     controller.refresh({...input,inventory:{...input.inventory,learnedSkills:[]}});
-    assert.equal(labels.get('SkillAuto/Label').string,'学习后可设置');
+    assert.equal(labels.get('SkillAuto/Label').string,'学习后可设置');assert.match(labels.get('Hint').string,/学习此技能/);
     controller.refresh(input);
     controller.openDetails();assert.equal(opened.length,1);assert.match(opened[0][1].message,/第2格有怪/);
     controller.refresh(input,12);assert.equal(labels.get('BindQuick/Label').string,'默认手动快捷');
     controller.refresh(input,12,12);assert.equal(labels.get('BindQuick/Label').string,'当前手动快捷');
     assert.equal(labels.get('Use/Label').string,'关闭');assert.equal(buttons.get('Use').interactable,true);
     assert.equal(nodes.get('Use').active,false);assert.equal(nodes.get('ModeToggle').active,true);assert.equal(toggle.isChecked,true);assert.equal(toggle.interactable,true);assert.equal(labels.get('ModeToggle/Label').string,'已开启');
-    for(const sceneKind of [3,4]){controller.refresh({...input,sceneKind});assert.equal(toggle.interactable,true);assert.equal(labels.get('Use/Label').string,'关闭');}
+    for(const sceneKind of [3,4]){controller.refresh({...input,sceneKind,canConfigureSlots:false});assert.equal(toggle.interactable,true);assert.equal(labels.get('Use/Label').string,'关闭');assert.match(labels.get('Hint').string,/回城镇或普通野外/);}
     toggle.isChecked=false;controller.refresh(input);assert.equal(toggle.isChecked,true);
     controller.refresh({...input,modePending:{skillId:12,enabled:false}});assert.equal(toggle.interactable,false);assert.equal(labels.get('ModeToggle/Label').string,'正在关闭');
     controller.refresh({...input,modes:null});assert.equal(buttons.get('Use').interactable,false);assert.equal(toggle.interactable,false);

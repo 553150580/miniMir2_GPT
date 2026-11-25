@@ -51,6 +51,24 @@ test('真实Session绑定观察领先Inventory时新op等待完整资料，旧Pe
  s.connection.deliver(40003,{revision:Long.fromInt(20,true)});assert.equal(h.operation().expectedRevision.toString(),'20');
  s.connection.deliver(20011,serverBinding(h,e,{roleRevision:Long.fromInt(12,true),sourceSeq:Long.fromInt(10,true),binding:{mapId:Long.fromInt(2,true),center:{x:330,y:330}},cause:2}));assert.deepEqual(s.bindingState.binding.center,{x:330,y:330});assert.equal(h.operation().expectedRevision.toString(),'20');
 });
+test('绑定修订领先时只允许携带真实原四槽的编辑，保留库存修订与经济序号',()=>{
+ const h=harness(),s=h.session,e=ready(h,entry('1','2',2,'5'));
+ s.inventory={revision:Long.fromInt(10,true),skillSlotIds:[0,0,0,2]};
+ s.connection.deliver(20011,serverBinding(h,e,{cause:2}));
+ assert.throws(()=>h.operation(),/角色资料正在同步/);
+ assert.throws(()=>h.operation([17,0,0,2]),/角色资料正在同步/);
+ assert.throws(()=>h.operation([0,0,0]),/角色资料正在同步/);
+ s.inventory.skillSlotIds=undefined;
+ assert.throws(()=>h.operation([0,0,0,2]),/角色资料正在同步/);
+ s.inventory.skillSlotIds=[0,0,0,2];
+ assert.equal(s.command.toString(),'5');
+ const op=h.operation([0,0,0,2]);
+ assert.equal(op.expectedRevision.toString(),'10');
+ assert.equal(op.expectedRuleVersion.toString(),s.entry.resourceVersion.toString());
+ assert.equal(op.commandSeq.toString(),'5');
+ assert.equal(s.command.toString(),'6');
+ assert.equal(op.opId.length,16);
+});
 test('真实Session旧scene/不同角色/旧transport binding隔离，健康新连接和冷scene1静默恢复receipt',()=>{
  const h=harness(),s=h.session,e=ready(h,entry('9007199254740993','2',2));s.connection.deliver(20011,serverBinding(h,e));const original=s.bindingState;
  s.connection.deliver(20011,serverBinding(h,e,{sceneEpoch:Long.UONE,cause:2}));s.connection.deliver(20011,serverBinding(h,e,{role:{...s.role.key,roleId:new Uint8Array(16).fill(8)},cause:2}));s.connection.deliver(20011,serverBinding(h,e,{cause:2}),{binding:Long.fromInt(8,true)});assert.equal(s.bindingState,original);

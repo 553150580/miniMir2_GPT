@@ -8,7 +8,7 @@ import type { OriginServer } from './ServerDirectoryModel';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
-import { acceptsSkillModeState, SkillModeState } from './SkillModel';
+import { acceptsSkillModeState, attackSkillSlotCount, SkillModeState } from './SkillModel';
 import type { DisplacementEvent } from './EntityDisplacement';
 import { attachmentKey, MapTravelModel, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
@@ -309,12 +309,17 @@ export function roleIdentity(): string {
     return session.role.key.originServerId.toString() + ':' + Array.from(session.role.key.roleId as Uint8Array, value => value.toString(16).padStart(2, '0')).join('');
 }
 
-export function operation(): any {
+export function operation(expectedSkillSlotIds?: readonly number[]): any {
     if (!session.ready) throw new Error('场景基线尚未确认');
-    // 绑定只观察永久修订；新经济操作仍等完整Inventory，不能拿自动SourceSeq或绑定修订改写旧Pending。
-    if (session.bindingState && (!session.inventory || BigInt(session.bindingState.roleRevision) > BigInt(session.inventory.revision.toString()))) throw new Error('角色资料正在同步，请稍后操作');
+    const inventory = session.inventory, observedSlots = inventory?.skillSlotIds;
+    // 只有带原四槽的编辑可用服务端槽位比较；协议仍携带实际读到的库存修订。
+    const editingConfirmedSlots = expectedSkillSlotIds?.length === attackSkillSlotCount &&
+        observedSlots?.length === attackSkillSlotCount && !inventory.revision.isZero() &&
+        expectedSkillSlotIds.every((id, index) => id === observedSlots[index]);
+    if (session.bindingState && (!inventory || BigInt(session.bindingState.roleRevision) > BigInt(inventory.revision.toString()) && !editingConfirmedSlots))
+        throw new Error('角色资料正在同步，请稍后操作');
     const result = { opId: newOperationId(), commandSeq: session.command,
-        expectedRevision: session.inventory?.revision ?? Long.UZERO,
+        expectedRevision: inventory?.revision ?? Long.UZERO,
         expectedRuleVersion: session.entry?.resourceVersion ?? Long.UONE };
     session.command = session.command.add(1);
     localOperation = { id: bytesIdentity(result.opId), connection: session.connection.generation, binding: session.connection.binding.toString(),

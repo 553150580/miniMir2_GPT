@@ -453,8 +453,9 @@ func (w *worker) admitTownRequests() {
 		m, known := w.currentMap(q.room)
 		// blockedStart 保存根据已知状态与可走格的计算结果与瞬移可走格计算的阻挡起点或开始时间。
 		blockedStart := known && !m.Walkable(q.actor.Pos) && m.TeleportWalkable(q.actor.Pos)
+		occupied := townBlocked(q, q.target) // 重新入队时使用最新占位，旧路线的终点可能已经被占。
 		if q.task == nil {
-			q.adjacent = townBlocked(q, q.target)
+			q.adjacent = occupied
 			// create 保存创建任务，用于当前步骤中的创建。
 			create := townnav.NewTask
 			if q.adjacent {
@@ -468,6 +469,9 @@ func (w *worker) admitTownRequests() {
 			}
 			q.task, err = create(q.grid, workspace, q.storage, q.key, townPoint(q.actor.Pos), townPoint(q.target), q.dynamic, limits)
 		} else {
+			if q.task.SetAdjacentGoal(q.key, occupied) {
+				q.adjacent = occupied
+			}
 			err = q.task.AttachRouteStorage(q.storage)
 			if err == nil {
 				if blockedStart {
@@ -675,7 +679,7 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 	if q.task == nil {
 		return true
 	}
-	if q.adjacent && !townBlocked(q, target) && q.task.ResumeExactGoal(q.key) {
+	if q.adjacent && !townBlocked(q, target) && q.task.SetAdjacentGoal(q.key, false) {
 		q.adjacent = false
 		// 立即归还旧邻格路线的工作区和缓冲，再沿同一次点击重新排队。
 		w.finishTownPlanning(q)

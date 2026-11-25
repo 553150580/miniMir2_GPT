@@ -25,7 +25,7 @@ import (
 	p "minimir/internal/protocol"
 )
 
-// TestSkillAttackSlotsSummonBrowserMongoWS 用保存的技能面板逐项点击，Mongo 核对两次原槽位操作。
+// TestSkillAttackSlotsSummonBrowserMongoWS 从触屏滚动、学习、配置到重连核对原书与四槽。
 func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 	webRoot := os.Getenv("MINIMIR_SUMMON_SLOTS_BROWSER_WEB_ROOT")
 	if webRoot == "" {
@@ -66,13 +66,22 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 		t.Fatal("已建道士没有通常可选的正式目录入口")
 	}
 	roleID := domain.Hex(role.Key.RoleId)
-	// 只准备本独立库的已学和适龄前态，浏览器继续验证普通登录、持久操作和健康重连。
-	learned := []domain.LearnedSkill{{SkillID: devconfig.SummonSkeletonSkillID}, {SkillID: devconfig.SummonShinsuSkillID}}
-	level, known := cfg.Fixture.Skill(devconfig.SummonShinsuSkillID)
-	if !known {
-		t.Fatal("现行配置缺少神兽技能")
+	// 只在本独立库准备适龄角色和两本原书，浏览器仍需真正学习后才能配置。
+	var level uint32
+	books := make([]domain.Item, 0, 2)
+	for _, id := range []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID} {
+		skill, known := cfg.Fixture.Skill(id)
+		if !known {
+			t.Fatal("现行配置缺少召唤技能", id)
+		}
+		level = max(level, skill.LearnLevel)
+		books = append(books, domain.Item{ID: domain.ID(), ItemID: skill.BookItemID, Quantity: 1, Bound: true, Version: 1})
 	}
-	_, err = store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{"$set": bson.M{"level": level.LearnLevel, "learned_skills": learned}})
+	_, err = store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{
+		"$set": bson.M{"level": level, "learned_skills": []domain.LearnedSkill{{SkillID: 2}},
+			"skill_slot_ids": []uint32{0, 0, 0, 2}},
+		"$push": bson.M{"items": bson.M{"$each": books}},
+	})
 	must(t, err)
 	upstream, err := url.Parse("http://" + cfg.AccountAddress)
 	must(t, err)
@@ -102,12 +111,22 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 	t.Logf("%s", log)
 	stored, err := store.Role(ctx, roleID)
 	must(t, err)
-	if !slices.Equal(stored.SkillSlotIDs, []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 0}) {
+	for _, book := range books {
+		if slices.ContainsFunc(stored.Items, func(item domain.Item) bool { return item.ID == book.ID }) {
+			t.Fatal("浏览器学习未消耗对应原书", book.ItemID)
+		}
+	}
+	for _, id := range []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID} {
+		if _, learned := stored.Skill(id); !learned {
+			t.Fatal("浏览器学习未持久化技能", id)
+		}
+	}
+	if !slices.Equal(stored.SkillSlotIDs, []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 2}) {
 		t.Fatal("触屏两次配置未持久化四槽", stored.SkillSlotIDs)
 	}
 	count, err := store.DB.Collection("operations").CountDocuments(ctx, bson.M{"role_id": roleID, "kind": persistence.AssetSetSkillSlots, "code": 0})
 	must(t, err)
-	if count != 2 || stored.EconomicSeq != 2 {
-		t.Fatalf("两次槽位点击或健康重连修改永久操作次数：操作%d、角色流水%d", count, stored.EconomicSeq)
+	if count != 2 || stored.EconomicSeq != 4 {
+		t.Fatalf("学书、槽位点击或健康重连产生非预期永久操作次数：技能槽%d、角色流水%d", count, stored.EconomicSeq)
 	}
 }

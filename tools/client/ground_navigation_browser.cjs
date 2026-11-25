@@ -97,6 +97,97 @@ async function inspectNpcTap({ witness, body }) {
         resolved: world.screenToGrid(ui), name: npc.npc.name, alphaMin: Math.min(...alphas), alphaMax: Math.max(...alphas) };
 }
 
+// 同一运行服的另一个真实角色提供站姿纹理。逐帧寻找人体外框内的全透明和不透明触点。
+async function inspectPeerTaps(name) {
+    const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0], world = app.world;
+    const peer = Array.from(world.visuals.values()).find(visual => visual.state.entityKind === 1 && visual.state.displayName === name);
+    const sprite = peer.body[0], transform = sprite.node._uiProps.uiTransformComp;
+    const foot = peer.node.position, exact = peer.state.position;
+    const rectangles = world.townNpcs.flatMap(npc => npc.layers.map(layer => layer.sprite.node._uiProps.uiTransformComp.getBoundingBoxToWorld()));
+    const canvas = document.createElement('canvas'), pixels = canvas.getContext('2d', { willReadFrequently: true });
+    const rasters = [];
+    const keys = peer.profile.layers[0].actions.standing.directions[peer.orderDirection].frames;
+    for (const key of new Set(keys)) {
+        const frame = world.assets.frames.get(key), definition = world.manifest.frames[key];
+        if (!frame || definition.declared_empty) throw new Error('城镇对照角色缺少站姿原画');
+        const original = frame.original, rect = frame.rect, asset = (original?._texture ?? frame.texture).image;
+        let bitmap = asset.data;
+        const temporary = ![HTMLImageElement, ImageBitmap, HTMLCanvasElement].some(type => bitmap instanceof type);
+        if (temporary) bitmap = await createImageBitmap(await (await fetch(asset.nativeUrl)).blob());
+        canvas.width = rect.width; canvas.height = rect.height;
+        pixels.drawImage(bitmap, original?._x ?? rect.x, original?._y ?? rect.y, rect.width, rect.height, 0, 0, rect.width, rect.height);
+        if (temporary) bitmap.close();
+        rasters.push({ left: definition.offset_x - 24 + (definition.width - rect.width) / 2 + frame.offset.x,
+            top: 16 - definition.offset_y - (definition.height - rect.height) / 2 + frame.offset.y,
+            width: rect.width, height: rect.height, data: pixels.getImageData(0, 0, rect.width, rect.height).data });
+    }
+    const box = document.querySelector('canvas').getBoundingClientRect(), visible = cc.view.getVisibleSize();
+    const viewport = world.viewport._uiProps.uiTransformComp.getBoundingBoxToWorld();
+    const inside = (point, rect, edge = 0) => point.x >= rect.x + edge && point.x <= rect.x + rect.width - edge
+        && point.y >= rect.y + edge && point.y <= rect.y + rect.height - edge;
+    const actorBox = transform.getBoundingBoxToWorld();
+    let clear, body;
+    for (let y = 2; y < transform.height - 2 && !(clear && body); y += 2) {
+        for (let x = 2; x < transform.width - 2 && !(clear && body); x += 2) {
+            const localX = sprite.node.position.x + x + .5, localY = sprite.node.position.y - y - .5;
+            const ui = world.world._uiProps.uiTransformComp.convertToWorldSpaceAR(new cc.Vec3(foot.x + localX, foot.y + localY));
+            if (!inside(ui, viewport, 12) || !inside(ui, actorBox, 2) || rectangles.some(rect => inside(ui, rect))) continue;
+            const alpha = [];
+            for (const raster of rasters) {
+                const column = Math.floor(localX - raster.left), row = Math.floor(raster.top - localY);
+                if (column < 1 || row < 1 || column >= raster.width - 1 || row >= raster.height - 1) break;
+                for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+                    alpha.push(raster.data[((row + dy) * raster.width + column + dx) * 4 + 3]);
+                }
+            }
+            if (alpha.length !== rasters.length * 9) continue;
+            const point = { x: box.x + ui.x * box.width / visible.width,
+                y: box.y + (visible.height - ui.y) * box.height / visible.height,
+                alphaMin: Math.min(...alpha), alphaMax: Math.max(...alpha) };
+            if (!body && point.alphaMin === 255) body = point;
+            if (!clear && point.alphaMax === 0) {
+                const target = world.screenToGrid(ui), own = world.visuals.get(world.playerHandle).state.position;
+                if (target && (target.x !== exact.x || target.y !== exact.y) && (target.x !== own.x || target.y !== own.y)) {
+                    clear = { ...point, target };
+                }
+            }
+        }
+    }
+    return { handle: peer.state.entityHandle, body, clear };
+}
+
+async function verifySharedTownGround(page, evidence, name) {
+    const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+    try {
+        const prior = evidence.intents.length;
+        const observed = await page.waitForFunction(name => {
+            const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
+            return Array.from(world.visuals.values()).some(visual => visual.state.entityKind === 1 && visual.state.displayName === name
+                && visual.pose?.action === 'standing' && visual.body[0]?.spriteFrame);
+        }, name, { timeout: 7500 });
+        await observed.dispose();
+        const taps = await page.evaluate(inspectPeerTaps, name);
+        assert(taps.body && taps.clear, '无法找到共享城镇角色的实图触点：' + JSON.stringify(taps));
+        await page.touchscreen.tap(taps.body.x, taps.body.y);
+        const selected = await page.waitForFunction(handle =>
+            cc.director.getScene().getComponentsInChildren('AppRoot')[0].selectedTarget?.handle === handle,
+        taps.handle, { timeout: 4500 });
+        await selected.dispose();
+        assert.equal(evidence.intents.length, prior);
+        await page.touchscreen.tap(taps.clear.x, taps.clear.y);
+        const arrived = await page.waitForFunction(({ session, target }) => {
+            const nav = session.baseline?.navigationState, player = session.baseline?.entities.find(row => row.entityHandle === session.entry.playerHandle);
+            return nav?.status === 2 && nav.destination?.x === target.x && nav.destination?.y === target.y
+                && player?.position.x === target.x && player.position.y === target.y && nav.inputSequence;
+        }, { session, target: taps.clear.target }, { timeout: 10000 }).catch(error => {
+            throw new Error(error.message + ' ' + JSON.stringify({ taps, intents: evidence.intents.slice(prior) }));
+        });
+        try { assert.deepEqual(evidence.intents.slice(prior), [{ input: await arrived.jsonValue(), ...taps.clear.target }]); }
+        finally { await arrived.dispose(); }
+        return { bodyAlphaMin: taps.body.alphaMin, groundAlphaMax: taps.clear.alphaMax, destination: taps.clear.target, arrived: true };
+    } finally { await session.dispose(); }
+}
+
 async function verifyGroundDirections(page, { intents, positions }, town = false) {
     const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
     const touches = await page.evaluateHandle(() => {
@@ -273,4 +364,4 @@ async function verifyGroundDirections(page, { intents, positions }, town = false
     }
 }
 
-module.exports = { observeGroundIntents, verifyGroundDirections };
+module.exports = { observeGroundIntents, verifyGroundDirections, verifySharedTownGround };

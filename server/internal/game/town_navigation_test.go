@@ -223,6 +223,63 @@ func TestTownNavigationReplansWhenTargetOpensBeforeArrival(t *testing.T) {
 	}
 }
 
+// TestTownNavigationReplansWhenGoalBecomesOccupied 验证持续占位只暂停最终落格，原点击仍引导角色靠近。
+func TestTownNavigationReplansWhenGoalBecomesOccupied(t *testing.T) {
+	w, r := navigationTownWorker(t, 17, 17, 64, 128, 1, 2, devconfig.Point{X: 6, Y: 9})
+	// 紧凑城镇中的另一个角色占目标格，本地宠物同时阻塞旧路线。
+	w.e.Store.Cfg.RunID = 1
+	definition := &w.e.Store.Cfg.Fixture.Maps[0]
+	definition.CompactTown = true
+	definition.Blocked = []devconfig.Point{{X: 6, Y: 9}}
+	definition.CollisionBits = nil
+	w.townNavigation = nil
+	if err := w.e.initializeTownNavigation(); err != nil {
+		t.Fatal(err)
+	}
+	r.Player.Pos = devconfig.Point{X: 8, Y: 13}
+	town, _ := w.currentMap(r)
+	if !w.attachSharedTown(r, town) {
+		t.Fatal("玩家未占用共享城镇起脚格")
+	}
+	target, now := devconfig.Point{X: 5, Y: 9}, time.Unix(1, 0)
+	requestTownGround(r, target)
+	navigationTownTick(w, r, target, now)
+	request := r.TownNavigation[0]
+	if request == nil || request.state != townnav.Ready || request.adjacent {
+		t.Fatal("未建立空目标格的精确路线")
+	}
+	priorExpanded := request.task.Progress().TotalExpanded
+	first, ok, err := request.task.Next(request.key, townPoint(r.Player.Pos), request.dynamic)
+	if err != nil || !ok {
+		t.Fatal("未能读取原路线首步", err)
+	}
+	r.Pet = &entity{Handle: 2, Kind: 2, HP: 10, Pos: gamePoint(first)}
+	blocker := addNavigationTownRoom(w, "b", target)
+	if !w.attachSharedTown(blocker, town) {
+		t.Fatal("第二个角色未占用目标格")
+	}
+	for frame := 1; frame <= 10; frame++ {
+		navigationTownTick(w, r, target, now.Add(time.Duration(frame)*time.Second))
+		if r.Player.Pos == target || r.TownNavigation[0] != request || r.Navigation.Revision != request.inputRevision {
+			t.Fatal("走进占格或替换了原点击身份")
+		}
+	}
+	if distance(r.Player.Pos, target) != 1 || request.state != townnav.Arrived || !request.adjacent ||
+		request.task.Progress().Replans != 1 || request.task.Progress().TotalExpanded <= priorExpanded || r.Navigation.Status != navigationActive {
+		t.Fatalf("拥堵时未保留目标并停到邻格：位置 %v，路线 %s，进度 %+v", r.Player.Pos, request.state, request.task.Progress())
+	}
+	if w.townNavigation.used != 0 || request.storage != nil {
+		t.Fatal("等候目标格腾空时继续重复搜索或占用路线缓冲")
+	}
+	w.leaveSharedTown(blocker)
+	for frame := 11; frame <= 14 && r.Player.Pos != target; frame++ {
+		navigationTownTick(w, r, target, now.Add(time.Duration(frame)*time.Second))
+	}
+	if r.Player.Pos != target || r.TownNavigation[0] != request || r.Navigation.Destination == nil || *r.Navigation.Destination != target {
+		t.Fatalf("占位解除后没有继续到原目标：位置 %v，导航 %+v", r.Player.Pos, r.Navigation)
+	}
+}
+
 // TestTownNavigationPetStopsBesideOwnerWithoutEnteringOwnerCell 核对「宠物未停在主人合法邻格」与「宠物已邻接仍重复整图搜索」所标示的断言。
 // t 提供断言失败报告、子用例和清理注册。
 func TestTownNavigationPetStopsBesideOwnerWithoutEnteringOwnerCell(t *testing.T) {

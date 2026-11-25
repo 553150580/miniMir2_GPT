@@ -6,7 +6,7 @@ const path = require('node:path');
 const { chromium } = require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT, 'browser-tools/node_modules/playwright-core'));
 const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js').minimir.v1;
 const { observeTravel, measureTravel } = require('./map_travel_benchmark.cjs');
-const { observeGroundIntents, verifyGroundDirections } = require('./ground_navigation_browser.cjs');
+const { observeGroundIntents, verifyGroundDirections, verifySharedTownGround } = require('./ground_navigation_browser.cjs');
 
 const manifestPath = path.resolve(process.argv[2] ?? '');
 const work = path.resolve('.work');
@@ -57,8 +57,9 @@ async function main() {
         }
         const travelBenchmark = process.env.MINIMIR_BENCHMARK_MAP_TRAVEL === '1' ? observeTravel(page) : undefined;
         const checkTownGround = process.env.MINIMIR_VERIFY_TOWN_GROUND_NAVIGATION === '1';
+        const checkTownPeer = process.env.MINIMIR_VERIFY_TOWN_PEER_TOUCH === '1';
         const checkPersonalGround = process.env.MINIMIR_VERIFY_GROUND_NAVIGATION === '1';
-        const groundIntents = checkPersonalGround || checkTownGround ? observeGroundIntents(page) : undefined;
+        const groundIntents = checkPersonalGround || checkTownGround || checkTownPeer ? observeGroundIntents(page) : undefined;
         page.on('pageerror', error => report.errors.push(error.message));
         const connections = [];
         const createdOrigins = [];
@@ -93,18 +94,18 @@ async function main() {
                     && payload[2] * 256 + payload[3] === 6) state.ready = true;
             });
         });
-        const scene = async name => {
+        const scene = async (name, targetPage = page) => {
             report.step = '等待场景 ' + name;
-            await page.waitForFunction(name => {
+            await targetPage.waitForFunction(name => {
                 const current = window.cc?.director?.getScene();
                 return current?.name === name && current.getComponentsInChildren('AppRoot').length
                     && cc.find('Canvas/Safe')?.activeInHierarchy && !cc.find('Canvas/Loading')?.activeInHierarchy;
             }, name, { timeout: 60000 });
-            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+            await targetPage.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         };
-        const tap = async (suffix, label, root = 'Canvas/Safe/') => {
+        const tap = async (suffix, label, root = 'Canvas/Safe/', targetPage = page) => {
             report.step = `触屏 ${suffix}${label === undefined ? '' : ' · ' + label}`;
-            const handle = await page.waitForFunction(({ suffix, label, root }) => {
+            const handle = await targetPage.waitForFunction(({ suffix, label, root }) => {
                 const node = cc.find(root + suffix);
                 const target = label == null ? node : node?.children.find(child => {
                     const value = child.getChildByName('Text')?.getComponent(cc.Label)?.string;
@@ -122,12 +123,12 @@ async function main() {
             const point = await handle.jsonValue();
             await handle.dispose();
             const tappedAt = performance.now();
-            await page.touchscreen.tap(point.x, point.y);
+            await targetPage.touchscreen.tap(point.x, point.y);
             return tappedAt;
         };
-        const edit = async (name, value) => {
-            await tap(name);
-            const widget = page.locator('input:visible');
+        const edit = async (name, value, targetPage = page) => {
+            await tap(name, undefined, undefined, targetPage);
+            const widget = targetPage.locator('input:visible');
             await widget.waitFor({ state: 'visible', timeout: 5000 });
             await widget.fill(value);
         };
@@ -404,26 +405,57 @@ async function main() {
                 assert.equal(report.ordinaryMap.columns, 13);
             } finally { await session.dispose(); }
         };
-        const verifyTownGround = async () => {
+        const enterTown = async (targetPage, map, name) => {
             const list = 'UIMgr/Panels/TownDirectory';
-            const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
-            const results = [];
+            await tap('BottomHUD/Footer/Map', undefined, undefined, targetPage);
+            await tap(list + '/RegionList/View/Content', '比奇省', undefined, targetPage);
+            await tap(list + '/MapList/View/Content', name + ' · 城镇', undefined, targetPage);
+            const session = await targetPage.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
             try {
-                for (const [map, name] of [['3', '银杏山谷'], ['4', '边界村'], ['5', '比奇城']]) {
-                    await tap('BottomHUD/Footer/Map');
-                    await tap(list + '/RegionList/View/Content', '比奇省');
-                    await tap(list + '/MapList/View/Content', name + ' · 城镇');
-                    report.step = `核对${name}八方向地面导航`;
-                    const ready = await page.waitForFunction(({ session, map }) => {
-                        const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
-                        return session.ready && session.entry.sceneKind === 2 && session.entry.roomId.toString() === map
-                            && world?.isMapReady && world.map.width === 17 && world.map.height === 17;
-                    }, { session, map }, { timeout: 35000 });
-                    await ready.dispose();
-                    results.push({ map, name, samples: await verifyGroundDirections(page, groundIntents, true) });
-                }
-                return results;
+                const ready = await targetPage.waitForFunction(({ session, map }) => {
+                    const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+                    return session.ready && session.entry.sceneKind === 2 && session.entry.roomId.toString() === map
+                        && world?.isMapReady && world.map.width === 17 && world.map.height === 17;
+                }, { session, map }, { timeout: 35000 });
+                await ready.dispose();
             } finally { await session.dispose(); }
+        };
+        const verifyTownGround = async () => {
+            const results = [];
+            for (const [map, name] of [['3', '银杏山谷'], ['4', '边界村'], ['5', '比奇城']]) {
+                await enterTown(page, map, name);
+                report.step = `核对${name}八方向地面导航`;
+                results.push({ map, name, samples: await verifyGroundDirections(page, groundIntents, true) });
+            }
+            return results;
+        };
+        const verifyTownPeer = async entry => {
+            const peerContext = await browser.newContext({ viewport: { width: 720, height: 1280 }, hasTouch: true, isMobile: true, deviceScaleFactor: 1 });
+            try {
+                const peer = await peerContext.newPage();
+                peer.on('pageerror', error => report.errors.push(error.message));
+                const touch = (name, label) => tap(name, label, undefined, peer);
+                await peer.goto(base.href);
+                await scene('Login', peer);
+                await edit('Account', 'peer_' + crypto.randomBytes(5).toString('hex'), peer);
+                await edit('Password', crypto.randomBytes(8).toString('hex'), peer);
+                await touch('Register');
+                await scene('ServerSelect', peer);
+                await touch('RegionList/View/Content', entry.region);
+                await touch('ServerList/View/Content', entry.server);
+                await scene('RoleSelect', peer);
+                const role = '城验' + crypto.randomBytes(2).toString('hex');
+                await edit('Name', role, peer);
+                await touch('Create');
+                await peer.waitForFunction(name => cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string.includes(name), role);
+                await touch('Enter');
+                await scene('Game', peer);
+                await peer.waitForFunction(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.reconciliationStarted);
+                await enterTown(peer, '5', '比奇城');
+                await page.bringToFront();
+                report.step = '核对共享城镇其他玩家的实图透明区域与选中';
+                return await verifySharedTownGround(page, groundIntents, role);
+            } finally { await peerContext.close(); }
         };
         await page.goto(base.href);
         await scene('Login');
@@ -524,6 +556,10 @@ async function main() {
             if (index === 0) {
                 // 城镇专项保留四服选服与入场，独立覆盖三座城镇的点地导航。
                 if (checkTownGround) report.townGroundNavigation = await verifyTownGround();
+                else if (checkTownPeer) {
+                    await enterTown(page, '5', '比奇城');
+                    report.townPeerTouch = await verifyTownPeer(entry);
+                }
                 else {
                     if (bossChallenges) await verifyBossChallenges();
                     if (tasksCodex) await verifyTasks();

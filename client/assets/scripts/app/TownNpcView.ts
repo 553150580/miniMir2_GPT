@@ -1,9 +1,10 @@
-import { instantiate, isValid, Label, Node, Sprite, UITransform, Vec3, view } from 'cc';
+import { instantiate, isValid, Label, Node, Sprite, UITransform } from 'cc';
 import { profileHeadTop } from './EntityHeadAnchor';
 import { GridProjection } from './GridProjection';
 import { townNpcAppearance } from './TownMapModel';
 import type { TownNpc } from './TownMapModel';
 import type { WorldAssets } from './WorldAssets';
+import { bindTownTouchHit } from './TownTouchHit';
 
 interface NpcLayer {
     readonly sprite: Sprite;
@@ -56,21 +57,11 @@ export class TownNpcView {
     // 在触摸开始前完成过滤，空地仍由原地图视口认领整次手势。
     private bindVisibleHit(layer: NpcLayer): void {
         if (!layer.frames.some(key => this.assets.manifest.townNpcHitMasks?.[key])) return;
-        const transform = layer.sprite.node.getComponent(UITransform)!;
-        const hitRectangle = transform.hitTest.bind(transform);
-        const uiPoint = new Vec3(), localPoint = new Vec3();
-        transform.hitTest = (screenPoint, windowId) => {
-            if (!hitRectangle(screenPoint, windowId)) return false;
+        bindTownTouchHit(layer.sprite.node, (x, y, width) => {
             if (!layer.hitMask) return true;
-            const viewport = view.getViewportRect();
-            uiPoint.set((screenPoint.x - viewport.x) / view.getScaleX(), (screenPoint.y - viewport.y) / view.getScaleY(), 0);
-            transform.convertToNodeSpaceAR(uiPoint, localPoint);
-            // 站姿图层的锚点固定在左上。原图行号向下增长。
-            const x = Math.floor(localPoint.x), y = Math.floor(-localPoint.y);
-            if (x < 0 || y < 0 || x >= transform.width || y >= transform.height) return false;
-            const pixel = y * transform.width + x;
+            const pixel = Math.floor(y) * width + Math.floor(x);
             return (layer.hitMask[pixel >> 3] & (1 << (pixel & 7))) !== 0;
-        };
+        });
     }
 
     private paint(layer: NpcLayer, key: string): void {

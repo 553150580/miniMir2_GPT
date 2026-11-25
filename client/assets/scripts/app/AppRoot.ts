@@ -1552,7 +1552,7 @@ export class AppRoot extends Component {
         return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
             sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO, sceneKind: session.entry?.sceneKind,
             inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], playerStatuses: player?.statuses,
-            canConfigureSlots: !!session.inventory && session.ready && !this.economicBusy && !this.unresolved &&
+            canConfigureSlots: !!session.inventory && session.ready && !this.economicBusy && !this.unresolved && !session.pending?.get(roleIdentity()) &&
                 (session.entry?.sceneKind === 1 || session.entry?.sceneKind === 2),
             ownedPet: session.baseline?.ownedPet, mapNoPets: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_pets,
             mapNoTeleport: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_teleport, modes, modesReceivedAt: session.skillModesReceivedAt,
@@ -1897,7 +1897,7 @@ export class AppRoot extends Component {
         this.ensureNotLeaving();
         if (this.economicBusy || this.unresolved) throw new Error('上一笔操作正在核对，请等待回执');
         if (!session.pending || session.pending.get(roleIdentity())) throw new Error('上一笔操作需要沿原身份核对');
-        const payload = { ...value, operation: operation() };
+        const payload = { ...value, operation: operation(id === 40031 ? value.expectedSkillSlotIds : undefined) };
         try { session.pending.set(roleIdentity(), { id, value: payload }); }
         catch (error) { session.command = payload.operation.commandSeq; throw error; }
         await this.submitPending();

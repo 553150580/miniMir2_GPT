@@ -27,6 +27,7 @@ import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
 import type { TownNpc } from './TownMapModel';
 import { TownNpcView } from './TownNpcView';
+import { TownActorTouch } from './TownTouchHit';
 
 interface Visual {
     node: Node;
@@ -94,6 +95,7 @@ export class GameWorldView {
     private mapFailure: unknown;
     private readonly props: Array<{ node: Node; foot: Vec3; id: string }> = [];
     private readonly townNpcs: TownNpcView[] = [];
+    private townActorTouch?: TownActorTouch;
     private disposed = false;
     private selected: (entity: any) => void = () => {};
     private playerPosition: { x: number; y: number } | null = null;
@@ -367,8 +369,12 @@ export class GameWorldView {
                 };
                 // 实体选择只使用实际身体。透明根容器和固定宽度的名字不阻挡地图点地。
                 const touchBody = profile ? body : placeholder ?? node;
-                // 城镇里自己的身体会覆盖身后的相邻地格；让点地操作直接到达地图视口。
-                if (this.assets.sceneKind !== 2 || state.entityHandle !== this.playerHandle) touchBody.on(Node.EventType.TOUCH_END, selectEntity);
+                const inTown = this.assets.sceneKind === 2;
+                if (!inTown || state.entityHandle !== this.playerHandle) {
+                    // 城镇自己的身体始终让开点地。其他角色和宠物的透明区域也应让开。
+                    if (inTown && profile) (this.townActorTouch ??= new TownActorTouch()).bind(sprites[0]);
+                    touchBody.on(Node.EventType.TOUCH_END, selectEntity);
+                }
                 const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
                 visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
                     motion: sameLife ? replaced.motion : new EntityMotion(),
