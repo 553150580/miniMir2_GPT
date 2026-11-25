@@ -161,6 +161,9 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 		if err := personalBossAdmissionError(availability.EligibilityReason); err != nil {
 			return err
 		}
+		if err := s.checkMirrorRoleFree(tc, r); err != nil {
+			return err
+		}
 		// 回执编号和所有者代次同源冻结，不能由其他角色或新执行接管旧预约。
 		grant = PersonalBossChallenge{ChallengeID: q.ChallengeID, ReservationID: domain.ID(), RoleID: r.ID,
 			RunID: s.Cfg.RunID, Execution: q.Execution, TemplateID: q.TemplateID, RuleVersion: q.RuleVersion,

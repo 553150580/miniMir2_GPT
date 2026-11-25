@@ -145,6 +145,7 @@ type room struct {
 	TownWorlds            []*worldState             // 已创建的其他城镇现场，用于按地图查找和保留事件归属。
 	townMembership        townMembership            // 角色当前的共享城镇席位，由所属分片管理。
 	personalBoss          *personalBossRun          // 永久角色房间正在批准、观察或结算的独享挑战。
+	mirrorMatch           *mirrorRun                // 当前角色持有的独立镜像挑战及原回执。
 	bossBattle            *personalBossBattle       // 独享挑战子房间只持有临时战斗能力，不能直接写永久数据。
 	worldBossObservation  *worldBossObservation     // 原角色控制分片上的共享场次观察身份。
 	worldBossResume       worldBossOccurrence       // 健康掉线或会话接管时原场次的接回提示。
@@ -468,6 +469,7 @@ func (w *worker) loop() {
 						w.retryPendingRoom(r, c.tick)
 					}
 					w.stepPersonalBoss(r, c.tick)
+					w.stepMirrorArena(r, c.tick)
 					w.step(r, c.tick)
 					w.resumeDungeonObservation(r, c.tick)
 					w.expireIdleRoom(roleID, r, c.tick)
@@ -588,6 +590,17 @@ func (w *worker) command(c command) {
 		}
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
+	}
+	if c.frame.ID == p.MsgC2SMirrorArenaRequest {
+		w.mirrorArenaCommand(r, c.frame, time.Now())
+		return
+	}
+	if r.mirrorMatch != nil {
+		switch c.frame.ID {
+		case p.MsgC2SPersonalBossEnter, p.MsgC2SWorldBossEnter, p.MsgC2SMapTravelPrepare, p.MsgC2SMapTravelCommit:
+			w.failure(r, c.frame, p.CodeLineRecovering)
+			return
+		}
 	}
 	if c.frame.ID == p.MsgC2SDungeonPartyRequest {
 		w.dungeonPartyCommand(r, c.frame, time.Now())

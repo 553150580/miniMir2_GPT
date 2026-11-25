@@ -180,7 +180,7 @@ func stepPoint(origin devconfig.Point, direction uint32, distance int) devconfig
 	return devconfig.Point{X: origin.X + d.X*distance, Y: origin.Y + d.Y*distance}
 }
 
-// 本阶段只允许活跃怪物为敌；每格以稳定句柄选第一个合法敌人，不把宠物算作敌人。
+// enemyAt 只从当前世界的活跃敌方中按稳定句柄取首个目标。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，point 记录点位。
 func (w *worker) enemyAt(r *room, point devconfig.Point) *entity {
 	return w.enemyAtInWorld(r.currentWorld(), point)
@@ -195,7 +195,7 @@ func (w *worker) enemyAtInWorld(world *worldState, point devconfig.Point) *entit
 	// found 记录已找到标记，使用实体表示。
 	var found *entity
 	// e 接收遍历怪物集合中的范围时当前的元素。
-	for _, e := range world.Monsters[:world.MonsterCount] {
+	for _, e := range world.combatOpponents() {
 		if e.HP > 0 && e.Pos == point && (found == nil || e.Handle < found.Handle) {
 			found = e
 		}

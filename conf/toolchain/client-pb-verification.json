@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 123,
+  "message_count": 129,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -128,10 +128,16 @@
     "DungeonPartyView",
     "DungeonPartyMember",
     "DungeonBattleState",
-    "DungeonSceneTransition"
+    "DungeonSceneTransition",
+    "MirrorArenaRequest",
+    "MirrorArenaOffer",
+    "MirrorArenaRecord",
+    "MirrorArenaState",
+    "MirrorArenaCombatFrame",
+    "MirrorArenaCombatObservation"
   ],
-  "int64_field_count": 282,
-  "int64_boundary_cases": 942,
+  "int64_field_count": 302,
+  "int64_boundary_cases": 1010,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1824,9 +1830,129 @@
       "field": "target_map_id",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MirrorArenaRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaRequest",
+      "field": "battle_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaOffer",
+      "field": "defense_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaRecord",
+      "field": "defense_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaRecord",
+      "field": "awarded_points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaRecord",
+      "field": "started_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaRecord",
+      "field": "finished_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "season_start_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "season_end_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "season_points",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "published_defense_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "battle_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "battle_map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "battle_deadline_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MirrorArenaState",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaCombatFrame",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaCombatFrame",
+      "field": "battle_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaCombatFrame",
+      "field": "sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MirrorArenaCombatFrame",
+      "field": "server_unix_ms",
+      "type": "int64",
+      "cases": 4
     }
   ],
-  "bytes_field_count": 39,
+  "bytes_field_count": 45,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2022,6 +2148,36 @@
       "message": "DungeonSceneTransition",
       "field": "challenge_id",
       "repeated": false
+    },
+    {
+      "message": "MirrorArenaRequest",
+      "field": "offer_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaRequest",
+      "field": "challenge_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaOffer",
+      "field": "offer_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaRecord",
+      "field": "challenge_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaCombatFrame",
+      "field": "challenge_id",
+      "repeated": false
+    },
+    {
+      "message": "MirrorArenaCombatObservation",
+      "field": "payload",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2059,18 +2215,22 @@
     {
       "path": "shared/proto/dungeon_party.proto",
       "sha256": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda"
+    },
+    {
+      "path": "shared/proto/mirror_arena.proto",
+      "sha256": "d8f4ab4adb3e871e48b54567fcfce6caa5a63c586d055334d298005e69cc3599"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "be7bef35fb87a4a0e93550d9ece843fa50c9e4a54bdd5abd1f8bbf3b1edcca44",
-      "bytes": 2130901
+      "sha256": "71f6a8d1f1f08ce0b957be69616245d731da5a682bdd3275c083d98b9a09a8de",
+      "bytes": 2253393
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "6991f3bddff66ebebb96dc7e773ec1856aa8a9b2b29872216818222e12fd91d8",
-      "bytes": 670563
+      "sha256": "1ed8d28f373ed432b164176c94014747a718f54a235f50ce9bad4c81b3e69b87",
+      "bytes": 706452
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

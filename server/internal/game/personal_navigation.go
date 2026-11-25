@@ -39,6 +39,8 @@ func (b *personalNavigationWorkspace) findFirstStep(m *devconfig.MapTemplate, r 
 		arena.eachLiving(func(actor *entity) { b.markActor(m, actor, self) })
 	} else if arena := r.dungeonCombat; arena != nil {
 		arena.eachLiving(func(actor *entity) { b.markActor(m, actor, self) })
+	} else if arena := r.currentWorld().mirrorCombat; arena != nil {
+		arena.eachBody(func(actor *entity) { b.markActor(m, actor, self) })
 	} else {
 		b.markActor(m, &r.Player, self)
 		b.markActor(m, r.worldPet(r.currentWorld()), self)

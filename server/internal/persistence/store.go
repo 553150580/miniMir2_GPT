@@ -204,6 +204,11 @@ func (s *Store) Migrate(ctx context.Context) error {
 		dungeonCollection:         dungeonIndexes(),
 		dungeonRewardCollection:   externalChallengeRewardIndexes(),
 	}
+	if s.Cfg.Fixture.MirrorArena != nil {
+		for collection, models := range mirrorArenaIndexes() {
+			indexes[collection] = models
+		}
+	}
 	// name 定位目标集合，models 是为该集合建立的索引列表。
 	for name, models := range indexes {
 		if _, e = s.DB.Collection(name).Indexes().CreateMany(ctx, models); e != nil {

@@ -53,7 +53,7 @@ func (w *worker) releaseIdleSlot(now time.Time) bool {
 func (w *worker) retainRoom(r *room) bool {
 	// 只由房间所属 worker 检查。隔离待恢复、已受理操作与尚可产出永久事实的事件都保留。
 	if r.Conn != nil || r.Scene == 0 || r.Isolated || r.Pending || r.PendingRetry != nil || r.personalBoss != nil || r.worldBossObservation != nil ||
-		r.dungeonStart != nil || r.dungeonMatch != nil ||
+		r.dungeonStart != nil || r.dungeonMatch != nil || r.mirrorMatch != nil ||
 		r.PendingOperationID != "" || r.PendingBinding != nil || r.BindingCandidate != nil || r.hostSecondsOpen != 0 ||
 		r.PendingPetBirth != nil || len(r.Waiting) != 0 || len(r.KillFacts) != 0 ||
 		len(r.Wear.open) != 0 || len(r.Wear.inflight) != 0 || r.eventCount() != 0 {

@@ -21,6 +21,8 @@ const (
 	SceneKindWorldBoss uint32 = 4
 	// SceneKindDungeon 表示同一队伍独享的多人讨伐地图。
 	SceneKindDungeon uint32 = 5
+	// SceneKindMirrorArena 表示挑战者与固定镜像共用的独立战斗场景。
+	SceneKindMirrorArena uint32 = 6
 
 	// maxPersonalGridSide 规定最大个人网格“side”的初始取值。
 	maxPersonalGridSide = 17
@@ -152,7 +154,7 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		return false
 	}
 	switch kind {
-	case SceneKindPersonal, SceneKindPersonalBoss, SceneKindWorldBoss, SceneKindDungeon:
+	case SceneKindPersonal, SceneKindPersonalBoss, SceneKindWorldBoss, SceneKindDungeon, SceneKindMirrorArena:
 	case SceneKindTown:
 		if !m.CompactTown {
 			return false

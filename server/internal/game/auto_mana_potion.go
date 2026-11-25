@@ -58,6 +58,9 @@ func (w *worker) castWithManaRecovery(r *room, q *pb.CastIntent, now time.Time) 
 // tryManaPotion 在合法施法仅缺魔法值、没有剩余药水恢复且可用药时，提交一笔背包药水消耗。
 // w 持有房间 r；need 给出施法所需的魔法值，now 用来判断用药冷却。
 func (w *worker) tryManaPotion(r *room, need automaticManaNeed, now time.Time) bool {
+	if r.currentWorld().mirrorCombat != nil {
+		return w.mirrorPotion(r, need, now)
+	}
 	if r.bossBattle != nil || r.Pending || r.Isolated || need.cost <= r.Player.MP || r.Potions.MP > 0 || potionGate(r, r.Scene, now) != 0 || r.Role.SourceSeq == math.MaxInt64 {
 		return false
 	}

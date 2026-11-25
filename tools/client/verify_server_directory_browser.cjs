@@ -502,6 +502,16 @@ async function main() {
             const route = await ticketResponses[ticketsBefore];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
+            if (index === 0 && process.env.MINIMIR_VERIFY_MIRROR_CLOSED === '1') {
+                const mirror = await page.evaluate(async () => {
+                    const { session } = await System.import('chunks:///_virtual/GameSession.ts');
+                    const result = await session.connection.request(20025, { action: 1, sceneEpoch: session.entry.sceneEpoch });
+                    return { open: result.open, error: result.errorCode, offers: result.offers.length,
+                        sameScene: result.sceneEpoch.equals(session.entry.sceneEpoch) };
+                });
+                assert.deepEqual(mirror, { open: false, error: 0, offers: 0, sameScene: true });
+                report.mirrorUnavailable = true;
+            }
             if (index === 0 && checkPersonalGround) {
                 report.step = '核对八向触屏地格及权威导航';
                 report.groundNavigation = await verifyGroundDirections(page, groundIntents);

@@ -42,11 +42,15 @@ func (e *Engine) DrainSettlements(ctx context.Context) error {
 			}
 			// pending 表示该单个房间仍有计量、收益或资产操作待确认。
 			pending := w.drainRoomSettlement(r, now)
+			mirrorPending, mirrorFailed := w.drainMirrorArena(r, now)
+			if mirrorFailed && !r.Isolated {
+				status.isolated++
+			}
 			if r.Isolated {
 				status.isolated++
 				continue
 			}
-			status.pending = pending || status.pending
+			status.pending = pending || mirrorPending || status.pending
 		}
 		pendingBoss, failedBoss := w.drainWorldBossLedger(now)
 		status.pending, status.isolated = status.pending || pendingBoss, status.isolated+failedBoss

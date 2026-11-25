@@ -28,6 +28,9 @@ func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) boo
 	if arena := r.dungeonCombat; arena != nil && arena.occupied(point, e) {
 		return false
 	}
+	if arena := r.currentWorld().mirrorCombat; arena != nil && arena.occupied(point, e) {
+		return false
+	}
 	if r.CellEntrySequence == math.MaxUint64 {
 		w.isolateRoom(r)
 		return false

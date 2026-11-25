@@ -64,6 +64,9 @@ func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
 	if arena := r.dungeonCombat; arena != nil {
 		return !arena.occupied(q, self)
 	}
+	if arena := r.currentWorld().mirrorCombat; arena != nil {
+		return !arena.occupied(q, self)
+	}
 	// all 初始化用作全部的实体列表。
 	all := []*entity{&r.Player}
 	// pet 保存由场景世界宠物取得的宠物。
@@ -148,6 +151,10 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
 	if e.Kind == 1 {
+		if r.worldState != nil && r.worldState.mirrorCombat != nil && e != &r.Player {
+			other := r.worldState.mirrorCombat.sides[1-r.worldState.mirrorSide].room
+			return statusFighter(e, other.bossBattle.fighter)
+		}
 		if battle := r.bossBattle; battle != nil {
 			return statusFighter(e, battle.fighter)
 		}
@@ -220,7 +227,7 @@ func (w *worker) nearest(r *room, from *entity) *entity {
 	// best 保存当前最接近来源实体的存活怪物。
 	var best *entity
 	// m 接收遍历怪物集合中的范围时当前的元素。
-	for _, m := range r.Monsters[:r.MonsterCount] {
+	for _, m := range r.currentWorld().combatOpponents() {
 		if m.HP > 0 && (best == nil || distance(from.Pos, m.Pos) < distance(from.Pos, best.Pos)) {
 			best = m
 		}
@@ -304,6 +311,10 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 // target 记录目标，使用实体表示，damage 记录伤害，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 // context 记录上下文，使用可变数量的命中上下文表示。
 func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
+	if world != nil && world.mirrorCombat != nil {
+		w.applyMirrorDamage(r, world, from, target, damage, now, context)
+		return
+	}
 	if r.dungeonCombat != nil {
 		if damage > 0 && target.HP > 0 && world == r.currentWorld() {
 			w.applyDungeonDamage(r, from, target, damage, now, context)

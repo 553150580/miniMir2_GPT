@@ -220,7 +220,12 @@ func (f *Fixture) assembleDungeonStage(m *MapTemplate, def DungeonStageDefinitio
 
 // validDungeonMap 拒绝普通刷怪、城镇或其它特殊场景的配置混入同一地图。
 func validDungeonMap(m *MapTemplate) bool {
-	if m.ID == 0 || m.ID > math.MaxInt64 || m.SceneKind != SceneKindDungeon || m.CellBudget() == 0 ||
+	return validChallengeGrid(m, SceneKindDungeon)
+}
+
+// validChallengeGrid 校验独立挑战共用的空白网格、阻挡和场景边界。
+func validChallengeGrid(m *MapTemplate, kind uint32) bool {
+	if m.ID == 0 || m.ID > math.MaxInt64 || m.SceneKind != kind || m.CellBudget() == 0 ||
 		m.Width > maxPersonalGridSide || m.Height > maxPersonalGridSide || m.CompactTown || len(m.CollisionBits) != 0 ||
 		len(m.NPCs) != 0 || len(m.SafeZones) != 0 || len(m.LegacySafeZoneIDs) != 0 || len(m.MonsterSpawns) != 0 ||
 		len(m.MonsterSpawnIDs) != 0 || m.InitialMonsterCount != 0 {

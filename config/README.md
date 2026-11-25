@@ -143,6 +143,18 @@ Excel编辑器已修复追加记录与空模板重复物理行的问题；实际
 
 Excel数据区公式需要在表格引擎中重算保存后再导出；没有缓存或存在公式错误时拒绝处理。协议64位ID、版本等字段使用BigInt/Long；配置表整数禁止超出Excel精确整数范围。元宝内部单位为显示值的10倍，佣金/概率尽量使用整数万分比，特殊小概率需使用字段注明的更高精度。
 
+## 镜像竞技隔离投影
+
+镜像竞技投影从唯一玩法工作簿读取赛季天数、每日次数、胜负积分、连胜档位和战报窗口，也读取当前登记为候选的每日对手数、战斗时限及超时比较。默认规则 30 的镜像入口保持关闭。正式匹配范围、赛季开场、竞技奖表和兑换条件仍需审定。 [隔离投影工具](../tools/resources/prepare_mirror_arena.py)
+
+隔离装配需提供独立模板和地图编号、既有个人图地板编号、带时区的上海零点、阻挡格、双方本体及宠物的四个落点。`match_policy` 选 `same_job_level_window` 时仅分配同职业镜像，选 `cross_job_level_window` 时允许跨职业。同一份装配中的 `max_level_gap` 限定绝对等级差，填零只匹配同等级。`pet_death_policy` 可选择主体阵亡时退场或让原参战宠物继续战斗。这些字段用于隔离候选对照，跨职业强度与首发赛季运营日程另行验证。
+
+```powershell
+# 在项目根目录运行，装配和两个输出使用不同文件。
+.\tools\dev.ps1 python3 tools/resources/prepare_mirror_arena.py --assembly .work/mirror/assembly.json --fixture-out .work/mirror/fixture.json --public-out .work/mirror/gameplay.json
+.\tools\dev.ps1 python3 tools/resources/prepare_mirror_arena.py --assembly .work/mirror/assembly.json --fixture-out .work/mirror/fixture.json --public-out .work/mirror/gameplay.json --check
+```
+
 ## 修改规则
 
 - 添加记录：保持字段名不变，分配稳定ID，填入状态、来源和实际数据。

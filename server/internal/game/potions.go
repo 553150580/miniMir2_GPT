@@ -71,17 +71,21 @@ func (w *worker) applyPotionReceipt(r *room, receipt persistence.Operation, now 
 	if sequence <= *watermark {
 		return false
 	}
-	// rules 保存药水集合，用于当前步骤中的规则集合。
-	rules := w.e.Store.Cfg.Fixture.Potions
 	*watermark = sequence
-	if effect.HP > 0 {
-		r.Potions.HP = queueAdd(r.Potions.HP, effect.HP, rules.QueueCap)
+	w.enqueuePotionRecovery(r, effect.HP, effect.MP, now)
+	return true
+}
+
+// enqueuePotionRecovery 接受已确认的永久药水或镜像临时药水，使用相同恢复节拍和冷却。
+func (w *worker) enqueuePotionRecovery(r *room, hp, mp int64, now time.Time) {
+	rules := w.e.Store.Cfg.Fixture.Potions
+	if hp > 0 {
+		r.Potions.HP = queueAdd(r.Potions.HP, hp, rules.QueueCap)
 	}
-	if effect.MP > 0 {
-		r.Potions.MP = queueAdd(r.Potions.MP, effect.MP, rules.QueueCap)
+	if mp > 0 {
+		r.Potions.MP = queueAdd(r.Potions.MP, mp, rules.QueueCap)
 	}
 	r.Potions.NextUse = now.Add(time.Duration(rules.UseDelayMS) * time.Millisecond)
-	return true
 }
 
 // restorePool 计算本次恢复实际作用值与队列剩余量。

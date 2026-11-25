@@ -97,7 +97,7 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 // areaTargetsInWorld 在指定世界按实际地格和目标生命确定范围技能命中对象。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，s 记录技能，grid 记录网格，使用点位表示。
 func (w *worker) areaTargetsInWorld(r *room, world *worldState, s devconfig.Skill, grid devconfig.Point) []*entity {
-	// friendly 区分同场内友方与原怪物，敌方范围仍只接受怪物。
+	// friendly 区分来源方的临时友方身体与当前地图的合法敌方。
 	friendly := strings.HasPrefix(targetKind(s), "friendly")
 	if friendly && r.dungeonCombat != nil {
 		if world != r.currentWorld() {
@@ -106,11 +106,16 @@ func (w *worker) areaTargetsInWorld(r *room, world *worldState, s devconfig.Skil
 		return w.dungeonAreaAllies(r, s, grid, false)
 	}
 	// all 保存当前处理所用的全部。
-	all := world.Monsters[:world.MonsterCount]
-	if world == r.currentWorld() {
-		all = append([]*entity{&r.Player}, all...)
+	all := world.combatOpponents()
+	if world.mirrorCombat == nil || friendly {
+		if world.mirrorCombat != nil {
+			all = nil // 镜像增益只给本方角色和本方原宠物。
+		}
+		if world == r.currentWorld() {
+			all = append([]*entity{&r.Player}, all...)
+		}
+		all = append(all[:len(all):len(all)], r.worldPet(world))
 	}
-	all = append(all[:len(all):len(all)], r.worldPet(world))
 	// out 初始化用作输出的实体列表。
 	out := []*entity{}
 	// e 接收遍历全部时当前的元素。
@@ -118,7 +123,7 @@ func (w *worker) areaTargetsInWorld(r *room, world *worldState, s devconfig.Skil
 		if e == nil || e.HP <= 0 || distance(e.Pos, grid) > s.AreaRadius || !w.worldWalkable(world, e.Pos) {
 			continue
 		}
-		if (friendly && (e.Kind == 1 || e.Kind == 2)) || (!friendly && e.Kind == 3) {
+		if (friendly && (e.Kind == 1 || e.Kind == 2)) || (!friendly && (e.Kind == 3 || world.mirrorCombat != nil)) {
 			out = append(out, e)
 		}
 	}
@@ -145,7 +150,7 @@ func (w *worker) lineTargetsInWorld(r *room, world *worldState, c pendingCast) [
 		// out 记录输出，使用实体列表表示。
 		var out []*entity
 		// e 接收遍历怪物集合中的范围时当前的元素。
-		for _, e := range world.Monsters[:world.MonsterCount] {
+		for _, e := range world.combatOpponents() {
 			if e.HP > 0 && e.Pos == point {
 				out = append(out, e)
 			}
@@ -234,7 +239,8 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		return nil, p.CodeSkillNotLearned
 	}
 	// 未接入角色 owner 的永久消耗前，私有挑战只运行本场的可独立结算动作。
-	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0) || r.worldBossObservation != nil && handler.Teleport {
+	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0 && r.currentWorld().mirrorCombat == nil) ||
+		r.worldBossObservation != nil && handler.Teleport {
 		return nil, p.CodeSkillStateBlocked
 	}
 	// 共享地格持续技能还需统一落格、冲突和拥有者归属，候选阶段只受理已具备场次语义的技能。
@@ -621,7 +627,7 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		} else {
 			// value 保存数量，用于当前步骤中的值。
 			value := c.Amount
-			if c.Skill.Behavior == "thunder_storm" && target.Monster != nil && !target.Monster.Undead {
+			if c.Skill.Behavior == "thunder_storm" && (target.Monster != nil && !target.Monster.Undead || world.mirrorCombat != nil) {
 				value /= c.Skill.NonUndeadDivisor
 			}
 			// damage 保存由魔法伤害取得的伤害。

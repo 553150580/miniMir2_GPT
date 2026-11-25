@@ -22,7 +22,7 @@ func (w *worker) prepareDungeonStartOwner(start *dungeonStartAttempt, identity d
 		return &dungeonStartPreparation{code: p.CodeLineRecovering}
 	}
 	if owner.currentWorld() != owner.PersonalWorld || owner.Player.HP <= 0 || owner.Scene >= math.MaxUint64-1 || owner.Role.Level < start.template.MinimumLevel ||
-		owner.personalBoss != nil || owner.worldBossObservation != nil || owner.dungeonMatch != nil || owner.dungeonStart != nil ||
+		owner.personalBoss != nil || owner.worldBossObservation != nil || owner.dungeonMatch != nil || owner.dungeonStart != nil || owner.mirrorMatch != nil ||
 		owner.Role.Dungeon != nil && owner.Role.Dungeon.ActiveChallengeID != "" || owner.Role.PersonalBoss != nil && owner.Role.PersonalBoss.ActiveChallengeID != "" ||
 		owner.Travel != nil && owner.Travel.Phase < travelCommitted || pendingPersonalBossTransfer(owner) {
 		return &dungeonStartPreparation{code: p.CodeLineForbidden}

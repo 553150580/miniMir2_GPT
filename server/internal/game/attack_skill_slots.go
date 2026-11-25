@@ -123,7 +123,7 @@ func (w *worker) tryQueuedMelee(r *room, candidate readyAttackSlot, focus *entit
 		return w.acceptQueuedMelee(r, candidate, focus, direction, input, now, manual)
 	}
 	for _, cells := range []int{1, 2} {
-		for _, target := range r.Monsters[:r.MonsterCount] {
+		for _, target := range r.currentWorld().combatOpponents() {
 			if target == nil || target.HP <= 0 || distance(r.Player.Pos, target.Pos) != cells {
 				continue
 			}

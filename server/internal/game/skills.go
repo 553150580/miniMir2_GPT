@@ -171,7 +171,7 @@ func (w *worker) skillTargetInWorld(r *room, world *worldState, s devconfig.Skil
 		return nil
 	}
 	// m 接收遍历怪物集合中的范围时当前的元素。
-	for _, m := range world.Monsters[:world.MonsterCount] {
+	for _, m := range world.combatOpponents() {
 		if m.Handle == handle && m.HP > 0 {
 			return m
 		}

@@ -70,9 +70,8 @@ func (w *worker) addFireWall(world *worldState, cast pendingCast, now time.Time)
 		stepPoint(cast.TargetPoint, 4, 1), stepPoint(cast.TargetPoint, 6, 1),
 	}
 	for _, point := range points {
-		if !w.worldWalkable(world, point) || slices.ContainsFunc(world.FireWalls, func(existing *fireWallField) bool {
-			return !now.After(existing.Expires) && existing.covers(point)
-		}) {
+		if !w.worldWalkable(world, point) || world.fireWallAt(point, now) != nil ||
+			world.mirrorCombat != nil && world.mirrorCombat.sides[1-world.mirrorSide].room.currentWorld().fireWallAt(point, now) != nil {
 			continue
 		}
 		field.Cells[field.Count] = point
@@ -83,6 +82,16 @@ func (w *worker) addFireWall(world *worldState, cast pendingCast, now time.Time)
 	}
 	world.FireWalls = append(world.FireWalls, field)
 	return field
+}
+
+// fireWallAt 查找当前尚未过期的场；镜像两侧分别持有自己的技能后继。
+func (world *worldState) fireWallAt(point devconfig.Point, now time.Time) *fireWallField {
+	for _, field := range world.FireWalls {
+		if !now.After(field.Expires) && field.covers(point) {
+			return field
+		}
+	}
+	return nil
 }
 
 // resolveFireWall 执行首次放置或后续地格处理。每个活场只占共同时间线的一个后继事件。
@@ -125,7 +134,7 @@ func (w *worker) resolveFireWall(r *room, world *worldState, caster *entity, cas
 	// context 保留当前到期事件已经冻结的托管和绑定条件，即使它被晚推进也不重判。
 	context := hitContext{At: cast.Due, HostSession: cast.HostSession, PrivilegeUntil: cast.PrivilegeUntil, PrivilegeCaptured: cast.PrivilegeCaptured}
 	for _, point := range field.Cells[:field.Count] {
-		for _, target := range world.Monsters[:world.MonsterCount] {
+		for _, target := range world.combatOpponents() {
 			if target != nil && target.Pos == point {
 				w.fireWallHit(r, world, caster, target, field, now, context)
 				if r.Pending || r.Isolated {
@@ -138,7 +147,8 @@ func (w *worker) resolveFireWall(r *room, world *worldState, caster *entity, cas
 
 // fireWallHit 以放置时的原始威力扣除当前目标魔防，沿统一命中入口记录伤害和击杀。
 func (w *worker) fireWallHit(r *room, world *worldState, caster, target *entity, field *fireWallField, now time.Time, context hitContext) {
-	if target.Kind != 3 || target.HP <= 0 || target.Monster == nil {
+	if target.HP <= 0 || (target.Kind != 3 || target.Monster == nil) &&
+		(world.mirrorCombat == nil || !slices.Contains(world.combatOpponents(), target)) {
 		return
 	}
 	// before 记录本次处理前的HP，伤害表现仅使用实际减少的生命值。
@@ -157,11 +167,22 @@ func (w *worker) fireWallHit(r *room, world *worldState, caster, target *entity,
 
 // enterFireWall 在怪物真正进入有效格时处理一次，不重置当前场的周期时间。
 func (w *worker) enterFireWall(r *room, target *entity, now time.Time) {
-	if target.Kind != 3 || target.HP <= 0 || r.Pending || r.Isolated {
+	if target.HP <= 0 || r.Pending || r.Isolated {
 		return
 	}
 	// world 是本次移动提交的活动世界，历史世界里的火墙不参与查询。
 	world := r.currentWorld()
+	if b := world.mirrorCombat; b != nil {
+		other := b.sides[1-world.mirrorSide].room
+		original := other.currentWorld()
+		if field := original.fireWallAt(target.Pos, now); field != nil {
+			w.fireWallHit(other, original, &other.Player, target, field, now, hitContext{At: now})
+		}
+		return
+	}
+	if target.Kind != 3 {
+		return
+	}
 	for _, field := range world.FireWalls {
 		if now.After(field.Expires) || !field.covers(target.Pos) || field.Caster != referenceIn(world, &r.Player) {
 			continue

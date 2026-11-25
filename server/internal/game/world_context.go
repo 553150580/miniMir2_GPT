@@ -34,6 +34,20 @@ type worldState struct {
 	FireWalls      []*fireWallField       // 已建立且可作用于入格实体的火墙，未使用技能的世界此切片为空。
 	Attacks        []pendingAttack        // 原归属世界为本世界的已受理攻击列表。
 	PetCorpses     []*petCorpse           // 在该世界保留的已死亡宠物身体。
+	mirrorCombat   *mirrorCombat          // 只有镜像临时世界可以用同职业的另一阵营作目标。
+	mirrorSide     int                    // 本世界的进攻或防守投影索引。
+}
+
+// combatOpponents 统一攻击目标入口。普通场保持原怪物槽，自身与友方宠物始终独立。
+func (world *worldState) combatOpponents() []*entity {
+	if world.mirrorCombat != nil {
+		other := world.mirrorCombat.sides[1-world.mirrorSide].room
+		if other.Pet == nil {
+			return []*entity{&other.Player}
+		}
+		return []*entity{&other.Player, other.Pet}
+	}
+	return world.Monsters[:world.MonsterCount]
 }
 
 // 由到期业务选择一次目的地；核心在该事件与批后缀之间提交。无统一死亡取消门禁。
@@ -202,7 +216,8 @@ func (w *worker) worldMap(world *worldState) (*devconfig.MapTemplate, bool) {
 	if world.BossMap != nil {
 		kind := world.BossMap.SceneKindValue()
 		return world.BossMap, world.MapID == world.BossMap.ID &&
-			(kind == devconfig.SceneKindPersonalBoss || kind == devconfig.SceneKindWorldBoss || kind == devconfig.SceneKindDungeon)
+			(kind == devconfig.SceneKindPersonalBoss || kind == devconfig.SceneKindWorldBoss || kind == devconfig.SceneKindDungeon ||
+				kind == devconfig.SceneKindMirrorArena && world.mirrorCombat != nil)
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
@@ -233,7 +248,7 @@ func (w *worker) resolveInWorld(r *room, world *worldState, ref actorRef) *entit
 		return nil
 	}
 	// all 保存当前处理所用的全部。
-	all := world.Monsters[:world.MonsterCount]
+	all := world.combatOpponents()
 	if world == r.currentWorld() {
 		all = append([]*entity{&r.Player}, all...)
 		all = append(all, world.Loot...)

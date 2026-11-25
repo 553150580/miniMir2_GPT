@@ -1,0 +1,74 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "world.proto";
+
+// 镜像竞技由原角色附着下发。对手只能选择服务端已签发的候选编号。
+message MirrorArenaRequest {
+  uint64 scene_epoch = 1;
+  // 1 查询，2 发布防守快照，3 挑战，4 确认战斗首帧，5 认输，6 查询本场。
+  uint32 action = 2;
+  bytes offer_id = 3;
+  bytes challenge_id = 4;
+  uint64 battle_scene_epoch = 5;
+}
+
+message MirrorArenaOffer {
+  bytes offer_id = 1;
+  string defender_name = 2;
+  uint32 defender_job = 3;
+  uint32 defender_level = 4;
+  uint64 defense_version = 5;
+}
+
+message MirrorArenaRecord {
+  bytes challenge_id = 1;
+  string attacker_name = 2;
+  string defender_name = 3;
+  uint64 defense_version = 4;
+  // 0 尚未结算，1 进攻胜，2 进攻负，3 系统中断。
+  uint32 outcome = 5;
+  int64 awarded_points = 6;
+  int64 started_at_unix_ms = 7;
+  int64 finished_at_unix_ms = 8;
+}
+
+message MirrorArenaState {
+  uint64 scene_epoch = 1;
+  uint32 error_code = 2;
+  bool open = 3;
+  int64 season_start_unix_ms = 4;
+  int64 season_end_unix_ms = 5;
+  uint32 daily_limit = 6;
+  uint32 entries_used = 7;
+  int64 season_points = 8;
+  uint32 streak = 9;
+  repeated MirrorArenaOffer offers = 10;
+  repeated MirrorArenaRecord attack_history = 11;
+  repeated MirrorArenaRecord defense_history = 12;
+  uint64 published_defense_version = 13;
+  MirrorArenaRecord challenge = 14;
+  // 0 无场次，1 等待首帧，2 战斗中，3 正在确认结果，4 已确认结果。
+  uint32 battle_state = 15;
+  uint64 battle_scene_epoch = 16;
+  uint64 battle_map_id = 17;
+  int64 battle_deadline_unix_ms = 18;
+  uint64 rule_version = 19;
+}
+
+// 复用格子战斗观测。事件只供当前镜像场显示，不属于普通挂机世界。
+message MirrorArenaCombatFrame {
+  uint64 scene_epoch = 1;
+  bytes challenge_id = 2;
+  uint64 battle_scene_epoch = 3;
+  uint64 sequence = 4;
+  int64 server_unix_ms = 5;
+  repeated EntityState entities = 6;
+  repeated MirrorArenaCombatObservation observations = 7;
+}
+
+message MirrorArenaCombatObservation {
+  uint32 message_id = 1;
+  bytes payload = 2;
+}

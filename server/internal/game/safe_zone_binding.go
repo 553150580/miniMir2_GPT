@@ -46,7 +46,7 @@ type safeZoneBindingFact struct {
 func (w *worker) prepareSafeZoneWalk(r *room, e *entity, point devconfig.Point) (*safeZoneBindingFact, bool) {
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
-	if !f.SafeZoneBindingEnabled() || e != &r.Player {
+	if !f.SafeZoneBindingEnabled() || e != &r.Player || r.currentWorld().mirrorCombat != nil {
 		return nil, true
 	}
 	// m 接收当前状态地图供后续步骤使用，known 保存由当前状态地图取得的已知状态。

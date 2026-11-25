@@ -66,7 +66,7 @@ func (w *worker) autoAreaAim(r *room, skill devconfig.Skill, focus *entity) (*en
 	// target 记录目标，使用实体表示，center 记录中心格，使用实体表示。
 	var target, center *entity
 	// candidate 接收遍历怪物集合中的范围时当前的元素。
-	for _, candidate := range r.Monsters[:r.MonsterCount] {
+	for _, candidate := range r.currentWorld().combatOpponents() {
 		if !w.canAimEnemy(r, skill, candidate) {
 			continue
 		}
@@ -109,7 +109,7 @@ func (w *worker) autoDirectAim(r *room, skill devconfig.Skill, focus *entity) *e
 	// nearest 记录最近，使用实体表示。
 	var nearest *entity
 	// candidate 接收遍历怪物集合中的范围时当前的元素。
-	for _, candidate := range r.Monsters[:r.MonsterCount] {
+	for _, candidate := range r.currentWorld().combatOpponents() {
 		if w.canAimEnemy(r, skill, candidate) && (nearest == nil || distance(r.Player.Pos, candidate.Pos) < distance(r.Player.Pos, nearest.Pos)) {
 			nearest = candidate
 		}

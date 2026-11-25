@@ -22,6 +22,20 @@ func (r *room) activeMonster(handle uint32, life uint64) *entity {
 	return nil
 }
 
+// activeCombatTarget 保持普通锁怪语义，镜像只允许锁定当前另一阵营身体。
+func (r *room) activeCombatTarget(handle uint32, life uint64) *entity {
+	world := r.currentWorld()
+	if world.mirrorCombat == nil {
+		return r.activeMonster(handle, life)
+	}
+	for _, target := range world.combatOpponents() {
+		if target.HP > 0 && target.Handle == handle && target.Life == life {
+			return target
+		}
+	}
+	return nil
+}
+
 // liveAutoTarget 返回存活自动目标供调用方使用。
 // r 是调用该方法的房间实例。
 func (r *room) liveAutoTarget() *entity {
@@ -32,7 +46,7 @@ func (r *room) liveAutoTarget() *entity {
 	}
 	if ref.World == r.currentWorld().Ref {
 		// target 保存由“active”怪物取得的目标。
-		if target := r.activeMonster(ref.Handle, ref.Life); target != nil {
+		if target := r.activeCombatTarget(ref.Handle, ref.Life); target != nil {
 			return target
 		}
 	}
@@ -43,7 +57,7 @@ func (r *room) liveAutoTarget() *entity {
 // 仅锁住仍属于当前现场的同一只活怪；攻击中的即时命中或世界移交可以让该引用先失效。
 // r 是调用该方法的房间实例，ref 记录引用，使用行动实体引用表示。
 func (r *room) lockAutoTarget(ref actorRef) {
-	if r.Player.HP > 0 && ref.World == r.currentWorld().Ref && r.activeMonster(ref.Handle, ref.Life) != nil {
+	if r.Player.HP > 0 && ref.World == r.currentWorld().Ref && r.activeCombatTarget(ref.Handle, ref.Life) != nil {
 		r.AutoTarget = ref
 	}
 }

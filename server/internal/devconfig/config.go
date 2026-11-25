@@ -209,6 +209,10 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 
 // Fixture 集中持有当前只读开发规则快照，供各玩法读取同一版本。
 type Fixture struct {
+	// MirrorArenaRelease 是显式选入的镜像赛季候选；缺省时入口关闭。
+	MirrorArenaRelease *MirrorArenaDefinition `json:"mirror_arena,omitempty"`
+	// MirrorArena 保存已装配的独立战斗地图和赛季规则，不加入普通换图目录。
+	MirrorArena *MirrorArenaConfig `json:"-"`
 	// DungeonReleases 是原玩法配置显式启用的讨伐链模板。缺失时不开放。
 	DungeonReleases []DungeonDefinition `json:"dungeons,omitempty"`
 	// Dungeons 保存通过装配校验的讨伐链快照，不加入普通地图目录。
@@ -446,6 +450,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateDungeonReleases(); err != nil {
+		return err
+	}
+	if err := f.ValidateMirrorArena(); err != nil {
 		return err
 	}
 	// err 接收校验会话绑定过程中可能产生的错误，供后续失败分支处理。

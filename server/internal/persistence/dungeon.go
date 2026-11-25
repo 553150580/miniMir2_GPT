@@ -188,6 +188,9 @@ func (s *Store) BeginDungeon(ctx context.Context, q DungeonBegin) (DungeonChalle
 			Execution: q.Execution, TemplateID: q.TemplateID, RuleVersion: q.RuleVersion, ConfigHash: q.ConfigHash, StartedAt: q.StartedAt, ExpiresAt: expires}
 		day := shanghaiOperatingDay(q.StartedAt)
 		for i := range roles {
+			if err := s.checkMirrorRoleFree(tc, roles[i]); err != nil {
+				return err
+			}
 			member, err := chargeDungeonMember(&roles[i], q, q.Members[i], template.MinimumLevel, day)
 			if err != nil {
 				return err

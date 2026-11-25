@@ -27,6 +27,7 @@ const codecs: Record<number, MessageType> = {
     20015: pb.PersonalBossQuery, 20016: pb.PersonalBossInfo,
     20017: pb.WorldBossQuery, 20018: pb.WorldBossEnter, 20019: pb.WorldBossLeave, 20020: pb.WorldBossState,
     20021: pb.DungeonPartyRequest, 20022: pb.DungeonPartyState, 20023: pb.DungeonBattleState, 20024: pb.DungeonSceneTransition,
+    20025: pb.MirrorArenaRequest, 20026: pb.MirrorArenaState, 20027: pb.MirrorArenaCombatFrame,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
     30012: pb.CastStep, 30013: pb.EntityDisplacement, 30014: pb.TeleportResult, 30015: pb.PetBorn,
@@ -247,7 +248,7 @@ export class GameConnection {
         if (cancelNavigation && !assemble) return Promise.reject(new Error('导航取消必须等待匹配的完整基线'));
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            const challengeResponses: Partial<Record<number, number>> = { 20012: 20014, 20015: 20016, 20017: 20020, 20018: 20020, 20021: 20022 };
+            const challengeResponses: Partial<Record<number, number>> = { 20012: 20014, 20015: 20016, 20017: 20020, 20018: 20020, 20021: 20022, 20025: 20026 };
             const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 1 ? 2 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : id === 40024 ? 40025 : id === 40027 ? 40028 : id === 40032 ? 40033 : challengeResponses[id] ?? 40005];
             this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {

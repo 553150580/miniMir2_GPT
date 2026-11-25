@@ -97,7 +97,8 @@ func clearPoison(target *entity, effect *poisonEffect) {
 func (w *worker) resolvePoisoning(r *room, world *worldState, caster *entity, cast pendingCast, now time.Time) {
 	// target 包含原世界和出生代次，即便相同句柄重生也不能接受此前的毒。
 	target := w.resolveInWorld(r, world, actorRef{World: world.Ref, Handle: cast.Target, Life: cast.TargetLife})
-	if target == nil || target.Kind != 3 || target.Monster == nil {
+	if target == nil || (target.Kind != 3 || target.Monster == nil) &&
+		(world.mirrorCombat == nil || !slices.Contains(world.combatOpponents(), target)) {
 		return
 	}
 	// effect 为 nil 表示本次只是尚未应用的施法，仍要求施法者留在同一世界。
