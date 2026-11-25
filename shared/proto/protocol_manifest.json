@@ -866,6 +866,30 @@
       "source_ref": "最终策划案4.19/7.2"
     },
     {
+      "value": 20021,
+      "name": "MsgC2SDungeonPartyRequest",
+      "proto_message": "DungeonPartyRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2 三人讨伐链招募"
+    },
+    {
+      "value": 20022,
+      "name": "MsgS2CDungeonPartyState",
+      "proto_message": "DungeonPartyState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2 三人讨伐链招募"
+    },
+    {
       "value": 40020,
       "name": "MsgC2SWarehouseQuery",
       "proto_message": "WarehouseQuery",

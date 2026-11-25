@@ -170,6 +170,7 @@ type Role struct {
 
 	PersonalBoss            *PersonalBossProgress    `bson:"personal_boss,omitempty" json:"personal_boss,omitempty"`                         // 个人首领预约、成功次数及冷却。
 	PendingChallengeRewards []ChallengePendingReward `bson:"pending_challenge_rewards,omitempty" json:"pending_challenge_rewards,omitempty"` // 永久待领附件。
+	Dungeon                 *DungeonProgress         `bson:"dungeon,omitempty" json:"dungeon,omitempty"`                                     // 讨伐链原预约与每日扣次，旧角色没有该字段。
 }
 
 // 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。

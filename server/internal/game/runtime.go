@@ -91,6 +91,8 @@ type worker struct {
 	personalNavigation personalNavigationWorkspace // 可在分片内跨个人房间复用的寻路数组。
 	worldBossArenas    map[uint64]*worldBossArena  // 本分片唯一拥有的运行服共享首领场次。
 	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
+
+	dungeonParties map[uint64]*dungeonPartyDirectory // 本分片拥有的运行服讨伐链招募目录。
 }
 
 // entity 保存当前进程中的战斗身体、动作时钟和空间身份。
@@ -212,7 +214,8 @@ type room struct {
 	CellEntrySequence     uint64                    // 分配角色及实体格进入身份的单调水位。
 	DeferMovementSnapshot bool                      // 暂缓中途位移快照，留待同一组合动作完整提交后再观察。
 
-	hostingQuote *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
+	hostingQuote         *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
+	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
 }
 
 // New 为单运行服启动持有共享分片、数据库队列与逻辑时钟的引擎。
@@ -450,6 +453,7 @@ func (w *worker) loop() {
 			}
 			if !c.tick.IsZero() {
 				w.tickWorldBosses(c.tick)
+				w.tickDungeonParties(c.tick)
 				w.beginTownNavigationTick(c.tick)
 				// roleID 定位房间集合中正在处理的成员，r 接收遍历房间集合时当前的元素。
 				for roleID, r := range w.rooms {
@@ -518,6 +522,7 @@ func (w *worker) command(c command) {
 	if r.Isolated {
 		if c.disconnect {
 			if r.Conn == c.conn {
+				dungeonPartyDetached(r, c.conn, c.at)
 				r.Conn = nil
 				r.PetBornReady = nil
 			}
@@ -536,6 +541,7 @@ func (w *worker) command(c command) {
 				at = time.Now()
 			}
 			r.entryAck = nil
+			dungeonPartyDetached(r, c.conn, at)
 			w.suspendWorldBossObservation(r, at)
 			w.detachPersonalBoss(r)
 			w.leaveSharedTown(r)
@@ -574,6 +580,10 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
+	if c.frame.ID == p.MsgC2SDungeonPartyRequest {
+		w.dungeonPartyCommand(r, c.frame, time.Now())
+		return
+	}
 	if w.worldBossCommand(r, c) {
 		return
 	}
@@ -600,6 +610,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			}
 		}
 		r.Ready = true
+		w.dungeonPartyAttached(r, time.Now())
 		w.expireModes(r, time.Now())
 		w.snapshot(r)
 		w.modes(r, time.Now())

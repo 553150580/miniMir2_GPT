@@ -1,5 +1,7 @@
 # 共享协议实现状态
 
+`20021 DungeonPartyRequest` 查询、创建、加入、退出、踢出或更新当前运行服的讨伐招募，`20022 DungeonPartyState` 回传原场景、模板、可加入队伍以及当前角色的原名单。队伍编号用 16 字节，名单变更核对 `uint64` 原修订。没有已装配的讨伐模板时查询返回场景禁入。实际开战和永久入场扣次使用独立流程。
+
 `40032 HostingQuoteRequest` 查询已确认场景的托管补时报价。零秒只查询当前等级档、规则和购买粒度。实际数量由 `40033 HostingQuoteResult` 回传报价编号、精确整数费用、两个钱包各自应扣金额及有效期。`40007 BuyHostingTimeRequest` 用原报价编号、秒数和经济操作身份成交。`40005 OperationResult` 的 `hosting_purchase` 在成交及同一操作重放时返回原报价和原到账余额。没有生效且已审定的价格时，旧版日领和托管流程继续可用。
 
 `20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。

@@ -86,6 +86,8 @@ func personalBossAvailability(r domain.Role, state domain.PersonalBossProgress, 
 	switch {
 	case state.ActiveChallengeID != "":
 		out.EligibilityReason = PersonalBossAlreadyActive
+	case dungeonProgress(r).ActiveChallengeID != "":
+		out.EligibilityReason = PersonalBossSceneForbidden
 	case r.Level < cfg.MinimumLevel:
 		out.EligibilityReason = PersonalBossLevelRequired
 	case out.AvailableAt.After(at):

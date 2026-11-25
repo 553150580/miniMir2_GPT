@@ -14466,5 +14466,653 @@ export namespace minimir {
             /** Shape of a WorldBossResult. */
             type $Shape = minimir.v1.WorldBossResult.$Properties;
         }
+
+        /**
+         * Properties of a DungeonPartyRequest.
+         * @deprecated Use minimir.v1.DungeonPartyRequest.$Properties instead.
+         */
+        interface IDungeonPartyRequest extends minimir.v1.DungeonPartyRequest.$Properties {
+        }
+
+        /** Represents a DungeonPartyRequest. */
+        class DungeonPartyRequest {
+
+            /**
+             * Constructs a new DungeonPartyRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** DungeonPartyRequest action. */
+            action: number;
+
+            /** DungeonPartyRequest party_id. */
+            party_id: Uint8Array;
+
+            /** DungeonPartyRequest expected_revision. */
+            expected_revision: Long;
+
+            /** DungeonPartyRequest template_id. */
+            template_id: number;
+
+            /** DungeonPartyRequest minimum_level. */
+            minimum_level: number;
+
+            /** DungeonPartyRequest allowed_jobs_mask. */
+            allowed_jobs_mask: number;
+
+            /** DungeonPartyRequest allow_same_job. */
+            allow_same_job: boolean;
+
+            /** DungeonPartyRequest target_role_id. */
+            target_role_id: Uint8Array;
+
+            /**
+             * Creates a new DungeonPartyRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyRequest instance
+             */
+            static create(properties: minimir.v1.DungeonPartyRequest.$Shape): minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyRequest.$Properties): minimir.v1.DungeonPartyRequest;
+
+            /**
+             * Encodes the specified DungeonPartyRequest message. Does not implicitly {@link minimir.v1.DungeonPartyRequest.verify|verify} messages.
+             * @param message DungeonPartyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyRequest message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyRequest.verify|verify} messages.
+             * @param message DungeonPartyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape} DungeonPartyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape;
+
+            /**
+             * Decodes a DungeonPartyRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape} DungeonPartyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape;
+
+            /**
+             * Verifies a DungeonPartyRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyRequest {
+
+            /** Properties of a DungeonPartyRequest. */
+            interface $Properties {
+
+                /** DungeonPartyRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** DungeonPartyRequest action */
+                action?: (number|null);
+
+                /** DungeonPartyRequest party_id */
+                party_id?: (Uint8Array|null);
+
+                /** DungeonPartyRequest expected_revision */
+                expected_revision?: (Long|null);
+
+                /** DungeonPartyRequest template_id */
+                template_id?: (number|null);
+
+                /** DungeonPartyRequest minimum_level */
+                minimum_level?: (number|null);
+
+                /** DungeonPartyRequest allowed_jobs_mask */
+                allowed_jobs_mask?: (number|null);
+
+                /** DungeonPartyRequest allow_same_job */
+                allow_same_job?: (boolean|null);
+
+                /** DungeonPartyRequest target_role_id */
+                target_role_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyRequest. */
+            type $Shape = minimir.v1.DungeonPartyRequest.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonPartyState.
+         * @deprecated Use minimir.v1.DungeonPartyState.$Properties instead.
+         */
+        interface IDungeonPartyState extends minimir.v1.DungeonPartyState.$Properties {
+        }
+
+        /** Represents a DungeonPartyState. */
+        class DungeonPartyState {
+
+            /**
+             * Constructs a new DungeonPartyState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyState scene_epoch. */
+            scene_epoch: Long;
+
+            /** DungeonPartyState error_code. */
+            error_code: number;
+
+            /** DungeonPartyState templates. */
+            templates: minimir.v1.DungeonPartyTemplate.$Properties[];
+
+            /** DungeonPartyState parties. */
+            parties: minimir.v1.DungeonPartyView.$Properties[];
+
+            /** DungeonPartyState own_party. */
+            own_party?: (minimir.v1.DungeonPartyView.$Properties|null);
+
+            /** DungeonPartyState more. */
+            more: boolean;
+
+            /**
+             * Creates a new DungeonPartyState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyState instance
+             */
+            static create(properties: minimir.v1.DungeonPartyState.$Shape): minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyState.$Properties): minimir.v1.DungeonPartyState;
+
+            /**
+             * Encodes the specified DungeonPartyState message. Does not implicitly {@link minimir.v1.DungeonPartyState.verify|verify} messages.
+             * @param message DungeonPartyState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyState message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyState.verify|verify} messages.
+             * @param message DungeonPartyState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape} DungeonPartyState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape;
+
+            /**
+             * Decodes a DungeonPartyState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape} DungeonPartyState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape;
+
+            /**
+             * Verifies a DungeonPartyState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyState {
+
+            /** Properties of a DungeonPartyState. */
+            interface $Properties {
+
+                /** DungeonPartyState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** DungeonPartyState error_code */
+                error_code?: (number|null);
+
+                /** DungeonPartyState templates */
+                templates?: (minimir.v1.DungeonPartyTemplate.$Properties[]|null);
+
+                /** DungeonPartyState parties */
+                parties?: (minimir.v1.DungeonPartyView.$Properties[]|null);
+
+                /** DungeonPartyState own_party */
+                own_party?: (minimir.v1.DungeonPartyView.$Properties|null);
+
+                /** DungeonPartyState more */
+                more?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyState. */
+            type $Shape = minimir.v1.DungeonPartyState.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonPartyTemplate.
+         * @deprecated Use minimir.v1.DungeonPartyTemplate.$Properties instead.
+         */
+        interface IDungeonPartyTemplate extends minimir.v1.DungeonPartyTemplate.$Properties {
+        }
+
+        /** Represents a DungeonPartyTemplate. */
+        class DungeonPartyTemplate {
+
+            /**
+             * Constructs a new DungeonPartyTemplate.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyTemplate.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyTemplate template_id. */
+            template_id: number;
+
+            /** DungeonPartyTemplate display_name. */
+            display_name: string;
+
+            /** DungeonPartyTemplate minimum_level. */
+            minimum_level: number;
+
+            /** DungeonPartyTemplate duration_seconds. */
+            duration_seconds: number;
+
+            /**
+             * Creates a new DungeonPartyTemplate instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyTemplate instance
+             */
+            static create(properties: minimir.v1.DungeonPartyTemplate.$Shape): minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyTemplate.$Properties): minimir.v1.DungeonPartyTemplate;
+
+            /**
+             * Encodes the specified DungeonPartyTemplate message. Does not implicitly {@link minimir.v1.DungeonPartyTemplate.verify|verify} messages.
+             * @param message DungeonPartyTemplate message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyTemplate.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyTemplate message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyTemplate.verify|verify} messages.
+             * @param message DungeonPartyTemplate message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyTemplate.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyTemplate message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape} DungeonPartyTemplate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape;
+
+            /**
+             * Decodes a DungeonPartyTemplate message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape} DungeonPartyTemplate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape;
+
+            /**
+             * Verifies a DungeonPartyTemplate message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyTemplate
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyTemplate {
+
+            /** Properties of a DungeonPartyTemplate. */
+            interface $Properties {
+
+                /** DungeonPartyTemplate template_id */
+                template_id?: (number|null);
+
+                /** DungeonPartyTemplate display_name */
+                display_name?: (string|null);
+
+                /** DungeonPartyTemplate minimum_level */
+                minimum_level?: (number|null);
+
+                /** DungeonPartyTemplate duration_seconds */
+                duration_seconds?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyTemplate. */
+            type $Shape = minimir.v1.DungeonPartyTemplate.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonPartyView.
+         * @deprecated Use minimir.v1.DungeonPartyView.$Properties instead.
+         */
+        interface IDungeonPartyView extends minimir.v1.DungeonPartyView.$Properties {
+        }
+
+        /** Represents a DungeonPartyView. */
+        class DungeonPartyView {
+
+            /**
+             * Constructs a new DungeonPartyView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyView party_id. */
+            party_id: Uint8Array;
+
+            /** DungeonPartyView revision. */
+            revision: Long;
+
+            /** DungeonPartyView template_id. */
+            template_id: number;
+
+            /** DungeonPartyView minimum_level. */
+            minimum_level: number;
+
+            /** DungeonPartyView allowed_jobs_mask. */
+            allowed_jobs_mask: number;
+
+            /** DungeonPartyView allow_same_job. */
+            allow_same_job: boolean;
+
+            /** DungeonPartyView leader_role_id. */
+            leader_role_id: Uint8Array;
+
+            /** DungeonPartyView members. */
+            members: minimir.v1.DungeonPartyMember.$Properties[];
+
+            /** DungeonPartyView leader_offline_until_unix_ms. */
+            leader_offline_until_unix_ms: Long;
+
+            /**
+             * Creates a new DungeonPartyView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyView instance
+             */
+            static create(properties: minimir.v1.DungeonPartyView.$Shape): minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyView.$Properties): minimir.v1.DungeonPartyView;
+
+            /**
+             * Encodes the specified DungeonPartyView message. Does not implicitly {@link minimir.v1.DungeonPartyView.verify|verify} messages.
+             * @param message DungeonPartyView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyView message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyView.verify|verify} messages.
+             * @param message DungeonPartyView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape} DungeonPartyView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape;
+
+            /**
+             * Decodes a DungeonPartyView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape} DungeonPartyView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape;
+
+            /**
+             * Verifies a DungeonPartyView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyView {
+
+            /** Properties of a DungeonPartyView. */
+            interface $Properties {
+
+                /** DungeonPartyView party_id */
+                party_id?: (Uint8Array|null);
+
+                /** DungeonPartyView revision */
+                revision?: (Long|null);
+
+                /** DungeonPartyView template_id */
+                template_id?: (number|null);
+
+                /** DungeonPartyView minimum_level */
+                minimum_level?: (number|null);
+
+                /** DungeonPartyView allowed_jobs_mask */
+                allowed_jobs_mask?: (number|null);
+
+                /** DungeonPartyView allow_same_job */
+                allow_same_job?: (boolean|null);
+
+                /** DungeonPartyView leader_role_id */
+                leader_role_id?: (Uint8Array|null);
+
+                /** DungeonPartyView members */
+                members?: (minimir.v1.DungeonPartyMember.$Properties[]|null);
+
+                /** DungeonPartyView leader_offline_until_unix_ms */
+                leader_offline_until_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyView. */
+            type $Shape = minimir.v1.DungeonPartyView.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonPartyMember.
+         * @deprecated Use minimir.v1.DungeonPartyMember.$Properties instead.
+         */
+        interface IDungeonPartyMember extends minimir.v1.DungeonPartyMember.$Properties {
+        }
+
+        /** Represents a DungeonPartyMember. */
+        class DungeonPartyMember {
+
+            /**
+             * Constructs a new DungeonPartyMember.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyMember.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyMember role_id. */
+            role_id: Uint8Array;
+
+            /** DungeonPartyMember display_name. */
+            display_name: string;
+
+            /** DungeonPartyMember job. */
+            job: number;
+
+            /** DungeonPartyMember level. */
+            level: number;
+
+            /** DungeonPartyMember online. */
+            online: boolean;
+
+            /**
+             * Creates a new DungeonPartyMember instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyMember instance
+             */
+            static create(properties: minimir.v1.DungeonPartyMember.$Shape): minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyMember.$Properties): minimir.v1.DungeonPartyMember;
+
+            /**
+             * Encodes the specified DungeonPartyMember message. Does not implicitly {@link minimir.v1.DungeonPartyMember.verify|verify} messages.
+             * @param message DungeonPartyMember message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyMember.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyMember message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyMember.verify|verify} messages.
+             * @param message DungeonPartyMember message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyMember.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyMember message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape} DungeonPartyMember
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape;
+
+            /**
+             * Decodes a DungeonPartyMember message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape} DungeonPartyMember
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape;
+
+            /**
+             * Verifies a DungeonPartyMember message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyMember
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyMember {
+
+            /** Properties of a DungeonPartyMember. */
+            interface $Properties {
+
+                /** DungeonPartyMember role_id */
+                role_id?: (Uint8Array|null);
+
+                /** DungeonPartyMember display_name */
+                display_name?: (string|null);
+
+                /** DungeonPartyMember job */
+                job?: (number|null);
+
+                /** DungeonPartyMember level */
+                level?: (number|null);
+
+                /** DungeonPartyMember online */
+                online?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyMember. */
+            type $Shape = minimir.v1.DungeonPartyMember.$Properties;
+        }
     }
 }

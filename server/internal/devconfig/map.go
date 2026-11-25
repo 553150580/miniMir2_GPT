@@ -19,6 +19,8 @@ const (
 	SceneKindPersonalBoss uint32 = 3
 	// SceneKindWorldBoss 表示同运行服共享的首领场次。
 	SceneKindWorldBoss uint32 = 4
+	// SceneKindDungeon 表示同一队伍独享的多人讨伐地图。
+	SceneKindDungeon uint32 = 5
 
 	// maxPersonalGridSide 规定最大个人网格“side”的初始取值。
 	maxPersonalGridSide = 17
@@ -135,7 +137,8 @@ func (m *MapTemplate) Walkable(p Point) bool {
 	if !m.Contains(p) {
 		return false
 	}
-	if m.SceneKindValue() == SceneKindTown && !m.CompactTown {
+	kind := m.SceneKindValue() // 由原地图确定的碰撞解析方式。
+	if kind == SceneKindTown && !m.CompactTown {
 		// cells 保存由地图格预算取得的地图格集合。
 		cells := m.CellBudget()
 		if len(m.Blocked) != 0 || len(m.CollisionBits) != collisionByteCount(cells) {
@@ -145,7 +148,16 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		cell := p.Y*m.Width + p.X
 		return m.CollisionBits[cell/8]&(1<<uint(cell%8)) == 0
 	}
-	if m.SceneKindValue() != SceneKindPersonal && m.SceneKindValue() != SceneKindPersonalBoss && m.SceneKindValue() != SceneKindWorldBoss && !(m.SceneKindValue() == SceneKindTown && m.CompactTown) || len(m.CollisionBits) != 0 {
+	if len(m.CollisionBits) != 0 {
+		return false
+	}
+	switch kind {
+	case SceneKindPersonal, SceneKindPersonalBoss, SceneKindWorldBoss, SceneKindDungeon:
+	case SceneKindTown:
+		if !m.CompactTown {
+			return false
+		}
+	default:
 		return false
 	}
 	// blocked 接收遍历阻挡时当前的元素。

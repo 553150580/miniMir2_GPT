@@ -209,6 +209,10 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 
 // Fixture 集中持有当前只读开发规则快照，供各玩法读取同一版本。
 type Fixture struct {
+	// DungeonReleases 是原玩法配置显式启用的讨伐链模板。缺失时不开放。
+	DungeonReleases []DungeonDefinition `json:"dungeons,omitempty"`
+	// Dungeons 保存通过装配校验的讨伐链快照，不加入普通地图目录。
+	Dungeons []DungeonConfig `json:"-"`
 	// WorldBoss 暂由隔离装配提供，经玩法源校验后才注册可发布模板。
 	WorldBoss *WorldBossConfig `json:"-"`
 	// WorldBossRelease 是配置工作簿中已批准且显式开放的共享首领候选。
@@ -439,6 +443,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateWorldBossRelease(); err != nil {
+		return err
+	}
+	if err := f.validateDungeonReleases(); err != nil {
 		return err
 	}
 	// err 接收校验会话绑定过程中可能产生的错误，供后续失败分支处理。

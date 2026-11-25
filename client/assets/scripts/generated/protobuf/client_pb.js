@@ -38172,6 +38172,1750 @@ $root.minimir = (function() {
             return WorldBossResult;
         })();
 
+        v1.DungeonPartyRequest = (function() {
+
+            /**
+             * Properties of a DungeonPartyRequest.
+             * @typedef {Object} minimir.v1.DungeonPartyRequest.$Properties
+             * @property {Long|null} [scene_epoch] DungeonPartyRequest scene_epoch
+             * @property {number|null} [action] DungeonPartyRequest action
+             * @property {Uint8Array|null} [party_id] DungeonPartyRequest party_id
+             * @property {Long|null} [expected_revision] DungeonPartyRequest expected_revision
+             * @property {number|null} [template_id] DungeonPartyRequest template_id
+             * @property {number|null} [minimum_level] DungeonPartyRequest minimum_level
+             * @property {number|null} [allowed_jobs_mask] DungeonPartyRequest allowed_jobs_mask
+             * @property {boolean|null} [allow_same_job] DungeonPartyRequest allow_same_job
+             * @property {Uint8Array|null} [target_role_id] DungeonPartyRequest target_role_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonPartyRequest.
+             * @memberof minimir.v1
+             * @interface IDungeonPartyRequest
+             * @augments minimir.v1.DungeonPartyRequest.$Properties
+             * @deprecated Use minimir.v1.DungeonPartyRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonPartyRequest.
+             * @typedef {minimir.v1.DungeonPartyRequest.$Properties} minimir.v1.DungeonPartyRequest.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonPartyRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonPartyRequest.
+             * @constructor
+             * @param {minimir.v1.DungeonPartyRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonPartyRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonPartyRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonPartyRequest action.
+             * @member {number} action
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.action = 0;
+
+            /**
+             * DungeonPartyRequest party_id.
+             * @member {Uint8Array} party_id
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.party_id = $util.newBuffer([]);
+
+            /**
+             * DungeonPartyRequest expected_revision.
+             * @member {Long} expected_revision
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.expected_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonPartyRequest template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.template_id = 0;
+
+            /**
+             * DungeonPartyRequest minimum_level.
+             * @member {number} minimum_level
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.minimum_level = 0;
+
+            /**
+             * DungeonPartyRequest allowed_jobs_mask.
+             * @member {number} allowed_jobs_mask
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.allowed_jobs_mask = 0;
+
+            /**
+             * DungeonPartyRequest allow_same_job.
+             * @member {boolean} allow_same_job
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.allow_same_job = false;
+
+            /**
+             * DungeonPartyRequest target_role_id.
+             * @member {Uint8Array} target_role_id
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @instance
+             */
+            DungeonPartyRequest.prototype.target_role_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new DungeonPartyRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {minimir.v1.DungeonPartyRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonPartyRequest} DungeonPartyRequest instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonPartyRequest.$Shape): minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape;
+             *   (properties?: minimir.v1.DungeonPartyRequest.$Properties): minimir.v1.DungeonPartyRequest;
+             * }}
+             */
+            DungeonPartyRequest.create = function(properties) {
+                return new DungeonPartyRequest(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonPartyRequest message. Does not implicitly {@link minimir.v1.DungeonPartyRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {minimir.v1.DungeonPartyRequest.$Properties} message DungeonPartyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.action);
+                if (message.party_id != null && $Object.hasOwnProperty.call(message, "party_id") && message.party_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.party_id);
+                if (message.expected_revision != null && $Object.hasOwnProperty.call(message, "expected_revision") && (typeof message.expected_revision === "object" ? message.expected_revision.low || message.expected_revision.high : message.expected_revision !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.expected_revision);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.template_id);
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level") && message.minimum_level !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.minimum_level);
+                if (message.allowed_jobs_mask != null && $Object.hasOwnProperty.call(message, "allowed_jobs_mask") && message.allowed_jobs_mask !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.allowed_jobs_mask);
+                if (message.allow_same_job != null && $Object.hasOwnProperty.call(message, "allow_same_job") && message.allow_same_job !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.allow_same_job);
+                if (message.target_role_id != null && $Object.hasOwnProperty.call(message, "target_role_id") && message.target_role_id.length)
+                    writer.uint32(/* id 9, wireType 2 =*/74).bytes(message.target_role_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonPartyRequest message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {minimir.v1.DungeonPartyRequest.$Properties} message DungeonPartyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonPartyRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape} DungeonPartyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonPartyRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.party_id = value;
+                            else
+                                delete message.party_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expected_revision = value;
+                            else
+                                delete message.expected_revision;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.minimum_level = value;
+                            else
+                                delete message.minimum_level;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.allowed_jobs_mask = value;
+                            else
+                                delete message.allowed_jobs_mask;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_same_job = value;
+                            else
+                                delete message.allow_same_job;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.target_role_id = value;
+                            else
+                                delete message.target_role_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonPartyRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyRequest & minimir.v1.DungeonPartyRequest.$Shape} DungeonPartyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonPartyRequest message.
+             * @function verify
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonPartyRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.party_id != null && $Object.hasOwnProperty.call(message, "party_id"))
+                    if (!(message.party_id && typeof message.party_id.length === "number" || $util.isString(message.party_id)))
+                        return "party_id: buffer expected";
+                if (message.expected_revision != null && $Object.hasOwnProperty.call(message, "expected_revision"))
+                    if (!$util.isInteger(message.expected_revision) && !(message.expected_revision && $util.isInteger(message.expected_revision.low) && $util.isInteger(message.expected_revision.high)))
+                        return "expected_revision: integer|Long expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level"))
+                    if (!$util.isInteger(message.minimum_level))
+                        return "minimum_level: integer expected";
+                if (message.allowed_jobs_mask != null && $Object.hasOwnProperty.call(message, "allowed_jobs_mask"))
+                    if (!$util.isInteger(message.allowed_jobs_mask))
+                        return "allowed_jobs_mask: integer expected";
+                if (message.allow_same_job != null && $Object.hasOwnProperty.call(message, "allow_same_job"))
+                    if (typeof message.allow_same_job !== "boolean")
+                        return "allow_same_job: boolean expected";
+                if (message.target_role_id != null && $Object.hasOwnProperty.call(message, "target_role_id"))
+                    if (!(message.target_role_id && typeof message.target_role_id.length === "number" || $util.isString(message.target_role_id)))
+                        return "target_role_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonPartyRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonPartyRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonPartyRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonPartyRequest";
+            };
+
+            return DungeonPartyRequest;
+        })();
+
+        v1.DungeonPartyState = (function() {
+
+            /**
+             * Properties of a DungeonPartyState.
+             * @typedef {Object} minimir.v1.DungeonPartyState.$Properties
+             * @property {Long|null} [scene_epoch] DungeonPartyState scene_epoch
+             * @property {number|null} [error_code] DungeonPartyState error_code
+             * @property {Array.<minimir.v1.DungeonPartyTemplate.$Properties>|null} [templates] DungeonPartyState templates
+             * @property {Array.<minimir.v1.DungeonPartyView.$Properties>|null} [parties] DungeonPartyState parties
+             * @property {minimir.v1.DungeonPartyView.$Properties|null} [own_party] DungeonPartyState own_party
+             * @property {boolean|null} [more] DungeonPartyState more
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonPartyState.
+             * @memberof minimir.v1
+             * @interface IDungeonPartyState
+             * @augments minimir.v1.DungeonPartyState.$Properties
+             * @deprecated Use minimir.v1.DungeonPartyState.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonPartyState.
+             * @typedef {minimir.v1.DungeonPartyState.$Properties} minimir.v1.DungeonPartyState.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonPartyState.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonPartyState.
+             * @constructor
+             * @param {minimir.v1.DungeonPartyState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonPartyState = function (properties) {
+                this.templates = [];
+                this.parties = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonPartyState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonPartyState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.error_code = 0;
+
+            /**
+             * DungeonPartyState templates.
+             * @member {Array.<minimir.v1.DungeonPartyTemplate.$Properties>} templates
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.templates = $util.emptyArray;
+
+            /**
+             * DungeonPartyState parties.
+             * @member {Array.<minimir.v1.DungeonPartyView.$Properties>} parties
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.parties = $util.emptyArray;
+
+            /**
+             * DungeonPartyState own_party.
+             * @member {minimir.v1.DungeonPartyView.$Properties|null|undefined} own_party
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.own_party = null;
+
+            /**
+             * DungeonPartyState more.
+             * @member {boolean} more
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.more = false;
+
+            /**
+             * Creates a new DungeonPartyState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {minimir.v1.DungeonPartyState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonPartyState} DungeonPartyState instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonPartyState.$Shape): minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape;
+             *   (properties?: minimir.v1.DungeonPartyState.$Properties): minimir.v1.DungeonPartyState;
+             * }}
+             */
+            DungeonPartyState.create = function(properties) {
+                return new DungeonPartyState(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonPartyState message. Does not implicitly {@link minimir.v1.DungeonPartyState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {minimir.v1.DungeonPartyState.$Properties} message DungeonPartyState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.error_code);
+                if (message.templates != null && message.templates.length)
+                    for (var i = 0; i < message.templates.length; ++i)
+                        $root.minimir.v1.DungeonPartyTemplate.encode(message.templates[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.parties != null && message.parties.length)
+                    for (var i = 0; i < message.parties.length; ++i)
+                        $root.minimir.v1.DungeonPartyView.encode(message.parties[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.own_party != null && $Object.hasOwnProperty.call(message, "own_party"))
+                    $root.minimir.v1.DungeonPartyView.encode(message.own_party, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.more != null && $Object.hasOwnProperty.call(message, "more") && message.more !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.more);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonPartyState message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {minimir.v1.DungeonPartyState.$Properties} message DungeonPartyState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonPartyState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape} DungeonPartyState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonPartyState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.templates && message.templates.length))
+                                message.templates = [];
+                            message.templates.push($root.minimir.v1.DungeonPartyTemplate.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.parties && message.parties.length))
+                                message.parties = [];
+                            message.parties.push($root.minimir.v1.DungeonPartyView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.own_party = $root.minimir.v1.DungeonPartyView.decode(reader, reader.size(), $undefined, _depth + 1, message.own_party);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.more = value;
+                            else
+                                delete message.more;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonPartyState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyState & minimir.v1.DungeonPartyState.$Shape} DungeonPartyState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonPartyState message.
+             * @function verify
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonPartyState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.templates != null && $Object.hasOwnProperty.call(message, "templates")) {
+                    if (!$Array.isArray(message.templates))
+                        return "templates: array expected";
+                    for (var i = 0; i < message.templates.length; ++i) {
+                        var error = $root.minimir.v1.DungeonPartyTemplate.verify(message.templates[i], _depth + 1);
+                        if (error)
+                            return "templates." + error;
+                    }
+                }
+                if (message.parties != null && $Object.hasOwnProperty.call(message, "parties")) {
+                    if (!$Array.isArray(message.parties))
+                        return "parties: array expected";
+                    for (var i = 0; i < message.parties.length; ++i) {
+                        var error = $root.minimir.v1.DungeonPartyView.verify(message.parties[i], _depth + 1);
+                        if (error)
+                            return "parties." + error;
+                    }
+                }
+                if (message.own_party != null && $Object.hasOwnProperty.call(message, "own_party")) {
+                    var error = $root.minimir.v1.DungeonPartyView.verify(message.own_party, _depth + 1);
+                    if (error)
+                        return "own_party." + error;
+                }
+                if (message.more != null && $Object.hasOwnProperty.call(message, "more"))
+                    if (typeof message.more !== "boolean")
+                        return "more: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonPartyState
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonPartyState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonPartyState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonPartyState";
+            };
+
+            return DungeonPartyState;
+        })();
+
+        v1.DungeonPartyTemplate = (function() {
+
+            /**
+             * Properties of a DungeonPartyTemplate.
+             * @typedef {Object} minimir.v1.DungeonPartyTemplate.$Properties
+             * @property {number|null} [template_id] DungeonPartyTemplate template_id
+             * @property {string|null} [display_name] DungeonPartyTemplate display_name
+             * @property {number|null} [minimum_level] DungeonPartyTemplate minimum_level
+             * @property {number|null} [duration_seconds] DungeonPartyTemplate duration_seconds
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonPartyTemplate.
+             * @memberof minimir.v1
+             * @interface IDungeonPartyTemplate
+             * @augments minimir.v1.DungeonPartyTemplate.$Properties
+             * @deprecated Use minimir.v1.DungeonPartyTemplate.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonPartyTemplate.
+             * @typedef {minimir.v1.DungeonPartyTemplate.$Properties} minimir.v1.DungeonPartyTemplate.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonPartyTemplate.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonPartyTemplate.
+             * @constructor
+             * @param {minimir.v1.DungeonPartyTemplate.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonPartyTemplate = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonPartyTemplate template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @instance
+             */
+            DungeonPartyTemplate.prototype.template_id = 0;
+
+            /**
+             * DungeonPartyTemplate display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @instance
+             */
+            DungeonPartyTemplate.prototype.display_name = "";
+
+            /**
+             * DungeonPartyTemplate minimum_level.
+             * @member {number} minimum_level
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @instance
+             */
+            DungeonPartyTemplate.prototype.minimum_level = 0;
+
+            /**
+             * DungeonPartyTemplate duration_seconds.
+             * @member {number} duration_seconds
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @instance
+             */
+            DungeonPartyTemplate.prototype.duration_seconds = 0;
+
+            /**
+             * Creates a new DungeonPartyTemplate instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {minimir.v1.DungeonPartyTemplate.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonPartyTemplate} DungeonPartyTemplate instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonPartyTemplate.$Shape): minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape;
+             *   (properties?: minimir.v1.DungeonPartyTemplate.$Properties): minimir.v1.DungeonPartyTemplate;
+             * }}
+             */
+            DungeonPartyTemplate.create = function(properties) {
+                return new DungeonPartyTemplate(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonPartyTemplate message. Does not implicitly {@link minimir.v1.DungeonPartyTemplate.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {minimir.v1.DungeonPartyTemplate.$Properties} message DungeonPartyTemplate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyTemplate.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.template_id);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.display_name);
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level") && message.minimum_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.minimum_level);
+                if (message.duration_seconds != null && $Object.hasOwnProperty.call(message, "duration_seconds") && message.duration_seconds !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.duration_seconds);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonPartyTemplate message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyTemplate.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {minimir.v1.DungeonPartyTemplate.$Properties} message DungeonPartyTemplate message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyTemplate.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonPartyTemplate message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape} DungeonPartyTemplate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyTemplate.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonPartyTemplate();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.minimum_level = value;
+                            else
+                                delete message.minimum_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.duration_seconds = value;
+                            else
+                                delete message.duration_seconds;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonPartyTemplate message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyTemplate & minimir.v1.DungeonPartyTemplate.$Shape} DungeonPartyTemplate
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyTemplate.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonPartyTemplate message.
+             * @function verify
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonPartyTemplate.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level"))
+                    if (!$util.isInteger(message.minimum_level))
+                        return "minimum_level: integer expected";
+                if (message.duration_seconds != null && $Object.hasOwnProperty.call(message, "duration_seconds"))
+                    if (!$util.isInteger(message.duration_seconds))
+                        return "duration_seconds: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonPartyTemplate
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonPartyTemplate
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonPartyTemplate.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonPartyTemplate";
+            };
+
+            return DungeonPartyTemplate;
+        })();
+
+        v1.DungeonPartyView = (function() {
+
+            /**
+             * Properties of a DungeonPartyView.
+             * @typedef {Object} minimir.v1.DungeonPartyView.$Properties
+             * @property {Uint8Array|null} [party_id] DungeonPartyView party_id
+             * @property {Long|null} [revision] DungeonPartyView revision
+             * @property {number|null} [template_id] DungeonPartyView template_id
+             * @property {number|null} [minimum_level] DungeonPartyView minimum_level
+             * @property {number|null} [allowed_jobs_mask] DungeonPartyView allowed_jobs_mask
+             * @property {boolean|null} [allow_same_job] DungeonPartyView allow_same_job
+             * @property {Uint8Array|null} [leader_role_id] DungeonPartyView leader_role_id
+             * @property {Array.<minimir.v1.DungeonPartyMember.$Properties>|null} [members] DungeonPartyView members
+             * @property {Long|null} [leader_offline_until_unix_ms] DungeonPartyView leader_offline_until_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonPartyView.
+             * @memberof minimir.v1
+             * @interface IDungeonPartyView
+             * @augments minimir.v1.DungeonPartyView.$Properties
+             * @deprecated Use minimir.v1.DungeonPartyView.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonPartyView.
+             * @typedef {minimir.v1.DungeonPartyView.$Properties} minimir.v1.DungeonPartyView.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonPartyView.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonPartyView.
+             * @constructor
+             * @param {minimir.v1.DungeonPartyView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonPartyView = function (properties) {
+                this.members = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonPartyView party_id.
+             * @member {Uint8Array} party_id
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.party_id = $util.newBuffer([]);
+
+            /**
+             * DungeonPartyView revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonPartyView template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.template_id = 0;
+
+            /**
+             * DungeonPartyView minimum_level.
+             * @member {number} minimum_level
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.minimum_level = 0;
+
+            /**
+             * DungeonPartyView allowed_jobs_mask.
+             * @member {number} allowed_jobs_mask
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.allowed_jobs_mask = 0;
+
+            /**
+             * DungeonPartyView allow_same_job.
+             * @member {boolean} allow_same_job
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.allow_same_job = false;
+
+            /**
+             * DungeonPartyView leader_role_id.
+             * @member {Uint8Array} leader_role_id
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.leader_role_id = $util.newBuffer([]);
+
+            /**
+             * DungeonPartyView members.
+             * @member {Array.<minimir.v1.DungeonPartyMember.$Properties>} members
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.members = $util.emptyArray;
+
+            /**
+             * DungeonPartyView leader_offline_until_unix_ms.
+             * @member {Long} leader_offline_until_unix_ms
+             * @memberof minimir.v1.DungeonPartyView
+             * @instance
+             */
+            DungeonPartyView.prototype.leader_offline_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new DungeonPartyView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {minimir.v1.DungeonPartyView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonPartyView} DungeonPartyView instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonPartyView.$Shape): minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape;
+             *   (properties?: minimir.v1.DungeonPartyView.$Properties): minimir.v1.DungeonPartyView;
+             * }}
+             */
+            DungeonPartyView.create = function(properties) {
+                return new DungeonPartyView(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonPartyView message. Does not implicitly {@link minimir.v1.DungeonPartyView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {minimir.v1.DungeonPartyView.$Properties} message DungeonPartyView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.party_id != null && $Object.hasOwnProperty.call(message, "party_id") && message.party_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.party_id);
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.revision);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.template_id);
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level") && message.minimum_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.minimum_level);
+                if (message.allowed_jobs_mask != null && $Object.hasOwnProperty.call(message, "allowed_jobs_mask") && message.allowed_jobs_mask !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.allowed_jobs_mask);
+                if (message.allow_same_job != null && $Object.hasOwnProperty.call(message, "allow_same_job") && message.allow_same_job !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.allow_same_job);
+                if (message.leader_role_id != null && $Object.hasOwnProperty.call(message, "leader_role_id") && message.leader_role_id.length)
+                    writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.leader_role_id);
+                if (message.members != null && message.members.length)
+                    for (var i = 0; i < message.members.length; ++i)
+                        $root.minimir.v1.DungeonPartyMember.encode(message.members[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.leader_offline_until_unix_ms != null && $Object.hasOwnProperty.call(message, "leader_offline_until_unix_ms") && (typeof message.leader_offline_until_unix_ms === "object" ? message.leader_offline_until_unix_ms.low || message.leader_offline_until_unix_ms.high : message.leader_offline_until_unix_ms !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.leader_offline_until_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonPartyView message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {minimir.v1.DungeonPartyView.$Properties} message DungeonPartyView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonPartyView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape} DungeonPartyView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonPartyView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.party_id = value;
+                            else
+                                delete message.party_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.minimum_level = value;
+                            else
+                                delete message.minimum_level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.allowed_jobs_mask = value;
+                            else
+                                delete message.allowed_jobs_mask;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_same_job = value;
+                            else
+                                delete message.allow_same_job;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.leader_role_id = value;
+                            else
+                                delete message.leader_role_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.members && message.members.length))
+                                message.members = [];
+                            message.members.push($root.minimir.v1.DungeonPartyMember.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.leader_offline_until_unix_ms = value;
+                            else
+                                delete message.leader_offline_until_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonPartyView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyView & minimir.v1.DungeonPartyView.$Shape} DungeonPartyView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonPartyView message.
+             * @function verify
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonPartyView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.party_id != null && $Object.hasOwnProperty.call(message, "party_id"))
+                    if (!(message.party_id && typeof message.party_id.length === "number" || $util.isString(message.party_id)))
+                        return "party_id: buffer expected";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level"))
+                    if (!$util.isInteger(message.minimum_level))
+                        return "minimum_level: integer expected";
+                if (message.allowed_jobs_mask != null && $Object.hasOwnProperty.call(message, "allowed_jobs_mask"))
+                    if (!$util.isInteger(message.allowed_jobs_mask))
+                        return "allowed_jobs_mask: integer expected";
+                if (message.allow_same_job != null && $Object.hasOwnProperty.call(message, "allow_same_job"))
+                    if (typeof message.allow_same_job !== "boolean")
+                        return "allow_same_job: boolean expected";
+                if (message.leader_role_id != null && $Object.hasOwnProperty.call(message, "leader_role_id"))
+                    if (!(message.leader_role_id && typeof message.leader_role_id.length === "number" || $util.isString(message.leader_role_id)))
+                        return "leader_role_id: buffer expected";
+                if (message.members != null && $Object.hasOwnProperty.call(message, "members")) {
+                    if (!$Array.isArray(message.members))
+                        return "members: array expected";
+                    for (var i = 0; i < message.members.length; ++i) {
+                        var error = $root.minimir.v1.DungeonPartyMember.verify(message.members[i], _depth + 1);
+                        if (error)
+                            return "members." + error;
+                    }
+                }
+                if (message.leader_offline_until_unix_ms != null && $Object.hasOwnProperty.call(message, "leader_offline_until_unix_ms"))
+                    if (!$util.isInteger(message.leader_offline_until_unix_ms) && !(message.leader_offline_until_unix_ms && $util.isInteger(message.leader_offline_until_unix_ms.low) && $util.isInteger(message.leader_offline_until_unix_ms.high)))
+                        return "leader_offline_until_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonPartyView
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonPartyView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonPartyView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonPartyView";
+            };
+
+            return DungeonPartyView;
+        })();
+
+        v1.DungeonPartyMember = (function() {
+
+            /**
+             * Properties of a DungeonPartyMember.
+             * @typedef {Object} minimir.v1.DungeonPartyMember.$Properties
+             * @property {Uint8Array|null} [role_id] DungeonPartyMember role_id
+             * @property {string|null} [display_name] DungeonPartyMember display_name
+             * @property {number|null} [job] DungeonPartyMember job
+             * @property {number|null} [level] DungeonPartyMember level
+             * @property {boolean|null} [online] DungeonPartyMember online
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonPartyMember.
+             * @memberof minimir.v1
+             * @interface IDungeonPartyMember
+             * @augments minimir.v1.DungeonPartyMember.$Properties
+             * @deprecated Use minimir.v1.DungeonPartyMember.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonPartyMember.
+             * @typedef {minimir.v1.DungeonPartyMember.$Properties} minimir.v1.DungeonPartyMember.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonPartyMember.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonPartyMember.
+             * @constructor
+             * @param {minimir.v1.DungeonPartyMember.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonPartyMember = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonPartyMember role_id.
+             * @member {Uint8Array} role_id
+             * @memberof minimir.v1.DungeonPartyMember
+             * @instance
+             */
+            DungeonPartyMember.prototype.role_id = $util.newBuffer([]);
+
+            /**
+             * DungeonPartyMember display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.DungeonPartyMember
+             * @instance
+             */
+            DungeonPartyMember.prototype.display_name = "";
+
+            /**
+             * DungeonPartyMember job.
+             * @member {number} job
+             * @memberof minimir.v1.DungeonPartyMember
+             * @instance
+             */
+            DungeonPartyMember.prototype.job = 0;
+
+            /**
+             * DungeonPartyMember level.
+             * @member {number} level
+             * @memberof minimir.v1.DungeonPartyMember
+             * @instance
+             */
+            DungeonPartyMember.prototype.level = 0;
+
+            /**
+             * DungeonPartyMember online.
+             * @member {boolean} online
+             * @memberof minimir.v1.DungeonPartyMember
+             * @instance
+             */
+            DungeonPartyMember.prototype.online = false;
+
+            /**
+             * Creates a new DungeonPartyMember instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {minimir.v1.DungeonPartyMember.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonPartyMember} DungeonPartyMember instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonPartyMember.$Shape): minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape;
+             *   (properties?: minimir.v1.DungeonPartyMember.$Properties): minimir.v1.DungeonPartyMember;
+             * }}
+             */
+            DungeonPartyMember.create = function(properties) {
+                return new DungeonPartyMember(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonPartyMember message. Does not implicitly {@link minimir.v1.DungeonPartyMember.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {minimir.v1.DungeonPartyMember.$Properties} message DungeonPartyMember message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyMember.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role_id != null && $Object.hasOwnProperty.call(message, "role_id") && message.role_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.role_id);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.display_name);
+                if (message.job != null && $Object.hasOwnProperty.call(message, "job") && message.job !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.job);
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level") && message.level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.level);
+                if (message.online != null && $Object.hasOwnProperty.call(message, "online") && message.online !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.online);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonPartyMember message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyMember.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {minimir.v1.DungeonPartyMember.$Properties} message DungeonPartyMember message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonPartyMember.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonPartyMember message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape} DungeonPartyMember
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyMember.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonPartyMember();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.role_id = value;
+                            else
+                                delete message.role_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.job = value;
+                            else
+                                delete message.job;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level = value;
+                            else
+                                delete message.level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.online = value;
+                            else
+                                delete message.online;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonPartyMember message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyMember & minimir.v1.DungeonPartyMember.$Shape} DungeonPartyMember
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonPartyMember.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonPartyMember message.
+             * @function verify
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonPartyMember.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role_id != null && $Object.hasOwnProperty.call(message, "role_id"))
+                    if (!(message.role_id && typeof message.role_id.length === "number" || $util.isString(message.role_id)))
+                        return "role_id: buffer expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
+                if (message.job != null && $Object.hasOwnProperty.call(message, "job"))
+                    if (!$util.isInteger(message.job))
+                        return "job: integer expected";
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level"))
+                    if (!$util.isInteger(message.level))
+                        return "level: integer expected";
+                if (message.online != null && $Object.hasOwnProperty.call(message, "online"))
+                    if (typeof message.online !== "boolean")
+                        return "online: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonPartyMember
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonPartyMember
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonPartyMember.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonPartyMember";
+            };
+
+            return DungeonPartyMember;
+        })();
+
         return v1;
     })();
 

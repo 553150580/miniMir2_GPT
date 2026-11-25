@@ -37,6 +37,29 @@ function sockets(t) {
     return { connection, status, instances, enter };
 }
 
+test('讨伐招募只接受原请求的招募回执，场景和队伍修订保留精确 Long', async t => {
+    const { connection, enter } = sockets(t);
+    const socket = await enter('讨伐协议测试');
+    const sceneEpoch = Long.fromString('18446744073709551614', true);
+    const revision = Long.fromString('9007199254740999', true);
+    const partyId = new Uint8Array(16).fill(7);
+    const pending = connection.request(20021, { sceneEpoch, action: 3, partyId, expectedRevision: revision });
+    const sent = socket.sent.at(-1);
+    assert.equal(sent.id, 20021);
+    assert.equal(sent.value.sceneEpoch.toString(), sceneEpoch.toString());
+    assert.equal(sent.value.expectedRevision.toString(), revision.toString());
+    assert.deepEqual(sent.value.partyId, partyId);
+    socket.deliver(40005, sent.seq, Long.UONE, { errorCode: 0 });
+    assert.ok(connection.pending.has(sent.seq));
+    socket.deliver(20022, sent.seq, Long.UONE, { sceneEpoch,
+        ownParty: { partyId, revision, templateId: 3001, members: [{ roleId: partyId, online: true }] } });
+    const state = await pending;
+    assert.equal(state.sceneEpoch.toString(), sceneEpoch.toString());
+    assert.equal(state.ownParty.revision.toString(), revision.toString());
+    assert.deepEqual(state.ownParty.partyId, partyId);
+    assert.equal(state.ownParty.members[0].online, true);
+});
+
 test('网络关闭立即退役当前连接、拒绝未完成请求并且只通知一次，迟到旧帧不进入替换连接', async t => {
     const { connection, status, enter } = sockets(t);
     const old = await enter('第一次');

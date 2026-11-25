@@ -133,6 +133,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 		w.initialize(r, role)
 	}
 	if r.Conn != nil && r.Conn != c.conn {
+		dungeonPartyDetached(r, r.Conn, now)
 		r.Conn.Close("role taken over")
 	}
 	w.detachPersonalBoss(r)

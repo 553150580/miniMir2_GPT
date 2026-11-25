@@ -72,6 +72,8 @@ const (
 	MsgC2SWorldBossEnter uint16 = 20018
 	MsgC2SWorldBossLeave uint16 = 20019
 	MsgS2CWorldBossState uint16 = 20020
+	MsgC2SDungeonPartyRequest uint16 = 20021
+	MsgS2CDungeonPartyState uint16 = 20022
 	MsgC2SWarehouseQuery uint16 = 40020
 	MsgS2CWarehousePage uint16 = 40021
 	MsgC2SWarehouseAction uint16 = 40022

@@ -1,0 +1,54 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+// 招募指令绑定当前已确认场景。永久入场扣次不通过招募消息触发。
+message DungeonPartyRequest {
+  uint64 scene_epoch = 1;
+  // 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件。
+  uint32 action = 2;
+  bytes party_id = 3;
+  uint64 expected_revision = 4;
+  uint32 template_id = 5;
+  uint32 minimum_level = 6;
+  // 位 0 为战士、位 1 为法师、位 2 为道士。招募条件约束申请加入的角色。
+  uint32 allowed_jobs_mask = 7;
+  bool allow_same_job = 8;
+  bytes target_role_id = 9;
+}
+
+message DungeonPartyState {
+  uint64 scene_epoch = 1;
+  uint32 error_code = 2;
+  repeated DungeonPartyTemplate templates = 3;
+  repeated DungeonPartyView parties = 4;
+  DungeonPartyView own_party = 5;
+  bool more = 6;
+}
+
+message DungeonPartyTemplate {
+  uint32 template_id = 1;
+  string display_name = 2;
+  uint32 minimum_level = 3;
+  uint32 duration_seconds = 4;
+}
+
+message DungeonPartyView {
+  bytes party_id = 1;
+  uint64 revision = 2;
+  uint32 template_id = 3;
+  uint32 minimum_level = 4;
+  uint32 allowed_jobs_mask = 5;
+  bool allow_same_job = 6;
+  bytes leader_role_id = 7;
+  repeated DungeonPartyMember members = 8;
+  int64 leader_offline_until_unix_ms = 9;
+}
+
+message DungeonPartyMember {
+  bytes role_id = 1;
+  string display_name = 2;
+  uint32 job = 3;
+  uint32 level = 4;
+  bool online = 5;
+}
