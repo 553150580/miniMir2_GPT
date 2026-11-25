@@ -856,7 +856,7 @@ func (w *worker) revivePlayer(r *room) {
 		w.isolateRoom(r)
 		return
 	}
-	spawn, reserved := w.reserveSharedTownRevival(r, m)
+	spawn, reserved := w.revivalLanding(r, m)
 	if !reserved {
 		w.isolateRoom(r)
 		return

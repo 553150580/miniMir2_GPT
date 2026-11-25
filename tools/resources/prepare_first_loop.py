@@ -1054,6 +1054,12 @@ def fixture_from_rows(tables):
 def public_gameplay(fixture):
     """客户端只接收显式展示白名单，来源、夹具说明和服务端内部字段留在源侧。"""
     boss_fields,boss_monsters=bosses.public_fields(fixture)
+    if fixture['rule_version'] >= 30 and boss_fields:
+        # 仅为客户端外观和图集提供本首领图真正可见的怪物编号。
+        monsters_by_map = {str(fixture[kind]['map']['id']): fixture[kind]['monster_id']
+                           for kind in ('personal_boss', 'world_boss')}
+        for entry in boss_fields['challenge_maps']:
+            entry['monster_definition_ids'] = [monsters_by_map[entry['id']]]
     potions=fixture['potions'];effects={effect['item_id']:effect for effect in potions['effects']}
     shared={field:potions[field] for field in POTION_FIELDS}
     items=[]

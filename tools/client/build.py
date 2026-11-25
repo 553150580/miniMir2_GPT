@@ -5,6 +5,11 @@ import hashlib,json,os,subprocess,sys,time
 ROOT=Path(__file__).resolve().parents[2]
 APP=Path(os.environ.get('MINIMIR_CREATOR_EXECUTABLE', '/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/MacOS/CocosCreator'))
 if not APP.is_file():raise SystemExit('未找到锁定Creator3.8.8，请通过统一工具入口设置本机安装路径')
+development=ROOT/'client/assets/resources/development'
+if json.loads((development/'gameplay.json').read_text(encoding='utf-8'))['rule_version'] >= 30:
+    required=('original-monsters/actors.json','pets/shinsu/profile.json','town-npcs/manifest.json')
+    missing=[name for name in required if not (development/name).is_file()]
+    if missing:raise SystemExit('请先运行 tools/resources/prepare_classic_actor_art.py 导入原版素材：'+', '.join(missing))
 subprocess.run([sys.executable, str(ROOT/'tools/resources/build_world_boss_atlas.py')], cwd=ROOT, check=True)
 def snapshots():
     return {p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for suffix in ['*.scene','*.prefab'] for p in (ROOT/'client/assets').rglob(suffix)}

@@ -13,6 +13,12 @@ const expected = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(expected.baseUrl);
 const socket = new URL(expected.endpoint);
 const atlasTextures = new Set(expected.atlasTexturePaths ?? []);
+const expectedBossProfile = process.env.MINIMIR_QA_WORLD_BOSS_PROFILE;
+const expectedBossFramePrefix = process.env.MINIMIR_QA_WORLD_BOSS_FRAME_PREFIX;
+if (expectedBossProfile || expectedBossFramePrefix) {
+    assert.match(expectedBossProfile ?? '', /^[a-z][a-z0-9_]+$/);
+    assert.match(expectedBossFramePrefix ?? '', /^[A-Za-z][A-Za-z0-9]*:[0-9]+$/);
+}
 assert.equal(base.protocol, 'http:');
 assert(base.hostname === '127.0.0.1' && base.port !== '18080');
 assert(socket.protocol === 'ws:' && socket.hostname === '127.0.0.1' && socket.pathname === '/ws' && !['18101', '18103'].includes(socket.port));
@@ -423,6 +429,38 @@ async function observeOtherSpell(observer, caster, casterHandle) {
     }
 }
 
+// 从当前首领画面核对真正显示的实体、帧键和已加载纹理，排除目录里有定义而场内仍用占位图的情况。
+async function observeBossAppearance(client) {
+    const { page, session } = client;
+    await page.bringToFront();
+    const shown = await page.waitForFunction(({ session, profile, prefix }) => {
+        const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+        const definitionId = world?.gameplay?.world_boss?.monster_id;
+        if (!session.ready || session.entry?.sceneKind !== 4 || !world?.isMapReady || !definitionId) return null;
+        const visual = Array.from(world.visuals.values()).find(candidate => candidate.state.entityKind === 3
+            && candidate.state.definitionId === definitionId && candidate.profile?.id === profile && candidate.node.activeInHierarchy);
+        if (!visual) return null;
+        for (const [index, layer] of visual.body.entries()) {
+            const key = visual.keys[index], frame = layer.spriteFrame, source = world.manifest.frames[key];
+            if (!key?.startsWith(prefix) || !/^\d{3}$/.test(key.slice(prefix.length)) || !layer.node.activeInHierarchy
+                || !frame?.texture || !source || world.assets?.frames.get(key) !== frame) continue;
+            const native = frame.texture.image?.nativeUrl;
+            return { definitionId, profile, frame: key, source: { path: source.png, sha256: source.png_sha256,
+                width: source.width, height: source.height }, texture: { path: native ? new URL(native, window.location.href).pathname : '',
+                width: frame.texture.width, height: frame.texture.height, frameWidth: frame.rect.width, frameHeight: frame.rect.height } };
+        }
+        return null;
+    }, { session, profile: expectedBossProfile, prefix: expectedBossFramePrefix }, { polling: 50, timeout: 8000 });
+    try {
+        const evidence = await shown.jsonValue();
+        assert.match(evidence.source.sha256, /^[a-f0-9]{64}$/);
+        assert.equal(evidence.source.width, evidence.texture.frameWidth);
+        assert.equal(evidence.source.height, evidence.texture.frameHeight);
+        assert(atlasTextures.has(evidence.texture.path), '首领实际纹理应属于本轮打包并冷载的图集');
+        return evidence;
+    } finally { await shown.dispose(); }
+}
+
 async function pet(client, corpse, handle = 0, timeout = 15000) {
     const { page, session } = client;
     const result = await page.waitForFunction(({ session, corpse, handle, definition }) => {
@@ -536,6 +574,11 @@ async function main() {
         assert.equal(warriorRoom.map, taoRoom.map);
         assert(warriorRoom.occurrence.length > 0 && warriorRoom.occurrence === taoRoom.occurrence);
         assert.notEqual(warriorRoom.roleHandle, taoRoom.roleHandle);
+        if (expectedBossProfile) {
+            report.step = '确认两端场内首领纹理和动作帧';
+            report.worldBossAppearance = { warrior: await observeBossAppearance(warrior), tao: await observeBossAppearance(tao) };
+            assert.equal(report.worldBossAppearance.warrior.definitionId, report.worldBossAppearance.tao.definitionId);
+        }
         if (expected.version >= 30) {
             report.step = '战士观察真实道士治疗特效';
             report.otherPlayerSpell = await observeOtherSpell(warrior, tao, taoRoom.roleHandle);
@@ -545,6 +588,7 @@ async function main() {
         fs.writeFileSync(path.join(resultDir, 'world-boss-cold-entry-report.json'), JSON.stringify({
             measuredAt: report.coldEntryMeasuredAt, ruleVersion: report.ruleVersion, cache: report.cache,
             atlasTextureCount: report.atlasTextureCount, coldEntry: report.coldEntry, otherPlayerSpell: report.otherPlayerSpell,
+            worldBossAppearance: report.worldBossAppearance,
         }, null, 2) + '\n', 'utf8');
         if (report.coldEntryOnly) {
             assert.deepEqual(report.errors, []);

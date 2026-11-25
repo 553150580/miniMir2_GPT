@@ -36,6 +36,14 @@ client/assets/resources/audio/*.wav.meta
 # 世界首领图集从现有本机帧生成，随实际构建发布。
 client/assets/resources/development/world-boss-atlas/
 client/assets/resources/development/world-boss-atlas.meta
+# 动作素材由本机原版资源生成，使用独立的可核对清单。
+client/assets/resources/development/original-monsters/
+client/assets/resources/development/original-monsters.meta
+client/assets/resources/development/town-npcs/
+client/assets/resources/development/town-npcs.meta
+client/assets/resources/development/pets/shinsu/
+client/assets/resources/development/pets/shinsu.meta
+client/assets/resources/development/pets.meta
 server/minimir
 outputs/server-dev/nbserver
 conf/dev/*.local.json

@@ -2,7 +2,7 @@ import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc'
 import { GridProjection } from './GridProjection';
 import { WorldBossFrameAtlas } from './WorldBossFrameAtlas';
 import { SourceMapAssets } from './SourceMapAssets';
-import { compactTownMap, townNpcFrames } from './TownMapModel';
+import { compactTownMap, mergeTownNpcAppearances, townNpcPreloadFrames } from './TownMapModel';
 import { petAppearanceFor } from './EntityHeadAnchor';
 
 interface WorldMapEntry {
@@ -188,27 +188,38 @@ export class WorldAssets {
             result.damageNumberPrefab = result.own(await load<Prefab>('prefabs/DamageNumber', Prefab));
             result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
             result.statusBadgePrefab = result.own(await load<Prefab>('prefabs/StatusBadge', Prefab));
+            const npcArtPath = 'development/town-npcs/manifest';
+            if (selected.compact_town && resources.getInfoWithPath(npcArtPath, JsonAsset)) {
+                const npcArt = result.own(await load<JsonAsset>(npcArtPath, JsonAsset)).json;
+                result.manifest = mergeTownNpcAppearances(result.manifest, npcArt, result.map.npcs);
+            }
             const profileIds = new Set<string>();
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
             if (!player) throw new Error('当前职业缺少外观资源');
             profileIds.add(player.profile);
             // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
             if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
-            const visibleMonsters = selected.monster_definition_ids === undefined
+            const monstersForMap = () => selected.monster_definition_ids === undefined
                 ? result.gameplay.monster_profiles.filter((row: any) => !String(row.profile).startsWith('monster_m1_'))
                 : result.gameplay.monster_profiles.filter((row: any) => selected.monster_definition_ids!.includes(row.definition_id));
-            // 独立原创包只在有对应怪物槽的普通地图加载。
-            if (visibleMonsters.some((row: any) => String(row.profile).startsWith('monster_m1_'))) {
-                const extras = result.own(await load<JsonAsset>('development/hunt/actors', JsonAsset)).json as any;
+            // 本机原版资源仅随拥有对应怪物的普通图和首领图加载。
+            if (monstersForMap().some((row: any) => String(row.profile).startsWith('monster_m1_'))
+                || result.sceneKind >= 3 && selected.monster_definition_ids !== undefined) {
+                const extras = result.own(await load<JsonAsset>('development/original-monsters/actors', JsonAsset)).json as any;
                 if (extras?.schema_version !== 1 || !extras.profiles || !extras.frames
+                    || !extras.challenge_profiles
                     || Object.entries(extras.frames).some(([key, frame]: [string, any]) => !/^Hunt:\d+$/.test(key)
-                        || !/^hunt\/frames\/[a-z_0-9]+\.png$/.test(frame?.png) || result.manifest.frames[key]))
-                    throw new Error('普通地图怪物资源清单无效');
+                        || !/^original-monsters\/frames\/frame_[0-9]+_[0-9]+\.png$/.test(frame?.png) || result.manifest.frames[key]))
+                    throw new Error('原版怪物资源清单无效');
                 result.manifest = { ...result.manifest,
                     profiles: { ...result.manifest.profiles, ...extras.profiles },
                     frames: { ...result.manifest.frames, ...extras.frames } };
+                result.gameplay = { ...result.gameplay, monster_profiles: result.gameplay.monster_profiles.map((row: any) => {
+                    const original = extras.challenge_profiles[String(row.definition_id)];
+                    return original ? { ...row, profile: original } : row;
+                }) };
             }
-            for (const row of visibleMonsters) profileIds.add(row.profile);
+            for (const row of monstersForMap()) profileIds.add(row.profile);
             // 共享首领场的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
             for (const row of result.gameplay.pet_profiles) {
                 if (result.sceneKind !== 4 && row.job_id !== job) continue;
@@ -226,7 +237,7 @@ export class WorldAssets {
                 if (!frame || frame.declared_empty) throw new Error(`地图物件缺少原始帧：${prop.frame}`);
                 keys.add(prop.frame);
             }
-            for (const npc of result.map.npcs ?? []) for (const key of townNpcFrames(result.manifest, npc)) keys.add(key);
+            for (const npc of result.map.npcs ?? []) for (const key of townNpcPreloadFrames(result.manifest, npc)) keys.add(key);
             for (const id of profileIds) {
                 const profile = result.manifest.profiles[id];
                 if (!profile) throw new Error(`缺少外观资源：${id}`);

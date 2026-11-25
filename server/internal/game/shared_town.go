@@ -102,22 +102,13 @@ func sharedTownLanding(m *devconfig.MapTemplate, preferred devconfig.Point, pet 
 		other := occupied[point]
 		return (other == 0 || other == owner) && (pet == nil || point != *pet) && m.Walkable(point)
 	}
-	if available(preferred) {
-		return preferred, true
-	}
 	if !alternate {
+		if available(preferred) {
+			return preferred, true
+		}
 		return devconfig.Point{}, false
 	}
-	best, bestDistance := devconfig.Point{}, math.MaxInt
-	for y := 0; y < m.Height; y++ {
-		for x := 0; x < m.Width; x++ {
-			point := devconfig.Point{X: x, Y: y}
-			if score := distance(preferred, point); score < bestDistance && available(point) {
-				best, bestDistance = point, score
-			}
-		}
-	}
-	return best, bestDistance != math.MaxInt
+	return nearestOpenLanding(m, preferred, available)
 }
 
 // reserveSharedTown 原子更换城镇席位，目标满员时保留来源场景和席位。
@@ -239,11 +230,8 @@ func (w *worker) moveSharedTownPlayer(r *room, point devconfig.Point) bool {
 }
 
 // reserveSharedTownRevival 为已经持久确认的复活占下空格，再由房间恢复生命。
-func (w *worker) reserveSharedTownRevival(r *room, m *devconfig.MapTemplate) (devconfig.Point, bool) {
+func (w *worker) reserveSharedTownRevival(r *room, m *devconfig.MapTemplate, pet *devconfig.Point) (devconfig.Point, bool) {
 	membership := r.townMembership
-	if membership.owner == 0 {
-		return m.PlayerSpawn, true
-	}
 	d := &w.e.sharedTowns
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -251,7 +239,7 @@ func (w *worker) reserveSharedTownRevival(r *room, m *devconfig.MapTemplate) (de
 	if town == nil || town.residents[membership.owner] == nil {
 		return devconfig.Point{}, false
 	}
-	point, ok := sharedTownLanding(m, m.PlayerSpawn, nil, town.occupied, membership.owner, true)
+	point, ok := sharedTownLanding(m, m.PlayerSpawn, pet, town.occupied, membership.owner, true)
 	if !ok {
 		return devconfig.Point{}, false
 	}

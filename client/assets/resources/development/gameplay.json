@@ -6552,7 +6552,10 @@
       "player_spawn": {
         "x": 6,
         "y": 6
-      }
+      },
+      "monster_definition_ids": [
+        80001
+      ]
     },
     {
       "id": "81",
@@ -6566,7 +6569,10 @@
       "player_spawn": {
         "x": 6,
         "y": 6
-      }
+      },
+      "monster_definition_ids": [
+        80002
+      ]
     }
   ],
   "world_boss": {

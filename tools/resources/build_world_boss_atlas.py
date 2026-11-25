@@ -45,7 +45,17 @@ def frame_catalog(source):
         profiles['pet_shinsu'] = local['profile']
         frames.update(local['frames'])
     visible = {row['profile'] for row in gameplay['jobs']}
-    visible.update(row['profile'] for row in gameplay['monster_profiles'] if not row['profile'].startswith('monster_m1_'))
+    world_map = next((row for row in gameplay.get('challenge_maps', []) if row['scene_kind'] == 4), {})
+    world_monsters = world_map.get('monster_definition_ids')
+    if world_monsters is None:
+        visible.update(row['profile'] for row in gameplay['monster_profiles'] if not row['profile'].startswith('monster_m1_'))
+    else:
+        original = load_json(source / 'original-monsters/actors.json')
+        if original['schema_version'] != 1 or frames.keys() & original['frames'].keys() or profiles.keys() & original['profiles'].keys():
+            raise ValueError('原版怪物清单与首领图集冲突')
+        profiles.update(original['profiles'])
+        frames.update(original['frames'])
+        visible.update(original['challenge_profiles'][str(id)] for id in world_monsters)
     visible.update(row['profile'] for row in gameplay['pet_profiles'] if not row.get('appearance_optional') or row['profile'] in profiles)
     keys = set(effect_keys(manifest.get('statuses'))) | set(effect_keys(manifest.get('teleport')))
     for profile in sorted(visible):
@@ -144,22 +154,25 @@ def build(source):
                 crop = replay.crop((x, y, x + frame['width'], y + frame['height']))
                 if hashlib.sha256(crop.tobytes()).digest() != original_pixels[key]:
                     raise ValueError(f'图集导出未保留原像素：{key}')
-        metadata = image_meta(f'{ATLAS}-{name}', width, height, 0)
+        # 旧页面可能仍持有上一版索引。图像字节变化后，所有原生纹理和纹理元数据都用新 UUID。
+        page_digest = hashlib.sha256(output.read_bytes()).hexdigest()
+        metadata = image_meta(f'{ATLAS}-{name}-{page_digest}', width, height, 0)
         texture = metadata['subMetas']['6c48a']
         texture['displayName'] = name
         metadata['subMetas'] = {'6c48a': texture}
         metadata['userData']['type'] = 'texture'
         write_json(output.with_suffix('.png.meta'), metadata)
-        index['pages'].append({'name': name, 'width': width, 'height': height,
-                               'sha256': hashlib.sha256(output.read_bytes()).hexdigest()})
+        index['pages'].append({'name': name, 'width': width, 'height': height, 'sha256': page_digest})
     # 只清除同一生成器上次留下且新索引没有引用的页。
     names = {page['name'] for page in index['pages']}
     for path in destination.iterdir():
         match = re.fullmatch(r'(page-[0-9]+)\.png(?:\.meta)?', path.name)
         if match and match[1] not in names:
             path.unlink()
-    write_json(destination / 'index.json.meta', base_meta('json', '2.0.1', stable_uuid(f'{ATLAS}-index'), ['.json']))
-    write_json(destination / 'index.json', index)
+    index_path = destination / 'index.json'
+    write_json(index_path, index)
+    digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
+    write_json(destination / 'index.json.meta', base_meta('json', '2.0.1', stable_uuid(f'{ATLAS}-index-{digest}'), ['.json']))
     print(json.dumps({'world_boss_atlas_pages': len(pages), 'source_frames': len(frames),
                       'page_bytes': sum((destination / f'{page["name"]}.png').stat().st_size for page in index['pages']),
                       'texture_bytes_rgba': sum(page['width'] * page['height'] * 4 for page in index['pages'])}))

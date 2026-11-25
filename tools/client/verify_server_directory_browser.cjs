@@ -207,6 +207,20 @@ async function main() {
             const personal = await sceneKind(3);
             assert.notEqual(personal.map, home.map);
             assert.equal(personal.version, home.version);
+            if (process.env.MINIMIR_QA_PERSONAL_BOSS_PROFILE) {
+                report.step = '核对个人首领的真实原版外观';
+                const appearance = await page.waitForFunction(profile => {
+                    const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+                    const guard = Array.from(world?.visuals?.values() ?? []).find(visual =>
+                        visual.state.entityKind === 3 && visual.profile?.id === profile);
+                    const frame = guard?.keys[0];
+                    if (!/^Hunt:18[0-9]{3}$/.test(frame ?? '') || !guard.body[0]?.spriteFrame
+                        || world.assets.frames.get(frame) !== guard.body[0].spriteFrame) return null;
+                    return { profile, frame, archive: world.manifest.frames[frame].source_archive };
+                }, process.env.MINIMIR_QA_PERSONAL_BOSS_PROFILE, { timeout: 6000 });
+                try { report.personalBossAppearance = await appearance.jsonValue(); } finally { await appearance.dispose(); }
+                assert.equal(report.personalBossAppearance.archive, '18.Lib');
+            }
             await tap(boss);
             await expectLabel('Status', '挑战中');
             await tap(panel + '/Action');

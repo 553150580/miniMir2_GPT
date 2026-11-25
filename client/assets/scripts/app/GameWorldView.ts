@@ -458,6 +458,7 @@ export class GameWorldView {
         if (this.disposed || !this.assets) return;
         const now = game.totalTime;
         this.audio?.update();
+        for (const npc of this.townNpcs) npc.update(now);
         if (this.skillFlights.length) {
             if (this.presentationCurrent()) for (const flight of this.skillFlights) {
                 if (now >= flight.at && now < flight.at + 250 && this.visuals.get(flight.caster)?.state.life.toString() === flight.life) playClientCue(flight.clip);

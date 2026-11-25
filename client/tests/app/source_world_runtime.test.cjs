@@ -83,6 +83,45 @@ test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有�
  }
  view.dispose();assertReleased(resources);
 });
+test('原版NPC按原序列换帧，保留碰撞脚点并在离场时解除全部图片', async () => {
+ const npcPath = 'development/town-npcs/manifest';
+ const catalog = { schema_version: 1, npc_profiles: {}, profiles: {}, frames: {} };
+ const fixture = JSON.parse(fs.readFileSync(path.join(root, 'config/development/first-loop.json'), 'utf8'));
+ const evidence = fixture._source_evidence.compact_towns.find(town => town.map_id === 4);
+ for (const npc of evidence.npcs) {
+  const id = `npc_original_${npc.appearance}`, start = npc.appearance === 27 ? 1680 : npc.appearance * 60;
+  catalog.npc_profiles[npc.id] = id;
+  const directions = [0, 1, 2].map(direction => ({ frames: [0, 1, 2, 3].map(frame => {
+   const index = start + direction * 10 + frame, key = `Npc:${index}`;
+   catalog.frames[key] = { png: `town-npcs/frames/frame_${index}.png`, width: 64, height: 72,
+    offset_x: frame, offset_y: -20, declared_empty: false };
+   return key;
+  }) }));
+  catalog.profiles[id] = { id, layers: [{ package: 'Npc', actions: { standing: { count: 4, duration_ms: 200, directions } } }] };
+ }
+ const resources = fakeResources({ extraResources: { [npcPath]: catalog } });
+ const assets = await WorldAssets.prepare(0, () => {}, '4');
+ const {view, entities} = scene(assets);
+ const originalNow = cc.game.totalTime;
+ try {
+  const definition = assets.map.npcs.find(npc => npc.id === '4002');
+  const node = entities.getChildByName('npc_4002'), body = node.getChildByName('Body');
+  const sprite = body.getComponent(Sprite), foot = view.grid(definition.position.x, definition.position.y);
+  assert.deepEqual(node.position, foot);
+  assert.equal(sprite.spriteFrame.key, 'development/town-npcs/frames/frame_1680/spriteFrame');
+  assert(!resources.requested.includes('development/town-npcs/frames/frame_1690/spriteFrame'));
+  view.update(0, 0);
+  cc.game.totalTime += 200;
+  view.update(0, 0);
+  assert.equal(sprite.spriteFrame.key, 'development/town-npcs/frames/frame_1681/spriteFrame');
+  assert.equal(body.position.x, -23);
+  assert.deepEqual(node.position, foot);
+ } finally {
+  cc.game.totalTime = originalNow;
+  view.dispose();
+  assertReleased(resources);
+ }
+});
 test('战士在世界首领场按模板预载道士宠物并显示无主尸体，普通图保留职业范围', async () => {
  const resources = fakeResources(), assets = await WorldAssets.prepare(0, () => {}, '81');
  const {view, world, entities} = scene(assets);

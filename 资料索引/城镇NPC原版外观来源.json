@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "scope": "用户本机试玩现有三座城镇的原画导入，不授权对外发行",
+  "archives": {
+    "npc.wil": "a26c2c9b17e4d0d8700b9f803655a585be57f6c269fe036f3d9c1515e94764b8",
+    "npc.WIX": "b38d1bf2d6b8702dd73b514b31aef46204f0c3a22f7519ffc965fecdf80efa09"
+  },
+  "frame_count": 3059,
+  "reference": {
+    "project": "D:/123DownLoad/Miro2_1.80",
+    "offset_rules": "tools/classic_npc_runtime.py:33–82",
+    "offset_rules_sha256": "7db10b5c79eb7a5727ff4d23eeace85c46e1dae37104a0cacccc9684e713c83b",
+    "action_table": "my-mir2-1.8/assets/resources/data/animations.json",
+    "action_table_sha256": "0ceb816659399ff8662182c6107308a61f23be6d9b1b332aecf8c9b3c04a0e83",
+    "original_reference": "mirbeta/MirClient@3dbba7d20f647e2716a1cacacdfe233e1695c33f:Source/MirClient/Actor.pas",
+    "same_version_server_proven": false
+  },
+  "standing": { "directions": 3, "count": 4, "direction_stride": 10, "duration_ms": 200 },
+  "appearance_frame_starts": { "0": 0, "1": 60, "2": 120, "3": 180, "5": 300, "6": 360, "7": 420, "8": 480, "9": 540, "11": 660, "27": 1680 }
+}
