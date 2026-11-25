@@ -19,6 +19,10 @@ test('仓库只追加保存子树与Functions入口；原1191对象只父childre
  const overlays=beforeDirectory[450]._children.filter(ref=>scene[ref.__id__]._name==='ItemActions');
  assert.equal(overlays.length,1);
  beforeDirectory[450]._children=beforeDirectory[450]._children.filter(ref=>scene[ref.__id__]._name!=='ItemActions');
+ // 镜像竞技只在 Safe 和原功能页追加入口引用，剥离后继续校验仓库阶段的历史对象。
+ for(const [parent,name] of [[17,'MirrorArenaBattle'],[395,'MirrorArena']]) {
+  beforeDirectory[parent]._children=beforeDirectory[parent]._children.filter(ref=>scene[ref.__id__]._name!==name);
+ }
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(beforeDirectory)).digest('hex'),'4914af7ce27923adca7039cdb36663ab4ffef85e7fd2915c009b9927a772f462');
  const projected=beforeDirectory.slice(0,1191);
  require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projected);

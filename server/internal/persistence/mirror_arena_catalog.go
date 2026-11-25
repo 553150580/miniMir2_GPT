@@ -127,6 +127,13 @@ func (s *Store) QueryMirrorArena(ctx context.Context, a Auth) (MirrorInfo, error
 			return err
 		}
 		out.SeasonPoints, out.Streak = score.Points, score.Streak
+		defense, err := mirrorOptional[mirrorPoolEntry](tc, s.DB.Collection(mirrorPoolCollection), scope+":"+r.ID)
+		if err != nil {
+			return err
+		}
+		if defense.RuleVersion == s.Cfg.Fixture.RuleVersion && defense.ConfigHash == s.Cfg.Fixture.Hash {
+			out.DefenseVersion = defense.Version
+		}
 		active, err := mirrorOptional[mirrorActive](tc, s.DB.Collection(mirrorActiveCollection), mirrorRoleKey(r.Origin, r.ID))
 		if err != nil {
 			return err

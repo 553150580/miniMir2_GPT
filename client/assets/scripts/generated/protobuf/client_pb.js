@@ -42802,6 +42802,7 @@ $root.minimir = (function() {
              * @property {Long|null} [server_unix_ms] MirrorArenaCombatFrame server_unix_ms
              * @property {Array.<minimir.v1.EntityState.$Properties>|null} [entities] MirrorArenaCombatFrame entities
              * @property {Array.<minimir.v1.MirrorArenaCombatObservation.$Properties>|null} [observations] MirrorArenaCombatFrame observations
+             * @property {Array.<minimir.v1.GridPoint.$Properties>|null} [fire_wall_cells] MirrorArenaCombatFrame fire_wall_cells
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -42829,6 +42830,7 @@ $root.minimir = (function() {
             var MirrorArenaCombatFrame = function (properties) {
                 this.entities = [];
                 this.observations = [];
+                this.fire_wall_cells = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -42892,6 +42894,14 @@ $root.minimir = (function() {
             MirrorArenaCombatFrame.prototype.observations = $util.emptyArray;
 
             /**
+             * MirrorArenaCombatFrame fire_wall_cells.
+             * @member {Array.<minimir.v1.GridPoint.$Properties>} fire_wall_cells
+             * @memberof minimir.v1.MirrorArenaCombatFrame
+             * @instance
+             */
+            MirrorArenaCombatFrame.prototype.fire_wall_cells = $util.emptyArray;
+
+            /**
              * Creates a new MirrorArenaCombatFrame instance using the specified properties.
              * @function create
              * @memberof minimir.v1.MirrorArenaCombatFrame
@@ -42939,6 +42949,9 @@ $root.minimir = (function() {
                 if (message.observations != null && message.observations.length)
                     for (var i = 0; i < message.observations.length; ++i)
                         $root.minimir.v1.MirrorArenaCombatObservation.encode(message.observations[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.fire_wall_cells != null && message.fire_wall_cells.length)
+                    for (var i = 0; i < message.fire_wall_cells.length; ++i)
+                        $root.minimir.v1.GridPoint.encode(message.fire_wall_cells[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -43057,6 +43070,14 @@ $root.minimir = (function() {
                             message.observations.push($root.minimir.v1.MirrorArenaCombatObservation.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.fire_wall_cells && message.fire_wall_cells.length))
+                                message.fire_wall_cells = [];
+                            message.fire_wall_cells.push($root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -43136,6 +43157,15 @@ $root.minimir = (function() {
                         var error = $root.minimir.v1.MirrorArenaCombatObservation.verify(message.observations[i], _depth + 1);
                         if (error)
                             return "observations." + error;
+                    }
+                }
+                if (message.fire_wall_cells != null && $Object.hasOwnProperty.call(message, "fire_wall_cells")) {
+                    if (!$Array.isArray(message.fire_wall_cells))
+                        return "fire_wall_cells: array expected";
+                    for (var i = 0; i < message.fire_wall_cells.length; ++i) {
+                        var error = $root.minimir.v1.GridPoint.verify(message.fire_wall_cells[i], _depth + 1);
+                        if (error)
+                            return "fire_wall_cells." + error;
                     }
                 }
                 return null;

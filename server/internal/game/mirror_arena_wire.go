@@ -22,7 +22,8 @@ func mirrorRecordPB(summary persistence.MirrorSummary) *pb.MirrorArenaRecord {
 func mirrorLobbyState(r *room, info persistence.MirrorInfo, rule uint64) *pb.MirrorArenaState {
 	out := &pb.MirrorArenaState{SceneEpoch: r.Scene, Open: !info.SeasonStart.IsZero(), RuleVersion: rule,
 		SeasonStartUnixMs: optionalBossUnixMillis(info.SeasonStart), SeasonEndUnixMs: optionalBossUnixMillis(info.SeasonEnd),
-		DailyLimit: info.DailyLimit, EntriesUsed: info.EntriesUsed, SeasonPoints: info.SeasonPoints, Streak: info.Streak}
+		DailyLimit: info.DailyLimit, EntriesUsed: info.EntriesUsed, SeasonPoints: info.SeasonPoints, Streak: info.Streak,
+		PublishedDefenseVersion: info.DefenseVersion}
 	for _, offer := range info.Offers {
 		out.Offers = append(out.Offers, &pb.MirrorArenaOffer{OfferId: domain.Bytes(offer.ID), DefenderName: offer.DefenderName,
 			DefenderJob: offer.DefenderJob, DefenderLevel: offer.DefenderLevel, DefenseVersion: offer.DefenseVersion})
@@ -74,7 +75,8 @@ func (w *worker) sendMirrorCombatFrame(r *room, run *mirrorRun, now time.Time) {
 	}
 	run.frameSeq++
 	frame := &pb.MirrorArenaCombatFrame{SceneEpoch: r.Scene, ChallengeId: domain.Bytes(run.grant.ChallengeID),
-		BattleSceneEpoch: run.scene, Sequence: run.frameSeq, ServerUnixMs: now.UnixMilli(), Entities: w.mirrorCombatEntities(run.battle)}
+		BattleSceneEpoch: run.scene, Sequence: run.frameSeq, ServerUnixMs: now.UnixMilli(), Entities: w.mirrorCombatEntities(run.battle),
+		FireWallCells: run.battle.fireWallCells(now)}
 	remaining := wire.MaxFrame - 32 - proto.Size(frame) // 为外层帧和后续字段标签留出空间。
 	for _, event := range observations {
 		raw, err := proto.Marshal(event.Message)

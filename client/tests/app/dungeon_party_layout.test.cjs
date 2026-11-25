@@ -36,9 +36,28 @@ function bounds(value) {
 }
 const overlap = (a, b) => a.l < b.r && a.r > b.l && a.b < b.t && a.t > b.b;
 
+// 将镜像新增的三个已知挂载引用剥离后，再逐字段核对原讨伐布局快照。
+function beforeMirror(count) {
+    const restored = structuredClone(scene.slice(0, count));
+    const mounts = [
+        ['', 'MirrorArenaBattle'],
+        [panels, panels + '/MirrorArena'],
+        [panels + '/Functions/Pages/Page0', panels + '/Functions/Pages/Page0/MirrorArena'],
+    ];
+    for (const [parent, child] of mounts) {
+        const parentId = parent ? index(parent) : nodes.get(safe), childId = index(child);
+        assert(parentId < count && childId >= count);
+        assert.deepEqual(scene[childId]._parent, { __id__: parentId });
+        const original = restored[parentId];
+        assert.deepEqual(original._children.filter(ref => ref.__id__ === childId), [{ __id__: childId }]);
+        original._children = original._children.filter(ref => ref.__id__ !== childId);
+    }
+    return restored;
+}
+
 test('只追加原首领的入口与独立普通面板，保留所有先前保存组件与布局', () => {
     const oldCount = 2020;
-    const before = structuredClone(scene.slice(0, oldCount));
+    const before = beforeMirror(oldCount);
     for (const [parent, child] of [[panels, party], [panels + '/BossChallenge', panels + '/BossChallenge/Dungeon']]) {
         const original = before[index(parent)];
         assert.deepEqual(original._children.filter(ref => ref.__id__ >= oldCount), [{ __id__: index(child) }]);
@@ -120,7 +139,7 @@ test('原生操作与招募条件各有独立触屏空间，列表与固定按�
 
 test('佣兵页只改变原面板的页签排列，新增按钮复用当前页的条件区域', () => {
     const originalCount = 2227;
-    const restored = structuredClone(scene.slice(0, originalCount));
+    const restored = beforeMirror(originalCount);
     const panel = restored[index(party)];
     assert.deepEqual(panel._children.filter(ref => ref.__id__ >= originalCount).map(ref => scene[ref.__id__]._name),
         ['HiresTab', 'HireList', 'HireAdd']);

@@ -2,6 +2,7 @@ syntax = "proto3";
 package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 
+import "common.proto";
 import "world.proto";
 
 // 镜像竞技由原角色附着下发。对手只能选择服务端已签发的候选编号。
@@ -66,6 +67,7 @@ message MirrorArenaCombatFrame {
   int64 server_unix_ms = 5;
   repeated EntityState entities = 6;
   repeated MirrorArenaCombatObservation observations = 7;
+  repeated GridPoint fire_wall_cells = 8;
 }
 
 message MirrorArenaCombatObservation {

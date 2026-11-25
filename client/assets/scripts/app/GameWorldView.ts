@@ -342,7 +342,7 @@ export class GameWorldView {
                 let placeholder: Node | undefined;
                 if (!profile && this.manifest.development_only && state.entityKind === 2 && petAppearanceFor(
                     this.gameplay.pet_profiles as Array<{ definition_id: number; job_id: number; appearance_optional?: boolean }>,
-                    state.definitionId, this.assets.sceneKind === 4 || this.assets.sceneKind === 5 ? undefined : this.job)?.appearance_optional) {
+                    state.definitionId, this.assets.sharedCombatActors ? undefined : this.job)?.appearance_optional) {
                     // 动态实体沿用当前模板的脚点和头顶组件，使用几何形体显示宠物所在格。
                     placeholder = new Node('PetPlaceholder');
                     placeholder.layer = body.layer;
@@ -370,7 +370,7 @@ export class GameWorldView {
                 // 实体选择只使用实际身体。透明根容器和固定宽度的名字不阻挡地图点地。
                 const touchBody = profile ? body : placeholder ?? node;
                 const inTown = this.assets.sceneKind === 2;
-                if (!inTown || state.entityHandle !== this.playerHandle) {
+                if (this.assets.sceneKind !== 6 && (!inTown || state.entityHandle !== this.playerHandle)) {
                     // 城镇自己的身体始终让开点地。其他角色和宠物的透明区域也应让开。
                     if (inTown && profile) (this.townActorTouch ??= new TownActorTouch()).bind(sprites[0]);
                     touchBody.on(Node.EventType.TOUCH_END, selectEntity);
@@ -421,7 +421,7 @@ export class GameWorldView {
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId,
                 state.entityHandle === this.playerHandle ? this.playerName : state.displayName ?? '',
-                this.assets.sceneKind === 4 || this.assets.sceneKind === 5 ? undefined : this.job, this.gameplay);
+                this.assets.sharedCombatActors ? undefined : this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
             name.active = showHead && !!displayName;
             const revealed = revealedMonsterHealthPercent(state, now, now);

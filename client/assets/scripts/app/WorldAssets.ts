@@ -32,7 +32,7 @@ export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | s
     }
     const ordinary = gameplay.map_catalog, challenges = gameplay.challenge_maps ?? [];
     if (!Array.isArray(ordinary) || !ordinary.length || ordinary[0]?.scene_kind !== 1 || !Array.isArray(challenges)) throw new Error('地图目录缺少首项个人地图');
-    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4, 5].includes(entry?.scene_kind)))
+    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4, 5, 6].includes(entry?.scene_kind)))
         throw new Error('地图目录场景分类不匹配');
     const catalog = [...ordinary, ...challenges];
     const ids = new Set<string>();
@@ -91,6 +91,8 @@ export class WorldAssets {
     mapId = '1';
     sceneKind = 1;
     get mapBackground(): SpriteFrame | null { return this.background; }
+    // 多人战斗和镜像同屏包含其他职业的角色、宠物与技能表现。
+    get sharedCombatActors(): boolean { return this.sceneKind === 4 || this.sceneKind === 5 || this.sceneKind === 6; }
     // 复用当前地图已预载的怪物站立帧，用于图鉴显示。
     monsterCodexFrame(id: number): SpriteFrame | null {
         // 挑战目录的早期占位外观可能恰好等于已加载的普通怪物，外图应走原画查找。
@@ -178,7 +180,7 @@ export class WorldAssets {
 
     // 缓存只保留一个小地图。流式城镇和已独立管理的世界首领由原生命周期回收。
     get canRetainAfterTravel(): boolean {
-        if (this.sourceMap || this.sceneKind === 4 || this.sceneKind === 5) return false;
+        if (this.sourceMap || this.sharedCombatActors) return false;
         const background = this.background?.texture;
         const floorBytes = background ? background.width * background.height * 4 : 0;
         let actorBytes = this.bossAtlas?.textureBytes;
@@ -200,7 +202,8 @@ export class WorldAssets {
                 .map(async path => result.own(await load<JsonAsset>(path, JsonAsset))));
             result.manifest = manifest.json; result.gameplay = gameplay.json;
             const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
-            const sharedChallenge = selected.scene_kind === 4 || selected.scene_kind === 5;
+            const sharedChallenge = result.sharedCombatActors;
+            const mirrorArena = selected.scene_kind === 6;
             // 开发神兽资源可独立导入。原开发清单和骷髅帧无需重新生成。
             const shinsuPath = 'development/pets/shinsu/profile';
             const needsShinsu = result.gameplay.pet_profiles?.some((row: any) => row.profile === 'pet_shinsu'
@@ -298,7 +301,7 @@ export class WorldAssets {
                 : result.gameplay.monster_profiles.filter((row: any) => selected.monster_definition_ids!.includes(row.definition_id));
             // 本机原版资源仅随拥有对应怪物的普通图和首领图加载。
             if (monstersForMap().some((row: any) => String(row.profile).startsWith('monster_m1_'))
-                || result.sceneKind >= 3 && selected.monster_definition_ids !== undefined) {
+                || result.sceneKind >= 3 && !mirrorArena && selected.monster_definition_ids !== undefined) {
                 const extras = result.own(await load<JsonAsset>('development/original-monsters/actors', JsonAsset)).json as any;
                 if (extras?.schema_version !== 1 || !extras.profiles || !extras.frames
                     || !extras.challenge_profiles
@@ -357,15 +360,15 @@ export class WorldAssets {
             }
             const pending = Array.from(keys);
             progress(0, pending.length);
-            const dungeon = result.sceneKind === 5;
-            const atlasDirectory = sharedChallenge && (!dungeon || WorldBossFrameAtlas.available()) ? undefined : mapTravelAtlasDirectory;
+            const allowAtlasFallback = result.sceneKind === 5 || mirrorArena;
+            const atlasDirectory = sharedChallenge && (!allowAtlasFallback || WorldBossFrameAtlas.available()) ? undefined : mapTravelAtlasDirectory;
             const preparingAtlas = sharedChallenge || travelling && !result.sourceMap;
             if (preparingAtlas && WorldBossFrameAtlas.available(atlasDirectory)) {
                 result.bossAtlas = new WorldBossFrameAtlas(atlasDirectory);
                 let unpacked = await result.bossAtlas.populate(pending, result.manifest.frames, result.frames,
-                    completed => progress(completed, pending.length), dungeon);
-                // 个人首领原帧通常已在旅行图集中，剩余挂载同一原始资源。
-                if (dungeon && unpacked.length && atlasDirectory !== mapTravelAtlasDirectory && WorldBossFrameAtlas.available(mapTravelAtlasDirectory)) {
+                    completed => progress(completed, pending.length), allowAtlasFallback);
+                // 讨伐及镜像缺少的原帧仍尝试从旅行图集取得同一原始资源。
+                if (allowAtlasFallback && unpacked.length && atlasDirectory !== mapTravelAtlasDirectory && WorldBossFrameAtlas.available(mapTravelAtlasDirectory)) {
                     result.fallbackAtlas = new WorldBossFrameAtlas(mapTravelAtlasDirectory);
                     const loaded = pending.length - unpacked.length;
                     unpacked = await result.fallbackAtlas.populate(unpacked, result.manifest.frames, result.frames,
@@ -377,7 +380,7 @@ export class WorldAssets {
                 await result.loadIndividualFrames(pending, progress);
             }
             // 出场与施法声音只使用已核原音频。
-            if (job === 2) {
+            if (job === 2 || mirrorArena) {
                 const sounds = Object.entries(result.manifest.audio ?? {}) as Array<[string, any]>;
                 if (sounds.some(([key, value]) => !/^[a-z0-9_]+$/.test(key) || typeof value.path !== 'string' || !/^audio\/[a-z0-9_]+\.wav$/.test(value.path)))
                     throw new Error('音频资源路径无效');
@@ -409,7 +412,7 @@ export class WorldAssets {
     profile(state: any, job: number): any {
         const row = state.entityKind === 1 ? this.gameplay.jobs.find((value: any) => value.job_id === job)
             : state.entityKind === 2 ? petAppearanceFor<{ definition_id: number; job_id: number; profile: string }>(
-                this.gameplay.pet_profiles, state.definitionId, this.sceneKind === 4 || this.sceneKind === 5 ? undefined : job)
+                this.gameplay.pet_profiles, state.definitionId, this.sharedCombatActors ? undefined : job)
             : state.entityKind === 3 ? this.gameplay.monster_profiles.find((value: any) => value.definition_id === state.definitionId) : null;
         return row ? this.manifest.profiles[row.profile] ?? null : null;
     }

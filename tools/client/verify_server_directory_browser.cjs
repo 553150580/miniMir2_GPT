@@ -535,6 +535,15 @@ async function main() {
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
             if (index === 0 && process.env.MINIMIR_VERIFY_MIRROR_CLOSED === '1') {
+                await tap('BottomHUD/Footer/Functions');
+                report.mirrorEntryHidden = await page.evaluate(() => {
+                    const entry = cc.find('Canvas/Safe/UIMgr/Panels/Functions/Pages/Page0/MirrorArena');
+                    const battle = cc.find('Canvas/Safe/MirrorArenaBattle');
+                    return !!entry && !!battle && !entry.active && !battle.active;
+                });
+                assert(report.mirrorEntryHidden, '默认规则暴露了镜像入口或战斗界面');
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(() => !cc.find('Canvas/Safe/UIMgr/Panels/Functions')?.activeInHierarchy);
                 const mirror = await page.evaluate(async () => {
                     const { session } = await System.import('chunks:///_virtual/GameSession.ts');
                     const result = await session.connection.request(20025, { action: 1, sceneEpoch: session.entry.sceneEpoch });

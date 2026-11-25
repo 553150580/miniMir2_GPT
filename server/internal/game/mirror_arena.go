@@ -104,27 +104,24 @@ func (w *worker) mirrorLobbyRead(r *room, request uint32, publish bool, store *p
 	recoverCold := r.mirrorMatch == nil
 	if !w.submit(job{target: w, run: func() func(*worker) {
 		var info persistence.MirrorInfo
-		var version uint64
 		var err error
 		if recoverCold {
 			_, err = store.RecoverMirrorChallenge(w.e.ctx, bound.auth)
 		}
 		if err == nil && publish {
-			var defense persistence.MirrorDefense
-			defense, err = store.PublishMirrorDefense(w.e.ctx, bound.auth, publication)
-			version = defense.Version
+			_, err = store.PublishMirrorDefense(w.e.ctx, bound.auth, publication)
 		}
 		if err == nil {
 			info, err = store.QueryMirrorArena(w.e.ctx, bound.auth)
 		}
-		return func(w *worker) { w.finishMirrorLobbyRead(bound, request, info, version, err) }
+		return func(w *worker) { w.finishMirrorLobbyRead(bound, request, info, err) }
 	}}) {
 		r.PreviewInFlight = false
 		w.sendMirrorError(r, request, p.CodeServerBusy)
 	}
 }
 
-func (w *worker) finishMirrorLobbyRead(bound skillPreviewBinding, request uint32, info persistence.MirrorInfo, version uint64, err error) {
+func (w *worker) finishMirrorLobbyRead(bound skillPreviewBinding, request uint32, info persistence.MirrorInfo, err error) {
 	r := bound.room
 	if !r.PreviewInFlight || r.PreviewGeneration != bound.generation {
 		return
@@ -139,7 +136,6 @@ func (w *worker) finishMirrorLobbyRead(bound skillPreviewBinding, request uint32
 		return
 	}
 	state := mirrorLobbyState(r, info, w.roomStore(r).Cfg.Fixture.RuleVersion)
-	state.PublishedDefenseVersion = version
 	if run := r.mirrorMatch; run != nil && run.grant.ChallengeID != "" && run.auth == r.Auth {
 		mergeMirrorRun(state, run)
 	}

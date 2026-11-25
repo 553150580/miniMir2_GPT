@@ -3,6 +3,7 @@ import Long from 'long';
 import { protocolErrorMessage } from './GameErrors';
 import { inputTraceMessage, traceInput } from './InputTrace';
 import { NavigationCancelAssembler } from './NavigationCancelAssembler';
+import { isMirrorCombatMessage } from './MirrorArenaModel';
 
 const pb = clientPb.minimir.v1;
 const accountRpcTimeoutMs = 10000;
@@ -67,6 +68,12 @@ function names(value: any, encode: boolean): any {
         result[converted] = names(value[key], encode);
     }
     return result;
+}
+
+// 镜像整帧中的内层数据没有传输帧头，只允许已登记的格战表现解码。
+export function decodeMirrorCombatPayload(id: number, payload: Uint8Array): unknown {
+    if (!isMirrorCombatMessage(id)) return null;
+    return names(codecs[id].decode(payload), false);
 }
 
 export function encodePacket(id: number, seq: number, binding: Long, value: any): Uint8Array {

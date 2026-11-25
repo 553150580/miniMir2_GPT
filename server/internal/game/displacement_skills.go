@@ -235,7 +235,9 @@ func (w *worker) shoulderDash(r *room, cast pendingCast, now time.Time) {
 	for _, point := range path {
 		event.Path = append(event.Path, pointPB(point))
 	}
-	if r.dungeonCombat != nil {
+	if arena := r.currentWorld().mirrorCombat; arena != nil {
+		arena.addObservation(p.MsgS2CEntityDisplacement, event)
+	} else if r.dungeonCombat != nil {
 		w.sendDungeonObservation(r, p.MsgS2CEntityDisplacement, event)
 	} else {
 		w.send(r, p.MsgS2CEntityDisplacement, 0, event)

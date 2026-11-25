@@ -40,7 +40,7 @@ function fakeResources(options={}){
  cc.resources={load,getInfoWithPath};return{pool,requested,pending,gameplay,sourceActive,flush(){for(const finish of pending.splice(0))finish();}};
 }
 function scene(assets){
- const viewport=new cc.Node('Viewport'),world=new cc.Node('World'),entities=new cc.Node('Entities');viewport.getComponent(UITransform).setContentSize(720,808);world.parent=viewport;
+ const root=new cc.Node('Safe'),viewport=new cc.Node('Viewport'),world=new cc.Node('World'),entities=new cc.Node('Entities');viewport.getComponent(UITransform).setContentSize(720,808);viewport.parent=root;world.parent=viewport;
  for(const [name,type]of [['Soil',Graphics],['Surface',Sprite],['GridLines',Graphics],['TargetMarker',Sprite]]){const node=new cc.Node(name);node.add(type,new type());node.parent=world;}
  const diamond=new cc.Node('Diamond');diamond.add(Graphics,new Graphics());diamond.parent=world.getChildByName('TargetMarker');entities.parent=world;new cc.Node('Effects').parent=world;
  const view=new GameWorldView(viewport,world,entities,'来源测试',0,Long.UONE,1);view.prepare(assets,()=>{});return{view,viewport,world,entities};
@@ -196,6 +196,32 @@ test('开发神兽缺少外观包时仍可按独立名字、身体与尸体观�
   view.apply({entities:[warrior,{...body,hp:Long.UZERO,isPetCorpse:true}]});
   assert.equal(living.node.parent,world);
   assert.equal(living.placeholder.scale.y,.35);
+ } finally { view.dispose(); assertReleased(resources); }
+});
+
+test('镜像地格在挑战目录，双方职业角色、宠物和技能资源在真实表现前持有', async () => {
+ const mirrorId='91';
+ const resources=fakeResources({changeGameplay:gameplay=>{
+  gameplay.challenge_maps.push({id:mirrorId,scene_kind:6,width:13,height:13,resource_key:'development/maps/personal-map',
+   floor_map_id:'1',blocked:[],player_spawn:{x:2,y:2},monster_definition_ids:[]});
+ }});
+ const assets=await WorldAssets.prepare(1,()=>{},mirrorId),{view,entities}=scene(assets);
+ try {
+  assert.equal(assets.sceneKind,6);
+  assert(!assets.canRetainAfterTravel);
+  assert(!resources.requested.includes('development/original-monsters/actors'));
+  const pet=assets.gameplay.pet_profiles.find(row=>row.profile==='pet_skeleton');
+  assert(assets.profile({entityKind:2,definitionId:pet.definition_id},1));
+  const mage=state(1,1,2,2,{definitionId:1});
+  const taoist=state(2,1,10,10,{definitionId:2,displayName:'道士镜像'});
+  const skeleton=state(102,2,10,11,{definitionId:pet.definition_id});
+  view.apply({entities:[mage,taoist,skeleton]});
+  assert.equal(entities.children.length,3);
+  assert.equal(view.visuals.get(2).node.getChildByName('Name').getComponent(cc.Label).string,'道士镜像');
+  assert.equal(view.visuals.get(102).node.getChildByName('Name').getComponent(cc.Label).string,pet.name);
+  for(const handle of [1,2,102])assert(view.visuals.get(handle).body[0].spriteFrame);
+  const skill=assets.manifest.effects['17'];
+  assert(skill.cast.frames.every(key=>assets.frames.has(key)));
  } finally { view.dispose(); assertReleased(resources); }
 });
 test('独立神兽帧按原资源租约预载，拼接引用越界会拒绝',async()=>{

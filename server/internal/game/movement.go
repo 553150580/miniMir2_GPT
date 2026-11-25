@@ -187,14 +187,17 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 		if e.HP > 0 {
 			e.Action, e.ActionUntil = 0, now
 		} // 尸体保持既有死亡姿态，不因位移伪装成站立。
-		if r.Conn != nil && r.Ready && !r.Isolated {
+		arena := r.currentWorld().mirrorCombat
+		if arena != nil || r.Conn != nil && r.Ready && !r.Isolated {
 			// event 保存当前处理所用的事件。
 			event := &pb.EntityDisplacement{SceneEpoch: r.Scene, EntityHandle: e.Handle, EntityLife: e.Life, MovementRevision: e.MovementRevision, Kind: movementPush, Origin: pointPB(origin), FacingDirection: e.Direction, MovementDirection: direction, StepDurationMs: uint32(timing.PushedStepDisplayMS), SourceSkillId: source.SkillID, CastId: source.CastID, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence}
 			// point 接收遍历路径时当前的元素。
 			for _, point := range path {
 				event.Path = append(event.Path, pointPB(point))
 			}
-			if r.dungeonCombat != nil {
+			if arena != nil {
+				arena.addObservation(p.MsgS2CEntityDisplacement, event)
+			} else if r.dungeonCombat != nil {
 				w.sendDungeonObservation(r, p.MsgS2CEntityDisplacement, event)
 			} else {
 				w.send(r, p.MsgS2CEntityDisplacement, 0, event)

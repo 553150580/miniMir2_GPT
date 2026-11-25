@@ -157,7 +157,7 @@ func TestMirrorArenaFrozenOpponentMongoWS(t *testing.T) {
 	defender = join(t, cfg.GameAddress, issue(t, endpoint, defenderToken, defenderKey))
 	defender.auto(false, 1)
 	other := mirrorArenaCall(defender, &pb.MirrorArenaRequest{Action: 1})
-	if other.EntriesUsed != 0 || other.SeasonPoints != 0 || other.Streak != 0 || len(other.DefenseHistory) == 0 {
+	if other.EntriesUsed != 0 || other.SeasonPoints != 0 || other.Streak != 0 || other.PublishedDefenseVersion != 2 || len(other.DefenseHistory) == 0 {
 		t.Fatal("原守方未收到战报或被扣分、扣次数", other)
 	}
 	afterDefender, err := store.Role(ctx, defenderID)

@@ -372,7 +372,9 @@ func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time
 		handle = front.Handle
 	}
 	observation := &pb.AttackAccepted{SceneEpoch: r.Scene, EventId: w.nextEvent(r), CasterHandle: from.Handle, TargetHandle: handle, Origin: pointPB(from.Pos), TargetGrid: pointPB(stepPoint(from.Pos, direction, 1)), Direction: direction, DelayMs: uint32(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS), AttackSequence: from.AttackSequence, InputSequence: input, SkillId: s.ID, SkillLevel: rank, CasterLife: from.Life}
-	if r.dungeonCombat != nil {
+	if arena := r.currentWorld().mirrorCombat; arena != nil {
+		arena.addObservation(p.MsgS2CAttackAccepted, observation)
+	} else if r.dungeonCombat != nil {
 		w.sendDungeonObservation(r, p.MsgS2CAttackAccepted, observation)
 	} else {
 		w.send(r, p.MsgS2CAttackAccepted, 0, observation)

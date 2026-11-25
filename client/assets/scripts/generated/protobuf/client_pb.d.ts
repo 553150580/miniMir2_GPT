@@ -16169,6 +16169,9 @@ export namespace minimir {
             /** MirrorArenaCombatFrame observations. */
             observations: minimir.v1.MirrorArenaCombatObservation.$Properties[];
 
+            /** MirrorArenaCombatFrame fire_wall_cells. */
+            fire_wall_cells: minimir.v1.GridPoint.$Properties[];
+
             /**
              * Creates a new MirrorArenaCombatFrame instance using the specified properties.
              * @param [properties] Properties to set
@@ -16252,6 +16255,9 @@ export namespace minimir {
 
                 /** MirrorArenaCombatFrame observations */
                 observations?: (minimir.v1.MirrorArenaCombatObservation.$Properties[]|null);
+
+                /** MirrorArenaCombatFrame fire_wall_cells */
+                fire_wall_cells?: (minimir.v1.GridPoint.$Properties[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

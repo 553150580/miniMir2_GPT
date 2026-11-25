@@ -164,6 +164,15 @@ func TestMirrorCombatWarriorUsesTwoCellThrustAndAtomicSameTimeDefeat(t *testing.
 	if left.Player.Pos != config.AttackerSpawn || left.Player.AttackSkillID != thrust.ID || len(left.Attacks) != 1 {
 		t.Fatal("镜像战士没有在两格使用原刺杀技能")
 	}
+	attackObserved := false
+	for _, event := range b.drainObservations() {
+		if attack, ok := event.Message.(*pb.AttackAccepted); ok && event.ID == p.MsgS2CAttackAccepted {
+			attackObserved = attack.CasterHandle == 1 && attack.SceneEpoch == 81 && attack.SkillId == thrust.ID
+		}
+	}
+	if !attackObserved {
+		t.Fatal("镜像视口没有收到原刺杀攻击动作")
+	}
 	w.advanceMirrorCombat(b, at.Add(time.Second))
 	if right.Player.HP == right.Player.MaxHP {
 		t.Fatal("镜像刺杀未沿原时间线命中另一职业身体")
@@ -185,5 +194,28 @@ func TestMirrorCombatWarriorUsesTwoCellThrustAndAtomicSameTimeDefeat(t *testing.
 	w.advanceMirrorCombat(b, due)
 	if left.Player.HP != 0 || right.Player.HP != 0 || b.result.Winner != 2 || b.result.Cause != mirrorDefeat || !b.result.FinishedAt.Equal(due) {
 		t.Fatalf("同归于尽在一方旧动作生效前提前出结果：%+v，双方 HP %d/%d", b.result, left.Player.HP, right.Player.HP)
+	}
+}
+
+// TestMirrorCombatFireWallObservation 核对双方同格火墙合并、对侧独立地格和原有效期。
+func TestMirrorCombatFireWallObservation(t *testing.T) {
+	w, config, fighters, at := mirrorCombatFixture(t)
+	b := w.newMirrorCombat(config, fighters, at, at.Add(time.Minute), 83)
+	shared, other := devconfig.Point{X: 3, Y: 4}, devconfig.Point{X: 4, Y: 4}
+	b.sides[0].room.currentWorld().FireWalls = []*fireWallField{
+		{Count: 1, Expires: at.Add(time.Second), Cells: [...]devconfig.Point{shared, {}, {}, {}, {}}},
+	}
+	b.sides[1].room.currentWorld().FireWalls = []*fireWallField{
+		{Count: 2, Expires: at.Add(2 * time.Second), Cells: [...]devconfig.Point{shared, other, {}, {}, {}}},
+		{Count: 1, Expires: at.Add(-time.Second), Cells: [...]devconfig.Point{{X: 1, Y: 1}, {}, {}, {}, {}}},
+	}
+	for _, moment := range []time.Time{at, at.Add(1100 * time.Millisecond)} {
+		cells := b.fireWallCells(moment)
+		if len(cells) != 2 || cells[0].X != 3 || cells[0].Y != 4 || cells[1].X != 4 || cells[1].Y != 4 {
+			t.Fatalf("双方火墙未按原当前地格投影：%v", cells)
+		}
+	}
+	if len(b.fireWallCells(at.Add(3*time.Second))) != 0 {
+		t.Fatal("过期火墙留在镜像观战帧")
 	}
 }

@@ -30,6 +30,7 @@ import { GameSkills } from './GameSkills';
 import { GameTasksCodex } from './GameTasksCodex';
 import { GameBoss } from './GameBoss';
 import { GameDungeonParty } from './GameDungeonParty';
+import { GameMirrorArena } from './GameMirrorArena';
 import type { WorldBossEntryPreparation, WorldBossEntryTarget } from './GameBoss';
 import { attackSkillSlotCount, attackSkillSlotIDs, canQueueSkill, canSetAutomaticSkill, createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, skillUseBlock, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
@@ -99,6 +100,7 @@ export class AppRoot extends Component {
     private tasksCodex?: GameTasksCodex;
     private boss?: GameBoss;
     private dungeonParty?: GameDungeonParty;
+    private mirrorArena?: GameMirrorArena;
     private skillAssets?: GameSkillAssets;
     private npcShop?: GameNpcShop;
     private npcShopContext?: { npc: TownNpc; scope: string };
@@ -186,6 +188,7 @@ export class AppRoot extends Component {
     update(dt: number): void {
         if (this.attached && session.entry) this.world?.observeEquipment(this.attached, session.entry.playerHandle, session.inventory);
         this.world?.update(dt, session.role?.job ?? 0);
+        this.mirrorArena?.update(dt);
         this.combatStatus?.update();
         if (!this.canSendInput()) return;
         this.moveTimer += dt;
@@ -528,6 +531,23 @@ export class AppRoot extends Component {
             sound: () => this.tapSound?.(),
         });
         this.cleanups.push(() => this.dungeonParty?.dispose());
+        const mirrorEntry = safe.getChildByPath('UIMgr/Panels/Functions/Pages/Page0/MirrorArena');
+        const mirrorPanel = safe.getChildByPath('UIMgr/Panels/MirrorArena');
+        const mirrorBattle = safe.getChildByName('MirrorArenaBattle');
+        if (mirrorEntry && mirrorPanel && mirrorBattle) {
+            this.mirrorArena = new GameMirrorArena(mirrorEntry, mirrorPanel, mirrorBattle, this.ui, this.popup, session.connection, {
+                context: () => {
+                    const identity = currentEntryIdentity(), { entry, role } = session;
+                    if (!identity || !role || !session.ready || this.disposed || this.leaving || this.attaching ||
+                        session.travel.blocksInput || session.teleport.blocksInput || !this.isWorldCurrent() ||
+                        entry.sceneKind !== 1 && entry.sceneKind !== 2) return null;
+                    return { identity, ruleVersion: entry.resourceVersion, name: role.name, job: role.job };
+                },
+                releaseInput: this.releaseInput,
+                sound: () => this.tapSound?.(),
+            });
+            this.cleanups.push(() => this.mirrorArena?.dispose());
+        }
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error),
             this.itemActions, () => this.previewSkillAsset());
         this.cleanups.push(() => this.skillAssets?.dispose());
@@ -740,6 +760,7 @@ export class AppRoot extends Component {
 
     private handleSessionUpdate(): void {
         if (this.disposed) return;
+        this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
@@ -901,7 +922,7 @@ export class AppRoot extends Component {
         });
     }
     private isWorldCurrent(): boolean { return !!this.attached && !!this.world && isCurrentEntry(this.attached) && this.world.sceneEpoch.toString() === this.attached.scene.toString(); }
-    private canSendInput(): boolean { return !this.disposed && !this.leaving && !this.attaching && !this.inputBarrier && session.ready && !session.travel?.blocksInput && !session.teleport?.blocksInput && this.isWorldCurrent(); }
+    private canSendInput(): boolean { return !this.disposed && !this.leaving && !this.attaching && !this.inputBarrier && !this.mirrorArena?.visible && session.ready && !session.travel?.blocksInput && !session.teleport?.blocksInput && this.isWorldCurrent(); }
     private eventMatchesWorld(scene: { toString(): string }): boolean { return this.isWorldCurrent() && this.attached!.scene.toString() === scene.toString(); }
     private setInputBarrier(blocked: boolean): void {
         this.nav.setInputBlocked(blocked || this.leaving);
@@ -1213,6 +1234,7 @@ export class AppRoot extends Component {
 
     private refreshGame(): void {
         if (this.disposed || !this.world || !this.isWorldCurrent()) return;
+        this.mirrorArena?.refresh(this.world.gameplay.mirror_arena);
         const baseline = session.baseline;
         const town = session.entry?.sceneKind === 2;
         const challenge = session.entry?.sceneKind >= 3;

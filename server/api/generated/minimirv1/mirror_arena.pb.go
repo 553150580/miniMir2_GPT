@@ -475,6 +475,7 @@ type MirrorArenaCombatFrame struct {
 	ServerUnixMs     int64                           `protobuf:"varint,5,opt,name=server_unix_ms,json=serverUnixMs,proto3" json:"server_unix_ms,omitempty"`
 	Entities         []*EntityState                  `protobuf:"bytes,6,rep,name=entities,proto3" json:"entities,omitempty"`
 	Observations     []*MirrorArenaCombatObservation `protobuf:"bytes,7,rep,name=observations,proto3" json:"observations,omitempty"`
+	FireWallCells    []*GridPoint                    `protobuf:"bytes,8,rep,name=fire_wall_cells,json=fireWallCells,proto3" json:"fire_wall_cells,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -558,6 +559,13 @@ func (x *MirrorArenaCombatFrame) GetObservations() []*MirrorArenaCombatObservati
 	return nil
 }
 
+func (x *MirrorArenaCombatFrame) GetFireWallCells() []*GridPoint {
+	if x != nil {
+		return x.FireWallCells
+	}
+	return nil
+}
+
 type MirrorArenaCombatObservation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MessageId     uint32                 `protobuf:"varint,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
@@ -615,7 +623,7 @@ var File_mirror_arena_proto protoreflect.FileDescriptor
 const file_mirror_arena_proto_rawDesc = "" +
 	"\n" +
 	"\x12mirror_arena.proto\x12\n" +
-	"minimir.v1\x1a\vworld.proto\"\xb9\x01\n" +
+	"minimir.v1\x1a\fcommon.proto\x1a\vworld.proto\"\xb9\x01\n" +
 	"\x12MirrorArenaRequest\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x16\n" +
@@ -661,7 +669,7 @@ const file_mirror_arena_proto_rawDesc = "" +
 	"\x12battle_scene_epoch\x18\x10 \x01(\x04R\x10battleSceneEpoch\x12\"\n" +
 	"\rbattle_map_id\x18\x11 \x01(\x04R\vbattleMapId\x125\n" +
 	"\x17battle_deadline_unix_ms\x18\x12 \x01(\x03R\x14battleDeadlineUnixMs\x12!\n" +
-	"\frule_version\x18\x13 \x01(\x04R\vruleVersion\"\xcf\x02\n" +
+	"\frule_version\x18\x13 \x01(\x04R\vruleVersion\"\x8e\x03\n" +
 	"\x16MirrorArenaCombatFrame\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12!\n" +
@@ -670,7 +678,8 @@ const file_mirror_arena_proto_rawDesc = "" +
 	"\bsequence\x18\x04 \x01(\x04R\bsequence\x12$\n" +
 	"\x0eserver_unix_ms\x18\x05 \x01(\x03R\fserverUnixMs\x123\n" +
 	"\bentities\x18\x06 \x03(\v2\x17.minimir.v1.EntityStateR\bentities\x12L\n" +
-	"\fobservations\x18\a \x03(\v2(.minimir.v1.MirrorArenaCombatObservationR\fobservations\"W\n" +
+	"\fobservations\x18\a \x03(\v2(.minimir.v1.MirrorArenaCombatObservationR\fobservations\x12=\n" +
+	"\x0ffire_wall_cells\x18\b \x03(\v2\x15.minimir.v1.GridPointR\rfireWallCells\"W\n" +
 	"\x1cMirrorArenaCombatObservation\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\rR\tmessageId\x12\x18\n" +
@@ -697,6 +706,7 @@ var file_mirror_arena_proto_goTypes = []any{
 	(*MirrorArenaCombatFrame)(nil),       // 4: minimir.v1.MirrorArenaCombatFrame
 	(*MirrorArenaCombatObservation)(nil), // 5: minimir.v1.MirrorArenaCombatObservation
 	(*EntityState)(nil),                  // 6: minimir.v1.EntityState
+	(*GridPoint)(nil),                    // 7: minimir.v1.GridPoint
 }
 var file_mirror_arena_proto_depIdxs = []int32{
 	1, // 0: minimir.v1.MirrorArenaState.offers:type_name -> minimir.v1.MirrorArenaOffer
@@ -705,11 +715,12 @@ var file_mirror_arena_proto_depIdxs = []int32{
 	2, // 3: minimir.v1.MirrorArenaState.challenge:type_name -> minimir.v1.MirrorArenaRecord
 	6, // 4: minimir.v1.MirrorArenaCombatFrame.entities:type_name -> minimir.v1.EntityState
 	5, // 5: minimir.v1.MirrorArenaCombatFrame.observations:type_name -> minimir.v1.MirrorArenaCombatObservation
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	7, // 6: minimir.v1.MirrorArenaCombatFrame.fire_wall_cells:type_name -> minimir.v1.GridPoint
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_mirror_arena_proto_init() }
@@ -717,6 +728,7 @@ func file_mirror_arena_proto_init() {
 	if File_mirror_arena_proto != nil {
 		return
 	}
+	file_common_proto_init()
 	file_world_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{

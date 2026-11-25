@@ -107,6 +107,7 @@ type MirrorInfo struct {
 	EntriesUsed     uint32           // 原运营日的已完成或预占次数。
 	SeasonPoints    int64            // 原角色当前赛季已确认分数。
 	Streak          uint32           // 原角色当前进攻连胜。
+	DefenseVersion  uint64           // 当前赛季已发布且规则相符的防守版本。
 	Offers          []MirrorOffer    // 仅当前原角色可选的已发布候选。
 	AttackHistory   []MirrorSummary  // 最新的原进攻结果。
 	DefenseHistory  []MirrorSummary  // 最新的原防守结果。

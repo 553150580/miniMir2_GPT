@@ -2218,19 +2218,19 @@
     },
     {
       "path": "shared/proto/mirror_arena.proto",
-      "sha256": "d8f4ab4adb3e871e48b54567fcfce6caa5a63c586d055334d298005e69cc3599"
+      "sha256": "23d013490ab570fe01b4f169bafc27b26754914feae3ad0fb4432b87994e11aa"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "71f6a8d1f1f08ce0b957be69616245d731da5a682bdd3275c083d98b9a09a8de",
-      "bytes": 2253393
+      "sha256": "7db1d7545dc27c93fda3250f22bdaba73b64f8c8eb32f686570c8d9a14c0b6ed",
+      "bytes": 2255273
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "1ed8d28f373ed432b164176c94014747a718f54a235f50ce9bad4c81b3e69b87",
-      "bytes": 706452
+      "sha256": "7e7b39554fca868bf0ef732f4cd316810d92aa41d9918c3b3d27a5f72bdd387e",
+      "bytes": 706717
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

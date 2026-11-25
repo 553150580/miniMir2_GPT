@@ -158,5 +158,19 @@ func (w *worker) mirrorCombatEntities(b *mirrorCombat) []*pb.EntityState {
 }
 
 func (b *mirrorCombat) fireWallCells(now time.Time) []*pb.GridPoint {
-	return append(b.sides[0].room.currentWorld().fireWallCells(now), b.sides[1].room.currentWorld().fireWallCells(now)...)
+	points := append(b.sides[0].room.currentWorld().fireWallCells(now), b.sides[1].room.currentWorld().fireWallCells(now)...)
+	if len(points) <= 1 {
+		return points
+	}
+	// 双方的火墙可能覆盖同一格。保持源遍历顺序，每格只发一次。
+	seen := make(map[[2]int32]bool, len(points))
+	unique := points[:0]
+	for _, point := range points {
+		key := [2]int32{point.X, point.Y}
+		if !seen[key] {
+			seen[key] = true
+			unique = append(unique, point)
+		}
+	}
+	return unique
 }
