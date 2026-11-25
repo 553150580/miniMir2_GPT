@@ -44,6 +44,7 @@ func TestSharedWorldBossCastObservationMongoWS(t *testing.T) {
 		Map: devconfig.MapTemplate{ID: 81, Width: 13, Height: 13, SceneKind: devconfig.SceneKindWorldBoss,
 			PlayerSpawn: devconfig.Point{X: 5, Y: 5}, MonsterSpawns: []devconfig.Point{{X: 6, Y: 5}}},
 		Monster: boss, DailyOpenOffsets: []time.Duration{opens}, Window: 3 * time.Minute, ReturnDelay: 300 * time.Millisecond, ParticipantLimit: 8}
+	cfg.Fixture.WorldBossVariants = nil
 	if !cfg.Fixture.ValidWorldBoss() {
 		t.Fatal("共享施法隔离首领配置无效")
 	}

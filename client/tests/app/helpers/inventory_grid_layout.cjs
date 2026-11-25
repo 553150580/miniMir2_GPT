@@ -15,6 +15,7 @@ const previous = {
 
 // 历史布局哈希仅允许还原已批准的九个旧对象字段及背包新增的容量节点引用。
 module.exports = function normalizeInventoryGridLayout(scene) {
+    require('./role_inventory_presentation.cjs')(scene);
     const restore = (index, target, fields) => {
         for (const [name, [current, original]] of Object.entries(fields)) {
             assert.equal(target[name], current, `对象${index}的${name}偏离保存网格`);

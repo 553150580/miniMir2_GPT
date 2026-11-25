@@ -1,4 +1,4 @@
-// 本文件比对个人网格首步与旧算法结果，并验证共用工作区隔离房间状态。
+// 本文件核对追击与靠近仍沿用旧首步，并验证共用工作区隔离房间状态。
 package game
 
 import (
@@ -100,7 +100,7 @@ func TestPersonalNavigationPreservesFirstStep(t *testing.T) {
 			if !search || want != tc.want {
 				t.Fatalf("旧路径参考首步为%+v，预期%+v", want, tc.want)
 			}
-			checkPersonalNavigation(t, w, r, actor, tc.goal, want, search)
+			checkPersonalApproach(t, w, r, actor, tc.goal, want)
 		})
 	}
 }
@@ -157,8 +157,8 @@ func TestPersonalNavigationWorkspacesPreserveRoomIsolation(t *testing.T) {
 							actor.HP = 10
 						}
 						// want 保存由引用个人导航取得的期望值，search 保存由引用个人导航取得的“search”。
-						want, search := referencePersonalNavigation(m, r, actor, goal)
-						checkPersonalNavigation(t, w, r, actor, goal, want, search)
+						want, _ := referencePersonalNavigation(m, r, actor, goal)
+						checkPersonalApproach(t, w, r, actor, goal, want)
 					}
 				})
 			}
@@ -269,17 +269,13 @@ func referencePersonalAdjacent(a, b devconfig.Point) bool {
 	return dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1 && (dx != 0 || dy != 0)
 }
 
-// checkPersonalNavigation 检查个人导航。
+// checkPersonalApproach 检查仍使用旧终点语义的原房间追击或靠近行为。
 // t 提供断言失败报告、子用例和清理注册，w 记录房间执行器，r 指向当前执行器拥有并更新的目标房间，actor 记录行动实体，goal 记录目标格，使用点位表示。
-// want 记录期望值，使用点位表示，search 标记是否处于“search”状态。
-func checkPersonalNavigation(t *testing.T, w *worker, r *room, actor *entity, goal, want devconfig.Point, search bool) {
+// want 是由旧算法独立计算的预期首步。
+func checkPersonalApproach(t *testing.T, w *worker, r *room, actor *entity, goal, want devconfig.Point) {
 	t.Helper()
 	// start 保存位置，用于当前步骤中的起点或开始时间。
 	start := actor.Pos
-	if actor == &r.Player {
-		r.Destination = &goal
-		r.Navigation = navigationState{Destination: &goal, Status: navigationActive, InputSequence: 1, Revision: 1}
-	}
 	w.move(r, actor, goal, time.Unix(1, 0), 100)
 	if actor.Pos != want {
 		t.Fatalf("地图%d格，实体%d从%+v走向%+v，首步为%+v，旧路径为%+v", w.e.Store.Cfg.Fixture.Map.Width, actor.Kind, start, goal, actor.Pos, want)
@@ -290,8 +286,5 @@ func checkPersonalNavigation(t *testing.T, w *worker, r *room, actor *entity, go
 		if actor.Direction >= uint32(len(directions)) || directions[actor.Direction] != delta || actor.MovementKind != movementWalk || actor.MovementRevision != 1 {
 			t.Fatalf("首步%+v的方向或移动提交状态不正确：方向%d，类型%d，版本%d", delta, actor.Direction, actor.MovementKind, actor.MovementRevision)
 		}
-	}
-	if actor == &r.Player && search && want == start && (r.Destination != nil || r.Navigation.Status != navigationBlocked || r.Navigation.Destination == nil || *r.Navigation.Destination != goal) {
-		t.Fatalf("没有合法首步时，移动接管和原目标状态不正确：%+v", r.Navigation)
 	}
 }

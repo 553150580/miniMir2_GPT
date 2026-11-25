@@ -4,6 +4,7 @@ import { PopupView } from '../ui/PopupView';
 import { assetInteger } from './SkillAssetsModel';
 import { sameVendorSelection, vendorActionName, vendorQuoteText, vendorRows, vendorSelection } from './NpcShopModel';
 import type { VendorAction, VendorMode, VendorQuote, VendorRow, VendorSelection, VendorSnapshot } from './NpcShopModel';
+import type { GameItemActions, ItemActionView } from './GameItemActions';
 
 interface VendorHandlers {
     quote(selection: VendorSelection): Promise<VendorQuote>;
@@ -29,7 +30,8 @@ export class GameNpcShop {
     private notice = '';
     private disposed = false;
 
-    constructor(safe: Node, private readonly popup: PopupView, private readonly handlers: VendorHandlers) {
+    constructor(safe: Node, private readonly popup: PopupView, private readonly handlers: VendorHandlers,
+        private readonly itemActions?: GameItemActions) {
         const panel = safe.getChildByPath('UIMgr/Panels/NpcShop');
         const list = panel?.getChildByName('ItemsList')?.getComponent(List);
         if (!panel || !list) throw new Error('NPC商店面板尚未完整保存在场景');
@@ -119,7 +121,29 @@ export class GameNpcShop {
         this.selected = row.key;
         this.notice = '';
         this.render(true);
+        const epoch = this.epoch, mode = this.mode;
+        this.itemActions?.open(() => this.itemDetails(epoch, mode, row.key));
     };
+
+    private itemDetails(epoch: number, mode: VendorMode, key: string): ItemActionView | null {
+        const row = this.currentRow();
+        if (this.disposed || !this.panel.activeInHierarchy || epoch !== this.epoch || mode !== this.mode || !row || row.key !== key) return null;
+        const actions: readonly VendorAction[] = mode === 3 ? row.repairActions ?? [] : [mode === 2 ? 2 : 1];
+        const usable = !this.busy && !row.disabledReason && this.snapshot?.ready;
+        return {
+            title: row.name,
+            lines: [row.detail, ...[row.disabledReason || (!this.snapshot?.ready && this.snapshot?.reason), this.notice].filter((line): line is string => !!line),
+                ...row.itemDetails ?? []],
+            actions: actions.map(action => ({ label: vendorActionName(action), enabled: !this.busy && !!vendorSelection(this.snapshot, mode, row, action, this.quantity),
+                run: () => this.runQuote(action) })),
+            quantity: mode === 3 ? undefined : {
+                value: this.quantity.toString(),
+                minus: usable && this.quantity > this.step(row) ? () => this.adjust(-1n) : undefined,
+                plus: usable && this.quantity + this.step(row) <= assetInteger(row.maxQuantity) ? () => this.adjust(1n) : undefined,
+            },
+        };
+    }
+
     private adjust(direction: bigint): void {
         const row = this.currentRow();
         if (!row || this.mode === 3 || row.disabledReason) return;
@@ -168,10 +192,10 @@ export class GameNpcShop {
             this.enable(`Tabs/${path}`, !this.busy && mode !== this.mode);
         }
         const repair = this.mode === 3;
-        this.saved('Quantity').active = !repair;
-        this.saved('Preview').active = !repair;
-        this.saved('RepairNormal').active = repair;
-        this.saved('RepairSpecial').active = repair;
+        this.saved('Quantity').active = !this.itemActions && !repair;
+        this.saved('Preview').active = !this.itemActions && !repair;
+        this.saved('RepairNormal').active = !this.itemActions && repair;
+        this.saved('RepairSpecial').active = !this.itemActions && repair;
         this.text('Quantity/Value', this.quantity.toString());
         const enabled = !!(row && !row.disabledReason && this.snapshot?.ready && !this.busy);
         this.enable('Quantity/Minus', enabled && !!row && this.quantity > this.step(row));

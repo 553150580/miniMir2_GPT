@@ -6,6 +6,7 @@ const path = require('node:path');
 const { chromium } = require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT, 'browser-tools/node_modules/playwright-core'));
 const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js').minimir.v1;
 const { observeTravel, measureTravel } = require('./map_travel_benchmark.cjs');
+const { observeGroundIntents, verifyGroundDirections } = require('./ground_navigation_browser.cjs');
 
 const manifestPath = path.resolve(process.argv[2] ?? '');
 const work = path.resolve('.work');
@@ -55,6 +56,7 @@ async function main() {
             await network.send('Network.setCacheDisabled', { cacheDisabled: true });
         }
         const travelBenchmark = process.env.MINIMIR_BENCHMARK_MAP_TRAVEL === '1' ? observeTravel(page) : undefined;
+        const groundIntents = process.env.MINIMIR_VERIFY_GROUND_NAVIGATION === '1' ? observeGroundIntents(page) : undefined;
         page.on('pageerror', error => report.errors.push(error.message));
         const connections = [];
         const createdOrigins = [];
@@ -139,10 +141,18 @@ async function main() {
             const point = await weapon.jsonValue();
             await weapon.dispose();
             await page.touchscreen.tap(point.x, point.y);
-            await page.waitForFunction(() => cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
-            await page.touchscreen.tap(10, 200);
-            await page.waitForFunction(() => !cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
-            await tap(bag + '/Equip');
+            const popup = await page.waitForFunction(() => ['ItemActions', 'StatusDetails'].find(
+                name => cc.find('Canvas/Safe/PopupView/Panels/' + name)?.activeInHierarchy));
+            const itemPopup = await popup.jsonValue();
+            await popup.dispose();
+            if (itemPopup === 'ItemActions') {
+                report.equippedViaItemDetails = true;
+                await tap('PopupView/Panels/ItemActions/Action1');
+            } else {
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(() => !cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
+                await tap(bag + '/Equip');
+            }
             await tap('PopupView/Panels/Confirm/ConfirmButton');
             report.step = '等待权威装备回执';
             const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
@@ -151,6 +161,37 @@ async function main() {
                     entry => entry.slot === 0 && entry.item.itemId === 218), session, { timeout: 15000 });
                 await equipped.dispose();
             } finally { await session.dispose(); }
+            if (itemPopup === 'ItemActions') {
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(() => !cc.find('Canvas/Safe/PopupView/Panels/ItemActions')?.activeInHierarchy);
+            }
+            if (await page.evaluate(path => Boolean(cc.find('Canvas/Safe/' + path + '/SectionTabs/Role')), bag)) {
+                const role = 'UIMgr/Panels/Role';
+                await tap(bag + '/SectionTabs/Role');
+                const observed = await page.waitForFunction(path => {
+                    const board = cc.find('Canvas/Safe/' + path + '/EquipmentBoard');
+                    const portrait = board?.getChildByName('Portrait')?.children.find(node => node.activeInHierarchy);
+                    const weapon = board?.getChildByName('Slot0');
+                    const label = weapon?.getChildByName('Label')?.getComponent(cc.Label)?.string;
+                    return board?.activeInHierarchy && portrait?.getComponent(cc.Sprite)?.spriteFrame && weapon?.getComponent(cc.Button)?.interactable
+                        && label?.includes('木剑') ? { portrait: portrait.name, weapon: label } : null;
+                }, role);
+                report.roleInventory = await observed.jsonValue();
+                await observed.dispose();
+                await page.screenshot({ path: path.join(path.dirname(manifestPath), 'role-equipped.png') });
+                await tap(role + '/EquipmentBoard/Slot0');
+                await page.waitForFunction(() => cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(() => !cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
+                await tap(role + '/SectionTabs/Skills');
+                await page.waitForFunction(() => cc.find('Canvas/Safe/UIMgr/Panels/Skills')?.activeInHierarchy);
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(path => cc.find('Canvas/Safe/' + path)?.activeInHierarchy, role);
+                await page.touchscreen.tap(10, 200);
+                await page.waitForFunction(path => cc.find('Canvas/Safe/' + path)?.activeInHierarchy, bag);
+                report.roleInventory.slotDetailsAndNavigation = true;
+                await page.screenshot({ path: path.join(path.dirname(manifestPath), 'inventory-grid.png') });
+            }
             await page.touchscreen.tap(10, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, bag);
             report.step = '开启自动战斗并观察任务进度';
@@ -274,12 +315,38 @@ async function main() {
         };
         await page.goto(base.href);
         await scene('Login');
+        if (await page.evaluate(() => Boolean(cc.find('Canvas/Safe/CredentialFrame')))) {
+            report.entryPresentation = { scenes: [] };
+            const readEntryVisual = async name => {
+                report.entryPresentation.scenes.push(name);
+                await page.screenshot({ path: path.join(path.dirname(manifestPath), `entry-${name}.png`) });
+            };
+            report.entryPresentation.loginFields = await page.evaluate(() => ['Account', 'Password'].map(name => {
+                const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];
+                const edit = app?.edit(name);
+                return { name, inputFlag: edit?.inputFlag, maxLength: edit?.maxLength, empty: edit?.string === '' };
+            }));
+            assert.deepEqual(report.entryPresentation.loginFields.map(field => [field.name, field.maxLength, field.empty]),
+                [['Account', 20, true], ['Password', 20, true]]);
+            assert.notEqual(report.entryPresentation.loginFields[0].inputFlag, report.entryPresentation.loginFields[1].inputFlag);
+            await readEntryVisual('login');
+        }
         await edit('Account', 'scope_' + crypto.randomBytes(5).toString('hex'));
         await edit('Password', crypto.randomBytes(8).toString('hex'));
         await tap('Register');
         for (const [index, entry] of entries.entries()) {
             await scene('ServerSelect');
             await tap('RegionList/View/Content', entry.region);
+            if (index === 0 && report.entryPresentation) {
+                const row = await page.waitForFunction(name => {
+                    const content = cc.find('Canvas/Safe/ServerList/View/Content');
+                    return content?.children.some(node => node.activeInHierarchy && node.getChildByName('Text')?.getComponent(cc.Label)?.string === name
+                        && node.getChildByName('Online')?.activeInHierarchy && node.getComponent(cc.Button)?.interactable);
+                }, entry.server);
+                await row.dispose();
+                await page.screenshot({ path: path.join(path.dirname(manifestPath), 'entry-server.png') });
+                report.entryPresentation.scenes.push('server');
+            }
             await tap('ServerList/View/Content', entry.server);
             await scene('RoleSelect');
             // 场景标题先更新，角色目录回包后才用服务端数据替换场景占位文本。
@@ -289,6 +356,24 @@ async function main() {
                 const slot = cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string;
                 return title?.startsWith(name + ' · ') && slot === '空角色槽';
             }, entry.server, { timeout: 30000 });
+            if (index === 0 && report.entryPresentation) {
+                report.entryPresentation.jobPreviews = [];
+                for (const job of [1, 2, 0]) {
+                    await tap('JobTabs/Job' + job);
+                    const portrait = await page.waitForFunction(job => {
+                        const preview = cc.find('Canvas/Safe/JobPreview');
+                        const active = preview?.children.filter(node => node.activeInHierarchy) ?? [];
+                        const node = active[0];
+                        return active.length === 1 && node?.name === 'Job' + job && node.getChildByName('Portrait')?.getComponent(cc.Sprite)?.spriteFrame
+                            ? node.getChildByName('Name')?.getComponent(cc.Label)?.string : null;
+                    }, job);
+                    report.entryPresentation.jobPreviews.push(await portrait.jsonValue());
+                    await portrait.dispose();
+                }
+                assert.deepEqual(report.entryPresentation.jobPreviews, ['女法师', '男道士', '男战士']);
+                await page.screenshot({ path: path.join(path.dirname(manifestPath), 'entry-role.png') });
+                report.entryPresentation.scenes.push('role');
+            }
             const role = '路由' + crypto.randomBytes(2).toString('hex');
             await edit('Name', role);
             await tap('Create');
@@ -305,6 +390,10 @@ async function main() {
             const route = await ticketResponses[index];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
+            if (index === 0 && groundIntents) {
+                report.step = '核对八向触屏地格及权威导航';
+                report.groundNavigation = await verifyGroundDirections(page, groundIntents);
+            }
             if (index === 0 && travelBenchmark) {
                 report.step = '测量五处目标地图及原路返回';
                 report.travelBenchmark = await measureTravel(page, tap, travelBenchmark, path.dirname(manifestPath),

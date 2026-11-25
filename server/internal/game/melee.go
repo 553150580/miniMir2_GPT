@@ -270,18 +270,22 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，direction 记录朝向，使用数值表示，expected 记录预期结果，使用数值表示。
 // input 记录输入，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准，focus 记录“focus”，使用实体表示。
 func (w *worker) attackFacingTarget(r *room, direction, expected, input uint32, now time.Time, focus *entity) uint32 {
-	// from 保存当前处理所用的来源。
-	from := &r.Player
 	if direction >= uint32(len(directions)) {
 		return p.CodeInvalidArgument
-	}
-	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
-	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
-		return p.CodeSkillStateBlocked
 	}
 	// s 接收已选择攻击供后续步骤使用，rank 保存由已选择攻击取得的排序位次，reachable 保存由已选择攻击取得的“reachable”。
 	s, rank, reachable := w.selectedAttack(r, direction, now, focus)
 	if !reachable || expected != 0 && expected != s.ID {
+		return p.CodeSkillStateBlocked
+	}
+	return w.attackWithSkill(r, direction, input, now, s, rank)
+}
+
+// attackWithSkill 让传统攻击模式和技能槽共用同一个扣蓝、时钟、命中和耐久入口。
+func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time, s devconfig.Skill, rank uint32) uint32 {
+	from := &r.Player
+	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
+	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
 	// front 保存由敌人发生时间取得的前端。
@@ -313,6 +317,11 @@ func (w *worker) attackFacingTarget(r *room, direction, expected, input uint32, 
 		from.MP -= s.MPBaseCost + int64(rank)*s.MPLevelCost
 	}
 	if s.Behavior == "flaming_sword" && front != nil {
+		// 传统蓄力已扣过蓝，槽位未蓄力时原时间窗口和扣蓝与攻击同次确认。
+		if !r.Melee.Flaming || !now.Before(r.Melee.FlamingUntil) {
+			from.MP -= s.MPBaseCost + int64(rank)*s.MPLevelCost
+			r.Melee.FlamingUntil = now.Add(time.Duration(s.ChargeWindowMS) * time.Millisecond)
+		}
 		r.Melee.Flaming, changed = false, true
 	}
 	// base 保存由周期取得的基础值。

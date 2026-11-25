@@ -33,6 +33,7 @@ type SettlementReceipt struct {
 	WearDeathID   string                    `bson:"wear_death_id,omitempty"`    // 并入此次结算的死亡磨损标识。
 
 	OrdinaryEquipment *OrdinaryEquipmentReceipt `bson:"ordinary_equipment,omitempty"` // 高品质候选实际发放或降档的永久事实。
+	HostingKillBonus  *HostingKillBonus         `bson:"hosting_kill_bonus,omitempty"` // 击杀时冻结的托管卡直接收益。
 }
 
 // Settle 提交固定来源的战斗或托管事实，只返回已确认的角色状态。
@@ -93,7 +94,8 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 			var old Operation
 			err = s.DB.Collection("operations").FindOne(tc, bson.M{"_id": id}).Decode(&old)
 			if err == nil {
-				if old.Kind != "settlement" || old.RoleID != a.RoleID || old.SourceSeq != q.SourceSeq || old.Digest != digest || old.Settlement == nil {
+				if old.Kind != "settlement" || old.RoleID != a.RoleID || old.SourceSeq != q.SourceSeq || old.Digest != digest ||
+					old.Settlement == nil || !sameHostingKillBonus(old.Settlement.HostingKillBonus, q.HostingKillBonus) {
 					return Fail(p.CodeOperationConflict, "同来源结算内容改变")
 				}
 				out, receipt = r, old
@@ -102,7 +104,7 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 			if !errors.Is(err, mongo.ErrNoDocuments) {
 				return err
 			}
-			if q.OrdinaryEquipment != nil || (r.SettlementReceiptStartSeq > 0 && q.SourceSeq >= r.SettlementReceiptStartSeq) {
+			if q.OrdinaryEquipment != nil || q.HostingKillBonus != nil || (r.SettlementReceiptStartSeq > 0 && q.SourceSeq >= r.SettlementReceiptStartSeq) {
 				return Fail(p.CodeOperationConflict, "新收益来源缺少永久回执")
 			}
 			// 升级前的历史来源只有水位；不构造或补播不存在的回收结果。
@@ -195,6 +197,10 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 	if q.HostSeconds < 0 || r.HostingSeconds < q.HostSeconds || q.Kills < 0 || r.Level == 0 || r.Revision == math.MaxInt64 {
 		return r, details, Fail(p.CodeOperationConflict, "托管时长或角色结算状态无效")
 	}
+	if err := validateHostingKillBonus(q, &f); err != nil {
+		return r, details, err
+	}
+	details.HostingKillBonus = q.HostingKillBonus
 	if f.RuleVersion >= 19 {
 		// code 表示旧角色的回收策略是否仍满足当前规则。
 		if _, code := policyFromProto(r.AutoRecycle.Proto(), f); code != 0 || r.AutoRecycle.Revision < 0 {

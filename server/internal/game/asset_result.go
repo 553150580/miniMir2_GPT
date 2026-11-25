@@ -32,6 +32,9 @@ func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, 
 		return
 	}
 	r.AssetGeneration++
+	if q.Kind == persistence.AssetClaimHostingTime {
+		q.HostingClaimAt = time.Now()
+	}
 	// binding 初始化用作会话绑定的资产会话绑定。
 	binding := assetBinding{room: r, auth: r.Auth, generation: r.AssetGeneration, id: domain.Hex(q.Context.OpId), fingerprint: q.Fingerprint}
 	r.Pending = true

@@ -26,10 +26,12 @@ func newPersonalBossBattle(owner *room, cfg *devconfig.PersonalBossConfig, snaps
 	challenge *bossChallenge, grant bossParticipantGrant, baseline uint64, now time.Time) *room {
 	monster := &entity{Handle: 10, Kind: 3, Def: cfg.Monster.ID, Pos: cfg.Map.MonsterSpawns[0], HP: challenge.hp,
 		MaxHP: challenge.hp, MP: cfg.Monster.MP, MaxMP: cfg.Monster.MP, Monster: &cfg.Monster, Life: 1}
-	world := &worldState{MapID: cfg.Map.ID, BossMap: &cfg.Map, Monsters: []*entity{monster}, MonsterCount: 1}
+	world := &worldState{MapID: cfg.Map.ID, BossMap: &cfg.Map, Monsters: []*entity{monster}, MonsterCount: 1, Auto: true}
 	child := &room{worldState: world, runStore: owner.runStore, ExecutionEpoch: challenge.identity.execution,
 		Auth: owner.Auth, Conn: owner.Conn, Scene: owner.Scene + 1, Baseline: baseline,
-		Role: domain.Role{ID: owner.Role.ID, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level, EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills},
+		AutoSkills: snapshot.autoSkills,
+		Role: domain.Role{ID: owner.Role.ID, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level, EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills,
+			HostingSeconds: owner.Role.HostingSeconds, SkillSlotIDs: snapshot.SkillSlotIDs},
 		Player: entity{Handle: 1, Kind: 1, Def: owner.Role.Job, Pos: cfg.Map.PlayerSpawn, HP: snapshot.Fighter.HP, MaxHP: snapshot.Fighter.HP,
 			MP: snapshot.Fighter.MP, MaxMP: snapshot.Fighter.MP, Life: 1},
 		bossBattle: &personalBossBattle{challenge: challenge, grant: grant, fighter: snapshot.Fighter, boss: monster},
@@ -55,7 +57,7 @@ func suppressOrdinaryObservation(owner *room, messageID uint16) bool {
 	}
 	switch messageID {
 	case p.MsgS2CSceneBaseline, p.MsgS2CCombatImpact, p.MsgS2CAttackAccepted, p.MsgS2CCastAccepted, p.MsgS2CCastStep,
-		p.MsgS2CSkillModeState, p.MsgS2CDeathNotice, p.MsgS2CEntityDisplacement, p.MsgS2CPetBorn:
+		p.MsgS2CSkillModeState, p.MsgS2CDeathNotice, p.MsgS2CEntityDisplacement, p.MsgS2CPetBorn, p.MsgS2CHostingState:
 		return true
 	default:
 		return false

@@ -25,7 +25,7 @@
     "_globals": {
       "__id__": 8
     },
-    "_id": "bba723dc-eae5-5372-b190-52314a0cbd31"
+    "_id": "692ddc96-a7a1-5c4a-8a59-d5278d6517cb"
   },
   {
     "__type__": "cc.Node",
@@ -419,6 +419,12 @@
     },
     "_children": [
       {
+        "__id__": 115
+      },
+      {
+        "__id__": 100
+      },
+      {
         "__id__": 22
       },
       {
@@ -435,6 +441,24 @@
       },
       {
         "__id__": 79
+      },
+      {
+        "__id__": 103
+      },
+      {
+        "__id__": 106
+      },
+      {
+        "__id__": 109
+      },
+      {
+        "__id__": 112
+      },
+      {
+        "__id__": 118
+      },
+      {
+        "__id__": 121
       }
     ],
     "_active": true,
@@ -551,9 +575,9 @@
     "_id": "",
     "_color": {
       "__type__": "cc.Color",
-      "r": 13,
-      "g": 19,
-      "b": 24,
+      "r": 14,
+      "g": 14,
+      "b": 17,
       "a": 255
     },
     "_spriteFrame": {
@@ -585,7 +609,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 330,
+      "y": 424,
       "z": 0
     },
     "_lrot": {
@@ -622,8 +646,8 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 600,
-      "height": 80
+      "width": 486,
+      "height": 74
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -641,10 +665,10 @@
     "_enabled": true,
     "__prefab": null,
     "_id": "",
-    "_string": "登录游戏",
+    "_string": "玛法 · 登录",
     "_fontSize": 42,
     "_actualFontSize": 42,
-    "_lineHeight": 48,
+    "_lineHeight": 49,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
     "_horizontalAlign": 1,
@@ -653,9 +677,9 @@
     "_enableWrapText": true,
     "_color": {
       "__type__": "cc.Color",
-      "r": 232,
-      "g": 224,
-      "b": 205,
+      "r": 240,
+      "g": 207,
+      "b": 157,
       "a": 255
     }
   },
@@ -690,8 +714,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 140,
+      "x": 51,
+      "y": 32,
       "z": 0
     },
     "_lrot": {
@@ -801,9 +825,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 239,
+      "g": 232,
+      "b": 214,
       "a": 255
     },
     "_sharedMaterial": null,
@@ -925,9 +949,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 187,
-      "g": 187,
-      "b": 187,
+      "r": 194,
+      "g": 186,
+      "b": 169,
       "a": 255
     },
     "_sharedMaterial": null,
@@ -974,8 +998,8 @@
     "_enabled": true,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 480,
-      "height": 64
+      "width": 430,
+      "height": 70
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1061,7 +1085,7 @@
       "b": 255,
       "a": 255
     },
-    "_placeholder": "账号（6～20位）",
+    "_placeholder": "请输入账号",
     "_placeholderFontSize": 26,
     "_placeholderFontColor": {
       "__type__": "cc.Color",
@@ -1125,8 +1149,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 40,
+      "x": 51,
+      "y": -89,
       "z": 0
     },
     "_lrot": {
@@ -1236,9 +1260,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 239,
+      "g": 232,
+      "b": 214,
       "a": 255
     },
     "_sharedMaterial": null,
@@ -1360,9 +1384,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 187,
-      "g": 187,
-      "b": 187,
+      "r": 194,
+      "g": 186,
+      "b": 169,
       "a": 255
     },
     "_sharedMaterial": null,
@@ -1409,8 +1433,8 @@
     "_enabled": true,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 480,
-      "height": 64
+      "width": 430,
+      "height": 70
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1496,7 +1520,7 @@
       "b": 255,
       "a": 255
     },
-    "_placeholder": "密码（6～20位）",
+    "_placeholder": "请输入密码",
     "_placeholderFontSize": 26,
     "_placeholderFontColor": {
       "__type__": "cc.Color",
@@ -1556,8 +1580,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -125,
-      "y": -90,
+      "x": 0,
+      "y": -242,
       "z": 0
     },
     "_lrot": {
@@ -1594,8 +1618,8 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 220,
-      "height": 64
+      "width": 456,
+      "height": 92
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1615,13 +1639,13 @@
     "_id": "",
     "_color": {
       "__type__": "cc.Color",
-      "r": 67,
-      "g": 60,
-      "b": 46,
+      "r": 255,
+      "g": 205,
+      "b": 173,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941"
+      "__uuid__": "94b6ccf3-2517-52b0-aaa4-8fb28fcd50f8@f9941"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1642,30 +1666,30 @@
     "_transition": 1,
     "_normalColor": {
       "__type__": "cc.Color",
-      "r": 185,
-      "g": 179,
-      "b": 155,
+      "r": 255,
+      "g": 205,
+      "b": 173,
       "a": 255
     },
     "_pressedColor": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 227,
-      "b": 148,
+      "r": 183,
+      "g": 151,
+      "b": 116,
       "a": 255
     },
     "_hoverColor": {
       "__type__": "cc.Color",
-      "r": 215,
-      "g": 207,
-      "b": 173,
+      "r": 255,
+      "g": 232,
+      "b": 188,
       "a": 255
     },
     "_disabledColor": {
       "__type__": "cc.Color",
-      "r": 100,
-      "g": 100,
-      "b": 100,
+      "r": 108,
+      "g": 105,
+      "b": 101,
       "a": 255
     },
     "_duration": 0.1,
@@ -1733,8 +1757,8 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 212,
-      "height": 60
+      "width": 442,
+      "height": 86
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1752,10 +1776,10 @@
     "_enabled": true,
     "__prefab": null,
     "_id": "",
-    "_string": "登录",
-    "_fontSize": 26,
-    "_actualFontSize": 26,
-    "_lineHeight": 32,
+    "_string": "登录并选服",
+    "_fontSize": 32,
+    "_actualFontSize": 32,
+    "_lineHeight": 39,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
     "_horizontalAlign": 1,
@@ -1764,9 +1788,9 @@
     "_enableWrapText": true,
     "_color": {
       "__type__": "cc.Color",
-      "r": 232,
-      "g": 224,
-      "b": 205,
+      "r": 240,
+      "g": 207,
+      "b": 157,
       "a": 255
     }
   },
@@ -1797,8 +1821,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 125,
-      "y": -90,
+      "x": 0,
+      "y": -350,
       "z": 0
     },
     "_lrot": {
@@ -1835,8 +1859,8 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 220,
-      "height": 64
+      "width": 350,
+      "height": 66
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1856,13 +1880,13 @@
     "_id": "",
     "_color": {
       "__type__": "cc.Color",
-      "r": 67,
-      "g": 60,
-      "b": 46,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941"
+      "__uuid__": "94b6ccf3-2517-52b0-aaa4-8fb28fcd50f8@f9941"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1883,30 +1907,30 @@
     "_transition": 1,
     "_normalColor": {
       "__type__": "cc.Color",
-      "r": 185,
-      "g": 179,
-      "b": 155,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_pressedColor": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 227,
-      "b": 148,
+      "r": 183,
+      "g": 151,
+      "b": 116,
       "a": 255
     },
     "_hoverColor": {
       "__type__": "cc.Color",
-      "r": 215,
-      "g": 207,
-      "b": 173,
+      "r": 255,
+      "g": 232,
+      "b": 188,
       "a": 255
     },
     "_disabledColor": {
       "__type__": "cc.Color",
-      "r": 100,
-      "g": 100,
-      "b": 100,
+      "r": 108,
+      "g": 105,
+      "b": 101,
       "a": 255
     },
     "_duration": 0.1,
@@ -1974,7 +1998,7 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 212,
+      "width": 336,
       "height": 60
     },
     "_anchorPoint": {
@@ -1993,9 +2017,9 @@
     "_enabled": true,
     "__prefab": null,
     "_id": "",
-    "_string": "注册",
-    "_fontSize": 26,
-    "_actualFontSize": 26,
+    "_string": "注册账号",
+    "_fontSize": 25,
+    "_actualFontSize": 25,
     "_lineHeight": 32,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
@@ -2005,9 +2029,9 @@
     "_enableWrapText": true,
     "_color": {
       "__type__": "cc.Color",
-      "r": 232,
-      "g": 224,
-      "b": 205,
+      "r": 239,
+      "g": 232,
+      "b": 214,
       "a": 255
     }
   },
@@ -2032,7 +2056,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -245,
+      "y": -455,
       "z": 0
     },
     "_lrot": {
@@ -2069,8 +2093,8 @@
     "_id": "",
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 640,
-      "height": 130
+      "width": 600,
+      "height": 110
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2088,10 +2112,10 @@
     "_enabled": true,
     "__prefab": null,
     "_id": "",
-    "_string": "开发环境账号与正式账号隔离",
+    "_string": "账号和密码支持6～20位字母、数字或下划线",
     "_fontSize": 24,
     "_actualFontSize": 24,
-    "_lineHeight": 30,
+    "_lineHeight": 31,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
     "_horizontalAlign": 1,
@@ -2100,9 +2124,9 @@
     "_enableWrapText": true,
     "_color": {
       "__type__": "cc.Color",
-      "r": 232,
-      "g": 224,
-      "b": 205,
+      "r": 194,
+      "g": 186,
+      "b": 169,
       "a": 255
     }
   },
@@ -2649,5 +2673,750 @@
     "_totalLength": 480,
     "_progress": 1,
     "_reverse": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "TitleFrame",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 101
+      },
+      {
+        "__id__": 102
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 424,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "2b8a69632c4153d7a03f9fe9a98d005e"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 100
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 512,
+      "height": 104
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 100
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 182,
+      "g": 180,
+      "b": 176,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "5e3acebb-51e5-508b-b640-a142040e661b@f9941"
+    },
+    "_type": 1,
+    "_sizeMode": 0,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "AuthenticationHint",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 104
+      },
+      {
+        "__id__": 105
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 348,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "0a6d9a424c0b609849cb56b6e3230330"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 103
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 516,
+      "height": 48
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Label",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 103
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_string": "登录账号后选择区服",
+    "_fontSize": 25,
+    "_actualFontSize": 25,
+    "_lineHeight": 32,
+    "_fontFamily": "Arial",
+    "_isSystemFontUsed": true,
+    "_horizontalAlign": 1,
+    "_verticalAlign": 1,
+    "_overflow": 1,
+    "_enableWrapText": true,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 194,
+      "g": 186,
+      "b": 169,
+      "a": 255
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "Emblemwarrior-male",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 107
+      },
+      {
+        "__id__": 108
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": -134,
+      "y": 225,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "edf01657394fe1feeb273c706ad050d8"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 106
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 86,
+      "height": 83
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 106
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "7cdb8e2a-5383-5aad-a0df-18bb2d094e90@f9941"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "Emblemwizard-female",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 110
+      },
+      {
+        "__id__": 111
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 225,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "9979d350f1cf1346fb17c2d1a7718f17"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 109
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 86,
+      "height": 83
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 109
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "f317c1c7-603f-5a6c-8e45-372c41bafe7c@f9941"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "Emblemtaoist-male",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 113
+      },
+      {
+        "__id__": 114
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 134,
+      "y": 225,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "23e399666bcb5526956996adb97de958"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 112
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 86,
+      "height": 83
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 112
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "dda4c3cf-d7c8-5635-8c5e-3b74f97386b7@f9941"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "CredentialFrame",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 116
+      },
+      {
+        "__id__": 117
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": -28,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "fdd80fa424d4d30c6ff9f3dbd5f875b4"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 115
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 620,
+      "height": 294
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 115
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 182,
+      "g": 180,
+      "b": 176,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "5e3acebb-51e5-508b-b640-a142040e661b@f9941"
+    },
+    "_type": 1,
+    "_sizeMode": 0,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "AccountCaption",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 119
+      },
+      {
+        "__id__": 120
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": -235,
+      "y": 32,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "46bccf001947a2bea6ab052c26162dc8"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 118
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 102,
+      "height": 64
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Label",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 118
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_string": "账号",
+    "_fontSize": 31,
+    "_actualFontSize": 31,
+    "_lineHeight": 38,
+    "_fontFamily": "Arial",
+    "_isSystemFontUsed": true,
+    "_horizontalAlign": 1,
+    "_verticalAlign": 1,
+    "_overflow": 1,
+    "_enableWrapText": true,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 240,
+      "g": 207,
+      "b": 157,
+      "a": 255
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "PasswordCaption",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 17
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 122
+      },
+      {
+        "__id__": 123
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": -235,
+      "y": -89,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "6426c68d0b5e565b1895b15c77bb0fb7"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 121
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 102,
+      "height": 64
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  {
+    "__type__": "cc.Label",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 121
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "",
+    "_string": "密码",
+    "_fontSize": 31,
+    "_actualFontSize": 31,
+    "_lineHeight": 38,
+    "_fontFamily": "Arial",
+    "_isSystemFontUsed": true,
+    "_horizontalAlign": 1,
+    "_verticalAlign": 1,
+    "_overflow": 1,
+    "_enableWrapText": true,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 240,
+      "g": 207,
+      "b": 157,
+      "a": 255
+    }
   }
 ]

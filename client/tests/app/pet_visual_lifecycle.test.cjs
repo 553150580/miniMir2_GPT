@@ -55,7 +55,7 @@ test('替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回
  const f=fixture(),selected=[];f.view.selected=value=>selected.push(value);f.assets.manifest.statuses['31']={idle:{frames:['retired-status'],duration_ms:1000}};f.assets.manifest.frames['retired-status']={width:32,height:32,offset_x:0,offset_y:0};f.assets.frames.set('retired-status',{key:'retired-status'});
  f.apply([f.pet({statuses:[{statusId:31}]})]);const previous=f.view.visuals.get(2),status=Array.from(f.view.statusEffects.nodes.values())[0],destroy=previous.node.destroy.bind(previous.node);let frameAtDestroy='not observed';previous.node.destroy=()=>{frameAtDestroy=status.sprite.spriteFrame;destroy();};
  f.setProfile(f.second);f.apply([f.pet({definitionId:3,life:Long.UONE})],100);const current=f.view.visuals.get(2);assert.equal(frameAtDestroy,null);assertRetired(previous);
- previous.node.listeners.get(cc.Node.EventType.TOUCH_END)({});assert.equal(selected.length,0);current.node.listeners.get(cc.Node.EventType.TOUCH_END)({});assert.equal(selected.length,1);assert.equal(selected[0],current.state);f.view.dispose();
+ previous.body[0].node.listeners.get(cc.Node.EventType.TOUCH_END)({});assert.equal(selected.length,0);current.body[0].node.listeners.get(cc.Node.EventType.TOUCH_END)({});assert.equal(selected.length,1);assert.equal(selected[0],current.state);f.view.dispose();
 });
 
 test('真实WorldAssets共享帧仅由世界owner归还，旧外观与新外观在ref0前均已解绑',()=>{

@@ -11,6 +11,7 @@ const scene = JSON.parse(fs.readFileSync(path.join(root, 'client/assets/scenes/G
 const child = (node, name) => node._children.map(ref => scene[ref.__id__]).find(row => row._name === name);
 const component = (node, type) => node._components.map(ref => scene[ref.__id__]).find(row => row.__type__ === type);
 const panel = ['Canvas', 'Safe', 'UIMgr', 'Panels', 'NpcShop'].reduce(child, scene[scene[0].scene.__id__]);
+const detailPanel = ['Canvas', 'Safe', 'PopupView', 'Panels', 'ItemActions'].reduce(child, scene[scene[0].scene.__id__]);
 
 test('NPC商店三种操作与网格保存在场景，列表和按钮互不遮挡', () => {
     assert.equal(panel._active, false);
@@ -90,6 +91,99 @@ class List {
     setItems(items, _renderer, preserve) { this.items = items; this.preserve = preserve; }
 }
 const Button = { EventType: { CLICK: 'click' } };
+
+test('保存物品详情隔开滚动内容、数量控件和操作按钮', () => {
+    assert.equal(detailPanel._active, false);
+    const list = child(detailPanel, 'List');
+    const topButton = name => {
+        const node = child(detailPanel, name), { width, height } = component(node, 'cc.UITransform')._contentSize;
+        assert(component(node, 'cc.Button'));
+        assert(component(child(node, 'Label'), 'cc.Label'));
+        return [node._lpos.x - width / 2, node._lpos.x + width / 2, node._lpos.y + height / 2];
+    };
+    const bottom = list._lpos.y - component(list, 'cc.UITransform')._contentSize.height / 2;
+    assert(bottom > topButton('Minus')[2] && bottom > topButton('Plus')[2]);
+    const actions = ['Action1', 'Action2', 'Action3'].map(topButton);
+    assert(actions[0][1] < actions[1][0] && actions[1][1] < actions[2][0]);
+    const quantity = child(detailPanel, 'Quantity');
+    assert(quantity._lpos.y - component(quantity, 'cc.UITransform')._contentSize.height / 2 > actions[0][2]);
+    const view = child(list, 'View');
+    assert(component(view, 'cc.Mask'));
+    assert.equal(scene[component(list, 'cc.ScrollView')._content.__id__], child(view, 'Content'));
+});
+
+test('NPC采购只显示通用和本职业，仍能出售旧的其他职业物品', () => {
+    const equipmentModel = require('../../../.work/ui-tests/app/EquipmentModel.js');
+    const level = require('../../../.work/ui-tests/app/LevelGrowthModel.js');
+    const { npcShopSnapshot } = load('client/assets/scripts/app/NpcShopCatalog.ts', id => ({
+        './EquipmentModel': equipmentModel, './LevelGrowthModel': level, './SkillAssetsModel': skillAssets,
+    })[id] ?? {});
+    const definitions = [
+        { item_id: 81, kind: 'book', name: '战士书', allowed_jobs: [0] },
+        { item_id: 82, kind: 'book', name: '道士书', allowed_jobs: [2] },
+        { item_id: 83, kind: 'potion', name: '药品', allowed_jobs: [] },
+    ];
+    const shop = { key: 'book', roles: ['book'], can_repair: false, offers: [...definitions, { item_id: 84 }].map((row, i) => ({
+        id: i+1, item_id: row.item_id, quantity: 1, currency: 'gold', price_units: 8, max_purchase_quantity: 16, required_role_level: 1,
+    })), sell_prices: [{ item_id: 82, price_gold: 4 }] };
+    const inventory = { level: 12, equipped: [], items: [{ itemId: 82, instanceId: instance, quantity: 1, version, bound: false }] };
+    const warrior = npcShopSnapshot(shop, 'entry', inventory, true, definitions, false, 0);
+    assert.deepEqual(warrior.buy.map(row => row.itemId), [81, 83]);
+    assert.deepEqual(warrior.sell.map(row => row.itemId), [82]);
+    assert.deepEqual(npcShopSnapshot(shop, 'entry', inventory, true, definitions, false, 2).buy.map(row => row.itemId), [82, 83]);
+});
+
+test('触击商店条目仅打开详情，报价确认和真实提交仍使用原商品', async () => {
+    const list = new List(), saved = new SavedNode(panel, list), detailList = new List(), detail = new SavedNode(detailPanel, detailList);
+    list.node = saved.getChildByName('ItemsList'); detailList.node = detail.getChildByName('List');
+    const safe = { getChildByPath: path => path.endsWith('/ItemActions') ? detail : saved };
+    const popupNode = new EventEmitter(), estimates = [], commits = [], errors = [];
+    const PopupView = { EVENT_CHANGED: 'popup-change' };
+    let accept;
+    const popup = { node: popupNode, show() { this.top = detail; this.node.emit(PopupView.EVENT_CHANGED); }, confirm() {
+        this.top = { name: 'Confirm' }; this.node.emit(PopupView.EVENT_CHANGED);
+        return new Promise(resolve => { accept = () => { this.top = detail; this.node.emit(PopupView.EVENT_CHANGED); resolve(true); }; });
+    } };
+    const cc = { Label, Button, isValid: Boolean };
+    const { GameItemActions } = load('client/assets/scripts/app/GameItemActions.ts', id => ({
+        cc, '../ui/List': { List }, '../ui/PopupView': { PopupView }, './CombatStatusModel': { detailLines: lines => lines },
+    })[id] ?? {});
+    const { GameNpcShop } = load('client/assets/scripts/app/GameNpcShop.ts', id => ({
+        cc, '../ui/List': { List }, './NpcShopModel': model, './SkillAssetsModel': skillAssets,
+    })[id] ?? {});
+    const actions = new GameItemActions(safe, popup, error => errors.push(error));
+    const shop = new GameNpcShop(safe, popup, {
+        quote: async selected => { estimates.push(selected); return quote; },
+        commit: async selected => { commits.push(selected); },
+        report: error => errors.push(error),
+    }, actions);
+    shop.open('药店', stock.shopKey);
+    shop.refresh(stock);
+    list.node.events.emit(List.EVENT_ITEM_CLICK, 0, list.items[0]);
+    assert.equal(popup.top, detail);
+    assert.equal(detail.getChildByName('Title').label.string, '疗伤药');
+    assert.equal(detail.getChildByPath('Action1/Label').label.string, '购买');
+    assert.equal(detail.getChildByName('Action2').active, false);
+    assert.deepEqual(estimates, []);
+    detail.getChildByName('Plus').events.emit('click');
+    assert.equal(detail.getChildByName('Quantity').label.string, '数量 4');
+    detail.getChildByName('Action1').events.emit('click');
+    detail.getChildByName('Action1').events.emit('click');
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(estimates.length, 1);
+    assert.deepEqual(commits, []);
+    accept();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.deepEqual(commits.map(entry => [entry.scope, entry.offerId, entry.quantity]), [['角色附着1', 20, 4n]]);
+    shop.refresh({ ...stock, scope: '角色附着2' });
+    actions.refresh();
+    assert.equal(detail.getChildByName('Action1').active, false);
+    detail.getChildByName('Action1').events.emit('click');
+    assert.equal(estimates.length, 1);
+    assert.deepEqual(errors, []);
+    actions.dispose();
+    shop.dispose();
+});
 
 test('真实视图报价后须手动确认，换附着期间旧报价不能提交', async () => {
     const list = new List(), saved = new SavedNode(panel, list);

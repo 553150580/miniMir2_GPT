@@ -245,7 +245,7 @@ func TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline(t *testi
 	r.Conn = nil
 	r.Role.HostingSeconds = 0
 	w.step(r, due.Add(2*time.Second))
-	if r.Pet.HP <= before || r.Player.HealAmount == 0 || r.HostMS != 0 {
+	if r.Pet.HP <= before || r.Player.HealAmount == 0 || r.hostRemainder != 0 {
 		t.Fatal("主人死亡/无托管时已支付宠物治疗停止、玩家队列丢失或错误计费")
 	}
 	r.Pet.HP = r.Pet.MaxHP

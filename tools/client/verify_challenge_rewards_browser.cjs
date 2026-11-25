@@ -159,10 +159,17 @@ async function main() {
         const point = await cell.jsonValue();
         await cell.dispose();
         await page.touchscreen.tap(point.x, point.y);
-        await page.waitForFunction(overlay => cc.find(overlay + '/StatusDetails')?.activeInHierarchy, overlay, { timeout: 5000 });
-        await hide(overlay + '/StatusDetails');
-        await touch(bag + '/' + action);
+        const popupHandle = await page.waitForFunction(overlay => ['ItemActions', 'StatusDetails'].find(
+            name => cc.find(overlay + '/' + name)?.activeInHierarchy), overlay, { timeout: 5000 });
+        const popup = await popupHandle.jsonValue();
+        await popupHandle.dispose();
+        if (popup === 'ItemActions') await touch(overlay + '/ItemActions/' + (action === 'Equip' ? 'Action1' : 'Action2'));
+        else {
+            await hide(overlay + '/StatusDetails');
+            await touch(bag + '/' + action);
+        }
         await touch(overlay + '/Confirm/ConfirmButton');
+        if (popup === 'ItemActions') await hide(overlay + '/ItemActions');
     };
 
     try {

@@ -40,9 +40,11 @@ type personalBossRun struct {
 
 // personalBossSnapshot 保存在服务器的固定入场战斗数据，账务版本和资产不复制到战斗房间。
 type personalBossSnapshot struct {
-	Fighter devconfig.Fighter     // 按原装备、被动技能、角色等级计算的属性。
-	Skills  []domain.LearnedSkill // 当时确认为已学习的技能与等级。
-	Pet     *entity               // 当时允许参战宠物的独立临时身体副本。
+	Fighter      devconfig.Fighter     // 按原装备、被动技能、角色等级计算的属性。
+	Skills       []domain.LearnedSkill // 当时确认为已学习的技能与等级。
+	SkillSlotIDs []uint32              // 当时已保存的四个攻击技能槽，缺省保留原选择规则。
+	Pet          *entity               // 当时允许参战宠物的独立临时身体副本。
+	autoSkills   *autoSkillSettings    // 只读偏好快照，独立于用于持久预约的战斗摘要。
 }
 
 // personalBossCommand 在原连接上分流入口、退出、ACK和战斗指令。
@@ -85,6 +87,8 @@ func (w *worker) personalBossCommand(owner *room, c command) bool {
 		return true
 	}
 	switch frame.ID {
+	case p.MsgC2SAutoBattle:
+		w.bossAutoBattleIntent(battle, frame)
 	case p.MsgC2SMoveIntent, p.MsgC2SSkillModeIntent, p.MsgC2SAttackIntent, p.MsgC2SCastIntent:
 		w.roomCommand(battle, c)
 	default:
@@ -133,7 +137,8 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 	}
 	store := w.roomStore(owner)
 	fixture := &store.Cfg.Fixture
-	if !fixture.ValidPersonalBoss() || fixture.PersonalBoss.TemplateID != msg.TemplateId || owner.currentWorld() != owner.PersonalWorld ||
+	template := fixture.PersonalBossByTemplate(msg.TemplateId)
+	if template == nil || owner.currentWorld() != owner.PersonalWorld ||
 		owner.Player.HP <= 0 || owner.Scene >= math.MaxUint64-1 {
 		w.failure(owner, frame, p.CodeLineForbidden)
 		return
@@ -147,7 +152,6 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 		w.failure(owner, frame, p.CodeLineRecovering)
 		return
 	}
-	template := fixture.PersonalBoss
 	snapshot := w.freezePersonalBossSnapshot(owner, template)
 	encoded, err := json.Marshal(snapshot)
 	if err != nil || owner.Isolated || snapshot.Fighter.HP <= 0 {
@@ -261,17 +265,22 @@ func (w *worker) ackPersonalBoss(owner *room, run *personalBossRun, frame wire.F
 		ack.SceneEpoch != battle.Scene || ack.BaselineId != battle.Baseline {
 		return
 	}
+	if ack.ChallengeAutoBattleEnabled != nil {
+		battle.Auto = *ack.ChallengeAutoBattleEnabled
+	}
 	battle.Ready, battle.LastTick = true, now
 	w.snapshot(battle)
 	w.modes(battle, now)
 	w.assets(owner)
+	w.hosting(battle, 0)
 	w.sendSyncReady(battle, frame.Request, &pb.SyncReady{SceneEpoch: battle.Scene, BaselineId: battle.Baseline, NextEconomicCommandSeq: uint64(owner.Role.EconomicSeq + 1)})
 	w.personalBossState(owner, run, 0, bossStateFighting, 0)
 }
 
 // freezePersonalBossSnapshot 按普通战斗同样的数值冻结玩家与可参战宠物，副本无任何资产写权限。
 func (w *worker) freezePersonalBossSnapshot(owner *room, cfg *devconfig.PersonalBossConfig) personalBossSnapshot {
-	snapshot := personalBossSnapshot{Fighter: w.basePlayerFighter(owner), Skills: slices.Clone(owner.Role.Skills)}
+	snapshot := personalBossSnapshot{Fighter: w.basePlayerFighter(owner), Skills: slices.Clone(owner.Role.Skills),
+		SkillSlotIDs: slices.Clone(owner.Role.SkillSlotIDs), autoSkills: owner.AutoSkills}
 	pet := owner.worldPet(owner.currentWorld())
 	if pet == nil || pet.HP <= 0 || mapForbidsPets(&cfg.Map) {
 		return snapshot

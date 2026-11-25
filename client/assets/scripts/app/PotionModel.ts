@@ -75,13 +75,15 @@ function rules(value: PotionRules | undefined): PotionRules {
 }
 
 // 快捷栏按服务端库存当前顺序选择一个明确实例，不另设绑定优先政策。
-export function createPotionPreview(snapshot: PotionSnapshot, itemId: number): PotionPreview {
+export function createPotionPreview(snapshot: PotionSnapshot, itemId: number, selected?: Uint8Array): PotionPreview {
     if (!snapshot.ready || !snapshot.roleIdentity || !snapshot.inventory || !snapshot.player) throw new Error('场景与背包尚未同步，暂不能使用药品');
     if (integer(snapshot.player.hp) === 0n) throw new Error('角色已倒下，不能使用药品');
     const definition = snapshot.definitions.find(item => item.item_id === itemId && item.kind === 'potion' && item.use_enabled);
     if (!definition) throw new Error('该药品暂未开放使用');
     const effect = rules(definition.potion);
-    const item = snapshot.inventory.items.find(entry => entry.itemId === itemId && integer(entry.quantity) > 0n);
+    const selectedId = selected && instanceHex(selected);
+    const item = snapshot.inventory.items.find(entry => entry.itemId === itemId && integer(entry.quantity) > 0n
+        && (!selectedId || instanceHex(entry.instanceId) === selectedId));
     if (!item) throw new Error(`背包中没有可用的${definition.name}`);
     const level = snapshot.inventory.level;
     if (!Number.isSafeInteger(level) || level < 1) throw new Error('角色等级尚未同步');

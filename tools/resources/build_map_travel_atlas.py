@@ -36,12 +36,15 @@ def map_frames(selected, job, gameplay, manifest, profiles, extras, floor):
     kind = selected['scene_kind']
     visible = {row['profile'] for row in gameplay['jobs'] if kind == 2 or row['job_id'] == job}
     monster_ids = selected.get('monster_definition_ids')
+    challenge_monsters = {identity for entry in gameplay.get('challenge_maps', []) for identity in entry.get('monster_definition_ids', [])}
     for row in gameplay['monster_profiles']:
         profile = row['profile']
-        if monster_ids is None and profile.startswith('monster_m1_') or monster_ids is not None and row['definition_id'] not in monster_ids:
+        definition = row['definition_id']
+        if (monster_ids is None and (profile.startswith('monster_m1_') or kind < 3 and definition in challenge_monsters)
+                or monster_ids is not None and definition not in monster_ids):
             continue
         if kind >= 3 and monster_ids is not None:
-            profile = extras['monsters']['challenge_profiles'].get(str(row['definition_id']), profile)
+            profile = extras['monsters']['challenge_profiles'].get(str(definition), profile)
         visible.add(profile)
     visible.update(row['profile'] for row in gameplay['pet_profiles'] if row['job_id'] == job
                    and (not manifest.get('development_only') or not row.get('appearance_optional') or row['profile'] in profiles))

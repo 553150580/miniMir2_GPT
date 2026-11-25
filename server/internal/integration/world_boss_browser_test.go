@@ -66,6 +66,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 		t.Fatal("首领双端验收需要工作区规则启用世界首领")
 	}
 	world.DailyOpenOffsets = []time.Duration{local.Sub(midnight) % shanghaiDay}
+	cfg.Fixture.WorldBossVariants = nil
 	world.Window = 220 * time.Second
 	world.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 4}}
 	world.Monster.HP = 10_000

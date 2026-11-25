@@ -9,6 +9,7 @@ export interface VendorRow {
     readonly itemId: number;
     readonly name: string;
     readonly detail: string;
+    readonly itemDetails?: readonly string[];
     readonly offerId?: number;
     readonly maxQuantity: VendorInteger;
     readonly quantityStep?: VendorInteger;

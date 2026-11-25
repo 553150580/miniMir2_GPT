@@ -5797,6 +5797,7 @@ $root.minimir = (function() {
              * @property {Long|null} [scene_epoch] EnterWorldAck scene_epoch
              * @property {Long|null} [baseline_id] EnterWorldAck baseline_id
              * @property {minimir.v1.AutoSkillSettings.$Properties|null} [auto_skill_settings] EnterWorldAck auto_skill_settings
+             * @property {boolean|null} [challenge_auto_battle_enabled] EnterWorldAck challenge_auto_battle_enabled
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5853,6 +5854,23 @@ $root.minimir = (function() {
             EnterWorldAck.prototype.auto_skill_settings = null;
 
             /**
+             * EnterWorldAck challenge_auto_battle_enabled.
+             * @member {boolean|null|undefined} challenge_auto_battle_enabled
+             * @memberof minimir.v1.EnterWorldAck
+             * @instance
+             */
+            EnterWorldAck.prototype.challenge_auto_battle_enabled = null;
+
+            // OneOf field names bound to virtual getters and setters
+            var $oneOfFields;
+
+            // Virtual OneOf for proto3 optional field
+            $Object.defineProperty(EnterWorldAck.prototype, "_challenge_auto_battle_enabled", {
+                get: $util.oneOfGetter($oneOfFields = ["challenge_auto_battle_enabled"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
+
+            /**
              * Creates a new EnterWorldAck instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EnterWorldAck
@@ -5890,6 +5908,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.baseline_id);
                 if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings"))
                     $root.minimir.v1.AutoSkillSettings.encode(message.auto_skill_settings, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.challenge_auto_battle_enabled != null && $Object.hasOwnProperty.call(message, "challenge_auto_battle_enabled"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.challenge_auto_battle_enabled);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5971,6 +5991,13 @@ $root.minimir = (function() {
                             message.auto_skill_settings = $root.minimir.v1.AutoSkillSettings.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_skill_settings);
                             continue;
                         }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            message.challenge_auto_battle_enabled = reader.bool();
+                            message._challenge_auto_battle_enabled = "challenge_auto_battle_enabled";
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -6019,6 +6046,7 @@ $root.minimir = (function() {
                     _depth = 0;
                 if (_depth > $util.recursionLimit)
                     return "max depth exceeded";
+                var properties = {};
                 if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
                     if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
                         return "scene_epoch: integer|Long expected";
@@ -6029,6 +6057,11 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.AutoSkillSettings.verify(message.auto_skill_settings, _depth + 1);
                     if (error)
                         return "auto_skill_settings." + error;
+                }
+                if (message.challenge_auto_battle_enabled != null && $Object.hasOwnProperty.call(message, "challenge_auto_battle_enabled")) {
+                    properties._challenge_auto_battle_enabled = 1;
+                    if (typeof message.challenge_auto_battle_enabled !== "boolean")
+                        return "challenge_auto_battle_enabled: boolean expected";
                 }
                 return null;
             };
@@ -13357,6 +13390,8 @@ $root.minimir = (function() {
              * @property {number|null} [input_sequence] AttackIntent input_sequence
              * @property {number|null} [direction] AttackIntent direction
              * @property {number|null} [skill_id] AttackIntent skill_id
+             * @property {number|null} [target_handle] AttackIntent target_handle
+             * @property {Long|null} [target_life] AttackIntent target_life
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -13421,6 +13456,22 @@ $root.minimir = (function() {
             AttackIntent.prototype.skill_id = 0;
 
             /**
+             * AttackIntent target_handle.
+             * @member {number} target_handle
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.target_handle = 0;
+
+            /**
+             * AttackIntent target_life.
+             * @member {Long} target_life
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.target_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new AttackIntent instance using the specified properties.
              * @function create
              * @memberof minimir.v1.AttackIntent
@@ -13460,6 +13511,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.direction);
                 if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.skill_id);
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle") && message.target_handle !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.target_handle);
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life") && (typeof message.target_life === "object" ? message.target_life.low || message.target_life.high : message.target_life !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.target_life);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -13553,6 +13608,24 @@ $root.minimir = (function() {
                                 delete message.skill_id;
                             continue;
                         }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_handle = value;
+                            else
+                                delete message.target_handle;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_life = value;
+                            else
+                                delete message.target_life;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -13613,6 +13686,12 @@ $root.minimir = (function() {
                 if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
                     if (!$util.isInteger(message.skill_id))
                         return "skill_id: integer expected";
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle"))
+                    if (!$util.isInteger(message.target_handle))
+                        return "target_handle: integer expected";
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life"))
+                    if (!$util.isInteger(message.target_life) && !(message.target_life && $util.isInteger(message.target_life.low) && $util.isInteger(message.target_life.high)))
+                        return "target_life: integer|Long expected";
                 return null;
             };
 
@@ -19350,6 +19429,7 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.LearnedSkill.$Properties>|null} [learned_skills] InventoryResult learned_skills
              * @property {minimir.v1.AutoRecyclePolicy.$Properties|null} [auto_recycle] InventoryResult auto_recycle
              * @property {minimir.v1.ProgressionState.$Properties|null} [progression] InventoryResult progression
+             * @property {Array.<number>|null} [skill_slot_ids] InventoryResult skill_slot_ids
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -19378,6 +19458,7 @@ $root.minimir = (function() {
                 this.items = [];
                 this.equipped = [];
                 this.learned_skills = [];
+                this.skill_slot_ids = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -19457,6 +19538,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.progression = null;
 
             /**
+             * InventoryResult skill_slot_ids.
+             * @member {Array.<number>} skill_slot_ids
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.skill_slot_ids = $util.emptyArray;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -19509,6 +19598,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.AutoRecyclePolicy.encode(message.auto_recycle, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.progression != null && $Object.hasOwnProperty.call(message, "progression"))
                     $root.minimir.v1.ProgressionState.encode(message.progression, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.skill_slot_ids != null && message.skill_slot_ids.length)
+                    writer.uint32(/* id 10, wireType 2 =*/82).uint32s(message.skill_slot_ids);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -19638,6 +19729,20 @@ $root.minimir = (function() {
                             message.progression = $root.minimir.v1.ProgressionState.decode(reader, reader.size(), $undefined, _depth + 1, message.progression);
                             continue;
                         }
+                    case 10: {
+                            if (wireType === 2) {
+                                if (!(message.skill_slot_ids && message.skill_slot_ids.length))
+                                    message.skill_slot_ids = [];
+                                reader.uint32s(message.skill_slot_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.skill_slot_ids && message.skill_slot_ids.length))
+                                message.skill_slot_ids = [];
+                            message.skill_slot_ids.push(reader.uint32());
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -19735,6 +19840,13 @@ $root.minimir = (function() {
                     if (error)
                         return "progression." + error;
                 }
+                if (message.skill_slot_ids != null && $Object.hasOwnProperty.call(message, "skill_slot_ids")) {
+                    if (!$Array.isArray(message.skill_slot_ids))
+                        return "skill_slot_ids: array expected";
+                    for (var i = 0; i < message.skill_slot_ids.length; ++i)
+                        if (!$util.isInteger(message.skill_slot_ids[i]))
+                            return "skill_slot_ids: integer[] expected";
+                }
                 return null;
             };
 
@@ -19753,6 +19865,254 @@ $root.minimir = (function() {
             };
 
             return InventoryResult;
+        })();
+
+        v1.SetSkillSlotsRequest = (function() {
+
+            /**
+             * Properties of a SetSkillSlotsRequest.
+             * @typedef {Object} minimir.v1.SetSkillSlotsRequest.$Properties
+             * @property {Array.<number>|null} [skill_slot_ids] SetSkillSlotsRequest skill_slot_ids
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetSkillSlotsRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetSkillSlotsRequest.
+             * @memberof minimir.v1
+             * @interface ISetSkillSlotsRequest
+             * @augments minimir.v1.SetSkillSlotsRequest.$Properties
+             * @deprecated Use minimir.v1.SetSkillSlotsRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetSkillSlotsRequest.
+             * @typedef {minimir.v1.SetSkillSlotsRequest.$Properties} minimir.v1.SetSkillSlotsRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SetSkillSlotsRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SetSkillSlotsRequest.
+             * @constructor
+             * @param {minimir.v1.SetSkillSlotsRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SetSkillSlotsRequest = function (properties) {
+                this.skill_slot_ids = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetSkillSlotsRequest skill_slot_ids.
+             * @member {Array.<number>} skill_slot_ids
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @instance
+             */
+            SetSkillSlotsRequest.prototype.skill_slot_ids = $util.emptyArray;
+
+            /**
+             * SetSkillSlotsRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @instance
+             */
+            SetSkillSlotsRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SetSkillSlotsRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {minimir.v1.SetSkillSlotsRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SetSkillSlotsRequest} SetSkillSlotsRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SetSkillSlotsRequest.$Shape): minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape;
+             *   (properties?: minimir.v1.SetSkillSlotsRequest.$Properties): minimir.v1.SetSkillSlotsRequest;
+             * }}
+             */
+            SetSkillSlotsRequest.create = function(properties) {
+                return new SetSkillSlotsRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SetSkillSlotsRequest message. Does not implicitly {@link minimir.v1.SetSkillSlotsRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {minimir.v1.SetSkillSlotsRequest.$Properties} message SetSkillSlotsRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetSkillSlotsRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.skill_slot_ids != null && message.skill_slot_ids.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).uint32s(message.skill_slot_ids);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetSkillSlotsRequest message, length delimited. Does not implicitly {@link minimir.v1.SetSkillSlotsRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {minimir.v1.SetSkillSlotsRequest.$Properties} message SetSkillSlotsRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetSkillSlotsRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetSkillSlotsRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape} SetSkillSlotsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetSkillSlotsRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SetSkillSlotsRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType === 2) {
+                                if (!(message.skill_slot_ids && message.skill_slot_ids.length))
+                                    message.skill_slot_ids = [];
+                                reader.uint32s(message.skill_slot_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.skill_slot_ids && message.skill_slot_ids.length))
+                                message.skill_slot_ids = [];
+                            message.skill_slot_ids.push(reader.uint32());
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetSkillSlotsRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape} SetSkillSlotsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetSkillSlotsRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SetSkillSlotsRequest message.
+             * @function verify
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetSkillSlotsRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.skill_slot_ids != null && $Object.hasOwnProperty.call(message, "skill_slot_ids")) {
+                    if (!$Array.isArray(message.skill_slot_ids))
+                        return "skill_slot_ids: array expected";
+                    for (var i = 0; i < message.skill_slot_ids.length; ++i)
+                        if (!$util.isInteger(message.skill_slot_ids[i]))
+                            return "skill_slot_ids: integer[] expected";
+                }
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SetSkillSlotsRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetSkillSlotsRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SetSkillSlotsRequest";
+            };
+
+            return SetSkillSlotsRequest;
         })();
 
         v1.ProgressionState = (function() {
@@ -32880,6 +33240,7 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.PersonalBossHistoryEntry.$Properties>|null} [history] PersonalBossInfo history
              * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [pending_rewards] PersonalBossInfo pending_rewards
              * @property {number|null} [pending_reward_capacity] PersonalBossInfo pending_reward_capacity
+             * @property {Array.<minimir.v1.PersonalBossTemplateChoice.$Properties>|null} [templates] PersonalBossInfo templates
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -32907,6 +33268,7 @@ $root.minimir = (function() {
             var PersonalBossInfo = function (properties) {
                 this.history = [];
                 this.pending_rewards = [];
+                this.templates = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -33058,6 +33420,14 @@ $root.minimir = (function() {
             PersonalBossInfo.prototype.pending_reward_capacity = 0;
 
             /**
+             * PersonalBossInfo templates.
+             * @member {Array.<minimir.v1.PersonalBossTemplateChoice.$Properties>} templates
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.templates = $util.emptyArray;
+
+            /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @function create
              * @memberof minimir.v1.PersonalBossInfo
@@ -33127,6 +33497,9 @@ $root.minimir = (function() {
                         $root.minimir.v1.ChallengePendingReward.encode(message.pending_rewards[i], writer.uint32(/* id 17, wireType 2 =*/138).fork(), _depth + 1).ldelim();
                 if (message.pending_reward_capacity != null && $Object.hasOwnProperty.call(message, "pending_reward_capacity") && message.pending_reward_capacity !== 0)
                     writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.pending_reward_capacity);
+                if (message.templates != null && message.templates.length)
+                    for (var i = 0; i < message.templates.length; ++i)
+                        $root.minimir.v1.PersonalBossTemplateChoice.encode(message.templates[i], writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -33344,6 +33717,14 @@ $root.minimir = (function() {
                                 delete message.pending_reward_capacity;
                             continue;
                         }
+                    case 19: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.templates && message.templates.length))
+                                message.templates = [];
+                            message.templates.push($root.minimir.v1.PersonalBossTemplateChoice.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -33458,6 +33839,15 @@ $root.minimir = (function() {
                 if (message.pending_reward_capacity != null && $Object.hasOwnProperty.call(message, "pending_reward_capacity"))
                     if (!$util.isInteger(message.pending_reward_capacity))
                         return "pending_reward_capacity: integer expected";
+                if (message.templates != null && $Object.hasOwnProperty.call(message, "templates")) {
+                    if (!$Array.isArray(message.templates))
+                        return "templates: array expected";
+                    for (var i = 0; i < message.templates.length; ++i) {
+                        var error = $root.minimir.v1.PersonalBossTemplateChoice.verify(message.templates[i], _depth + 1);
+                        if (error)
+                            return "templates." + error;
+                    }
+                }
                 return null;
             };
 
@@ -33476,6 +33866,383 @@ $root.minimir = (function() {
             };
 
             return PersonalBossInfo;
+        })();
+
+        v1.PersonalBossTemplateChoice = (function() {
+
+            /**
+             * Properties of a PersonalBossTemplateChoice.
+             * @typedef {Object} minimir.v1.PersonalBossTemplateChoice.$Properties
+             * @property {number|null} [template_id] PersonalBossTemplateChoice template_id
+             * @property {string|null} [display_name] PersonalBossTemplateChoice display_name
+             * @property {Long|null} [map_id] PersonalBossTemplateChoice map_id
+             * @property {number|null} [monster_id] PersonalBossTemplateChoice monster_id
+             * @property {number|null} [minimum_level] PersonalBossTemplateChoice minimum_level
+             * @property {boolean|null} [can_enter] PersonalBossTemplateChoice can_enter
+             * @property {number|null} [eligibility_reason] PersonalBossTemplateChoice eligibility_reason
+             * @property {Long|null} [available_at_unix_ms] PersonalBossTemplateChoice available_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossTemplateChoice.
+             * @memberof minimir.v1
+             * @interface IPersonalBossTemplateChoice
+             * @augments minimir.v1.PersonalBossTemplateChoice.$Properties
+             * @deprecated Use minimir.v1.PersonalBossTemplateChoice.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossTemplateChoice.
+             * @typedef {minimir.v1.PersonalBossTemplateChoice.$Properties} minimir.v1.PersonalBossTemplateChoice.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossTemplateChoice.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossTemplateChoice.
+             * @constructor
+             * @param {minimir.v1.PersonalBossTemplateChoice.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossTemplateChoice = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossTemplateChoice template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.template_id = 0;
+
+            /**
+             * PersonalBossTemplateChoice display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.display_name = "";
+
+            /**
+             * PersonalBossTemplateChoice map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossTemplateChoice monster_id.
+             * @member {number} monster_id
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.monster_id = 0;
+
+            /**
+             * PersonalBossTemplateChoice minimum_level.
+             * @member {number} minimum_level
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.minimum_level = 0;
+
+            /**
+             * PersonalBossTemplateChoice can_enter.
+             * @member {boolean} can_enter
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.can_enter = false;
+
+            /**
+             * PersonalBossTemplateChoice eligibility_reason.
+             * @member {number} eligibility_reason
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.eligibility_reason = 0;
+
+            /**
+             * PersonalBossTemplateChoice available_at_unix_ms.
+             * @member {Long} available_at_unix_ms
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @instance
+             */
+            PersonalBossTemplateChoice.prototype.available_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new PersonalBossTemplateChoice instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {minimir.v1.PersonalBossTemplateChoice.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossTemplateChoice} PersonalBossTemplateChoice instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossTemplateChoice.$Shape): minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape;
+             *   (properties?: minimir.v1.PersonalBossTemplateChoice.$Properties): minimir.v1.PersonalBossTemplateChoice;
+             * }}
+             */
+            PersonalBossTemplateChoice.create = function(properties) {
+                return new PersonalBossTemplateChoice(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossTemplateChoice message. Does not implicitly {@link minimir.v1.PersonalBossTemplateChoice.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {minimir.v1.PersonalBossTemplateChoice.$Properties} message PersonalBossTemplateChoice message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossTemplateChoice.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.template_id);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.display_name);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.map_id);
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id") && message.monster_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.monster_id);
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level") && message.minimum_level !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.minimum_level);
+                if (message.can_enter != null && $Object.hasOwnProperty.call(message, "can_enter") && message.can_enter !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.can_enter);
+                if (message.eligibility_reason != null && $Object.hasOwnProperty.call(message, "eligibility_reason") && message.eligibility_reason !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.eligibility_reason);
+                if (message.available_at_unix_ms != null && $Object.hasOwnProperty.call(message, "available_at_unix_ms") && (typeof message.available_at_unix_ms === "object" ? message.available_at_unix_ms.low || message.available_at_unix_ms.high : message.available_at_unix_ms !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.available_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossTemplateChoice message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossTemplateChoice.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {minimir.v1.PersonalBossTemplateChoice.$Properties} message PersonalBossTemplateChoice message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossTemplateChoice.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossTemplateChoice message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape} PersonalBossTemplateChoice
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossTemplateChoice.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossTemplateChoice();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.monster_id = value;
+                            else
+                                delete message.monster_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.minimum_level = value;
+                            else
+                                delete message.minimum_level;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.can_enter = value;
+                            else
+                                delete message.can_enter;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.eligibility_reason = value;
+                            else
+                                delete message.eligibility_reason;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.available_at_unix_ms = value;
+                            else
+                                delete message.available_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossTemplateChoice message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape} PersonalBossTemplateChoice
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossTemplateChoice.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossTemplateChoice message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossTemplateChoice.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id"))
+                    if (!$util.isInteger(message.monster_id))
+                        return "monster_id: integer expected";
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level"))
+                    if (!$util.isInteger(message.minimum_level))
+                        return "minimum_level: integer expected";
+                if (message.can_enter != null && $Object.hasOwnProperty.call(message, "can_enter"))
+                    if (typeof message.can_enter !== "boolean")
+                        return "can_enter: boolean expected";
+                if (message.eligibility_reason != null && $Object.hasOwnProperty.call(message, "eligibility_reason"))
+                    if (!$util.isInteger(message.eligibility_reason))
+                        return "eligibility_reason: integer expected";
+                if (message.available_at_unix_ms != null && $Object.hasOwnProperty.call(message, "available_at_unix_ms"))
+                    if (!$util.isInteger(message.available_at_unix_ms) && !(message.available_at_unix_ms && $util.isInteger(message.available_at_unix_ms.low) && $util.isInteger(message.available_at_unix_ms.high)))
+                        return "available_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossTemplateChoice
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossTemplateChoice
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossTemplateChoice.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossTemplateChoice";
+            };
+
+            return PersonalBossTemplateChoice;
         })();
 
         v1.ChallengePendingReward = (function() {

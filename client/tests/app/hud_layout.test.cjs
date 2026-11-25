@@ -249,7 +249,7 @@ test('技能普通弹窗保存复用列表与学习施放按钮，游戏特效�
     assert.equal(scene[scroll._content.__id__]._parent.__id__,scene.indexOf(view));assert.equal(template._active,false);
     component(template,'cc.Button');assert(list.rowHeight>=96);
     for(const button of ['Learn','Use'])component(node(`UIMgr/Panels/Skills/${button}`),'cc.Button');
-    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'自动施法随战斗开启 · 手动快捷可单独设置');
+    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'选技能后点槽位，同一技能可移除。');
     assert.equal(node('MapViewport/World/Effects')._parent.__id__,scene.indexOf(node('MapViewport/World')));
     const effect=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Effect.prefab'),'utf8'));
     const sprite=effect.find(value=>value.__type__==='cc.Sprite');assert(sprite);assert.equal(sprite._type,SPRITE_SIMPLE);
@@ -257,23 +257,29 @@ test('技能普通弹窗保存复用列表与学习施放按钮，游戏特效�
     assert(!effect.some(value=>value.__type__==='cc.Graphics'));
 });
 
-test('手动技能、自动偏好、目标详情使用独立保存按钮且不挡技能列表', () => {
+test('技能槽、清空、详情和目标详情使用独立保存按钮且不挡实际技能列表', () => {
     const box = n => {
         const { width, height } = transform(n)._contentSize;
         return { left: n._lpos.x - width / 2, right: n._lpos.x + width / 2,
             bottom: n._lpos.y - height / 2, top: n._lpos.y + height / 2 };
     };
     const skillPath = 'UIMgr/Panels/Skills/';
-    const list = box(node(skillPath + 'List')), message = box(node(skillPath + 'Message'));
-    const controls = ['AutoCast', 'SkillAuto', 'Details'].map(name => {
+    const host = node(skillPath + 'List'), view = box(node(skillPath + 'List/View')), message = box(node(skillPath + 'Message'));
+    const list = { bottom: host._lpos.y + view.bottom, top: host._lpos.y + view.top };
+    for (const legacy of ['AutoCast', 'SkillAuto']) assert.equal(node(skillPath + legacy)._active, false);
+    const details = node(skillPath + 'Details');
+    assert.deepEqual(component(details, 'cc.Button').clickEvents, []);
+    assert(box(details).bottom > message.top);
+    const controls = ['AttackSlot1', 'AttackSlot2', 'AttackSlot3', 'AttackSlot4', 'ClearSlots'].map(name => {
         const control = node(skillPath + name);
         assert.deepEqual(component(control, 'cc.Button').clickEvents, []);
         assert.equal(component(node(skillPath + name + '/Label'), 'cc.Label')._fontSize, 24);
         const area = box(control);
-        assert(area.bottom > list.top && area.top < message.bottom);
+        assert(area.top < list.bottom);
         return area;
     });
-    assert(controls[0].right < controls[1].left && controls[1].right < controls[2].left);
+    for (let index = 1; index < 4; index++) assert(controls[index - 1].right < controls[index].left);
+    assert(controls[4].top < controls[3].bottom);
     const target = node('MapViewport/Actions/TargetDetails'), auto = node('MapViewport/Actions/Auto');
     assert.equal(target._active, false);
     assert(box(target).bottom > box(auto).top);

@@ -140,11 +140,11 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 			return err
 		}
 		cfg := &s.Cfg.Fixture
+		template := cfg.PersonalBossByTemplate(q.TemplateID)
 		if !cfg.ValidPersonalBoss() || cfg.RuleVersion == 0 || !lowerHex(cfg.Hash, 32) {
 			return Fail(p.CodeLineForbidden, "个人首领模板尚未开放")
 		}
-		template := cfg.PersonalBoss
-		if q.RuleVersion != cfg.RuleVersion || q.ConfigHash != cfg.Hash || q.TemplateID != template.TemplateID || q.BossHP != template.Monster.HP ||
+		if template == nil || q.RuleVersion != cfg.RuleVersion || q.ConfigHash != cfg.Hash || q.BossHP != template.Monster.HP ||
 			q.Duration != template.Duration || q.SuccessCooldown != template.SuccessCooldown || q.RetryCooldown != template.RetryCooldown ||
 			q.ExpectedRevision != r.Revision || r.Revision == math.MaxInt64 {
 			return Fail(p.CodeOperationConflict, "个人首领配置、角色或战斗快照版本变化")

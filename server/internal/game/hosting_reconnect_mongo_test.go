@@ -41,6 +41,9 @@ func newHostingMongoFixture(t *testing.T, cfg devconfig.Config) hostingMongoFixt
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("显式启用本任务副本集中的独立托管计量测试库")
 	}
+	if uri := os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI"); uri != "" {
+		cfg.MongoURI = uri
+	}
 	cfg.Database = "minimir_dev_game_test_host_" + domain.ID()
 	// ctx 传递从调用方派生的上下文，供取消或控制截止时间，cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -136,13 +139,15 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 	monster.HP, monster.MaxHP = 1000, 1000
 	// hpBefore 保存生命值，用于当前步骤中的生命值操作前的状态。
 	hpBefore := monster.HP
-	// simulatedMS 记录“simulated”毫秒，使用数值表示，committedSeconds 记录已提交秒集合，使用数值表示。
-	var simulatedMS, committedSeconds int64
+	// simulated 是实际推进的离线时间，committedSeconds 是 MongoDB 已确认的托管整秒。
+	var simulated time.Duration
+	var committedSeconds int64
+	const offlineFrame = 100*time.Millisecond + 50*time.Microsecond
 	// now 保存由新增取得的当前时间。
 	now := time.Now().Add(5 * time.Second)
 	// segment 规定分段的初始取值。
 	for segment := 0; segment < 3; segment++ {
-		// 走正常断线分支；八个100ms非致死离线tick，健康接管冻结整秒并沿原SourceSeq提交。
+		// 走正常断线分支；每段八个含亚毫秒余量的离线帧，健康接管先确认旧会话整秒。
 		w.command(command{role: id, conn: r.Conn, disconnect: true, at: now})
 		// session 保存托管会话标识，用于当前步骤中的会话。
 		session := r.HostSession
@@ -152,17 +157,17 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		r.LastTick = now
 		// tick 规定模拟帧的初始取值。
 		for tick := 0; tick < 8; tick++ {
-			now = now.Add(100 * time.Millisecond)
+			now = now.Add(offlineFrame)
 			w.step(r, now)
 			if r.Pending || len(w.e.jobs) != 0 {
 				t.Fatal("未到检查点且无击杀，不能提前提交")
 			}
 		}
-		simulatedMS += 800
-		// fraction 保存根据“simulated”毫秒与当前数据计算的“fraction”。
-		fraction := simulatedMS % 1000
-		if r.HostMS != fraction || (5-r.Role.HostingSeconds+r.hostSecondsOpen)*1000+r.HostMS != simulatedMS {
-			t.Fatalf("累计模拟和计量不等: simulated=%d balance=%d fraction=%d", simulatedMS, r.Role.HostingSeconds, r.HostMS)
+		simulated += 8 * offlineFrame
+		// fraction 是累计离线时间扣除整秒后的亚秒余量。
+		fraction := simulated % time.Second
+		if r.hostRemainder != fraction || time.Duration(5-r.Role.HostingSeconds+r.hostSecondsOpen)*time.Second+r.hostRemainder != simulated {
+			t.Fatalf("累计模拟和计量不等：离线=%s、余额=%d、余量=%s", simulated, r.Role.HostingSeconds, r.hostRemainder)
 		}
 		// ticket 保存由签发入场票据取得的入场票据，err 接收签发入场票据过程中可能产生的错误，供后续失败分支处理。
 		ticket, err := account.IssueTicket(ctx, fixture.accountAuth, fixture.roleKey)
@@ -197,7 +202,7 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		// j 接收任务或职业编号集合通道送来的当前位置的下标。
 		j := <-w.e.jobs
 		j.run()(w)
-		if r.Pending || r.Conn != next || r.Isolated || r.HostMS != fraction {
+		if r.Pending || r.Conn != next || r.Isolated || r.hostRemainder != fraction {
 			t.Fatal("真实健康接管丢失计量或未完成")
 		}
 		w.command(command{role: id, conn: next, frame: wire.Message(p.MsgC2SEnterWorldAck, 10, next.Binding(), &pb.EnterWorldAck{SceneEpoch: r.Scene, BaselineId: r.Baseline})})
@@ -208,14 +213,15 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		now = now.Add(100 * time.Millisecond)
 		r.LastTick = now.Add(-100 * time.Millisecond)
 		w.step(r, now)
-		if r.HostMS != fraction || r.Pending {
+		if r.hostRemainder != fraction || r.Pending {
 			t.Fatal("健康上线误计费")
 		}
-		t.Logf("第%d段: 实际离线%dms，余额%d秒，余量%dms，会话代次%d", segment+1, simulatedMS, r.Role.HostingSeconds, r.HostMS, r.Auth.SessionEpoch)
+		t.Logf("第%d段实际离线%s，余额%d秒，余量%s，会话代次%d", segment+1, simulated, r.Role.HostingSeconds, r.hostRemainder, r.Auth.SessionEpoch)
 		now = now.Add(time.Second)
 	}
-	if monster.HP >= hpBefore || r.Player.AttackSequence == 0 || committedSeconds != 2 || r.Role.HostingSeconds != 3 || r.HostMS != 400 {
-		t.Fatalf("真实AI或累计扣时错误: hp=%d attacks=%d committed=%d balance=%d fraction=%d", monster.HP, r.Player.AttackSequence, committedSeconds, r.Role.HostingSeconds, r.HostMS)
+	if monster.HP >= hpBefore || r.Player.AttackSequence == 0 || committedSeconds != 2 || r.Role.HostingSeconds != 3 || r.hostRemainder != 401200*time.Microsecond {
+		t.Fatalf("真实战斗或累计扣时错误：生命=%d、攻击次数=%d、已扣=%d、余额=%d、余量=%s",
+			monster.HP, r.Player.AttackSequence, committedSeconds, r.Role.HostingSeconds, r.hostRemainder)
 	}
 	// persisted 保存由角色取得的“persisted”，err 接收角色过程中可能产生的错误，供后续失败分支处理。
 	persisted, err := owner.Role(ctx, id)
@@ -237,7 +243,7 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		}
 		// session 保存托管会话标识，用于当前步骤中的会话。
 		session := r.HostSession
-		if r.Pending || r.hostSecondsOpen != 1 || r.HostMS != 0 {
+		if r.Pending || r.hostSecondsOpen != 1 || r.hostRemainder != 1200*time.Microsecond {
 			t.Fatal("击杀前应累计一整秒且没有独立写入")
 		}
 		r.KillFacts = append(r.KillFacts, killFact{ID: domain.ID(), World: r.currentWorld().Ref, At: now, HostSession: session, Monster: *monster.Monster})
@@ -261,6 +267,7 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		retry := <-w.e.jobs
 		retry.run()(w)
 		if r.Pending || r.Isolated || len(r.KillFacts) != 0 || r.Role.SourceSeq != q.SourceSeq || r.Role.HostingSeconds != 2 ||
+			r.hostRemainder != 1200*time.Microsecond ||
 			r.Role.Report.SessionID != session || r.Role.Report.UsedSeconds != 1 || r.Role.Report.Kills != 1 || r.Role.Report.RawExperience != q.Experience {
 			t.Fatalf("重试未准确恢复同一次托管扣时与击杀收益: %+v", r.Role.Report)
 		}

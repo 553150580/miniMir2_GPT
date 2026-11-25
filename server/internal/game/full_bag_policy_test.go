@@ -120,7 +120,7 @@ func TestFullBagActualAttackStillReleasesKillFactOnlineAndOffline(t *testing.T) 
 			}
 			// q 接收击杀结算供后续步骤使用。
 			q := w.killSettlement(r, r.KillFacts[0])
-			if q.Kills != 1 || q.Experience != m.Monster.Exp || q.SourceSeq != 5 || r.Role.SourceSeq != 4 || offline && (q.HostingSession != r.HostSession || r.HostMS <= 0) {
+			if q.Kills != 1 || q.Experience != m.Monster.Exp || q.SourceSeq != 5 || r.Role.SourceSeq != 4 || offline && (q.HostingSession != r.HostSession || r.hostRemainder <= 0) {
 				t.Fatal("满包kill的EXP/原来源/离线时钟被截断", q)
 			}
 		})
@@ -133,7 +133,7 @@ func TestFullBagOfflineChargesOriginalSlotAndStopsNewAIAtZero(t *testing.T) {
 	// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 	w, r, _ := fullBagPolicyWorker(t)
 	r.Conn = nil
-	r.Role.HostingSeconds, r.HostMS = 1, 900
+	r.Role.HostingSeconds, r.hostRemainder = 1, 900*time.Millisecond
 	// now 保存由Unix 时间取得的当前时间。
 	now := time.Unix(1800000000, 0)
 	r.LastTick = now.Add(-100 * time.Millisecond)
@@ -145,7 +145,7 @@ func TestFullBagOfflineChargesOriginalSlotAndStopsNewAIAtZero(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !r.Pending || len(w.e.jobs) != 1 || r.HostMS != 0 || r.Role.HostingSeconds != 1 || r.PendingFingerprint != persistence.Hash(raw) {
+	if !r.Pending || len(w.e.jobs) != 1 || r.hostRemainder != 0 || r.Role.HostingSeconds != 1 || r.PendingFingerprint != persistence.Hash(raw) {
 		t.Fatal("满包未进入原扣秒事务，或提交前先减余额")
 	}
 	// retry 接收任务或职业编号集合通道送来的重试。
@@ -208,7 +208,7 @@ func TestFullBagDoesNotBypassOwnerAndLifeSafetyGates(t *testing.T) {
 			r.AwaitUntil = now.Add(time.Minute)
 			r.LastTick = now.Add(-100 * time.Millisecond)
 			w.step(r, now)
-			if r.Player.AttackSequence != 0 || len(r.Attacks) != 0 || len(r.Casts) != 0 || len(w.e.jobs) != 0 || r.HostMS != 0 || r.Role.SourceSeq != 4 {
+			if r.Player.AttackSequence != 0 || len(r.Attacks) != 0 || len(r.Casts) != 0 || len(w.e.jobs) != 0 || r.hostRemainder != 0 || r.Role.SourceSeq != 4 {
 				t.Fatal("容量修复绕过了原安全屏障", reason)
 			}
 			if reason == "dead" && r.Player.HP != 0 || reason == "pending" && !r.Pending {

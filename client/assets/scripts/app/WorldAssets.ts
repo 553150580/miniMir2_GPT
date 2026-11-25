@@ -247,8 +247,11 @@ export class WorldAssets {
             profileIds.add(player.profile);
             // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
             if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
+            const challengeMonsterIds = new Set<number>((result.gameplay.challenge_maps ?? [])
+                .flatMap((entry: WorldMapEntry) => entry.monster_definition_ids ?? []));
             const monstersForMap = () => selected.monster_definition_ids === undefined
-                ? result.gameplay.monster_profiles.filter((row: any) => !String(row.profile).startsWith('monster_m1_'))
+                ? result.gameplay.monster_profiles.filter((row: any) => !String(row.profile).startsWith('monster_m1_')
+                    && (result.sceneKind >= 3 || !challengeMonsterIds.has(row.definition_id)))
                 : result.gameplay.monster_profiles.filter((row: any) => selected.monster_definition_ids!.includes(row.definition_id));
             // 本机原版资源仅随拥有对应怪物的普通图和首领图加载。
             if (monstersForMap().some((row: any) => String(row.profile).startsWith('monster_m1_'))

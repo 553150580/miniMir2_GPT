@@ -68,33 +68,79 @@ func (f *Fixture) validatePersonalBossRelease() error {
 		seen[monster.ID] = true
 	}
 	def := f.PersonalBossRelease
-	if def == nil {
+	if def == nil && len(f.PersonalBossVariantReleases) == 0 {
 		return nil
 	}
 	f.PersonalBoss = nil
-	if !def.Enabled {
+	f.PersonalBossVariants = nil
+	if def == nil || !def.Enabled {
+		if len(f.PersonalBossVariantReleases) > 0 {
+			return errors.New("个人首领选项需要启用的主目录")
+		}
 		return nil
 	}
-	monster, found := f.ChallengeMonster(def.MonsterID)
-	maxMS := int64(24 * time.Hour / time.Millisecond)
-	if !found || def.DurationMS <= 0 || def.DurationMS > maxMS || def.SuccessCooldownMS <= 0 || def.SuccessCooldownMS > maxMS ||
-		def.RetryCooldownMS <= 0 || def.RetryCooldownMS > maxMS || strings.TrimSpace(def.DisplayName) == "" || def.MinimumLevel == 0 {
-		return errors.New("个人首领开发候选缺少有效的模板、资格或时限")
+	primary, err := f.parsePersonalBossDefinition(*def)
+	if err != nil {
+		return err
 	}
-	f.PersonalBoss = &PersonalBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, Map: def.Map, Monster: monster,
-		MinimumLevel: def.MinimumLevel, Duration: time.Duration(def.DurationMS) * time.Millisecond,
-		SuccessCooldown: time.Duration(def.SuccessCooldownMS) * time.Millisecond, RetryCooldown: time.Duration(def.RetryCooldownMS) * time.Millisecond,
-		DailySuccessLimit: def.DailySuccessLimit, PrivilegeSuccessBonus: def.PrivilegeSuccessBonus, HistoryLimit: def.HistoryLimit,
-		KillRewardGold: def.KillRewardGold, ItemReward: def.ItemReward}
-	if !f.ValidPersonalBoss() {
-		return errors.New("个人首领开发候选的地图或角色次数规则不合法")
+	f.PersonalBoss = &primary
+	templates := map[uint32]bool{primary.TemplateID: true}
+	maps := map[uint64]bool{primary.Map.ID: true}
+	for _, definition := range f.PersonalBossVariantReleases {
+		candidate, err := f.parsePersonalBossDefinition(definition)
+		if err != nil {
+			return err
+		}
+		if templates[candidate.TemplateID] || maps[candidate.Map.ID] || candidate.DailySuccessLimit != primary.DailySuccessLimit ||
+			candidate.PrivilegeSuccessBonus != primary.PrivilegeSuccessBonus || candidate.HistoryLimit != primary.HistoryLimit {
+			return errors.New("个人首领身份重复或同角色次数与历史规则不一致")
+		}
+		templates[candidate.TemplateID], maps[candidate.Map.ID] = true, true
+		f.PersonalBossVariants = append(f.PersonalBossVariants, candidate)
 	}
 	return nil
 }
 
+// parsePersonalBossDefinition 解析和校验单个有明确来源的个人首领。
+func (f *Fixture) parsePersonalBossDefinition(def PersonalBossDefinition) (PersonalBossConfig, error) {
+	monster, found := f.ChallengeMonster(def.MonsterID)
+	maxMS := int64(24 * time.Hour / time.Millisecond)
+	if !def.Enabled || !found || def.DurationMS <= 0 || def.DurationMS > maxMS || def.SuccessCooldownMS <= 0 || def.SuccessCooldownMS > maxMS ||
+		def.RetryCooldownMS <= 0 || def.RetryCooldownMS > maxMS || strings.TrimSpace(def.DisplayName) == "" || def.MinimumLevel == 0 {
+		return PersonalBossConfig{}, errors.New("个人首领开发候选缺少有效的模板、资格或时限")
+	}
+	candidate := PersonalBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, Map: def.Map, Monster: monster,
+		MinimumLevel: def.MinimumLevel, Duration: time.Duration(def.DurationMS) * time.Millisecond,
+		SuccessCooldown: time.Duration(def.SuccessCooldownMS) * time.Millisecond, RetryCooldown: time.Duration(def.RetryCooldownMS) * time.Millisecond,
+		DailySuccessLimit: def.DailySuccessLimit, PrivilegeSuccessBonus: def.PrivilegeSuccessBonus, HistoryLimit: def.HistoryLimit,
+		KillRewardGold: def.KillRewardGold, ItemReward: def.ItemReward}
+	if !f.validPersonalBoss(&candidate) {
+		return PersonalBossConfig{}, errors.New("个人首领开发候选的地图或角色次数规则不合法")
+	}
+	return candidate, nil
+}
+
 // ValidPersonalBoss 检查独立地图、出生点、时限和核心战斗属性是否可运行。
 func (f *Fixture) ValidPersonalBoss() bool {
-	cfg := f.PersonalBoss
+	return f.validPersonalBoss(f.PersonalBoss)
+}
+
+// PersonalBossByTemplate 返回按唯一模板定位、且已经通过独立地图验证的首领。
+func (f *Fixture) PersonalBossByTemplate(id uint32) *PersonalBossConfig {
+	if f.PersonalBoss != nil && f.PersonalBoss.TemplateID == id && f.ValidPersonalBoss() {
+		return f.PersonalBoss
+	}
+	for i := range f.PersonalBossVariants {
+		entry := &f.PersonalBossVariants[i]
+		if entry.TemplateID == id {
+			return entry
+		}
+	}
+	return nil
+}
+
+// validPersonalBoss 校验单个模板的独立地图与当前角色共用约束。
+func (f *Fixture) validPersonalBoss(cfg *PersonalBossConfig) bool {
 	if cfg == nil || cfg.TemplateID == 0 || cfg.Map.ID == 0 || cfg.Map.ID > math.MaxInt64 || cfg.Map.SceneKind != SceneKindPersonalBoss ||
 		cfg.Map.CellBudget() <= 0 || cfg.Map.Width > maxPersonalGridSide || cfg.Map.Height > maxPersonalGridSide || len(cfg.Map.MonsterSpawns) != 1 ||
 		cfg.Map.MonsterSpawns[0] == cfg.Map.PlayerSpawn || !cfg.Map.Walkable(cfg.Map.PlayerSpawn) || !cfg.Map.Walkable(cfg.Map.MonsterSpawns[0]) ||

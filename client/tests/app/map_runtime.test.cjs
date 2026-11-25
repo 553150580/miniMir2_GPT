@@ -15,12 +15,12 @@ class Label{}class ProgressBar{}class Color{constructor(r,g,b,a){Object.assign(t
 class Graphics{constructor(){this.operations=[];}clear(){this.operations=[];}moveTo(x,y){this.operations.push(['move',x,y]);}lineTo(x,y){this.operations.push(['line',x,y]);}close(){this.operations.push(['close']);}fill(){this.operations.push(['fill',this.fillColor]);}stroke(){this.operations.push(['stroke',this.strokeColor]);}}
 class Node{
     static EventType={SIZE_CHANGED:'size',TOUCH_END:'touch'};
-    constructor(name){this.name=name;this.children=[];this.parts=new Map();this.position=new Vec3();this.scale=new Vec3(1,1,1);this.active=true;this.add(UITransform,new UITransform());}
+    constructor(name){this.name=name;this.children=[];this.parts=new Map();this.listeners=new Map();this.position=new Vec3();this.scale=new Vec3(1,1,1);this.active=true;this.add(UITransform,new UITransform());}
     add(type,value){value.node=this;this.parts.set(type,value);return value;}getComponent(type){return this.parts.get(type);}
     set parent(value){if(this._parent)this._parent.children=this._parent.children.filter(n=>n!==this);this._parent=value;if(value)value.children.push(this);}get parent(){return this._parent;}
     getChildByName(name){return this.children.find(n=>n.name===name);}getChildByPath(path){return path.split('/').reduce((n,key)=>n?.getChildByName(key),this);}
     setPosition(x,y,z=0){this.position=typeof x==='object'?new Vec3(x.x,x.y,x.z):new Vec3(x,y,z);}setSiblingIndex(i){const a=this.parent.children;a.splice(a.indexOf(this),1);a.splice(i,0,this);}getSiblingIndex(){return this.parent.children.indexOf(this);}
-    on(){}off(){}destroy(){this.destroyed=true;}
+    on(type,callback){this.listeners.set(type,callback);}off(type){this.listeners.delete(type);}destroy(){this.destroyed=true;}
 }
 const geometry={width:17,height:17,tile_width:64,tile_height:32,soil_thickness_px:48,projection:'isometric_diamond'},projection=new GridProjection(geometry);
 const cc={Node,UITransform,Sprite,Label,ProgressBar,Graphics,Color,Vec3,isValid:()=>true,game:{totalTime:100}};
@@ -77,11 +77,19 @@ test('真实世界渲染将直立物件与角色统一排序，身体武器及�
         {id:'brazier',x:8,y:9,display_x:8,display_y:9,group_id:'brazier_group',part_index:0,frame:'Objects:1',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
         {id:'sign',x:9,y:9,display_x:9,display_y:9,group_id:'sign_group',part_index:0,frame:'Objects:2',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
     ]},gameplay:{monster_profiles:[{definition_id:1,name:'稻草人'}]},frames,prefab:'entity',propPrefab:'prop',profile:()=>profile};
-    const view=new GameWorldView(viewport,world,entities,'角色',0,'1',1);view.prepare(assets,()=>{});
+    const selected=[];
+    const view=new GameWorldView(viewport,world,entities,'角色',0,'1',1);view.prepare(assets,value=>selected.push(value.entityHandle));
     const hp={isZero:()=>false,lessThan:()=>false,toString:()=> '100'};
     const state=(handle,kind,x,y)=>({entityHandle:handle,entityKind:kind,definitionId:kind===3?1:0,position:{x,y},direction:0,moveIntervalMs:1000,hp,hpMax:hp,life:'0',action:0,attackSequence:0,castSequence:0});
     view.apply({entities:[state(1,1,8,8),state(3,3,7,7)]});view.update(0,0,true);
     const player=view.visuals.get(1);assert.match(player.body[0].spriteFrame.key,/standing:1:/);assert.match(player.body[1].spriteFrame.key,/standing:1:/);
+    const monster=view.visuals.get(3),tap={propagationStopped:false};
+    assert.equal(player.node.listeners.has('touch'),false);
+    assert.equal(monster.node.listeners.has('touch'),false);
+    monster.body[0].node.listeners.get('touch')(tap);
+    assert.equal(player.node.getChildByName('Name').listeners.has('touch'),false);
+    player.body[0].node.listeners.get('touch')(tap);
+    assert.deepEqual(selected,[3,1]);assert.equal(tap.propagationStopped,true);
     assert.equal(entities.children[0],view.visuals.get(3).node);assert.equal(entities.children[1],player.node);assert.equal(entities.children[2].name,'brazier');assert.equal(entities.children[3].name,'sign');
     assert.equal(entities.children[2].position.y,8);assert.equal(entities.children[3].position.y,-8);assert.equal(player.node.position.y,24);
     const labelY=player.node.getChildByName('Name').position.y,hpY=player.node.getChildByName('HP').position.y;

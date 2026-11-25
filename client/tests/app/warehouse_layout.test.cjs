@@ -15,6 +15,9 @@ test('仓库只追加保存子树与Functions入口；原1191对象只父childre
  const reconnect=beforeDirectory[2]._children.filter(ref=>ref.__id__>=1373);
  assert.deepEqual(reconnect.map(ref=>scene[ref.__id__]._name),['ReconnectDialog']);
  beforeDirectory[2]._children=beforeDirectory[2]._children.filter(ref=>ref.__id__<1373);
+ const overlays=beforeDirectory[450]._children.filter(ref=>scene[ref.__id__]._name==='ItemActions');
+ assert.equal(overlays.length,1);
+ beforeDirectory[450]._children=beforeDirectory[450]._children.filter(ref=>scene[ref.__id__]._name!=='ItemActions');
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(beforeDirectory)).digest('hex'),'4914af7ce27923adca7039cdb36663ab4ffef85e7fd2915c009b9927a772f462');
  const projected=beforeDirectory.slice(0,1191);
  require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projected);

@@ -2,6 +2,8 @@ import { Button, isValid, Label, Node } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
 import { traceInput } from './InputTrace';
+import type { GameItemActions, ItemActionView } from './GameItemActions';
+import { shopItemApplies } from './NpcShopCatalog';
 import { adjustPurchaseQuantity, assetId, assetInteger, canRecycleBook, captureSkillAssetContext, materialSelectionMatches,
     ShopOffer, PreparedSkillAsset, SkillAssetItem, SkillAssetQuote, SkillAssetsSnapshot, SkillMaterialSelection, SkillUpgradeRule,
     skillQuoteLines, sourceName, upgradeRequirements, yuanbaoText } from './SkillAssetsModel';
@@ -27,7 +29,8 @@ export class GameSkillAssets {
     private busy = false;
     private resetListOffset = true;
 
-    constructor(safe: Node, private readonly popup: PopupView, private readonly report: (error: unknown) => void) {
+    constructor(safe: Node, private readonly popup: PopupView, private readonly report: (error: unknown) => void,
+        private readonly itemActions?: GameItemActions, private readonly purchase?: () => Promise<void>) {
         const panel = safe.getChildByPath('UIMgr/Panels/SkillAssets');
         const quote = safe.getChildByPath('PopupView/Panels/SkillQuote/List')?.getComponent(List);
         if (!panel || !quote) throw new Error('技能资产与报价面板尚未保存');
@@ -62,10 +65,15 @@ export class GameSkillAssets {
             : input.definitions.find(row => row.item_id === item.itemId)?.kind === 'book'));
     }
     refresh(input: SkillAssetsSnapshot): void {
+        if (this.kind === 1 && input.job !== undefined) {
+            const job = input.job, definitions = new Map(input.definitions.map(row => [row.item_id, row]));
+            input = { ...input, offers: input.offers.filter(offer => shopItemApplies(definitions.get(offer.item_id), job)) };
+        }
         this.input = input;
         if (this.selections.reconcile(input.inventory?.items ?? [])) { this.notice = '原材料已变化，请重新选择'; this.key = ''; }
         const key = JSON.stringify({ kind: this.kind, skill: this.skillId, offer: this.offerId, purchase: this.purchaseQuantity.toString(), revision: input.inventory?.revision.toString(),
             wallet: input.wallet?.revision.toString(), ready: input.ready, busy: this.busy, notice: this.notice,
+            job: input.job, offers: this.kind === 1 ? input.offers.map(offer => offer.offer_id) : [],
             choices: this.items(input).map(item => [assetId(item.instanceId), this.selections.quantity(item).toString()]) });
         if (key === this.key) return; this.key = key;
         this.saved('OffersList').active = this.kind === 1; this.saved('MaterialsList').active = this.kind !== 1;
@@ -133,7 +141,35 @@ export class GameSkillAssets {
         node.getChildByName('Plus')!.getComponent(Button)!.interactable = eligible && !this.busy && count < assetInteger(item.quantity);
         node.getChildByName('Minus')!.getComponent(Button)!.interactable = !this.busy && count > 0n;
     }
-    private selectOffer(_index: number, offer: ShopOffer): void { if (this.busy) return; this.offerId = offer.offer_id; this.purchaseQuantity = 1n; this.key = ''; if (this.input) this.refresh(this.input); }
+    private selectOffer(_index: number, offer: ShopOffer): void {
+        const input = this.input;
+        if (this.busy || !input?.offers.some(row => row.offer_id === offer.offer_id)) return;
+        this.offerId = offer.offer_id;
+        this.purchaseQuantity = 1n;
+        this.key = '';
+        this.refresh(input);
+        const scope = [input.roleIdentity, input.sceneEpoch.toString(), input.ruleVersion.toString()].join('/');
+        if (this.purchase) this.itemActions?.open(() => this.purchaseDetails(scope, offer.offer_id));
+    }
+
+    private purchaseDetails(scope: string, offerId: number): ItemActionView | null {
+        const input = this.input, offer = input?.offers.find(row => row.offer_id === offerId);
+        if (!input || !offer || this.kind !== 1 || this.offerId !== offerId || !this.panel.activeInHierarchy
+            || [input.roleIdentity, input.sceneEpoch.toString(), input.ruleVersion.toString()].join('/') !== scope) return null;
+        const price = offer.currency_kind === 'gold' ? `${offer.price_units}金币`
+            : `${yuanbaoText(offer.price_units)}${offer.currency_kind === 'ingot' ? '元宝' : '绑定元宝'}`;
+        const reason = !input.ready || !input.inventory || !input.wallet || input.inventory.revision.toString() !== input.wallet.revision.toString()
+            ? '正在同步角色资产，请稍候'
+            : input.inventory.level < offer.required_role_level ? `${offer.required_role_level}级可购买` : '';
+        return {
+            title: offer.name,
+            lines: [`每份 ${offer.quantity}件 · ${price}`, offer.output_bound ? '购买后绑定' : '购买后不绑定', ...[reason].filter(Boolean)],
+            actions: [{ label: '购买', enabled: !this.busy && !reason, run: this.purchase! }],
+            quantity: { value: this.purchaseQuantity.toString(),
+                minus: !this.busy && this.purchaseQuantity > 1n ? () => this.adjustPurchase(-1) : undefined,
+                plus: !this.busy && this.purchaseQuantity < BigInt(offer.max_purchase_quantity) ? () => this.adjustPurchase(1) : undefined },
+        };
+    }
     private itemDetails(_index: number, item: SkillAssetItem): void {
         if (this.busy) return;
         this.popup.show('Details', { title: this.input?.definitions.find(row => row.item_id === item.itemId)?.name ?? '材料详情',

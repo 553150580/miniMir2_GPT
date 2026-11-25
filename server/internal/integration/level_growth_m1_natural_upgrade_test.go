@@ -234,6 +234,12 @@ func naturalUpgradeIncome(t *testing.T, ctx context.Context, store *persistence.
 	if proof := bookReceipt.Settlement; proof == nil || proof.MapID != mapID || proof.Kills != 1 || !proof.GrantedItem || !drop.Bound {
 		t.Fatal("拆书前真实掉落缺少原野外收益的入包回执")
 	}
+	return naturalOrdinaryKillIncome(t, ctx, store, role)
+}
+
+// naturalOrdinaryKillIncome 仅统计真实击杀账本的直接金币及同次掉落兑现的自动回收金币。
+func naturalOrdinaryKillIncome(t *testing.T, ctx context.Context, store *persistence.Store, role domain.Role) (int64, int64) {
+	t.Helper()
 	cursor, err := store.DB.Collection("audit_outbox").Find(ctx, bson.M{"role_id": role.ID, "kind": "settlement", "kills": 1})
 	must(t, err)
 	var rows []struct {

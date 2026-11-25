@@ -26,12 +26,19 @@ export class ServerDirectory {
 
     private renderRegion = (node: Node, value: unknown): void => {
         const region = value as ServerRegion;
-        node.getChildByName('Text')!.getComponent(Label)!.string = `${this.selected === region ? '● ' : ''}${region.name}`;
+        const selected = this.selected === region, marker = node.getChildByName('Selected');
+        if (marker) marker.active = selected;
+        node.getChildByName('Text')!.getComponent(Label)!.string = `${selected ? '● ' : ''}${region.name}`;
     };
 
     private renderServer = (node: Node, value: unknown): void => {
         const server = value as OriginServer;
-        node.getChildByName('Text')!.getComponent(Label)!.string = `${server.name}${server.available ? '' : '（暂不可用）'}`;
+        const online = node.getChildByName('Online'), unavailable = node.getChildByName('Unavailable');
+        if (online && unavailable) {
+            online.active = server.available;
+            unavailable.active = !server.available;
+        }
+        node.getChildByName('Text')!.getComponent(Label)!.string = `${server.name}${!server.available && !unavailable ? '（暂不可用）' : ''}`;
         node.getComponent(Button)!.interactable = server.available;
     };
 

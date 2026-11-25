@@ -38,27 +38,28 @@ type pendingAttack struct {
 
 // killFact 在怪物死亡当下保存来源归属和掉落候选，随后按原内容持久化。
 type killFact struct {
-	World               worldRef              // 击杀实际发生的原世界。
-	Order               uint64                // 在房间内协调击杀和绑定事实的受理顺序。
-	DropPoint           devconfig.Point       // 战利品在原世界显示的逻辑坐标。
-	ID                  string                // 应用或核对该击杀事实时使用的唯一编号。
-	Target              actorRef              // 死亡怪物的世界、句柄和生命代次。
-	Caster              actorRef              // 击杀者的世界、句柄和生命代次。
-	Monster             devconfig.Monster     // 击杀时冻结的怪物数值，供经验和掉落结算。
-	MapID               uint64                // 实际发生击杀的地图配置号，后续换图不改归属。
-	At                  time.Time             // 事件实际到期时刻，决定收益归属与绑定。
-	Bound               bool                  // 击杀时已经确定的资产绑定属性。
-	HostSession         string                // 应该累加战报的原托管会话。
-	StopReason          uint32                // 托管停止原因，非零时只结算停止状态。
-	Roll                int64                 // 击杀时抽取的一个百万分位随机值。
-	EquipmentID, ItemID uint32                // 预先抽中的装备与普通物品候选编号。
-	EquipmentDowngrades []frozenEquipmentDrop // 同池同阶段的降档装备，品质从高到低排列。
-	ItemQuantity        int64                 // 按普通道具条目的范围在击杀时已确定的堆叠数量。
-	Gold                int64                 // 已经抽好的本次金币数量。
-	InstanceID          string                // 若生成物品时使用的唯一资产编号。
-	Prepared            bool                  // 首部事实已经转换为来源事务，防止再次准备。
-	PetTraining         *petTrainingCredit    // 为原代宠物冻结的训练资格。
-	ProgressionActor    actorRef              // 原世界中允许接收升级恢复效果的角色出生身份。
+	World               worldRef                      // 击杀实际发生的原世界。
+	Order               uint64                        // 在房间内协调击杀和绑定事实的受理顺序。
+	DropPoint           devconfig.Point               // 战利品在原世界显示的逻辑坐标。
+	ID                  string                        // 应用或核对该击杀事实时使用的唯一编号。
+	Target              actorRef                      // 死亡怪物的世界、句柄和生命代次。
+	Caster              actorRef                      // 击杀者的世界、句柄和生命代次。
+	Monster             devconfig.Monster             // 击杀时冻结的怪物数值，供经验和掉落结算。
+	MapID               uint64                        // 实际发生击杀的地图配置号，后续换图不改归属。
+	At                  time.Time                     // 事件实际到期时刻，决定收益归属与绑定。
+	Bound               bool                          // 击杀时已经确定的资产绑定属性。
+	HostSession         string                        // 应该累加战报的原托管会话。
+	StopReason          uint32                        // 托管停止原因，非零时只结算停止状态。
+	Roll                int64                         // 击杀时抽取的一个百万分位随机值。
+	EquipmentID, ItemID uint32                        // 预先抽中的装备与普通物品候选编号。
+	EquipmentDowngrades []frozenEquipmentDrop         // 同池同阶段的降档装备，品质从高到低排列。
+	ItemQuantity        int64                         // 按普通道具条目的范围在击杀时已确定的堆叠数量。
+	Gold                int64                         // 已经抽好的本次金币数量。
+	HostingKillBonus    *persistence.HostingKillBonus // 原击杀有效的托管卡加成，金币部分须由原分类选用。
+	InstanceID          string                        // 若生成物品时使用的唯一资产编号。
+	Prepared            bool                          // 首部事实已经转换为来源事务，防止再次准备。
+	PetTraining         *petTrainingCredit            // 为原代宠物冻结的训练资格。
+	ProgressionActor    actorRef                      // 原世界中允许接收升级恢复效果的角色出生身份。
 }
 
 // sourceTimeline 判断当前规则是否启用来源公式和统一动作时钟。
@@ -469,6 +470,18 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 	}
 	fact.PetTraining = w.capturePetTraining(r, fact.ID)
 	fact.Gold = m.Monster.GoldMin + w.draw(m.Monster.GoldMax-m.Monster.GoldMin+1)
+	// 只为原普通怪击杀冻结卡收益；原场景和事件时间在离线和在线都相同。
+	fixture := &w.e.Store.Cfg.Fixture
+	if fixture.HostingBenefits != nil && r.Role.HostingCardUntil.After(at) {
+		if mapTemplate, ordinary := fixture.MapByID(fact.MapID); ordinary && mapTemplate.SceneKindValue() == devconfig.SceneKindPersonal {
+			bonus, err := persistence.NewHostingKillBonus(r.Role.HostingCardUntil, fact.Monster.Exp, fact.Gold, fixture.HostingBenefits)
+			if err != nil {
+				w.isolateRoom(r)
+				return
+			}
+			fact.HostingKillBonus = bonus
+		}
+	}
 	r.KillFacts = append(r.KillFacts, fact)
 }
 
@@ -574,6 +587,16 @@ func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {
 		} else if fact.Roll >= goldEnd {
 			itemID = fact.ItemID
 			quantity = max(1, fact.ItemQuantity)
+		}
+		if fact.HostingKillBonus != nil {
+			// bonus 保留原击杀快照；没有抽中直接金币的分支只应用经验加成。
+			bonus := *fact.HostingKillBonus
+			if q.Gold == 0 {
+				bonus.BaseDirectGold, bonus.BonusDirectGold = 0, 0
+			}
+			q.Experience += bonus.BonusExperience
+			q.Gold += bonus.BonusDirectGold
+			q.HostingKillBonus = &bonus
 		}
 		if itemID != 0 {
 			// definition 是掉落物品的配置定义，提供本次资产的品质。

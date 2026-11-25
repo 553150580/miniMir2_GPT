@@ -996,6 +996,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.2/7.4"
+    },
+    {
+      "value": 40031,
+      "name": "MsgC2SSetSkillSlots",
+      "proto_message": "SetSkillSlotsRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-11-25 用户指定每角色四个技能槽与攻击释放队列"
     }
   ],
   "error_codes": [

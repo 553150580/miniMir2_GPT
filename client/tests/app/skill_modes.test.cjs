@@ -36,7 +36,11 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     const labels=new Map(),buttons=new Map(),nodes=new Map(),toggle={isChecked:false,setIsCheckedWithoutNotify(value){this.isChecked=value;}},texts=[],list={node:{on(){},off(){}},setItems(rows,render){
         texts.length=0;for(const row of rows){const label={string:''};render({getChildByName:name=>name==='Text'?{getComponent:()=>label}:{active:false}},row);texts.push(label.string);}
     }};
-    const panel={getChildByName:()=>({getComponent:()=>list}),getChildByPath(name){if(!nodes.has(name))nodes.set(name,{active:true,getComponent(type){if(type===Toggle)return toggle;const values=type===Label?labels:buttons;if(!values.has(name))values.set(name,{});return values.get(name);}});return nodes.get(name);}};
+    const panel={getChildByName(name){return name==='List'?{getComponent:()=>list}:this.getChildByPath(name);},getChildByPath(name){
+        if(!nodes.has(name))nodes.set(name,{active:true,getChildByName:child=>this.getChildByPath(name+'/'+child),getComponent(type){
+            if(type===Toggle)return toggle;const values=type===Label?labels:buttons;if(!values.has(name))values.set(name,{});return values.get(name);
+        }});return nodes.get(name);
+    }};
     const opened=[];
     const controller=new module.exports.GameSkills({getChildByPath:()=>panel},{show:(...args)=>opened.push(args)}),modes=state();
     const input={ready:true,job:0,sceneEpoch:modes.sceneEpoch,modes,modesReceivedAt:Date.now(),definitions:[definition({id:7,name:'攻杀剑术',kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),definition(),definition({id:26,name:'烈火剑法',kind:'flaming_sword',activation_kind:'charge',target_kind:'attack_charge'})],inventory:{level:40,items:[],learnedSkills:[{skillId:7,level:0},{skillId:12,level:0},{skillId:26,level:0}]}};
@@ -52,6 +56,7 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     controller.refresh(input,12,12);assert.equal(labels.get('BindQuick/Label').string,'当前手动快捷');
     assert.equal(labels.get('Use/Label').string,'关闭');assert.equal(buttons.get('Use').interactable,true);
     assert.equal(nodes.get('Use').active,false);assert.equal(nodes.get('ModeToggle').active,true);assert.equal(toggle.isChecked,true);assert.equal(toggle.interactable,true);assert.equal(labels.get('ModeToggle/Label').string,'已开启');
+    for(const sceneKind of [3,4]){controller.refresh({...input,sceneKind});assert.equal(toggle.interactable,true);assert.equal(labels.get('Use/Label').string,'关闭');}
     toggle.isChecked=false;controller.refresh(input);assert.equal(toggle.isChecked,true);
     controller.refresh({...input,modePending:{skillId:12,enabled:false}});assert.equal(toggle.interactable,false);assert.equal(labels.get('ModeToggle/Label').string,'正在关闭');
     controller.refresh({...input,modes:null});assert.equal(buttons.get('Use').interactable,false);assert.equal(toggle.interactable,false);

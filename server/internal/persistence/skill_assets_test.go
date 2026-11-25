@@ -288,6 +288,13 @@ func TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity(t *testing.T
 		copy := r
 		copy.Items = nil
 		copy.Wallet = domain.Wallet{}
+		definition, found := f.Item(offer.ItemID)
+		if !found {
+			t.Fatalf("书店商品 %d 缺少物品定义", offer.ID)
+		}
+		if len(definition.AllowedJobs) != 0 {
+			copy.Job = definition.AllowedJobs[0]
+		}
 		switch offer.Currency {
 		case "gold":
 			copy.Wallet.BoundGold = offer.PriceUnits - 1
@@ -324,6 +331,9 @@ func TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity(t *testing.T
 	}
 	// offer 保存从技能商店取出的尝试提交。
 	offer := f.SkillShop[0]
+	if definition, found := f.Item(offer.ItemID); found && len(definition.AllowedJobs) != 0 {
+		r.Job = definition.AllowedJobs[0]
+	}
 	f.SkillShop[0].MaxPurchaseQuantity = math.MaxInt64
 	// code 保存由构建技能计划取得的结果码。
 	if _, code := buildSkillPlan(r, &pb.SkillAssetPreviewRequest{Kind: 1, OfferId: offer.ID, Quantity: math.MaxInt64}, f); code != p.CodeSkillPurchaseBlocked {

@@ -14,6 +14,7 @@ import (
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
 	"os"
+	"slices"
 	"sync"
 	"testing"
 	"time"
@@ -494,6 +495,31 @@ func TestSkillAssetEconomyMongoWS(t *testing.T) {
 	// r 接收技能提交供后续步骤使用。
 	if r := c.skillCommit(original); r.ErrorCode != 0 {
 		t.Fatal("重连后的历史购买回执不可核对")
+	}
+	if cfg.Fixture.RuleVersion >= 29 {
+		// 用当前书店库存的一件跨职业技能书验证两个真实报价入口都不会收款。
+		otherJobOffer := devconfig.SkillShop{}
+		for _, candidate := range cfg.Fixture.SkillShop {
+			definition, ok := cfg.Fixture.Item(candidate.ItemID)
+			if ok && len(definition.AllowedJobs) != 0 && !slices.Contains(definition.AllowedJobs, skill.JobID) {
+				otherJobOffer = candidate
+				break
+			}
+		}
+		if otherJobOffer.ID == 0 {
+			t.Fatal("书店缺少用于验证的其他职业技能书")
+		}
+		walletBefore = stored().Wallet
+		bookRequest := &pb.SkillAssetPreviewRequest{Kind: 1, OfferId: otherJobOffer.ID, Quantity: 1}
+		travelExpectError(c, p.MsgC2SSkillAssetPreview, c.send(p.MsgC2SSkillAssetPreview, bookRequest), p.CodeSkillPurchaseBlocked)
+		town, npc, vendorOffer := naturalEquipmentVendor(t, &cfg.Fixture, otherJobOffer.ItemID)
+		reachTownVendor(c, town, npc)
+		vendorRequest := &pb.VendorQuoteRequest{SceneEpoch: c.entry.SceneEpoch, NpcId: npc.ID, Action: 1, OfferId: vendorOffer.ID, Quantity: 1}
+		travelExpectError(c, p.MsgC2SVendorQuote, c.send(p.MsgC2SVendorQuote, vendorRequest), p.CodeVendorItemBlocked)
+		if stored().Wallet != walletBefore {
+			t.Fatal("其他职业技能书被拒后仍变动钱包")
+		}
+		t.Log("独立真实WS确认技能面板书店与实体NPC均拒绝购买其他职业技能书，钱包未变动")
 	}
 	t.Log("通过：来源与绑定、三钱包明确购买、旧预览、永久原op防重、NPC反套利、掉落书分解、0→3逐阶2/3/4本与页精确消耗、满级/施法/重连")
 }

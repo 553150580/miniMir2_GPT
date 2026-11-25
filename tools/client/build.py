@@ -3,6 +3,8 @@ from pathlib import Path
 import hashlib,json,os,subprocess,sys,time
 
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools/resources'))
+from creator_json_meta import content_meta_bytes
 APP=Path(os.environ.get('MINIMIR_CREATOR_EXECUTABLE', '/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/MacOS/CocosCreator'))
 if not APP.is_file():raise SystemExit('未找到锁定Creator3.8.8，请通过统一工具入口设置本机安装路径')
 development=ROOT/'client/assets/resources/development'
@@ -10,6 +12,10 @@ if json.loads((development/'gameplay.json').read_text(encoding='utf-8'))['rule_v
     required=('original-monsters/actors.json','pets/shinsu/profile.json','town-npcs/manifest.json')
     missing=[name for name in required if not (development/name).is_file()]
     if missing:raise SystemExit('请先运行 tools/resources/prepare_classic_actor_art.py 导入原版素材：'+', '.join(missing))
+    for name in ('gameplay.json', 'original-monsters/actors.json'):
+        resource = development / name
+        if resource.with_suffix('.json.meta').read_bytes() != content_meta_bytes(f'development/{name}', resource.read_bytes()):
+            raise SystemExit(f'请重新导出 Creator 资源导入地址：{name}')
 subprocess.run([sys.executable, str(ROOT/'tools/resources/build_world_boss_atlas.py')], cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT/'tools/resources/build_map_travel_atlas.py')], cwd=ROOT, check=True)
 def snapshots():

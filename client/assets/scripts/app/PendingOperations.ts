@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -215,6 +215,13 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         // 待领奖包独立于背包物品和场景，跨连接重放保留同一个原奖包编号。
         const item = record(input.value, ['rewardId', 'operation']);
         payload = { rewardId: bytes16(item.rewardId, stored), operation: operation(item.operation, stored) };
+    } else if (id === 40031) {
+        const item = record(input.value, ['skillSlotIds', 'operation']);
+        if (!Array.isArray(item.skillSlotIds) || item.skillSlotIds.length !== 4) return invalid('原技能槽数量无效');
+        const skillSlotIds = item.skillSlotIds.map(uint32);
+        const assigned = skillSlotIds.filter(id => id !== 0);
+        if (new Set(assigned).size !== assigned.length) return invalid('原技能槽有重复技能');
+        payload = { skillSlotIds, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

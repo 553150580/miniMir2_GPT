@@ -218,6 +218,10 @@ func buildSkillPlan(r domain.Role, q *pb.SkillAssetPreviewRequest, f devconfig.F
 		if !ok || q.Quantity <= 0 || q.Quantity > offer.MaxPurchaseQuantity || r.Level < offer.RequiredRoleLevel || len(q.Materials) > 0 || q.SkillId != 0 {
 			return plan, p.CodeSkillPurchaseBlocked
 		}
+		definition, known := f.Item(offer.ItemID)
+		if !known || (len(definition.AllowedJobs) != 0 && !slices.Contains(definition.AllowedJobs, r.Job)) {
+			return plan, p.CodeSkillPurchaseBlocked
+		}
 		// quantity 保存由相乘取得的数量，valid 保存由相乘取得的有效。
 		quantity, valid := multiply(offer.Quantity, q.Quantity)
 		if !valid {

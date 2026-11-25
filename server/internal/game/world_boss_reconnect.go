@@ -69,6 +69,7 @@ func (a *worldBossArena) resumeSeat(enter worldBossEnter, seat *worldBossSeat, n
 	seat.observation = obs
 	child.Auth, child.Conn, child.Scene, child.Baseline = obs.auth, obs.conn, obs.scene, obs.baseline
 	child.Role.EconomicSeq, child.Role.Revision = enter.role.EconomicSeq, enter.role.Revision
+	child.Role.HostingSeconds = enter.role.HostingSeconds
 	child.Ready, child.InputSequence, child.Sequence = false, 0, 0
 	child.AwaitUntil = minBossTime(now.Add(10*time.Second), a.occurrence.closesAt)
 	child.LastTick, child.LastBroadcast = now, now

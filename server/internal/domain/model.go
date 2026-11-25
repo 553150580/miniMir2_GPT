@@ -161,6 +161,7 @@ type Role struct {
 	HostingCardUntil             time.Time         `bson:"hosting_card_until" json:"-"`                                                    // 角色托管卡权益的到期时刻。
 	Report                       Report            `bson:"hosting_report" json:"hosting_report"`                                           // 最近一段已确认的离线托管战报。
 	Skills                       []LearnedSkill    `bson:"learned_skills" json:"learned_skills"`                                           // 已学习技能及其当前等级。
+	SkillSlotIDs                 []uint32          `bson:"skill_slot_ids,omitempty" json:"-"`                                              // 四个持久技能槽，零为空，缺省保留旧角色默认规则。
 	Binding                      *RoleBinding      `bson:"binding,omitempty" json:"binding,omitempty"`                                     // 已持久确认的安全点，不随当前位置更新。
 	BindingSourceSeq             int64             `bson:"binding_source_seq,omitempty" json:"-"`                                          // 最后一次确认绑定的服务端来源序号。
 	BindingSafeZoneID            uint64            `bson:"-" json:"-"`                                                                     // 读取时核对出的可信安全区号，由配置推导。
@@ -207,6 +208,7 @@ func (r Role) Summary() *pb.RoleSummary {
 func (r Role) Inventory(progression ...*pb.ProgressionState) *pb.InventoryResult {
 	// p 保存当前处理所用的背包资产结果。
 	p := &pb.InventoryResult{Capacity: uint32(r.Capacity), Revision: uint64(r.Revision), Level: r.Level, Experience: r.Experience, AutoRecycle: r.AutoRecycle.Proto()}
+	p.SkillSlotIds = append([]uint32(nil), r.SkillSlotIDs...)
 	if len(progression) > 0 {
 		p.Progression = progression[0]
 	}

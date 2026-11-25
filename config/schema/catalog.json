@@ -14811,6 +14811,14 @@
               "maximum": 4294967295
             }
           },
+          "world_boss_slot_templates": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
           "map_id": {
             "type": "int",
             "minimum": 0
@@ -14946,11 +14954,26 @@
           "recycle_test_gold_by_item": {
             "type": "object",
             "properties": {
-              "195": {"type": "int", "minimum": 0},
-              "220": {"type": "int", "minimum": 0},
-              "223": {"type": "int", "minimum": 0},
-              "225": {"type": "int", "minimum": 0},
-              "261": {"type": "int", "minimum": 0},
+              "195": {
+                "type": "int",
+                "minimum": 0
+              },
+              "220": {
+                "type": "int",
+                "minimum": 0
+              },
+              "223": {
+                "type": "int",
+                "minimum": 0
+              },
+              "225": {
+                "type": "int",
+                "minimum": 0
+              },
+              "261": {
+                "type": "int",
+                "minimum": 0
+              },
               "259": {
                 "type": "int",
                 "minimum": 0
@@ -26007,6 +26030,216 @@
         }
       },
       "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 80003,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；最终策划案.md:445-457"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 80004,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；最终策划案.md:445-457"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 80005,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；最终策划案.md:445-457"
+    },
+    {
+      "table_id": "game_boss_templates",
+      "id": 3,
+      "field": "participation_rule",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "development_enabled": {
+            "type": "boolean"
+          },
+          "duration_seconds": {
+            "type": "int",
+            "minimum": 1,
+            "maximum": 86400
+          }
+        }
+      },
+      "source_ref": "最终策划案.md:113、445-457、1350；开发首领候选"
+    },
+    {
+      "table_id": "game_boss_templates",
+      "id": 4,
+      "field": "participation_rule",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "development_enabled": {
+            "type": "boolean"
+          },
+          "duration_seconds": {
+            "type": "int",
+            "minimum": 1,
+            "maximum": 86400
+          }
+        }
+      },
+      "source_ref": "最终策划案.md:113、445-457、1350；开发首领候选"
+    },
+    {
+      "table_id": "game_boss_templates",
+      "id": 5,
+      "field": "participation_rule",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "development_enabled": {
+            "type": "boolean"
+          },
+          "participant_limit": {
+            "type": "int",
+            "minimum": 2,
+            "maximum": 288
+          }
+        }
+      },
+      "source_ref": "最终策划案.md:113、445-457、1350；开发首领候选"
     }
   ]
 }

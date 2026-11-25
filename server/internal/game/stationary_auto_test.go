@@ -54,7 +54,7 @@ func TestStationaryAutoWaitsAndCastsFromSameCellOnlineAndOffline(t *testing.T) {
 				r.Casts[0].Skill.ID != 1 || r.Casts[0].Target != monster.Handle || r.Player.MP >= mana {
 				t.Fatal("射程内合法目标未在原地完成自动施法")
 			}
-			if offline && (r.HostMS != 300 || r.Casts[0].HostSession != "stationary") {
+			if offline && (r.hostRemainder != 300*time.Millisecond || r.Casts[0].HostSession != "stationary") {
 				t.Fatal("定点托管未沿用权威权益计时与离线施法归属")
 			}
 		})

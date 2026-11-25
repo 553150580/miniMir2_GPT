@@ -169,7 +169,7 @@ func TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting(t *testing.T) {
 	beforeMonster := *r.Monsters[0]
 	w.applyPotionReceipt(r, potionReceipt(r, 12, 8, 10), now)
 	w.step(r, now)
-	if r.Player.HP != 14 || r.Player.MP != 9 || !reflect.DeepEqual(beforeRole, r.Role) || !reflect.DeepEqual(beforeMonster, *r.Monsters[0]) || r.HostMS != 0 {
+	if r.Player.HP != 14 || r.Player.MP != 9 || !reflect.DeepEqual(beforeRole, r.Role) || !reflect.DeepEqual(beforeMonster, *r.Monsters[0]) || r.hostRemainder != 0 {
 		t.Fatal("健康离线药效未推进，或越过无托管门槛运行了战斗/收益/扣时")
 	}
 	// clock 保存下一模拟帧时间，用于当前步骤中的时钟，delay 保存下一状态使用，用于当前步骤中的“delay”。

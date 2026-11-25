@@ -417,9 +417,13 @@ func travelToBaseline(c *client, destination uint32, mapID uint64) {
 
 // travelAcknowledge 处理地图切换确认。
 // c 记录客户端，assertTown 标记是否处于“assert”城镇状态。
-func travelAcknowledge(c *client, assertTown bool) {
+func travelAcknowledge(c *client, assertTown bool, challengeAuto ...bool) {
 	c.t.Helper()
-	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: c.entry.SceneEpoch, BaselineId: c.entry.BaselineId})
+	ack := &pb.EnterWorldAck{SceneEpoch: c.entry.SceneEpoch, BaselineId: c.entry.BaselineId}
+	if len(challengeAuto) > 0 {
+		ack.ChallengeAutoBattleEnabled = &challengeAuto[0]
+	}
+	c.send(p.MsgC2SEnterWorldAck, ack)
 	// f 接收地图切换有效截止时间“within”供后续步骤使用，f 记录协议帧。
 	f := travelUntilWithin(c, 3*time.Second, func(f wire.Frame) bool { return f.ID == p.MsgS2CSyncReady })
 	// ready 保存当前处理所用的就绪。

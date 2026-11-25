@@ -181,7 +181,7 @@ type room struct {
 	Waiting               []command                 // 在途操作结束后准备重放的有限命令队列。
 	LastTick              time.Time                 // 上次处理的服务器逻辑帧时刻，用于计算定步计量。
 	idleSince             time.Time                 // 首次满足释放条件的时刻，健康回收窗口从这里计起。
-	HostMS                int64                     // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
+	hostRemainder         time.Duration             // 健康房间累计的未满秒托管余量，跨连接、地图和生命保留。
 	hostSecondsOpen       int64                     // 当前会话已经运行、尚未绑定结算流水的整秒。
 	HostSession           string                    // 当前连续离线托管的会话编号。
 	DeathID               string                    // 当前死亡待选分支的唯一编号。
@@ -671,7 +671,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			return
 		}
 		// code 是当前朝向普攻的受理结果；非零时返回原请求错误。
-		if code := w.attackFacing(r, q.Direction, q.SkillId, q.InputSequence, time.Now()); code != 0 {
+		if code := w.attackFromConfiguredSlots(r, &q, time.Now()); code != 0 {
 			w.failure(r, c.frame, code)
 		}
 	case p.MsgC2SCastWithMaterial:
@@ -762,7 +762,7 @@ func (w *worker) roomCommand(r *room, c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -804,7 +804,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.PersonalWorld = r.currentWorld()
 	r.Role = role
 	// 故障后的新执行现场不恢复旧临时计量；健康重入不经过此初始化。
-	r.HostMS = 0
+	r.hostRemainder = 0
 	r.hostSecondsOpen = 0
 	r.Potions.LastAppliedSeq = role.EconomicSeq
 	r.Potions.LastSourceSeq = role.SourceSeq
@@ -919,15 +919,35 @@ func (w *worker) assets(r *room) {
 	if r.Conn == nil || !r.Ready {
 		return
 	}
-	// state 保存由成长状态取得的状态，err 接收成长状态过程中可能产生的错误，供后续失败分支处理。
-	state, err := persistence.ProgressionState(r.Role, w.e.Store.Cfg.Fixture)
+	view, err := snapshotRoleAssets(r.Role, w.e.Store.Cfg.Fixture)
 	if err != nil {
 		w.isolateRoom(r)
 		return
 	}
-	w.send(r, p.MsgS2CInventory, 0, r.Role.Inventory(state))
-	w.send(r, p.MsgS2CWallet, 0, r.Role.Wallet.Proto(r.Role.Revision))
+	w.sendRoleAssetView(r, view)
 	w.hosting(r, 0)
+}
+
+// roleAssetView 由角色 owner 生成，跨场次传递的协议视图不引用原角色的可变资产。
+type roleAssetView struct {
+	inventory *pb.InventoryResult // 已学技能、背包、穿戴及完整成长数据。
+	wallet    *pb.WalletState     // 同一角色修订的四种钱包余额。
+}
+
+func snapshotRoleAssets(role domain.Role, fixture devconfig.Fixture) (roleAssetView, error) {
+	state, err := persistence.ProgressionState(role, fixture)
+	if err != nil {
+		return roleAssetView{}, err
+	}
+	inventory := role.Inventory(state)
+	inventory.SkillSlotIds = attackSlotsForRole(role, fixture)
+	return roleAssetView{inventory: inventory, wallet: role.Wallet.Proto(role.Revision)}, nil
+}
+
+// sendRoleAssetView 不改变源场景的挂机和自动战斗设置。
+func (w *worker) sendRoleAssetView(r *room, view roleAssetView) {
+	w.send(r, p.MsgS2CInventory, 0, view.inventory)
+	w.send(r, p.MsgS2CWallet, 0, view.wallet)
 }
 
 // hosting 同步余额、自动战斗开关、资产修订号和自动技能偏好。
@@ -1038,6 +1058,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SSetSkillSlots:
+		var request pb.SetSkillSlotsRequest
+		if proto.Unmarshal(f.Payload, &request) != nil || len(request.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.SkillSlotIDs, q.Context = persistence.AssetSetSkillSlots, request.SkillSlotIds, request.Operation
 	case p.MsgC2SClaimChallengeReward:
 		var request pb.ClaimChallengeReward
 		if proto.Unmarshal(f.Payload, &request) != nil || len(request.RewardId) != 16 || len(request.ProtoReflect().GetUnknown()) != 0 {
@@ -1203,7 +1230,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots:
 		return true
 	}
 	return false
@@ -1215,6 +1242,11 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SSetSkillSlots:
+		q := &pb.SetSkillSlotsRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SClaimChallengeReward:
 		var request pb.ClaimChallengeReward
 		if proto.Unmarshal(f.Payload, &request) == nil {

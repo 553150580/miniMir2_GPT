@@ -83,6 +83,7 @@ const (
 	MsgS2CTaskCodexState uint16 = 40028
 	MsgC2STaskCodexClaim uint16 = 40029
 	MsgC2SClaimChallengeReward uint16 = 40030
+	MsgC2SSetSkillSlots uint16 = 40031
 )
 
 const (

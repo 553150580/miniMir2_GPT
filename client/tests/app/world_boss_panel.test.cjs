@@ -25,7 +25,7 @@ function fixture(t) {
     };
     const { GameBoss } = load('client/assets/scripts/app/GameBoss.ts', id => id === 'cc' ? {
         game, Game: { EVENT_HIDE: 'hide', EVENT_SHOW: 'show' },
-    } : {});
+    } : { newOperationId: () => new Uint8Array(16) });
     let now = 0, nextState = freshState(1, 3000, 12000), listener, answer, prepare, closed = 0;
     t.mock.method(performance, 'now', () => now);
     t.mock.timers.enable({ apis: ['setTimeout'] });
@@ -164,6 +164,46 @@ test('触屏入场先准备目录指定地图再重新查询，确认原场才�
     assert.equal(dispatched, 1);
     assert.equal(released, 0);
     assert.equal(f.closed, 1);
+});
+
+test('晚场轮到祖玛教主时显示并准备实际地图，沿晚场模板和场次入场', async t => {
+    const f = fixture(t);
+    const evening = { display_name: '祖玛教主', minimum_level: 20, map_id: '84', template_id: 5 };
+    f.current.worldBosses = [f.current.worldBoss, evening];
+    f.change({ ...freshState(3, 0, 15000), templateId: 5, occurrenceId: 'evening' });
+    await f.view.show(4);
+    assert.equal(f.rows.get('Headline').string, '祖玛教主');
+    assert.equal(f.rows.get('Action').interactable, false);
+    f.current.level = 20;
+    f.view.render();
+    f.prepare(async target => {
+        assert.deepEqual(target, { mapId: '84', templateId: 5, occurrenceId: 'evening' });
+        return { dispatch() {}, release() {} };
+    });
+    await f.view.action();
+    assert.deepEqual(f.requests.at(-1).payload, { sceneEpoch: epoch, templateId: 5, occurrenceId: 'evening' });
+});
+
+test('个人首领分页使用该模板的等级资格、冷却、历史和入场编号', async t => {
+    const f = fixture(t);
+    const choices = [
+        { templateId: 1, displayName: '林地守卫', minimumLevel: 1, canEnter: false, eligibilityReason: 4 },
+        { templateId: 3, displayName: '骷髅精灵', minimumLevel: 15, canEnter: true, eligibilityReason: 0 },
+        { templateId: 4, displayName: '白野猪', minimumLevel: 21, canEnter: false, eligibilityReason: 2 },
+    ];
+    f.respond(async () => ({ open: true, templates: choices, dailyLimit: 5, successes: 1, pendingRewards: [],
+        history: [{ templateId: 3, outcome: 1, damage: 500, finishedAtUnixMs: timestamp(0) }] }));
+    await f.view.show(3);
+    assert.equal(f.rows.get('Headline').string, '林地守卫');
+    assert.match(f.rows.get('Status').string, /冷却中/);
+    assert.equal(f.rows.get('Action').interactable, false);
+    f.view.turn(1);
+    assert.equal(f.rows.get('Headline').string, '骷髅精灵');
+    assert.match(f.rows.get('Results').string, /伤害 500/);
+    assert.equal(f.rows.get('Action').interactable, true);
+    await f.view.action();
+    assert.equal(f.requests.at(-1).id, 20012);
+    assert.equal(f.requests.at(-1).payload.templateId, 3);
 });
 
 for (const cause of ['关闭面板', '开场身份变化']) {

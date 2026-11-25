@@ -58,6 +58,30 @@ func TestVendorPurchaseSplitsPaymentAndPreservesBoundAssets(t *testing.T) {
 	}
 }
 
+// TestVendorOnlySellsCurrentJobOffers 测试职业门禁只作用于 NPC 的上架商品，玩家旧库存仍可卖给原商人。
+func TestVendorOnlySellsCurrentJobOffers(t *testing.T) {
+	fixture := &devconfig.Fixture{Items: []devconfig.Item{{ID: 19, AllowedJobs: []uint32{1}}, {ID: 35}}}
+	shop := &devconfig.NPCShop{Offers: []devconfig.SkillShop{
+		{ID: 1, ItemID: 19, Quantity: 1, PriceUnits: 10, Currency: "gold", MaxPurchaseQuantity: 1},
+		{ID: 2, ItemID: 35, Quantity: 1, PriceUnits: 10, Currency: "gold", MaxPurchaseQuantity: 1},
+	}, SellPrices: []devconfig.NPCSellPrice{{ItemID: 19, PriceGold: 1}}}
+	owned := domain.Item{ID: domain.ID(), ItemID: 19, Quantity: 1, Version: 2}
+	role := domain.Role{Job: 2, Level: 45, Capacity: 8, Items: []domain.Item{owned}, Wallet: domain.Wallet{Gold: 50}}
+	if _, code := buildVendorPlan(role, fixture, shop, &pb.VendorQuoteRequest{Action: vendorBuy, OfferId: 1, Quantity: 1}); code != p.CodeVendorItemBlocked {
+		t.Fatal("其它职业仍能购入专属物品", code)
+	}
+	if _, code := buildVendorPlan(role, fixture, shop, &pb.VendorQuoteRequest{Action: vendorBuy, OfferId: 2, Quantity: 1}); code != 0 {
+		t.Fatal("无职业限定的商品应可正常购买", code)
+	}
+	if _, code := buildVendorPlan(role, fixture, shop, &pb.VendorQuoteRequest{Action: vendorSell, InstanceId: domain.Bytes(owned.ID), ItemVersion: 2, Quantity: 1}); code != 0 {
+		t.Fatal("跨职业历史库存仍应可以按商人规则出售", code)
+	}
+	role.Job = 1
+	if _, code := buildVendorPlan(role, fixture, shop, &pb.VendorQuoteRequest{Action: vendorBuy, OfferId: 1, Quantity: 1}); code != 0 {
+		t.Fatal("本职业商品应可正常购买", code)
+	}
+}
+
 // TestVendorSaleUsesOriginalInstanceAndNeverLaundersBoundGold 核验过期、锁定、损坏或余额溢出应拒绝，用诊断「磨损折价或绑定入账错误」定位对应断言。
 // t 提供断言失败报告、子用例和清理注册。
 func TestVendorSaleUsesOriginalInstanceAndNeverLaundersBoundGold(t *testing.T) {

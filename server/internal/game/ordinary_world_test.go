@@ -54,6 +54,40 @@ func acceptOrdinaryTravel(t *testing.T, w *worker, r *room, now time.Time) {
 	r.Ready = true
 }
 
+// TestOrdinaryWorldTravelKeepsSelectedMonsterCount 验证直达和经过城镇均沿用原普通图选择。
+func TestOrdinaryWorldTravelKeepsSelectedMonsterCount(t *testing.T) {
+	w, r, otherMapID, now := ordinaryTravelFixture(t)
+	f := &w.e.Store.Cfg.Fixture
+	if !w.setVisibleMonsterCount(r, &f.Map, 8) {
+		t.Fatal("原普通图无法切换到八个活跃槽")
+	}
+	prepareOrdinaryTravel(w, r, 1, travelToPersonal, otherMapID, now)
+	confirmTravelAt(w, r, 1, r.Scene, false, now)
+	acceptOrdinaryTravel(t, w, r, now)
+	if r.MapID != otherMapID || r.MonsterCount != 8 {
+		t.Fatal("直达新普通图丢失已选择的八个槽")
+	}
+	other, ok := f.MapByID(otherMapID)
+	if !ok || !w.setVisibleMonsterCount(r, other, 4) {
+		t.Fatal("新普通图无法切换到四个活跃槽")
+	}
+	town := f.TownTravel.DestinationMapIDs[0]
+	now = now.Add(time.Second)
+	prepareOrdinaryTravel(w, r, 2, travelToTown, town, now)
+	confirmTravelAt(w, r, 2, r.Scene, false, now)
+	acceptOrdinaryTravel(t, w, r, now)
+	if r.MapID != town || r.MonsterCount != 0 || r.SavedPersonal.MonsterCount != 4 {
+		t.Fatal("进入城镇没有独立保留原普通图的四个槽")
+	}
+	now = now.Add(time.Second)
+	prepareOrdinaryTravel(w, r, 3, travelToPersonal, f.Map.ID, now)
+	confirmTravelAt(w, r, 3, r.Scene, false, now)
+	acceptOrdinaryTravel(t, w, r, now)
+	if r.MapID != f.Map.ID || r.MonsterCount != 4 {
+		t.Fatal("从城镇去另一张普通图丢失已选择的四个槽")
+	}
+}
+
 // TestOrdinaryWorldTravelKeepsSlotCooldownAndReleasesOldScene 验证多模板、旧收益屏障和单现场上限。
 func TestOrdinaryWorldTravelKeepsSlotCooldownAndReleasesOldScene(t *testing.T) {
 	w, r, targetID, now := ordinaryTravelFixture(t)

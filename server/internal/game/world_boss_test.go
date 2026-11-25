@@ -33,6 +33,31 @@ func TestWorldBossWindowShanghaiBoundaries(t *testing.T) {
 	}
 }
 
+// TestWorldBossRotationKeepsNoonIdentity 检验同服原午场编号和晚场新模板的唯一窗口。
+func TestWorldBossRotationKeepsNoonIdentity(t *testing.T) {
+	primary := devconfig.WorldBossConfig{TemplateID: 2, DailyOpenOffsets: []time.Duration{12 * time.Hour}, Window: time.Hour}
+	evening := devconfig.WorldBossConfig{TemplateID: 5, DailyOpenOffsets: []time.Duration{20 * time.Hour}, Window: time.Hour}
+	fixture := devconfig.Fixture{WorldBoss: &primary, WorldBossVariants: []devconfig.WorldBossConfig{evening}}
+	noon := time.Date(2026, 11, 25, 4, 0, 0, 0, time.UTC)
+	before, option, active := worldBossForFixture(&fixture, 1, noon.Add(-time.Millisecond))
+	legacy := primary
+	legacy.DailyOpenOffsets = []time.Duration{12 * time.Hour, 20 * time.Hour}
+	original, _ := worldBossWindow(&legacy, 1, noon)
+	if active || option.TemplateID != 2 || before.id != original.id || !before.opensAt.Equal(noon) {
+		t.Fatal("轮换破坏了原午场预告和场次编号", before, original)
+	}
+	night := noon.Add(8 * time.Hour)
+	waiting, option, active := worldBossForFixture(&fixture, 1, noon.Add(time.Hour))
+	if active || option.TemplateID != 5 || waiting.id == original.id || !waiting.opensAt.Equal(night) {
+		t.Fatal("午场结束后没有切为独立晚场预告", waiting)
+	}
+	opened, option, active := worldBossForFixture(&fixture, 1, night)
+	peer, _, _ := worldBossForFixture(&fixture, 2, night)
+	if !active || option.TemplateID != 5 || opened.id != waiting.id || opened.id == peer.id {
+		t.Fatal("晚场开放或运行服隔离身份错误", opened, peer)
+	}
+}
+
 // TestWorldBossSameTickUsesOneRemainingLife 验证两个原动作在同一逻辑时刻争用一个共享生命。
 func TestWorldBossSameTickUsesOneRemainingLife(t *testing.T) {
 	owner, _ := observedRoom()

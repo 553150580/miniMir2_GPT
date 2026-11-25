@@ -101,8 +101,13 @@ func TestMonsterRespawnM1DefaultMapCatalogMongoWS(t *testing.T) {
 		if c.entry.RoomId != m.ID || c.entry.SceneKind != devconfig.SceneKindPersonal {
 			t.Fatalf("真实场景未到达普通图%d：%v", m.ID, c.entry)
 		}
-		if travelCount(c.scene, 3) != m.InitialMonsterCount || m.InitialMonsterCount != 1 {
-			t.Fatalf("地图%d首入场初始怪数不等于配置的一个槽", m.ID)
+		// 新角色按地图默认值开始，换另一张普通图沿用前一张已设置的八个槽。
+		wantCount := m.InitialMonsterCount
+		if i != 0 {
+			wantCount = len(maps[i-1].MonsterSpawns)
+		}
+		if got := travelCount(c.scene, 3); got != wantCount || m.InitialMonsterCount != 1 {
+			t.Fatalf("地图%d可见怪数=%d，预期%d", m.ID, got, wantCount)
 		}
 		c.auto(false, uint32(len(m.MonsterSpawns)))
 		travelUntilWithin(c, 3*time.Second, func(frame wire.Frame) bool {
@@ -128,4 +133,20 @@ func TestMonsterRespawnM1DefaultMapCatalogMongoWS(t *testing.T) {
 	if rejoined.entry.RoomId != currentMap || rejoined.entry.SceneEpoch != currentScene || travelCount(rejoined.scene, 3) != 8 {
 		t.Fatal("健康重连未恢复角色所在普通图及当前八个怪槽", rejoined.entry)
 	}
+	rejoined.auto(false, 4)
+	travelUntilWithin(rejoined, 3*time.Second, func(frame wire.Frame) bool {
+		return frame.ID == p.MsgS2CSceneBaseline && travelCount(rejoined.scene, 3) == 4
+	})
+	town := fixture.TownTravel.DestinationMapIDs[0]
+	travelToBaseline(rejoined, 1, town)
+	travelAcknowledge(rejoined, true)
+	if travelCount(rejoined.scene, 3) != 0 {
+		t.Fatal("普通图怪槽被带入城镇")
+	}
+	travelToBaseline(rejoined, 2, fixture.Map.ID)
+	travelAcknowledge(rejoined, false)
+	if got := travelCount(rejoined.scene, 3); got != 4 {
+		t.Fatalf("从城镇去另一张普通图的怪数=%d，预期4", got)
+	}
+	t.Log("八槽跨普通地图及健康接回、四槽经过无怪城镇后跨普通地图均通过")
 }

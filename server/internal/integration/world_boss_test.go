@@ -52,6 +52,7 @@ func TestSharedWorldBossMongoWS(t *testing.T) {
 		Map: devconfig.MapTemplate{ID: 81, Width: 13, Height: 13, SceneKind: devconfig.SceneKindWorldBoss,
 			PlayerSpawn: devconfig.Point{X: 5, Y: 5}, MonsterSpawns: []devconfig.Point{{X: 6, Y: 5}}},
 		Monster: monster, DailyOpenOffsets: []time.Duration{offset}, Window: 3 * time.Minute, ReturnDelay: 300 * time.Millisecond, ParticipantLimit: 8}
+	cfg.Fixture.WorldBossVariants = nil
 	if !cfg.Fixture.ValidWorldBoss() {
 		t.Fatal("共享首领隔离配置无效")
 	}
@@ -166,6 +167,12 @@ func TestSharedWorldBossMongoWS(t *testing.T) {
 	if other := queryWorldBossTest(t, third); other.State != 3 || other.Hp != 9 || len(other.Ranks) != 0 {
 		t.Fatal("运行服间串了首领生命或排行榜", other)
 	}
+	// 第二运行服用首领的独立自动开关产生真实排行，未发送手动攻击。
+	setChallengeAuto(third, true)
+	active := waitWorldBossTest(t, third, 0, func(state *pb.WorldBossState) bool { return state.Hp < 9 && len(state.Ranks) != 0 })
+	if active.Ranks[0].DisplayName != thirdRole.Name || active.Ranks[0].Damage != 9-active.Hp {
+		t.Fatal("首领自动攻击没有计入真实共享伤害和角色排行", active)
+	}
 	count, err := inspection.DB.Collection("audit_outbox").CountDocuments(ctx, bson.M{"kind": "settlement", "$or": bson.A{
 		bson.M{"settlement.map_id": cfg.Fixture.WorldBoss.Map.ID}, bson.M{"settlement.monster_id": monster.ID},
 	}})
@@ -223,6 +230,7 @@ func rejoinWorldBossTest(t *testing.T, address, ticket, occurrence string) *clie
 		t.Fatal("健康重连恢复了错误的活动场次", entry, c.entry)
 	}
 	travelAcknowledge(c, false)
+	requireChallengeAuto(c, false)
 	return c
 }
 
@@ -267,7 +275,8 @@ func enterWorldBossTest(t *testing.T, c *client, open *pb.WorldBossState) {
 	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: old, BaselineId: c.entry.BaselineId})
 	tooEarly := attackWorldBossTest(c)
 	travelExpectError(c, p.MsgC2SCastIntent, tooEarly, p.CodeLineRecovering)
-	travelAcknowledge(c, false)
+	travelAcknowledge(c, false, false)
+	requireChallengeAuto(c, false)
 }
 
 // attackWorldBossTest 从已有场景中引用真实首领句柄，而不是提交伤害或排行榜字段。

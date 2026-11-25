@@ -7060,6 +7060,21 @@
           "id": 5,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:24；最终策划案.md §4.1、§5.2",
           "note": "项目原创开发外观。基础属性沿来源行，采用本项目现有的近身普通怪管线。"
+        },
+        {
+          "id": 80003,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；资料参考/crystal/Shared/Enums.cs；本机原图库 26.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 80004,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；资料参考/crystal/Shared/Enums.cs；本机原图库 48.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 80005,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；资料参考/crystal/Shared/Enums.cs；本机原图库 68.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
         }
       ],
       "game_items": [
@@ -7396,6 +7411,21 @@
           "id": 7,
           "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
           "note": "独享的开阔普通挂机场，与林间战场共用地板资源，独立维护布局及怪物槽。"
+        },
+        {
+          "id": 82,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；资料参考/crystal/Shared/Enums.cs；本机原图库 26.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 83,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；资料参考/crystal/Shared/Enums.cs；本机原图库 48.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 84,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；资料参考/crystal/Shared/Enums.cs；本机原图库 68.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
         }
       ],
       "game_map_collisions": [
@@ -7428,6 +7458,21 @@
           "id": 7,
           "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
           "note": "169格均无固定地形阻挡。原地图阻挡仅属来源证据；寻路切角及实体动态占格规则继续适用。"
+        },
+        {
+          "id": 82,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；资料参考/crystal/Shared/Enums.cs；本机原图库 26.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 83,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；资料参考/crystal/Shared/Enums.cs；本机原图库 48.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 84,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；资料参考/crystal/Shared/Enums.cs；本机原图库 68.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
         }
       ],
       "game_map_regions": [
@@ -7622,6 +7667,21 @@
           "id": 707,
           "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
           "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 82,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；资料参考/crystal/Shared/Enums.cs；本机原图库 26.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 83,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；资料参考/crystal/Shared/Enums.cs；本机原图库 48.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 84,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；资料参考/crystal/Shared/Enums.cs；本机原图库 68.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
         }
       ],
       "game_pet_templates": [
@@ -9707,6 +9767,143 @@
           "note": "精英候选每20分钟，活动上限不无限叠加。"
         }
       ],
+      "game_entitlement_rules": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 4,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 5,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 8,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 9,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 10,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 11,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 14,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 15,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 16,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 17,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 18,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 19,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 20,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "无购买后24h总上限。"
+        },
+        {
+          "id": 21,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 22,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 23,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 24,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 25,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "须配置合法购买粒度。"
+        },
+        {
+          "id": 26,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "激励视频首测候选，回调核验及账号/IP/设备限额待配置。"
+        },
+        {
+          "id": 27,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "策划要求联合限额但未给数量。"
+        }
+      ],
       "dev_first_loop_profile": [
         {
           "id": 1,
@@ -9861,6 +10058,21 @@
           "id": 2,
           "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
           "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 3,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:41；资料参考/crystal/Shared/Enums.cs；本机原图库 26.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 4,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:120；资料参考/crystal/Shared/Enums.cs；本机原图库 48.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
+        },
+        {
+          "id": 5,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:152；资料参考/crystal/Shared/Enums.cs；本机原图库 68.Lib；最终策划案.md:113、445-457、1350",
+          "note": "原怪基础数值保持原表，开发预览复用独立13格场地和近战AI；不开放原怪特殊招式、经验或击杀奖励。最低等级15/20参考历史玩法解锁样本，21取T3起点，均是试玩候选。"
         }
       ],
       "game_challenge_rules": [
@@ -9983,143 +10195,6 @@
           "id": 26,
           "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
           "note": "有效参与、退出、宠物归属、排名与材料总预算需逐项审定。"
-        }
-      ],
-      "game_entitlement_rules": [
-        {
-          "id": 1,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 2,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 3,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 4,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 5,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 6,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 7,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 8,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 9,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 10,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 11,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 12,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 13,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 14,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 15,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 16,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 17,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 18,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 19,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 20,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": "无购买后24h总上限。"
-        },
-        {
-          "id": 21,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 22,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 23,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 24,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": null
-        },
-        {
-          "id": 25,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": "须配置合法购买粒度。"
-        },
-        {
-          "id": 26,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": "激励视频首测候选，回调核验及账号/IP/设备限额待配置。"
-        },
-        {
-          "id": 27,
-          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
-          "note": "策划要求联合限额但未给数量。"
         }
       ],
       "game_drop_categories": [
@@ -10750,11 +10825,32 @@
           "name": "林地首领",
           "profile": "monster_scarecrow",
           "can_push": false
+        },
+        {
+          "definition_id": 80003,
+          "name": "骷髅精灵",
+          "profile": "monster_boss_bone_elite",
+          "can_push": false
+        },
+        {
+          "definition_id": 80004,
+          "name": "白野猪",
+          "profile": "monster_boss_white_boar",
+          "can_push": false
+        },
+        {
+          "definition_id": 80005,
+          "name": "祖玛教主",
+          "profile": "monster_boss_zuma_taurus",
+          "can_push": false
         }
       ],
       "floor_map_ids": {
         "80": "1",
-        "81": "1"
+        "81": "1",
+        "82": "1",
+        "83": "1",
+        "84": "1"
       },
       "tables": [
         "game_boss_templates",
@@ -10765,7 +10861,7 @@
         "game_monster_spawns",
         "game_monsters"
       ],
-      "compiler_sha256": "b783694d656a06e905658b04d60780cbe02ba713a5edcd5a2862e28b45777f24",
+      "compiler_sha256": "99f04f075ed0634745146365b1a6cde56166b0d5d1472b5f4c509e37bdd7e8e1",
       "scope": "个人与世界首领可玩开发候选。地图、首领数值、容量及失败等待用于隔离体验，个人与世界均未投影经济奖励。"
     },
     "workbook_sync": "exported_from_current_unique_excel",
@@ -10889,9 +10985,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "060dfc3b3d4a82010b608c3d6f9d0b8f1a72450b1adf860e5538f32084e5222e"
+      "sha256": "3d92b927ac4914612696b9e99232c97b9b64274b722edddba0c341cc9b101161"
     },
-    "exporter_sha256": "47ab74a5be5adc50ec61bdc724d5097ac01d3a547acdbf81b9be2b43332d3b27",
+    "exporter_sha256": "f03502d9cb9a311c1a40f18465ae711eed6ffcb3a6fb2d6a647988545c8d0ab0",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -10903,7 +10999,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "060dfc3b3d4a82010b608c3d6f9d0b8f1a72450b1adf860e5538f32084e5222e"
+          "sha256": "3d92b927ac4914612696b9e99232c97b9b64274b722edddba0c341cc9b101161"
         }
       ]
     },
@@ -11209,6 +11305,12 @@
       ]
     }
   ],
+  "hosting_benefits": {
+    "card_daily_seconds": 43200,
+    "free_daily_seconds": 21600,
+    "kill_experience_bonus_bp": 2000,
+    "direct_gold_bonus_bp": 2000
+  },
   "map_regions": [
     {
       "id": "0",
@@ -13287,6 +13389,102 @@
       "gold_min": 0,
       "gold_max": 0,
       "respawn_ms": 0
+    },
+    {
+      "job_id": 0,
+      "definition_id": 80003,
+      "level": 40,
+      "hp": 500,
+      "mp": 0,
+      "attack_min": 7,
+      "attack_max": 24,
+      "defence": 5,
+      "defence_min": 5,
+      "defence_max": 5,
+      "magic_defence_min": 4,
+      "magic_defence_max": 4,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 14,
+      "agility": 15,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 2000,
+      "move_ms": 1200,
+      "undead": true,
+      "can_push": false,
+      "id": 80003,
+      "exp": 0,
+      "gold_min": 0,
+      "gold_max": 0,
+      "respawn_ms": 0
+    },
+    {
+      "job_id": 0,
+      "definition_id": 80004,
+      "level": 40,
+      "hp": 1000,
+      "mp": 0,
+      "attack_min": 30,
+      "attack_max": 55,
+      "defence": 15,
+      "defence_min": 15,
+      "defence_max": 15,
+      "magic_defence_min": 15,
+      "magic_defence_max": 15,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 17,
+      "agility": 25,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 1800,
+      "move_ms": 800,
+      "undead": true,
+      "can_push": false,
+      "id": 80004,
+      "exp": 0,
+      "gold_min": 0,
+      "gold_max": 0,
+      "respawn_ms": 0
+    },
+    {
+      "job_id": 0,
+      "definition_id": 80005,
+      "level": 60,
+      "hp": 10000,
+      "mp": 0,
+      "attack_min": 60,
+      "attack_max": 130,
+      "defence": 20,
+      "defence_min": 20,
+      "defence_max": 20,
+      "magic_defence_min": 20,
+      "magic_defence_max": 20,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 30,
+      "agility": 32,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 1000,
+      "move_ms": 300,
+      "undead": true,
+      "can_push": false,
+      "id": 80005,
+      "exp": 0,
+      "gold_min": 0,
+      "gold_max": 0,
+      "respawn_ms": 0
     }
   ],
   "personal_boss": {
@@ -13327,6 +13525,84 @@
     "privilege_success_bonus": 1,
     "history_limit": 20
   },
+  "personal_boss_variants": [
+    {
+      "enabled": true,
+      "template_id": 3,
+      "display_name": "骷髅精灵",
+      "map": {
+        "id": 82,
+        "display_name": "骷髅精灵战场",
+        "scene_kind": 3,
+        "resource_key": "development/maps/personal-map",
+        "width": 13,
+        "height": 13,
+        "blocked": [],
+        "no_teleport": true,
+        "no_pets": false,
+        "player_spawn": {
+          "x": 6,
+          "y": 6
+        },
+        "pet_spawn": {
+          "x": 6,
+          "y": 5
+        },
+        "monster_spawns": [
+          {
+            "x": 9,
+            "y": 6
+          }
+        ]
+      },
+      "monster_id": 80003,
+      "minimum_level": 15,
+      "duration_ms": 180000,
+      "success_cooldown_ms": 1800000,
+      "retry_cooldown_ms": 15000,
+      "daily_success_limit": 5,
+      "privilege_success_bonus": 1,
+      "history_limit": 20
+    },
+    {
+      "enabled": true,
+      "template_id": 4,
+      "display_name": "白野猪",
+      "map": {
+        "id": 83,
+        "display_name": "白野猪战场",
+        "scene_kind": 3,
+        "resource_key": "development/maps/personal-map",
+        "width": 13,
+        "height": 13,
+        "blocked": [],
+        "no_teleport": true,
+        "no_pets": false,
+        "player_spawn": {
+          "x": 6,
+          "y": 6
+        },
+        "pet_spawn": {
+          "x": 6,
+          "y": 5
+        },
+        "monster_spawns": [
+          {
+            "x": 9,
+            "y": 6
+          }
+        ]
+      },
+      "monster_id": 80004,
+      "minimum_level": 21,
+      "duration_ms": 180000,
+      "success_cooldown_ms": 3600000,
+      "retry_cooldown_ms": 15000,
+      "daily_success_limit": 5,
+      "privilege_success_bonus": 1,
+      "history_limit": 20
+    }
+  ],
   "world_boss": {
     "enabled": true,
     "template_id": 2,
@@ -13359,11 +13635,50 @@
     "monster_id": 80002,
     "minimum_level": 1,
     "daily_open_offsets_ms": [
-      43200000,
-      72000000
+      43200000
     ],
     "window_ms": 3600000,
     "return_delay_ms": 5000,
     "participant_limit": 16
-  }
+  },
+  "world_boss_variants": [
+    {
+      "enabled": true,
+      "template_id": 5,
+      "display_name": "祖玛教主",
+      "map": {
+        "id": 84,
+        "display_name": "祖玛教主战场",
+        "scene_kind": 4,
+        "resource_key": "development/maps/personal-map",
+        "width": 13,
+        "height": 13,
+        "blocked": [],
+        "no_teleport": true,
+        "no_pets": false,
+        "player_spawn": {
+          "x": 6,
+          "y": 6
+        },
+        "pet_spawn": {
+          "x": 6,
+          "y": 5
+        },
+        "monster_spawns": [
+          {
+            "x": 9,
+            "y": 7
+          }
+        ]
+      },
+      "monster_id": 80005,
+      "minimum_level": 20,
+      "daily_open_offsets_ms": [
+        72000000
+      ],
+      "window_ms": 3600000,
+      "return_delay_ms": 5000,
+      "participant_limit": 16
+    }
+  ]
 }

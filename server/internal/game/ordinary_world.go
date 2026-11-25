@@ -7,7 +7,7 @@ import (
 )
 
 // populateOrdinaryMonsters 为每个角色创建独立实体，新目录共用只读数值模板。
-// 上一张普通图尚未到期的槽位等待原截止，即使该槽在新地图的怪物种类不同。
+// 上一张普通图的可见槽数和未到期的复活时间随同一健康角色进入下一张普通图。
 func populateOrdinaryMonsters(f *devconfig.Fixture, world *worldState, target *devconfig.MapTemplate, previous *worldState, now time.Time) bool {
 	slots := devconfig.OrdinaryMonsterSlots
 	initialCount := 1
@@ -18,6 +18,9 @@ func populateOrdinaryMonsters(f *devconfig.Fixture, world *worldState, target *d
 		initialCount = target.InitialMonsterCount
 		if len(target.MonsterSpawnIDs) != slots || initialCount < 1 || initialCount > slots {
 			return false
+		}
+		if previous != nil && previous.MonsterCount >= 1 && previous.MonsterCount <= slots {
+			initialCount = previous.MonsterCount
 		}
 	}
 	monsters := make([]*entity, 0, slots)

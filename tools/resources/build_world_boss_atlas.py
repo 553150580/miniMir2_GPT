@@ -32,7 +32,7 @@ def load_json(path):
     return json.loads(path.read_text(encoding='utf-8'))
 
 
-def frame_catalog(source):
+def frame_catalog(source, world_maps=None):
     """根据世界首领能看到的角色、宠物和技能编制待打包帧。"""
     manifest = load_json(source / 'manifest.json')
     gameplay = load_json(source / 'gameplay.json')
@@ -45,9 +45,9 @@ def frame_catalog(source):
         profiles['pet_shinsu'] = local['profile']
         frames.update(local['frames'])
     visible = {row['profile'] for row in gameplay['jobs']}
-    world_map = next((row for row in gameplay.get('challenge_maps', []) if row['scene_kind'] == 4), {})
-    world_monsters = world_map.get('monster_definition_ids')
-    if world_monsters is None:
+    if world_maps is None:
+        world_maps = [row for row in gameplay.get('challenge_maps', []) if row['scene_kind'] == 4]
+    if not world_maps or any('monster_definition_ids' not in row for row in world_maps):
         visible.update(row['profile'] for row in gameplay['monster_profiles'] if not row['profile'].startswith('monster_m1_'))
     else:
         original = load_json(source / 'original-monsters/actors.json')
@@ -55,7 +55,7 @@ def frame_catalog(source):
             raise ValueError('原版怪物清单与首领图集冲突')
         profiles.update(original['profiles'])
         frames.update(original['frames'])
-        visible.update(original['challenge_profiles'][str(id)] for id in world_monsters)
+        visible.update(original['challenge_profiles'][str(identity)] for row in world_maps for identity in row['monster_definition_ids'])
     visible.update(row['profile'] for row in gameplay['pet_profiles'] if not row.get('appearance_optional') or row['profile'] in profiles)
     keys = set(effect_keys(manifest.get('statuses'))) | set(effect_keys(manifest.get('teleport')))
     for profile in sorted(visible):
@@ -119,9 +119,15 @@ def write_json(path, value):
 
 
 def build(source):
-    """世界首领沿用独立的打包范围与资源路径。"""
-    frames = frame_catalog(source)
-    return build_atlas(source, ATLAS, [frames])
+    """保留主场图集页的原排布，把轮换首领专属帧放入其余页。"""
+    gameplay = load_json(source / 'gameplay.json')
+    world_maps = [row for row in gameplay.get('challenge_maps', []) if row['scene_kind'] == 4]
+    primary = frame_catalog(source, world_maps[:1])
+    if len(world_maps) < 2:
+        return build_atlas(source, ATLAS, [primary])
+    alternatives = frame_catalog(source, world_maps[1:])
+    extra = {key: frame for key, frame in alternatives.items() if key not in primary}
+    return build_atlas(source, ATLAS, [primary, extra])
 
 
 def build_atlas(source, package, groups):

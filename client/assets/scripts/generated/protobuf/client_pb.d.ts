@@ -2405,6 +2405,9 @@ export namespace minimir {
             /** EnterWorldAck auto_skill_settings. */
             auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
 
+            /** EnterWorldAck challenge_auto_battle_enabled. */
+            challenge_auto_battle_enabled?: (boolean|null);
+
             /**
              * Creates a new EnterWorldAck instance using the specified properties.
              * @param [properties] Properties to set
@@ -2476,6 +2479,9 @@ export namespace minimir {
 
                 /** EnterWorldAck auto_skill_settings */
                 auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
+
+                /** EnterWorldAck challenge_auto_battle_enabled */
+                challenge_auto_battle_enabled?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -5168,6 +5174,12 @@ export namespace minimir {
             /** AttackIntent skill_id. */
             skill_id: number;
 
+            /** AttackIntent target_handle. */
+            target_handle: number;
+
+            /** AttackIntent target_life. */
+            target_life: Long;
+
             /**
              * Creates a new AttackIntent instance using the specified properties.
              * @param [properties] Properties to set
@@ -5242,6 +5254,12 @@ export namespace minimir {
 
                 /** AttackIntent skill_id */
                 skill_id?: (number|null);
+
+                /** AttackIntent target_handle */
+                target_handle?: (number|null);
+
+                /** AttackIntent target_life */
+                target_life?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -7457,6 +7475,9 @@ export namespace minimir {
             /** InventoryResult progression. */
             progression?: (minimir.v1.ProgressionState.$Properties|null);
 
+            /** InventoryResult skill_slot_ids. */
+            skill_slot_ids: number[];
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -7547,12 +7568,117 @@ export namespace minimir {
                 /** InventoryResult progression */
                 progression?: (minimir.v1.ProgressionState.$Properties|null);
 
+                /** InventoryResult skill_slot_ids */
+                skill_slot_ids?: (number[]|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an InventoryResult. */
             type $Shape = minimir.v1.InventoryResult.$Properties;
+        }
+
+        /**
+         * Properties of a SetSkillSlotsRequest.
+         * @deprecated Use minimir.v1.SetSkillSlotsRequest.$Properties instead.
+         */
+        interface ISetSkillSlotsRequest extends minimir.v1.SetSkillSlotsRequest.$Properties {
+        }
+
+        /** Represents a SetSkillSlotsRequest. */
+        class SetSkillSlotsRequest {
+
+            /**
+             * Constructs a new SetSkillSlotsRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SetSkillSlotsRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SetSkillSlotsRequest skill_slot_ids. */
+            skill_slot_ids: number[];
+
+            /** SetSkillSlotsRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SetSkillSlotsRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SetSkillSlotsRequest instance
+             */
+            static create(properties: minimir.v1.SetSkillSlotsRequest.$Shape): minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape;
+            static create(properties?: minimir.v1.SetSkillSlotsRequest.$Properties): minimir.v1.SetSkillSlotsRequest;
+
+            /**
+             * Encodes the specified SetSkillSlotsRequest message. Does not implicitly {@link minimir.v1.SetSkillSlotsRequest.verify|verify} messages.
+             * @param message SetSkillSlotsRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SetSkillSlotsRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SetSkillSlotsRequest message, length delimited. Does not implicitly {@link minimir.v1.SetSkillSlotsRequest.verify|verify} messages.
+             * @param message SetSkillSlotsRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SetSkillSlotsRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SetSkillSlotsRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape} SetSkillSlotsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape;
+
+            /**
+             * Decodes a SetSkillSlotsRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape} SetSkillSlotsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SetSkillSlotsRequest & minimir.v1.SetSkillSlotsRequest.$Shape;
+
+            /**
+             * Verifies a SetSkillSlotsRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SetSkillSlotsRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SetSkillSlotsRequest {
+
+            /** Properties of a SetSkillSlotsRequest. */
+            interface $Properties {
+
+                /** SetSkillSlotsRequest skill_slot_ids */
+                skill_slot_ids?: (number[]|null);
+
+                /** SetSkillSlotsRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SetSkillSlotsRequest. */
+            type $Shape = minimir.v1.SetSkillSlotsRequest.$Properties;
         }
 
         /**
@@ -12578,6 +12704,9 @@ export namespace minimir {
             /** PersonalBossInfo pending_reward_capacity. */
             pending_reward_capacity: number;
 
+            /** PersonalBossInfo templates. */
+            templates: minimir.v1.PersonalBossTemplateChoice.$Properties[];
+
             /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -12695,12 +12824,153 @@ export namespace minimir {
                 /** PersonalBossInfo pending_reward_capacity */
                 pending_reward_capacity?: (number|null);
 
+                /** PersonalBossInfo templates */
+                templates?: (minimir.v1.PersonalBossTemplateChoice.$Properties[]|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of a PersonalBossInfo. */
             type $Shape = minimir.v1.PersonalBossInfo.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossTemplateChoice.
+         * @deprecated Use minimir.v1.PersonalBossTemplateChoice.$Properties instead.
+         */
+        interface IPersonalBossTemplateChoice extends minimir.v1.PersonalBossTemplateChoice.$Properties {
+        }
+
+        /** Represents a PersonalBossTemplateChoice. */
+        class PersonalBossTemplateChoice {
+
+            /**
+             * Constructs a new PersonalBossTemplateChoice.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossTemplateChoice.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossTemplateChoice template_id. */
+            template_id: number;
+
+            /** PersonalBossTemplateChoice display_name. */
+            display_name: string;
+
+            /** PersonalBossTemplateChoice map_id. */
+            map_id: Long;
+
+            /** PersonalBossTemplateChoice monster_id. */
+            monster_id: number;
+
+            /** PersonalBossTemplateChoice minimum_level. */
+            minimum_level: number;
+
+            /** PersonalBossTemplateChoice can_enter. */
+            can_enter: boolean;
+
+            /** PersonalBossTemplateChoice eligibility_reason. */
+            eligibility_reason: number;
+
+            /** PersonalBossTemplateChoice available_at_unix_ms. */
+            available_at_unix_ms: Long;
+
+            /**
+             * Creates a new PersonalBossTemplateChoice instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossTemplateChoice instance
+             */
+            static create(properties: minimir.v1.PersonalBossTemplateChoice.$Shape): minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape;
+            static create(properties?: minimir.v1.PersonalBossTemplateChoice.$Properties): minimir.v1.PersonalBossTemplateChoice;
+
+            /**
+             * Encodes the specified PersonalBossTemplateChoice message. Does not implicitly {@link minimir.v1.PersonalBossTemplateChoice.verify|verify} messages.
+             * @param message PersonalBossTemplateChoice message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossTemplateChoice.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossTemplateChoice message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossTemplateChoice.verify|verify} messages.
+             * @param message PersonalBossTemplateChoice message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossTemplateChoice.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossTemplateChoice message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape} PersonalBossTemplateChoice
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape;
+
+            /**
+             * Decodes a PersonalBossTemplateChoice message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape} PersonalBossTemplateChoice
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossTemplateChoice & minimir.v1.PersonalBossTemplateChoice.$Shape;
+
+            /**
+             * Verifies a PersonalBossTemplateChoice message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossTemplateChoice
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossTemplateChoice {
+
+            /** Properties of a PersonalBossTemplateChoice. */
+            interface $Properties {
+
+                /** PersonalBossTemplateChoice template_id */
+                template_id?: (number|null);
+
+                /** PersonalBossTemplateChoice display_name */
+                display_name?: (string|null);
+
+                /** PersonalBossTemplateChoice map_id */
+                map_id?: (Long|null);
+
+                /** PersonalBossTemplateChoice monster_id */
+                monster_id?: (number|null);
+
+                /** PersonalBossTemplateChoice minimum_level */
+                minimum_level?: (number|null);
+
+                /** PersonalBossTemplateChoice can_enter */
+                can_enter?: (boolean|null);
+
+                /** PersonalBossTemplateChoice eligibility_reason */
+                eligibility_reason?: (number|null);
+
+                /** PersonalBossTemplateChoice available_at_unix_ms */
+                available_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossTemplateChoice. */
+            type $Shape = minimir.v1.PersonalBossTemplateChoice.$Properties;
         }
 
         /**

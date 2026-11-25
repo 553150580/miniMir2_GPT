@@ -21,7 +21,7 @@ func TestHostingFractionSurvivesNonBillablePeriods(t *testing.T) {
 		t.Run(gate, func(t *testing.T) {
 			// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 			w, r, _ := fullBagPolicyWorker(t)
-			r.HostMS = 800
+			r.hostRemainder = 800 * time.Millisecond
 			r.Monsters[0].HP, r.Monsters[0].MaxHP = 1000, 1000
 			switch gate {
 			case "pending":
@@ -51,8 +51,8 @@ func TestHostingFractionSurvivesNonBillablePeriods(t *testing.T) {
 			// before 保存角色剩余托管秒数，用于当前步骤中的操作前的状态。
 			before := r.Role.HostingSeconds
 			w.step(r, now)
-			if r.HostMS != 800 || r.Role.HostingSeconds != before || len(w.e.jobs) != 0 {
-				t.Fatalf("不计费期间丢失余量或发起扣时: fraction=%d balance=%d jobs=%d", r.HostMS, r.Role.HostingSeconds, len(w.e.jobs))
+			if r.hostRemainder != 800*time.Millisecond || r.Role.HostingSeconds != before || len(w.e.jobs) != 0 {
+				t.Fatalf("不计费期间丢失余量或发起扣时：余量=%s 余额=%d 任务=%d", r.hostRemainder, r.Role.HostingSeconds, len(w.e.jobs))
 			}
 		})
 	}
@@ -63,7 +63,7 @@ func TestHostingFractionSurvivesNonBillablePeriods(t *testing.T) {
 func TestHostingFractionSurvivesHealthyTravelAndRevive(t *testing.T) {
 	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
-	r.HostMS = 800
+	r.hostRemainder = 800 * time.Millisecond
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, r.Scene, false, now)
 	if r.MapID != 2 {
@@ -73,18 +73,18 @@ func TestHostingFractionSurvivesHealthyTravelAndRevive(t *testing.T) {
 	r.Conn = nil
 	r.LastTick = now
 	w.step(r, now.Add(100*time.Millisecond))
-	if r.HostMS != 800 {
+	if r.hostRemainder != 800*time.Millisecond {
 		t.Fatal("城镇清除了原个人托管余量")
 	}
 	r.Conn, r.Ready = c, true
 	prepareTravelAt(w, r, 2, travelToPersonal, now.Add(time.Second))
 	confirmTravelAt(w, r, 2, r.Scene, false, now.Add(time.Second))
-	if r.MapID != w.e.Store.Cfg.Fixture.Map.ID || r.HostMS != 800 {
+	if r.MapID != w.e.Store.Cfg.Fixture.Map.ID || r.hostRemainder != 800*time.Millisecond {
 		t.Fatal("返回个人现场丢失余量")
 	}
 	r.Player.HP = 0
 	w.revivePlayer(r)
-	if r.Player.HP <= 0 || r.HostMS != 800 {
+	if r.Player.HP <= 0 || r.hostRemainder != 800*time.Millisecond {
 		t.Fatal("正常复活丢失已经模拟的托管余量")
 	}
 }
@@ -94,7 +94,7 @@ func TestHostingFractionSurvivesHealthyTravelAndRevive(t *testing.T) {
 func TestHostingFractionExcludesPendingDatabaseWait(t *testing.T) {
 	// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 	w, r, _ := fullBagPolicyWorker(t)
-	r.Conn, r.Pending, r.HostMS = nil, true, 800
+	r.Conn, r.Pending, r.hostRemainder = nil, true, 800*time.Millisecond
 	r.Monsters[0].HP, r.Monsters[0].MaxHP = 1000, 1000
 	// now 保存由Unix 时间取得的当前时间。
 	now := time.Unix(1800000000, 0)
@@ -102,18 +102,18 @@ func TestHostingFractionExcludesPendingDatabaseWait(t *testing.T) {
 	w.step(r, now)
 	r.Pending = false
 	w.step(r, now.Add(100*time.Millisecond))
-	if r.HostMS != 900 || len(w.e.jobs) != 0 || r.Role.HostingSeconds != 3 {
+	if r.hostRemainder != 900*time.Millisecond || len(w.e.jobs) != 0 || r.Role.HostingSeconds != 3 {
 		t.Fatal("DB等待混入余量或原余量丢失")
 	}
 	w.step(r, now.Add(200*time.Millisecond))
-	if r.HostMS != 0 || r.hostSecondsOpen != 1 || r.Pending || len(w.e.jobs) != 0 || r.Role.HostingSeconds != 3 {
+	if r.hostRemainder != 0 || r.hostSecondsOpen != 1 || r.Pending || len(w.e.jobs) != 0 || r.Role.HostingSeconds != 3 {
 		t.Fatal("恢复后的实际200ms未累计整秒，或提前结算")
 	}
 }
 
 func TestHostingSettlementResumesBetweenTicks(t *testing.T) {
 	w, r, _ := fullBagPolicyWorker(t)
-	r.Conn, r.Pending, r.HostMS, r.MonsterCount = nil, true, 940, 0
+	r.Conn, r.Pending, r.hostRemainder, r.MonsterCount = nil, true, 940*time.Millisecond, 0
 	now := time.Unix(1800000000, 0)
 	r.LastTick = now.Add(-100 * time.Millisecond)
 	w.step(r, now)
@@ -121,12 +121,12 @@ func TestHostingSettlementResumesBetweenTicks(t *testing.T) {
 	r.resumeAfterPending(now.Add(60 * time.Millisecond))
 	w.step(r, now.Add(40*time.Millisecond))
 	w.step(r, now.Add(100*time.Millisecond))
-	if r.HostMS != 980 || r.hostSecondsOpen != 0 || r.Pending {
-		t.Fatalf("恢复前的等待进入托管计量: 余量=%d 整秒=%d", r.HostMS, r.hostSecondsOpen)
+	if r.hostRemainder != 980*time.Millisecond || r.hostSecondsOpen != 0 || r.Pending {
+		t.Fatalf("恢复前的等待进入托管计量：余量=%s 整秒=%d", r.hostRemainder, r.hostSecondsOpen)
 	}
 	w.step(r, now.Add(200*time.Millisecond))
-	if r.HostMS != 80 || r.hostSecondsOpen != 1 {
-		t.Fatalf("恢复后的真实时间未连续计量: 余量=%d 整秒=%d", r.HostMS, r.hostSecondsOpen)
+	if r.hostRemainder != 80*time.Millisecond || r.hostSecondsOpen != 1 {
+		t.Fatalf("恢复后的真实时间未连续计量：余量=%s 整秒=%d", r.hostRemainder, r.hostSecondsOpen)
 	}
 }
 
@@ -135,7 +135,7 @@ func TestHostingSettlementResumesBetweenTicks(t *testing.T) {
 func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
 	// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用，c 接收完整或满额背包策略房间执行器供后续步骤使用。
 	w, r, c := fullBagPolicyWorker(t)
-	r.HostMS, r.MonsterCount = 900, 0
+	r.hostRemainder, r.MonsterCount = 900*time.Millisecond, 0
 	w.command(command{role: r.Role.ID, conn: c, disconnect: true})
 	// detached 保存上一次状态模拟帧，用于当前步骤中的脱离。
 	detached := r.LastTick
@@ -143,15 +143,15 @@ func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
 		t.Fatal("断线没有设置托管时钟起点")
 	}
 	w.step(r, detached.Add(-60*time.Millisecond))
-	if !r.LastTick.Equal(detached) || r.HostMS != 900 {
+	if !r.LastTick.Equal(detached) || r.hostRemainder != 900*time.Millisecond {
 		t.Fatal("排队的在线帧倒拨了托管时钟")
 	}
 	w.step(r, detached.Add(40*time.Millisecond))
-	if r.HostMS != 940 || len(w.e.jobs) != 0 || r.Pending {
+	if r.hostRemainder != 940*time.Millisecond || len(w.e.jobs) != 0 || r.Pending {
 		t.Fatal("断线前的在线时长进入扣时事务")
 	}
 	w.step(r, detached.Add(100*time.Millisecond))
-	if r.HostMS != 0 || r.hostSecondsOpen != 1 || len(w.e.jobs) != 0 || r.Pending {
+	if r.hostRemainder != 0 || r.hostSecondsOpen != 1 || len(w.e.jobs) != 0 || r.Pending {
 		t.Fatal("真实托管余量满一秒时应累计整秒")
 	}
 	w.command(command{role: r.Role.ID, conn: &capturedConnection{}, ticket: &persistence.Ticket{}})
@@ -165,9 +165,9 @@ func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
 func TestHostingColdWorldDoesNotRestoreOldFraction(t *testing.T) {
 	// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 	w, r, _ := fullBagPolicyWorker(t)
-	r.HostMS = 800
+	r.hostRemainder = 800 * time.Millisecond
 	w.initialize(r, r.Role)
-	if r.HostMS != 0 {
+	if r.hostRemainder != 0 {
 		t.Fatal("故障新现场继承了旧临时计量")
 	}
 }
@@ -188,24 +188,50 @@ func TestHostingBatchesThreeSecondsAndClipsBalanceBoundary(t *testing.T) {
 			t.Fatalf("第%d帧提前提交整秒", i)
 		}
 	}
-	if r.hostSecondsOpen != 2 || r.HostMS != 900 {
+	if r.hostSecondsOpen != 2 || r.hostRemainder != 900*time.Millisecond {
 		t.Fatal("达到检查点前累计计量不正确")
 	}
 	// at 保存由新增取得的发生时间。
 	at := now.Add(3 * time.Second)
 	w.step(r, at)
 	assertHostingJob(t, w, r, persistence.Settlement{SourceSeq: 5, HostSeconds: 3, HostingSession: r.HostSession, EventAt: at})
-	if r.hostSecondsOpen != 0 || r.HostMS != 0 || r.Role.HostingSeconds != 10 {
+	if r.hostSecondsOpen != 0 || r.hostRemainder != 0 || r.Role.HostingSeconds != 10 {
 		t.Fatal("冻结检查点后仍重复持有整秒，或提前公布未确认余额")
 	}
 
 	w, r, _ = fullBagPolicyWorker(t)
-	r.Conn, r.MonsterCount, r.Role.HostingSeconds, r.HostMS = nil, 0, 1, 950
+	r.Conn, r.MonsterCount, r.Role.HostingSeconds, r.hostRemainder = nil, 0, 1, 950*time.Millisecond+650*time.Microsecond
 	r.LastTick = now.Add(-200 * time.Millisecond)
 	w.step(r, now)
 	assertHostingJob(t, w, r, persistence.Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: r.HostSession, EventAt: now})
-	if r.HostMS != 0 || r.hostSecondsOpen != 0 || r.Player.AttackSequence != 0 {
+	if r.hostRemainder != 0 || r.hostSecondsOpen != 0 || r.Player.AttackSequence != 0 {
 		t.Fatal("最后一秒超额累计，或在耗尽后的帧产生新攻击")
+	}
+}
+
+// TestHostingRetainsSubMillisecondFrameRemainder 检查实帧余量跨整秒及数据库检查点持续累加。
+func TestHostingRetainsSubMillisecondFrameRemainder(t *testing.T) {
+	w, r, _ := fullBagPolicyWorker(t)
+	r.Conn, r.MonsterCount, r.Role.HostingSeconds = nil, 0, 10
+	// start 为首个计费区间起点，frame 模拟带亚毫秒余量的服务器帧间隔。
+	start := time.Unix(1800000000, 0)
+	const frame = 47650 * time.Microsecond
+	r.LastTick = start
+	for i := 1; i <= 21; i++ {
+		w.step(r, start.Add(time.Duration(i)*frame))
+	}
+	if r.hostSecondsOpen != 1 || r.hostRemainder != 650*time.Microsecond || r.Pending || len(w.e.jobs) != 0 {
+		t.Fatalf("累计实帧后应保留一整秒和650微秒：整秒=%d、余量=%s", r.hostSecondsOpen, r.hostRemainder)
+	}
+
+	for i := 22; i <= 63; i++ {
+		w.step(r, start.Add(time.Duration(i)*frame))
+	}
+	assertHostingJob(t, w, r, persistence.Settlement{
+		SourceSeq: 5, HostSeconds: 3, HostingSession: r.HostSession, EventAt: start.Add(63 * frame),
+	})
+	if r.hostSecondsOpen != 0 || r.hostRemainder != 1950*time.Microsecond || r.Role.HostingSeconds != 10 {
+		t.Fatalf("检查点只应冻结三整秒：未绑定整秒=%d、余量=%s、确认余额=%d", r.hostSecondsOpen, r.hostRemainder, r.Role.HostingSeconds)
 	}
 }
 
@@ -218,7 +244,7 @@ func TestHostingMergesWithOnlyMatchingSettlement(t *testing.T) {
 		t.Run(reason, func(t *testing.T) {
 			// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 			w, r, _ := fullBagPolicyWorker(t)
-			r.Conn, r.hostSecondsOpen, r.HostMS = nil, 2, 400
+			r.Conn, r.hostSecondsOpen, r.hostRemainder = nil, 2, 400*time.Millisecond
 			// q 组装结算所需的数据。
 			q := persistence.Settlement{SourceSeq: 5, Kills: 1, HostingSession: r.HostSession}
 			switch reason {
@@ -239,7 +265,7 @@ func TestHostingMergesWithOnlyMatchingSettlement(t *testing.T) {
 				t.Fatal("旧会话击杀不能扣除当前区间的时长")
 			}
 			assertHostingJob(t, w, r, q)
-			if r.HostMS != 400 {
+			if r.hostRemainder != 400*time.Millisecond {
 				t.Fatal("原未满秒余量应保留")
 			}
 		})
@@ -251,7 +277,7 @@ func TestHostingMergesWithOnlyMatchingSettlement(t *testing.T) {
 func TestHostingClosesBeforeIdleReleaseAndLeavesIsolatedRoomFrozen(t *testing.T) {
 	// w 接收完整或满额背包策略房间执行器供后续步骤使用，r 接收完整或满额背包策略房间执行器供后续步骤使用。
 	w, r, _ := fullBagPolicyWorker(t)
-	r.Conn, r.Player.HP, r.hostSecondsOpen, r.HostMS = nil, 0, 1, 350
+	r.Conn, r.Player.HP, r.hostSecondsOpen, r.hostRemainder = nil, 0, 1, 350*time.Millisecond
 	// now 保存由Unix 时间取得的当前时间。
 	now := time.Unix(1800000000, 0)
 	r.LastTick, r.idleSince = now.Add(-100*time.Millisecond), now.Add(-offlineRoomRetention)
@@ -265,7 +291,7 @@ func TestHostingClosesBeforeIdleReleaseAndLeavesIsolatedRoomFrozen(t *testing.T)
 	r.Isolated = false
 	w.step(r, now)
 	assertHostingJob(t, w, r, persistence.Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: r.HostSession, EventAt: now})
-	if r.HostMS != 350 || w.expireIdleRoom(r.Role.ID, r, now) {
+	if r.hostRemainder != 350*time.Millisecond || w.expireIdleRoom(r.Role.ID, r, now) {
 		t.Fatal("终态误计时或在确认前删除房间")
 	}
 }

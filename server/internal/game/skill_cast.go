@@ -340,7 +340,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		return nil, p.CodeSkillStateBlocked
 	}
 	if r.Player.MP < cost {
-		return &preparedCast{Cost: cost}, p.CodeSkillResource
+		return &preparedCast{Cost: cost, Summon: summon}, p.CodeSkillResource
 	}
 	// amount 保存由整数“64”取得的数量。
 	amount := int64(0)
@@ -625,113 +625,4 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		}
 		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, amount, outcome, handler.Healing, c.ID, 0)
 	}
-}
-
-// autoSkill 根据自动技能偏好和合法目标逐项尝试，失败时保留常规攻击机会。
-// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，now 提供当前时点，作为状态有效期和计时判断的基准。
-func (w *worker) autoSkill(r *room, now time.Time) bool {
-	if r.AutoSkills != nil && !r.AutoSkills.enabled {
-		return false
-	}
-	// pet 保存由场景世界宠物取得的宠物。
-	pet := r.worldPet(r.currentWorld())
-	// focus 保存由存活自动目标取得的“focus”。
-	focus := r.liveAutoTarget()
-	// manaNeeded 记录魔法值已所需量，使用自动魔法值所需量表示。
-	var manaNeeded automaticManaNeed
-	// skills 保留加入新条目后的技能集合。
-	skills := append([]devconfig.Skill(nil), w.e.Store.Cfg.Fixture.Skills...)
-	// i 记录当前位置的下标，使用数值表示，j 记录当前位置的下标，使用数值表示。
-	sort.SliceStable(skills, func(i, j int) bool {
-		if skills[i].AutoPriority == skills[j].AutoPriority {
-			return skills[i].ID < skills[j].ID
-		}
-		return skills[i].AutoPriority > skills[j].AutoPriority
-	})
-	// s 接收遍历技能集合时当前的元素。
-	for _, s := range skills {
-		if !r.AutoSkills.permits(s.ID) || !automaticSkillForJob(s, r.Role.Job) {
-			continue
-		}
-		// handler 保存从技能处理器集合取出的处理器。
-		handler := skillHandlers[s.Behavior]
-		// rank 保存由技能取得的排序位次，learned 保存由技能取得的已学习。
-		rank, learned := r.Role.Skill(s.ID)
-		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) {
-			continue
-		}
-		// direction 保存当前处理所用的朝向。
-		direction := r.Player.Direction
-		if handler.Status {
-			// missing 封装缺失条目对应的后续处理，e 记录实体。
-			missing := func(e *entity) bool { return e != nil && e.HP > 0 && e.Statuses[s.BuffID] == nil }
-			// center 保存位置，用于当前步骤中的中心格。
-			center := r.Player.Pos
-			if s.TargetKind == "friendly_self" {
-				if !missing(&r.Player) {
-					continue
-				}
-			} else {
-				if !missing(&r.Player) {
-					if !missing(pet) {
-						continue
-					}
-					center = pet.Pos
-				}
-				// count 规定数量的初始取值。
-				count := 0
-				// e 接收遍历实体列表时当前的元素。
-				for _, e := range []*entity{&r.Player, pet} {
-					if missing(e) && distance(e.Pos, center) <= s.AreaRadius && w.walkable(r, e.Pos) {
-						count++
-					}
-				}
-				if count < s.AutoMinTargets {
-					continue
-				}
-			}
-			if s.MaterialQuantity > 0 {
-				if w.autoMaterialCast(r, s, 0, direction, pointPB(center), now, &manaNeeded) {
-					return true
-				}
-			} else if w.castAutomatically(r, s.ID, 0, direction, now, &manaNeeded, pointPB(center)) {
-				return true
-			}
-			continue
-		}
-		if handler.Healing {
-			// target 保存由自动治疗目标取得的目标。
-			target := w.automaticHealingTarget(r, pet, s.RangeCells)
-			if target == nil {
-				continue
-			}
-			// grid 记录网格，使用网格点位表示。
-			var grid *pb.GridPoint
-			// handle 保存当前处理所用的实体句柄。
-			handle := target.Handle
-			if handler.Area {
-				// count 规定数量的初始取值。
-				count := 0
-				// e 接收遍历区域目标集合时当前的元素。
-				for _, e := range w.areaTargets(r, s, target.Pos) {
-					if e.HP < e.MaxHP && e.HealAmount == 0 {
-						count++
-					}
-				}
-				if count < s.AutoMinTargets {
-					continue
-				}
-				grid = pointPB(target.Pos)
-				handle = 0
-			}
-			if w.castAutomatically(r, s.ID, handle, direction, now, &manaNeeded, grid) {
-				return true
-			}
-			continue
-		}
-		if w.autoOffensiveCast(r, s, handler, focus, now, &manaNeeded) {
-			return true
-		}
-	}
-	return r.Auto && w.tryManaPotion(r, manaNeeded, now)
 }

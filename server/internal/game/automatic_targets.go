@@ -37,7 +37,7 @@ func (w *worker) autoAttack(r *room, now time.Time) {
 func (w *worker) autoAttackMonster(r *room, target *entity, now time.Time) bool {
 	// cells 保存由距离取得的地图格集合。
 	cells := distance(r.Player.Pos, target.Pos)
-	if target.HP <= 0 || cells < 1 || cells > 2 || cells == 2 && (!w.sourceTimeline() || !r.Melee.Thrusting) {
+	if target.HP <= 0 || cells < 1 || cells > 2 || cells == 2 && (!w.sourceTimeline() || !r.Melee.Thrusting || len(r.Role.SkillSlotIDs) == devconfig.AttackSkillSlotCount) {
 		return false
 	}
 	// ref 接收引用供后续步骤使用。
@@ -47,7 +47,7 @@ func (w *worker) autoAttackMonster(r *room, target *entity, now time.Time) bool 
 	if w.sourceTimeline() {
 		// direction 保存由“facing”取得的朝向。
 		direction := facing(r.Player.Pos, target.Pos, r.Player.Direction)
-		w.attackFacingTarget(r, direction, 0, 0, now, target)
+		w.attackSlotFallback(r, direction, 0, now, target)
 	} else {
 		w.attack(r, &r.Player, target, now)
 	}

@@ -29,16 +29,17 @@ func (w *worker) meterHosting(r *room, delta time.Duration, now time.Time) bool 
 		w.flushHostingSeconds(r, now)
 		return true
 	}
-	// elapsed 把本帧允许推进的时长换算为毫秒，余额只剩最后一秒时还要截断。
-	elapsed := delta.Milliseconds()
+	// elapsed 是本帧实际可累计的时长，保留帧间不足一毫秒的部分。
+	elapsed := delta
 	if remaining == 1 {
 		// 最后一秒到达门槛即暂停，不能把越过余额的时间记入下一次领取。
-		elapsed = min(elapsed, 1000-r.HostMS)
+		elapsed = min(elapsed, time.Second-r.hostRemainder)
 	}
-	r.HostMS += elapsed
-	r.hostSecondsOpen += r.HostMS / 1000
+	// total 是上一帧亚秒余量和本帧累计量，只有完整的秒数绑定结算。
+	total := r.hostRemainder + elapsed
+	r.hostSecondsOpen += int64(total / time.Second)
 	// 余量留在同一健康房间，整秒进入下一笔可追溯结算。
-	r.HostMS %= 1000
+	r.hostRemainder = total % time.Second
 	if r.hostSecondsOpen >= hostingCheckpointSeconds || r.hostSecondsOpen >= r.Role.HostingSeconds {
 		w.flushHostingSeconds(r, now)
 		return true

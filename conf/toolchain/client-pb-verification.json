@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 109,
+  "message_count": 111,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -67,6 +67,7 @@
     "EquippedItem",
     "LearnedSkill",
     "InventoryResult",
+    "SetSkillSlotsRequest",
     "ProgressionState",
     "ExperienceGrantResult",
     "AutoRecyclePolicy",
@@ -107,6 +108,7 @@
     "PersonalBossState",
     "PersonalBossQuery",
     "PersonalBossInfo",
+    "PersonalBossTemplateChoice",
     "ChallengePendingReward",
     "ClaimChallengeReward",
     "PersonalBossHistoryEntry",
@@ -116,8 +118,8 @@
     "WorldBossState",
     "WorldBossRank"
   ],
-  "int64_field_count": 253,
-  "int64_boundary_cases": 843,
+  "int64_field_count": 256,
+  "int64_boundary_cases": 853,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -692,6 +694,12 @@
     {
       "message": "AttackIntent",
       "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackIntent",
+      "field": "target_life",
       "type": "uint64",
       "cases": 3
     },
@@ -1548,6 +1556,18 @@
       "cases": 4
     },
     {
+      "message": "PersonalBossTemplateChoice",
+      "field": "map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PersonalBossTemplateChoice",
+      "field": "available_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "ChallengePendingReward",
       "field": "earned_at_unix_ms",
       "type": "int64",
@@ -1800,11 +1820,11 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "57196433a90dcaba614fb03372e7c37a8a5c956830f64d16fb3782b02bfc4846"
+      "sha256": "9babe5e3430e6bd8ebe3cc7037f7840408d05557fe09e481599c509695a226c6"
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "caa3d594c988fce3e384130b9a14d6c75a96d35a1c4db6ea3a50e860b3f1834b"
+      "sha256": "c0afd6e88ebbd025800c0428dbed2c90c21411893fccde23adddc17a4ffb1d67"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -1812,7 +1832,7 @@
     },
     {
       "path": "shared/proto/personal_boss.proto",
-      "sha256": "a54c4a30a863d3a121b96d002d1391cfacf29b7562db10db8277144992d0ccba"
+      "sha256": "ae7f8c8e5b44f3ee9ab882ba40132a6ca31015b7b90b4a5187d3c0ac34e8150b"
     },
     {
       "path": "shared/proto/world_boss.proto",
@@ -1822,13 +1842,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "6e3c4e720e6f7d6e6287b7de4488180eb8056ca01a5133d76bb69b7aec57b5bd",
-      "bytes": 1848602
+      "sha256": "16e24c9aa82e865b02dea30e60f1fc90ec79facfc506ceb01ac875f14a90be55",
+      "bytes": 1889621
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "f3ed88f1197f49cd31f0dbc829b2ac53cb50c3606ec717967577e228c957c428",
-      "bytes": 586312
+      "sha256": "bafb55582dc2b9ec811f1fa267604499a4c455140cfff402dbb5bffb534e6026",
+      "bytes": 598665
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

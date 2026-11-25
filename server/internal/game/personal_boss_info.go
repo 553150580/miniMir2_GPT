@@ -57,8 +57,9 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		w.send(owner, p.MsgS2CPersonalBossInfo, frame.Request, &pb.PersonalBossInfo{ErrorCode: persistence.Code(err)})
 		return
 	}
-	if info.EligibilityReason == persistence.PersonalBossEligible && (owner.currentWorld() != owner.PersonalWorld || owner.Player.HP <= 0 ||
-		owner.personalBoss != nil || owner.worldBossObservation != nil || owner.Travel != nil && owner.Travel.Phase < travelCommitted || pendingPersonalBossTransfer(owner) || mapTravelQuiescing(owner)) {
+	outside := owner.currentWorld() != owner.PersonalWorld || owner.Player.HP <= 0 || owner.personalBoss != nil || owner.worldBossObservation != nil ||
+		owner.Travel != nil && owner.Travel.Phase < travelCommitted || pendingPersonalBossTransfer(owner) || mapTravelQuiescing(owner)
+	if outside && info.EligibilityReason == persistence.PersonalBossEligible {
 		info.EligibilityReason = persistence.PersonalBossSceneForbidden
 	}
 	out := &pb.PersonalBossInfo{Open: info.Open, TemplateId: info.TemplateID, DisplayName: info.DisplayName, MapId: info.MapID,
@@ -66,6 +67,15 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		CanEnter: info.EligibilityReason == persistence.PersonalBossEligible, EligibilityReason: info.EligibilityReason,
 		AvailableAtUnixMs: optionalBossUnixMillis(info.AvailableAt), ActiveChallengeId: info.ActiveChallengeID, ActiveExpiresAtUnixMs: optionalBossUnixMillis(info.ActiveExpiresAt)}
 	out.PendingRewardCapacity = info.PendingRewardCapacity
+	for _, option := range info.Templates {
+		reason := option.EligibilityReason
+		if outside && reason == persistence.PersonalBossEligible {
+			reason = persistence.PersonalBossSceneForbidden
+		}
+		out.Templates = append(out.Templates, &pb.PersonalBossTemplateChoice{TemplateId: option.TemplateID, DisplayName: option.DisplayName,
+			MapId: option.MapID, MonsterId: option.MonsterID, MinimumLevel: option.MinimumLevel, CanEnter: reason == persistence.PersonalBossEligible,
+			EligibilityReason: reason, AvailableAtUnixMs: optionalBossUnixMillis(option.AvailableAt)})
+	}
 	for _, reward := range info.PendingRewards {
 		entry := &pb.ChallengePendingReward{RewardId: domain.Bytes(reward.RewardID), TemplateId: reward.TemplateID, EarnedAtUnixMs: reward.EarnedAt.UnixMilli()}
 		for _, item := range reward.Items {

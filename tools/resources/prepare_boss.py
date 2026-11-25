@@ -58,9 +58,10 @@ def project(tables, profile, ordinary_map, generic_map_ids, fighter):
     selection = profile.get('boss_template_ids')
     if selection is None:
         return {}, {}
-    if profile['rule_version'] < 28 or not isinstance(selection, list) or len(selection) != len(KINDS) or any(type(identity) is not int for identity in selection) or len(set(selection)) != len(KINDS):
-        raise ValueError('须在规则28起明确选择个人和世界首领模板')
+    if profile['rule_version'] < 28 or not isinstance(selection, list) or len(selection) < len(KINDS) or any(type(identity) is not int for identity in selection) or len(set(selection)) != len(selection):
+        raise ValueError('须在规则28起明确选择唯一编号的个人和世界首领模板')
     result = {'challenge_monsters': []}
+    entries = {kind: [] for kind in KINDS}
     evidence = {'monster_profiles': [], 'floor_map_ids': {}}
     seen_maps = set(generic_map_ids)
     seen_monsters = {profile['monster_id'], *(row['monster_template_id'] for row in tables['game_pet_templates'])}
@@ -69,11 +70,13 @@ def project(tables, profile, ordinary_map, generic_map_ids, fighter):
         integer(identity, 1, (1 << 32) - 1, '模板编号')
         row = selected_row(tables, 'game_boss_templates', identity)
         kind = row['boss_kind']
-        if kind not in KINDS or kind + '_boss' in result:
-            raise ValueError('仅允许一个个人和一个世界首领模板')
+        if kind not in KINDS:
+            raise ValueError('首领模板必须明确归属个人或世界场景')
         source_map = selected_row(tables, 'game_maps', row['map_id'])
         source_monster = selected_row(tables, 'game_monsters', row['monster_id'])
-        if source_monster['resource_key'] != visual or any(type(source_monster['attributes'].get(field)) is not bool for field in ('undead', 'can_push')):
+        profile_key = source_monster['resource_key']
+        if (profile_key != visual and not re.fullmatch(r'monster_boss_[a-z_]+', profile_key)
+                or any(type(source_monster['attributes'].get(field)) is not bool for field in ('undead', 'can_push'))):
             raise ValueError('候选首领需要当前已登记的可用形象及明确实体规则')
         collision = selected_row(tables, 'game_map_collisions', source_map['collision_id'])
         map_id = integer(source_map['id'], 1, (1 << 63) - 1, '地图编号')
@@ -127,12 +130,32 @@ def project(tables, profile, ordinary_map, generic_map_ids, fighter):
             if row['cooldown_seconds'] != 0 or row['failure_cooldown_seconds'] != 0:
                 raise ValueError('世界首领由每天的确认场次控制，不启用个人冷却')
             entry.update(world_schedule(tables), participant_limit=integer(participation[expected], 2, width * height - len(blocked) - 1, '共享人数'))
-        result[kind + '_boss'] = entry
+        entries[kind].append(entry)
         result['challenge_monsters'].append({**fighter(source_monster), 'id': monster_id, 'exp': 0, 'gold_min': 0, 'gold_max': 0, 'respawn_ms': 0})
         evidence['floor_map_ids'][str(map_id)] = str(floor)
         evidence['monster_profiles'].append({'definition_id': monster_id, 'name': source_monster['display_name'],
                                              'profile': source_monster['resource_key'], 'can_push': source_monster['attributes']['can_push']})
+    if any(not group for group in entries.values()):
+        raise ValueError('试玩首领目录需要个人与世界各至少一个模板')
+    rotate_world(entries['world'], profile.get('world_boss_slot_templates'))
+    for kind, (first, *variants) in entries.items():
+        result[kind + '_boss'] = first
+        if variants:
+            result[kind + '_boss_variants'] = variants
     return result, evidence
+
+
+def rotate_world(world, slot_templates):
+    """按已确认的开场时刻选择轮换模板，每个时段精确指向一个。"""
+    if len(world) == 1 and slot_templates is None:
+        return
+    offsets = world[0]['daily_open_offsets_ms']
+    templates = {entry['template_id'] for entry in world}
+    if (not isinstance(slot_templates, list) or len(slot_templates) != len(offsets)
+            or any(type(identity) is not int for identity in slot_templates) or set(slot_templates) != templates):
+        raise ValueError('世界首领轮换必须为每个开场时刻选入恰好一个已开放模板')
+    for entry in world:
+        entry['daily_open_offsets_ms'] = [at for at, identity in zip(offsets, slot_templates) if identity == entry['template_id']]
 
 
 def public_fields(fixture):
@@ -142,11 +165,15 @@ def public_fields(fixture):
         return {}, []
     maps = []
     for kind in KINDS:
-        grid = fixture[kind + '_boss']['map']
-        identity = str(grid['id'])
-        maps.append({'id': identity, 'name': grid['display_name'], 'resource_key': grid['resource_key'],
-                     'floor_map_id': evidence['floor_map_ids'][identity],
-                     **{field: deepcopy(grid[field]) for field in ('scene_kind', 'width', 'height', 'blocked', 'player_spawn')}})
-    world = fixture['world_boss']
-    return {'challenge_maps': maps, 'world_boss': {'map_id': str(world['map']['id']),
-            **{field: deepcopy(world[field]) for field in ('enabled', 'template_id', 'display_name', 'monster_id', 'minimum_level', 'daily_open_offsets_ms', 'window_ms', 'return_delay_ms')}}}, deepcopy(evidence['monster_profiles'])
+        for entry in (fixture[kind + '_boss'], *fixture.get(kind + '_boss_variants', [])):
+            grid = entry['map']
+            identity = str(grid['id'])
+            maps.append({'id': identity, 'name': grid['display_name'], 'resource_key': grid['resource_key'],
+                         'floor_map_id': evidence['floor_map_ids'][identity],
+                         **({'monster_definition_ids': [entry['monster_id']]} if fixture['rule_version'] >= 30 else {}),
+                         **{field: deepcopy(grid[field]) for field in ('scene_kind', 'width', 'height', 'blocked', 'player_spawn')}})
+    worlds = [{'map_id': str(entry['map']['id']),
+               **{field: deepcopy(entry[field]) for field in ('enabled', 'template_id', 'display_name', 'monster_id', 'minimum_level', 'daily_open_offsets_ms', 'window_ms', 'return_delay_ms')}}
+              for entry in (fixture['world_boss'], *fixture.get('world_boss_variants', []))]
+    return {'challenge_maps': maps, 'world_boss': worlds[0],
+            **({'world_bosses': worlds} if len(worlds) > 1 else {})}, deepcopy(evidence['monster_profiles'])

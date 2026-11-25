@@ -41,6 +41,12 @@ message InventoryResult {
   repeated LearnedSkill learned_skills = 7;
   AutoRecyclePolicy auto_recycle = 8;
   ProgressionState progression = 9;
+  // 四个有序槽，0表示空。历史未设置的角色可以缺省。
+  repeated uint32 skill_slot_ids = 10;
+}
+message SetSkillSlotsRequest {
+  repeated uint32 skill_slot_ids = 1;
+  OperationContext operation = 2;
 }
 // 只读永久成长观察；缺少目录或遗留超范围角色不凭数组长度猜上限。
 message ProgressionState {

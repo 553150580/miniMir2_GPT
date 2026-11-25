@@ -47,6 +47,7 @@ type worldBossObservation struct {
 	auth       persistence.Auth    // 原角色、账号和会话代次。
 	scene      uint64              // 此连接观察共享场次用的场景代次。
 	baseline   uint64              // 此连接必须确认的场景基线。
+	assets     roleAssetView       // 原角色 owner 冻结的只读资产视图，供匹配场次 ACK 后同步。
 	shown      bool                // 角色 owner 已暂停本连接的普通场景投影。
 	started    atomic.Bool         // 已由场次分片真正提交新场景首帧，离开时据此决定是否发返回场景。
 	revoked    atomic.Bool         // 本席位的原命令和投递已经失效。
@@ -83,6 +84,23 @@ func worldBossWindow(cfg *devconfig.WorldBossConfig, runID uint64, now time.Time
 	return worldBossOccurrence{}, false
 }
 
+// worldBossForFixture 选择正在开放或最近预告的一场，保留运行服和真实开场生成的原身份。
+func worldBossForFixture(f *devconfig.Fixture, runID uint64, now time.Time) (worldBossOccurrence, *devconfig.WorldBossConfig, bool) {
+	if f.WorldBoss == nil {
+		return worldBossOccurrence{}, nil, false
+	}
+	selected := f.WorldBoss
+	window, open := worldBossWindow(selected, runID, now)
+	for i := range f.WorldBossVariants {
+		candidate := &f.WorldBossVariants[i]
+		occurrence, active := worldBossWindow(candidate, runID, now)
+		if !occurrence.opensAt.IsZero() && (window.opensAt.IsZero() || occurrence.opensAt.Before(window.opensAt)) {
+			selected, window, open = candidate, occurrence, active
+		}
+	}
+	return window, selected, open
+}
+
 // worldBossCommand 分流共享场次协议和已经切到共享场景的输入。
 func (w *worker) worldBossCommand(owner *room, c command) bool {
 	f := c.frame
@@ -103,7 +121,7 @@ func (w *worker) worldBossCommand(owner *room, c command) bool {
 		return false
 	}
 	switch f.ID {
-	case p.MsgC2SWorldBossLeave, p.MsgC2SEnterWorldAck, p.MsgC2SMoveIntent, p.MsgC2SAttackIntent, p.MsgC2SCastIntent, p.MsgC2SSkillModeIntent:
+	case p.MsgC2SWorldBossLeave, p.MsgC2SEnterWorldAck, p.MsgC2SMoveIntent, p.MsgC2SAttackIntent, p.MsgC2SCastIntent, p.MsgC2SSkillModeIntent, p.MsgC2SAutoBattle:
 		if !w.postWorldBoss(obs.actor, func(actor *worker) { actor.applyWorldBossCommand(obs, f, time.Now()) }) {
 			w.failure(owner, f, p.CodeServerBusy)
 		}
@@ -143,11 +161,11 @@ func (w *worker) queryWorldBoss(owner *room, f wire.Frame) {
 		return
 	}
 	conn, auth := owner.Conn, owner.Auth
-	runID, cfg := store.Cfg.RunID, store.Cfg.Fixture.WorldBoss
+	runID, fixture := store.Cfg.RunID, &store.Cfg.Fixture
 	actor := w.e.workers[runID%uint64(len(w.e.workers))]
 	if !w.postWorldBoss(actor, func(actor *worker) {
 		if conn.Alive() && conn.Binding() == uint64(auth.SessionEpoch) {
-			conn.Deliver(wire.Message(p.MsgS2CWorldBossState, f.Request, uint64(auth.SessionEpoch), actor.worldBossStatus(cfg, runID, scene, time.Now())))
+			conn.Deliver(wire.Message(p.MsgS2CWorldBossState, f.Request, uint64(auth.SessionEpoch), actor.worldBossStatus(fixture, runID, scene, time.Now())))
 		}
 	}) {
 		w.failure(owner, f, p.CodeServerBusy)
@@ -163,8 +181,8 @@ func (w *worker) beginWorldBoss(owner *room, f wire.Frame, now time.Time) {
 	}
 	store := w.roomStore(owner)
 	fixture := &store.Cfg.Fixture
-	if !fixture.ValidWorldBoss() || fixture.WorldBoss.TemplateID != q.TemplateId || owner.Role.Level < fixture.WorldBoss.MinimumLevel ||
-		owner.currentWorld() != owner.PersonalWorld || owner.Player.HP <= 0 || owner.Scene >= math.MaxUint64-1 {
+	if !fixture.ValidWorldBoss() || owner.currentWorld() != owner.PersonalWorld ||
+		owner.Player.HP <= 0 || owner.Scene >= math.MaxUint64-1 {
 		w.failure(owner, f, p.CodeLineForbidden)
 		return
 	}
@@ -172,17 +190,16 @@ func (w *worker) beginWorldBoss(owner *room, f wire.Frame, now time.Time) {
 		w.failure(owner, f, p.CodeLineRecovering)
 		return
 	}
-	cfg := fixture.WorldBoss
-	occurrence, open := worldBossWindow(cfg, store.Cfg.RunID, now)
-	if !open || occurrence.id != q.OccurrenceId {
+	occurrence, cfg, open := worldBossForFixture(fixture, store.Cfg.RunID, now)
+	if !open || occurrence.id != q.OccurrenceId || cfg.TemplateID != q.TemplateId || owner.Role.Level < cfg.MinimumLevel {
 		w.failure(owner, f, p.CodeLineForbidden)
 		return
 	}
-	w.submitWorldBossSeat(owner, store, occurrence, f, false)
+	w.submitWorldBossSeat(owner, store, cfg, occurrence, f, false)
 }
 
 // submitWorldBossSeat 将冻结的新身份交给场次，自动重入由原 actor 核对旧快照。
-func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, occurrence worldBossOccurrence, frame wire.Frame, resumeOnly bool) {
+func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, cfg *devconfig.WorldBossConfig, occurrence worldBossOccurrence, frame wire.Frame, resumeOnly bool) {
 	baseline, available := w.nextTravelBaseline(owner.Baseline)
 	if !available {
 		if !resumeOnly {
@@ -193,7 +210,7 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, occu
 	var snapshot personalBossSnapshot
 	var snapshotID string
 	if !resumeOnly {
-		snapshot = w.freezePersonalBossSnapshot(owner, &devconfig.PersonalBossConfig{Map: store.Cfg.Fixture.WorldBoss.Map})
+		snapshot = w.freezePersonalBossSnapshot(owner, &devconfig.PersonalBossConfig{Map: cfg.Map})
 		encoded, err := json.Marshal(snapshot)
 		if err != nil || owner.Isolated || snapshot.Fighter.HP <= 0 {
 			w.isolateRoom(owner)
@@ -201,10 +218,16 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, occu
 		}
 		snapshotID = persistence.Hash(encoded)
 	}
+	assets, err := snapshotRoleAssets(owner.Role, store.Cfg.Fixture)
+	if err != nil {
+		w.isolateRoom(owner)
+		return
+	}
 	obs := &worldBossObservation{occurrence: occurrence, owner: w, actor: w.e.workers[occurrence.runID%uint64(len(w.e.workers))],
-		conn: owner.Conn, auth: owner.Auth, scene: owner.Scene + 1, baseline: baseline}
+		conn: owner.Conn, auth: owner.Auth, scene: owner.Scene + 1, baseline: baseline, assets: assets}
 	role := domain.Role{ID: owner.Role.ID, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level,
-		EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills}
+		EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills, HostingSeconds: owner.Role.HostingSeconds,
+		SkillSlotIDs: snapshot.SkillSlotIDs}
 	enter := worldBossEnter{observation: obs, snapshot: snapshot, role: role, store: store, snapshotID: snapshotID, request: frame.Request, resumeOnly: resumeOnly}
 	owner.worldBossObservation = obs
 	if !w.postWorldBoss(obs.actor, func(actor *worker) { actor.reserveWorldBoss(enter, time.Now()) }) {
@@ -235,9 +258,9 @@ func (w *worker) resumeWorldBossObservation(owner *room, now time.Time) {
 	if previous.runID != store.Cfg.RunID || !store.Cfg.Fixture.ValidWorldBoss() {
 		return
 	}
-	window, active := worldBossWindow(store.Cfg.Fixture.WorldBoss, previous.runID, now)
+	window, cfg, active := worldBossForFixture(&store.Cfg.Fixture, previous.runID, now)
 	if active && window.id == previous.id {
-		w.submitWorldBossSeat(owner, store, window, wire.Frame{}, true)
+		w.submitWorldBossSeat(owner, store, cfg, window, wire.Frame{}, true)
 	}
 }
 

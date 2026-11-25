@@ -42,6 +42,21 @@ type PersonalBossInfo struct {
 	History               []PersonalBossChallenge         // 角色最近已终结场次，按结束时间倒序。
 	PendingRewards        []domain.ChallengePendingReward // 该永久绑定角色的全部未领原附件。
 	PendingRewardCapacity uint32                          // 当前发布允许为新挑战预留的待领笔数。
+	Templates             []PersonalBossTemplateChoice    // 同一次查询读取的实际个人挑战菜单。
+}
+
+// PersonalBossTemplateChoice 保存单模板的等级、地图和独立冷却资格。
+type PersonalBossTemplateChoice struct {
+	TemplateID, MonsterID, MinimumLevel, EligibilityReason uint32
+	DisplayName                                            string
+	MapID                                                  uint64
+	AvailableAt                                            time.Time
+}
+
+// choice 只复制角色在此模板的资格和入口资料。
+func (info PersonalBossInfo) choice() PersonalBossTemplateChoice {
+	return PersonalBossTemplateChoice{TemplateID: info.TemplateID, MonsterID: info.MonsterID, MinimumLevel: info.MinimumLevel,
+		DisplayName: info.DisplayName, MapID: info.MapID, EligibilityReason: info.EligibilityReason, AvailableAt: info.AvailableAt}
 }
 
 // personalBossAvailability 让目录查询和预约事务采用同一等级、次数与冷却规则。
@@ -144,6 +159,11 @@ func (s *Store) QueryPersonalBoss(ctx context.Context, a Auth) (PersonalBossInfo
 		}
 		if template == nil {
 			return nil
+		}
+		out.Templates = append(out.Templates, out.choice())
+		for i := range cfg.PersonalBossVariants {
+			option := personalBossAvailability(r, state, &cfg.PersonalBossVariants[i], now)
+			out.Templates = append(out.Templates, option.choice())
 		}
 		cursor, err := s.DB.Collection(personalBossCollection).Find(tc, bson.M{"role_id": r.ID, "finished_at": bson.M{"$type": "date"}},
 			options.Find().SetSort(bson.D{{Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}).SetLimit(int64(template.HistoryLimit)))

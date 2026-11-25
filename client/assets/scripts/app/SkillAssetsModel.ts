@@ -1,7 +1,7 @@
 import { PotionInteger, PotionItem } from './PotionModel';
 
 export interface SkillAssetItem extends PotionItem { sourceKind?: string; sourceId?: string; quality?: number; locked?: boolean; recycleBlockFlags?: number; }
-export interface SkillAssetDefinition { item_id: number; name: string; kind: string; skill_id?: number; }
+export interface SkillAssetDefinition { item_id: number; name: string; kind: string; skill_id?: number; allowed_jobs?: readonly number[]; }
 export interface ShopOffer {
     offer_id: number; item_id: number; name: string; quantity: number; currency_kind: 'gold' | 'ingot' | 'bound_ingot';
     price_units: number; required_role_level: number; output_bound: boolean; max_purchase_quantity: number;
@@ -13,7 +13,7 @@ export interface SkillUpgradeRule {
 export interface SkillBookRecycleRule { item_id: number; book_quality: number; page_item_id: number; pages_per_book: number; allowed_source_kinds: readonly string[]; }
 export interface AssetWallet { revision: PotionInteger; gold: PotionInteger; boundGold: PotionInteger; yuanbaoUnits: PotionInteger; boundYuanbaoUnits: PotionInteger; }
 export interface SkillAssetsSnapshot {
-    ready: boolean; roleIdentity: string; sceneEpoch: PotionInteger; ruleVersion: PotionInteger;
+    ready: boolean; roleIdentity: string; sceneEpoch: PotionInteger; ruleVersion: PotionInteger; job?: number;
     inventory: { revision: PotionInteger; level: number; items: readonly SkillAssetItem[]; learnedSkills?: readonly { skillId: number; level: number }[] } | null;
     wallet: AssetWallet | null; definitions: readonly SkillAssetDefinition[];
     skills: readonly { id: number; name: string; job_id: number; max_level: number }[];
@@ -90,6 +90,13 @@ export class SkillMaterialSelection {
 export function canRecycleBook(item: SkillAssetItem, rules: readonly SkillBookRecycleRule[]): boolean {
     return assetInteger(item.quantity) > 0n && !!item.sourceId && rules.some(rule => rule.item_id === item.itemId && rule.book_quality === (item.quality ?? 0)
         && rule.allowed_source_kinds.includes(item.sourceKind ?? ''));
+}
+
+// 背包详情从这一本或这一叠技能书中选择一本，沿现有拆书报价提交。
+export function prepareBookRecycle(snapshot: SkillAssetsSnapshot, item: SkillAssetItem): PreparedSkillAsset {
+    if (!canRecycleBook(item, snapshot.recycle) || item.locked || item.recycleBlockFlags) throw new Error('此技能书当前不能拆解');
+    const materials = [{ instanceId: new Uint8Array(item.instanceId), version: item.version, quantity: 1n }];
+    return { context: captureSkillAssetContext(snapshot, materials), request: { kind: 3, offerId: 0, quantity: 0n, skillId: 0, materials } };
 }
 
 // 合并只认已知同源原实例；容量与最终叠数由服务端真实报价决定。

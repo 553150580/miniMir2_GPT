@@ -39,8 +39,11 @@ type worldBossSeat struct {
 }
 
 // worldBossStatus 为查询返回当前开放、终态或下一场的日程与共享进度。
-func (w *worker) worldBossStatus(cfg *devconfig.WorldBossConfig, runID, scene uint64, now time.Time) *pb.WorldBossState {
-	occurrence, open := worldBossWindow(cfg, runID, now)
+func (w *worker) worldBossStatus(fixture *devconfig.Fixture, runID, scene uint64, now time.Time) *pb.WorldBossState {
+	occurrence, cfg, open := worldBossForFixture(fixture, runID, now)
+	if cfg == nil {
+		return &pb.WorldBossState{SceneEpoch: scene, ErrorCode: p.CodeLineForbidden}
+	}
 	if arena := w.worldBossArenas[runID]; arena != nil && arena.occurrence.id == occurrence.id {
 		return arena.state(scene, worldBossFighting)
 	}
@@ -85,8 +88,7 @@ func (w *worker) reserveWorldBoss(enter worldBossEnter, now time.Time) {
 		return
 	}
 	fixture := &enter.store.Cfg.Fixture
-	cfg := fixture.WorldBoss
-	occurrence, open := worldBossWindow(cfg, enter.store.Cfg.RunID, now)
+	occurrence, cfg, open := worldBossForFixture(fixture, enter.store.Cfg.RunID, now)
 	if w.e.stopped.Load() || !open || occurrence.id != obs.occurrence.id || obs.auth.RoleID != enter.role.ID {
 		w.rejectWorldBoss(enter, p.CodeLineForbidden)
 		return
@@ -174,10 +176,11 @@ func (a *worldBossArena) addSeat(enter worldBossEnter, now time.Time) *worldBoss
 		pet.Pos = petPos
 	}
 	grant := bossParticipantGrant{challenge: a.challenge.identity, roleID: enter.role.ID, reservationID: domain.ID(), combatSnapshot: enter.snapshotID}
-	world := &worldState{MapID: mapTemplate.ID, BossMap: mapTemplate, Monsters: []*entity{a.boss}, MonsterCount: 1}
+	world := &worldState{MapID: mapTemplate.ID, BossMap: mapTemplate, Monsters: []*entity{a.boss}, MonsterCount: 1, Auto: true}
 	a.nextHandle++
 	fighter := enter.snapshot.Fighter
 	child := &room{worldState: world, runStore: enter.store, Auth: obs.auth, Conn: obs.conn, Role: enter.role, Scene: obs.scene, Baseline: obs.baseline,
+		AutoSkills: enter.snapshot.autoSkills,
 		Player:     entity{Handle: a.nextHandle, Kind: 1, Def: enter.role.Job, Pos: point, HP: fighter.HP, MaxHP: fighter.HP, MP: fighter.MP, MaxMP: fighter.MP, Life: 1},
 		bossBattle: &personalBossBattle{challenge: a.challenge, grant: grant, fighter: fighter, boss: a.boss}, worldBossCombat: a,
 		AwaitUntil: minBossTime(now.Add(10*time.Second), a.occurrence.closesAt), LastTick: now, LastBroadcast: now}
@@ -280,6 +283,12 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 			w.removeWorldBossSeat(arena, seat, worldBossLeft)
 			return
 		}
+		if ack.ChallengeAutoBattleEnabled != nil {
+			child.Auto = *ack.ChallengeAutoBattleEnabled
+			if !child.Auto {
+				child.AutoTarget = actorRef{}
+			}
+		}
 		child.Ready, child.LastTick = true, now
 		w.snapshot(child)
 		// 其它端先收到该新身体，再能依据句柄和出生代次播放它的首个施法。
@@ -289,12 +298,19 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 			}
 		}
 		w.modes(child, now)
+		// 换场已丢弃客户端旧背包视图。仅匹配原首领基线后重发入场冻住的角色资料。
+		w.sendRoleAssetView(child, obs.assets)
+		w.hosting(child, 0)
 		w.sendSyncReady(child, frame.Request, &pb.SyncReady{SceneEpoch: obs.scene, BaselineId: obs.baseline, NextEconomicCommandSeq: uint64(child.Role.EconomicSeq + 1)})
 		w.send(child, p.MsgS2CWorldBossState, 0, arena.state(obs.scene, worldBossFighting))
 		return
 	}
 	if !child.Ready {
 		w.failure(child, frame, p.CodeLineRecovering)
+		return
+	}
+	if frame.ID == p.MsgC2SAutoBattle {
+		w.bossAutoBattleIntent(child, frame)
 		return
 	}
 	w.roomCommand(child, command{conn: obs.conn, frame: frame})

@@ -64,7 +64,7 @@ func TestPersonalBossPlayerDefeatMongoWS(t *testing.T) {
 	if c.entry.ServerTransitionId != booking.ChallengeId || monster.GetDefinitionId() != template.Monster.ID || challengeBody.GetHp() <= 0 {
 		t.Fatal("玩家未进入具有活体首领的批准挑战", c.entry, c.scene)
 	}
-	travelAcknowledge(c, false)
+	travelAcknowledge(c, false, false)
 	var outcome pb.PersonalBossState
 	var damage int64
 	travelUntilWithin(c, 5*time.Second, func(frame wire.Frame) bool {
@@ -132,6 +132,7 @@ func TestPersonalBossPlayerDefeatMongoWS(t *testing.T) {
 func TestSharedWorldBossPlayerDefeatMongoWS(t *testing.T) {
 	ctx, store, endpoint, route := startChallengePlayerDeathServer(t, func(cfg *devconfig.Config) {
 		boss := cfg.Fixture.WorldBoss
+		cfg.Fixture.WorldBossVariants = nil // 独立验证单场战败，无关真实运营轮换。
 		boss.Map.PlayerSpawn, boss.Map.MonsterSpawns = devconfig.Point{X: 5, Y: 5}, []devconfig.Point{{X: 6, Y: 5}}
 		// 第一个席位承担持续近战，第二个席位有时间在同场退到安全格。
 		boss.Monster.Accuracy, boss.Monster.AttackMin, boss.Monster.AttackMax = 10_000, 5, 5

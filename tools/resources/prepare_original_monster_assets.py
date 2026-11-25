@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from build_hud_assets import base_meta, image_meta, stable_uuid
+from creator_json_meta import content_meta_bytes
 from prepare_shinsu_assets import DIRECTIONS, ROOT, sha
 from prepare_shinsu_lib_preview import encode_json, load_lib, read_frame
 
@@ -17,8 +18,12 @@ ART = {
     'monster_m1_spider': (12, 'SpittingSpider', 'b7b55455723dbbbc1a39c236f4a05abc422f61f15a0b7e9c2007bff3ffd86d27'),
     'monster_boss_guard': (18, 'OmaWarrior', '03a14b21056c66baea72e92285e9115df72ec3324e1a2376e45df8270094dcd1'),
     'monster_boss_lord': (34, 'WoomaTaurus', '5bfa3816f89a09e3b763ae9eff7e4776240ad4092b5a40dca90c93fd32d96bad'),
+    'monster_boss_bone_elite': (26, 'BoneElite', '8eb9444e8d840e09ff252466c4c267b85dd02238a9e54cc32cb32a9daa8d6f7c'),
+    'monster_boss_white_boar': (48, 'WhiteBoar', '10a63e10d833019acfd821b8fd0aca02f2de7652f64c800b5c83c7ff8be812a2'),
+    'monster_boss_zuma_taurus': (68, 'ZumaTaurus', 'fcc5989054d90e0ec37b401028e6099e483edac931ee116a4cb3f487cd4babdf'),
 }
-CHALLENGES = {'80001': 'monster_boss_guard', '80002': 'monster_boss_lord'}
+CHALLENGES = {'80001': 'monster_boss_guard', '80002': 'monster_boss_lord', '80003': 'monster_boss_bone_elite',
+              '80004': 'monster_boss_white_boar', '80005': 'monster_boss_zuma_taurus'}
 ACTIONS = {'standing': 'Standing', 'walking': 'Walking', 'attack': 'Attack1', 'struck': 'Struck', 'die': 'Die'}
 
 
@@ -73,8 +78,9 @@ def compile_art(source):
             actions[action] = {'count': count, 'duration_ms': row['interval_ms'], 'loop': action == 'standing',
                                'blend': 'additive' if row['blend'] else 'normal', 'directions': directions}
         catalog['profiles'][profile_id] = {'id': profile_id, 'layers': [{'package': 'Hunt', 'actions': actions}]}
-    files[f'{PACKAGE}/actors.json'] = encode_json(catalog)
-    files[f'{PACKAGE}/actors.json.meta'] = encode_json(base_meta('json', '2.0.1', stable_uuid(f'{PACKAGE}-manifest'), ['.json']))
+    actors_path = f'{PACKAGE}/actors.json'
+    files[actors_path] = encode_json(catalog)
+    files[actors_path + '.meta'] = content_meta_bytes(f'development/{actors_path}', files[actors_path])
     for directory in (PACKAGE, f'{PACKAGE}/frames'):
         files[directory + '.meta'] = encode_json(base_meta('directory', '1.2.0', stable_uuid(directory), []))
     return catalog, files

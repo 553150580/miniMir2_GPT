@@ -81,6 +81,7 @@ export const MsgC2STaskCodexState: 40027 = 40027;
 export const MsgS2CTaskCodexState: 40028 = 40028;
 export const MsgC2STaskCodexClaim: 40029 = 40029;
 export const MsgC2SClaimChallengeReward: 40030 = 40030;
+export const MsgC2SSetSkillSlots: 40031 = 40031;
 export const CodeOK: 0 = 0;
 export const CodeInvalidArgument: 1001 = 1001;
 export const CodeUnauthenticated: 1002 = 1002;

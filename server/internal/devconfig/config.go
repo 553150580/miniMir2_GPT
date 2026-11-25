@@ -213,8 +213,16 @@ type Fixture struct {
 	WorldBoss *WorldBossConfig `json:"-"`
 	// WorldBossRelease 是配置工作簿中已批准且显式开放的共享首领候选。
 	WorldBossRelease *WorldBossDefinition `json:"world_boss,omitempty"`
+	// WorldBossVariantReleases 补充按非重叠时段投入同一运行服的世界首领。
+	WorldBossVariantReleases []WorldBossDefinition `json:"world_boss_variants,omitempty"`
+	// WorldBossVariants 是装载校验后的其他世界场次模板。
+	WorldBossVariants []WorldBossConfig `json:"-"`
 	// PersonalBossRelease 是唯一工作簿的显式开发候选定义。
 	PersonalBossRelease *PersonalBossDefinition `json:"personal_boss,omitempty"`
+	// PersonalBossVariantReleases 补充玩家可选的独立个人首领。
+	PersonalBossVariantReleases []PersonalBossDefinition `json:"personal_boss_variants,omitempty"`
+	// PersonalBossVariants 是装载检查后允许选择的个人挑战。
+	PersonalBossVariants []PersonalBossConfig `json:"-"`
 	// PersonalBoss 保存已由来源编号解析完成的挑战配置。
 	PersonalBoss *PersonalBossConfig `json:"-"`
 	// ChallengeMonsters 保存特殊挑战的怪物来源，不并入普通挂机的刷怪集合。
@@ -306,6 +314,8 @@ type Fixture struct {
 	OrdinaryDropPools []OrdinaryDropPool `json:"ordinary_drop_pools,omitempty"`
 	// OrdinaryEquipmentQuotas 收录明确启用的普通怪稀有和史诗装备额度。
 	OrdinaryEquipmentQuotas []OrdinaryEquipmentQuota `json:"drop_quotas,omitempty"`
+	// HostingBenefits 包含当日领时和真实普通击杀按权益发放的加成。
+	HostingBenefits *HostingBenefits `json:"hosting_benefits,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
 	Progression ProgressionRules `json:"progression"`
 	// InitialInventory 记录初始值背包资产，使用数值列表表示。
@@ -542,6 +552,9 @@ func (f *Fixture) Validate() error {
 		return errors.New("普通掉落须互斥65/20/10/5与20杀保底")
 	}
 	if err := f.validateOrdinaryDropPools(); err != nil {
+		return err
+	}
+	if err := f.validateHostingBenefits(); err != nil {
 		return err
 	}
 	// id 接收遍历“append”时当前的元素。

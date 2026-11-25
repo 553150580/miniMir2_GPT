@@ -26,7 +26,7 @@ GROUP_PREFIXES = {
     'hosting': ('ManaPotion', 'AutoTarget', 'CompactTown', 'FirstLoop', 'FullBagOffline',
                 'LevelGrowthNatural', 'MapTravel'),
     'scene-lifecycle': ('MonsterRespawn', 'SharedTown'),
-    'skills': ('Combat', 'Displacement', 'PetRuntime', 'SkillLearning', 'SummonPet', 'Taoist', 'Teleport'),
+    'skills': ('Combat', 'Displacement', 'PetRuntime', 'SkillAttackSlots', 'SkillLearning', 'SummonPet', 'Taoist', 'Teleport'),
     'bosses': ('PersonalBoss', 'SharedWorldBoss'),
 }
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。

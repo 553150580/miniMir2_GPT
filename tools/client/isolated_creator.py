@@ -14,6 +14,7 @@ SELECTED = ['assets', 'settings', 'profiles', '.creator', 'node_modules', 'packa
 EDITOR_CACHES = ['settings/v2/packages/information.json']
 sys.path.insert(0, str(ROOT / 'tools/resources'))
 from prepare_first_loop import public_gameplay
+from creator_json_meta import content_meta_bytes
 
 
 def sha(path):
@@ -79,8 +80,11 @@ def prepare_project(directory, fixture):
     public = public_gameplay(fixture)
     public_path = project / 'assets/resources/development/gameplay.json'
     save(public_path, public)
+    public_meta = public_path.with_suffix('.json.meta')
+    public_meta.write_bytes(content_meta_bytes('development/gameplay.json', public_path.read_bytes()))
     expected = dict(snapshot)
     expected['assets/resources/development/gameplay.json'] = sha(public_path)
+    expected['assets/resources/development/gameplay.json.meta'] = sha(public_meta)
     if files(project) != expected:
         raise RuntimeError('除编译器生成public外的工程输入发生变化')
     report = {'project': str(project), 'source_sha256': snapshot, 'project_sha256': expected,
@@ -144,7 +148,9 @@ def reuse_project(directory, artifact_directory, fixture):
         raise RuntimeError('主工程输入已变化，必须重新真实构建')
     public = (json.dumps(public_gameplay(fixture), ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     public_sha = hashlib.sha256(public).hexdigest()
-    expected = {**source, 'assets/resources/development/gameplay.json': public_sha}
+    public_meta = content_meta_bytes('development/gameplay.json', public)
+    expected = {**source, 'assets/resources/development/gameplay.json': public_sha,
+                'assets/resources/development/gameplay.json.meta': hashlib.sha256(public_meta).hexdigest()}
     if expected != prepared['project_sha256'] or expected != built['input_sha256'] or public_sha != built['public_sha256'] or public_sha != prepared['public_sha256'] or input_snapshot(project) != expected:
         raise RuntimeError('候选public或独立工程输入已变化，不能复用构建')
     if not built.get('build_sha256') or 'index.html' not in built['build_sha256'] or files(project / 'build/web-mobile') != built['build_sha256']:

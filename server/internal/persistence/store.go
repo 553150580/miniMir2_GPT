@@ -109,6 +109,8 @@ type Operation struct {
 	Vendor            *VendorReceipt                 `bson:"npc_trade,omitempty"`              // NPC 买卖或修理的原成交参数和结果。
 	TaskCodex         *TaskCodexClaimReceipt         `bson:"tasks_codex_claim,omitempty"`      // 原任务或图鉴领取确认的定义及绑定奖励。
 	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
+	SkillSlotIDs      []uint32                       `bson:"skill_slot_ids,omitempty"`         // 已确认的四个技能槽位。
+	HostingClaim      *HostingClaimReceipt           `bson:"hosting_claim,omitempty"`          // 首次确认的日领时长及原权益快照。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。

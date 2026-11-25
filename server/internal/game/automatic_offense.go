@@ -120,7 +120,7 @@ func (w *worker) autoDirectAim(r *room, skill devconfig.Skill, focus *entity) *e
 // 选心和朝向只控制本次施法。已释放的直线与范围依旧依其能力结算附带目标。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，skill 记录技能，handler 记录处理器，使用技能处理器表示，focus 记录“focus”，使用实体表示。
 // now 提供当前时点，作为状态有效期和计时判断的基准，need 记录所需量，使用自动魔法值所需量表示。
-func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skillHandler, focus *entity, now time.Time, need *automaticManaNeed) bool {
+func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skillHandler, focus *entity, now time.Time, need *automaticManaNeed, input uint32, lock bool) bool {
 	// target 记录目标，使用实体表示。
 	var target *entity
 	// grid 记录网格，使用网格点位表示。
@@ -154,13 +154,15 @@ func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skill
 	// accepted 表示本次动作已受理，耗材技能先提交永久扣料任务。
 	var accepted bool
 	if skill.MaterialQuantity > 0 {
-		accepted = w.autoMaterialCast(r, skill, handle, direction, grid, now, need)
+		accepted = w.autoMaterialCast(r, skill, handle, direction, grid, now, need, input)
 	} else {
-		accepted = w.castAutomatically(r, skill.ID, handle, direction, now, need, grid)
+		accepted = w.castAutomatically(r, skill.ID, handle, direction, now, need, grid, input)
 	}
 	if !accepted {
 		return false
 	}
-	r.lockAutoTarget(ref)
+	if lock {
+		r.lockAutoTarget(ref)
+	}
 	return true
 }

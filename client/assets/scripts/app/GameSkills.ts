@@ -1,7 +1,7 @@
 import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { isDirectionalSkill, isGroundSkill, isSummonRecall, needsCastingSupply, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
+import { attackSkillSlotIDs, canQueueSkill, isDirectionalSkill, isGroundSkill, isSummonRecall, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows, skillUseBlock } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -37,6 +37,7 @@ export class GameSkills {
         this.boundQuickSkillId = boundQuickSkillId;
         this.input = input; this.rows = skillRows(input);
         if (!this.rows.some(row => row.definition.id === this.selectedId)) this.selectedId = this.rows[0]?.definition.id ?? 0;
+        this.renderAttackSlots(input);
         const current = this.selected, toggleNode = this.saved('ModeToggle'), toggle = toggleNode.getComponent(Toggle)!;
         const usesToggle = !!current && skillActivation(current.definition) === 'toggle';
         toggleNode.active = usesToggle; this.saved('Use').active = !usesToggle;
@@ -44,9 +45,9 @@ export class GameSkills {
         const pending = input.modePending?.skillId === current?.definition.id ? input.modePending : undefined;
         // 勾选只显示已确认状态，回执期间用文案和禁用态反馈本次点击。
         toggle.setIsCheckedWithoutNotify(!!mode?.enabled);
-        toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode && !input.modePending);
+        toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode && !input.modePending && !skillUseBlock(input, current));
         this.text('ModeToggle/Label', pending ? pending.enabled ? '正在开启' : '正在关闭' : mode ? mode.enabled ? '已开启' : '未开启' : '同步中');
-        const key = JSON.stringify({ ready: input.ready, castingSupplyEnabled: input.castingSupplyEnabled, mapNoPets: input.mapNoPets, auto: input.autoSkillSettings, pending: input.modePending, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillActionLabel(input, row), skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId, boundQuick: boundQuickSkillId });
+        const key = JSON.stringify({ ready: input.ready, scene: input.sceneKind, castingSupplyEnabled: input.castingSupplyEnabled, mapNoPets: input.mapNoPets, auto: input.autoSkillSettings, pending: input.modePending, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillActionLabel(input, row), skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId, boundQuick: boundQuickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
@@ -62,9 +63,7 @@ export class GameSkills {
         const learn = this.saved('Learn').getComponent(Button)!;
         const use = this.saved('Use').getComponent(Button)!;
         learn.interactable = !!selected?.canLearn;
-        use.interactable = !!(input.ready && selected?.learned && selected.definition.active
-            && (!needsCastingSupply(input, selected) || input.castingSupplyEnabled !== false)
-            && !(selected.definition.kind === 'summon_pet' && input.mapNoPets)
+        use.interactable = !!(input.ready && selected?.learned && selected.definition.active && !skillUseBlock(input, selected)
             && !(skillActivation(selected.definition) === 'charge' && input.modePending)
             && (!['toggle', 'charge'].includes(skillActivation(selected.definition)) || skillMode(input, selected.definition.id))
             && !(skillActivation(selected.definition) === 'charge' && skillMode(input, selected.definition.id)?.ready));
@@ -78,6 +77,21 @@ export class GameSkills {
             input.autoSkillSettings ? input.autoSkillSettings.enabled ? '自动施法开' : '自动施法关' : '自动施法');
         this.setButton('SkillAuto', !!(input.ready && input.autoSkillSettings && selected?.learned && selected.definition.auto_enabled),
             this.automaticLabel(input, selected));
+    }
+
+    // 固定按钮保存在技能页；服务端库存确认前不改变槽位文字。
+    private renderAttackSlots(input: SkillSnapshot): void {
+        const slots = attackSkillSlotIDs(input.inventory?.skillSlotIds);
+        const available = !!input.canConfigureSlots && canQueueSkill(this.selected);
+        for (const [index, id] of slots.entries()) {
+            const button = this.panel.getChildByName(`AttackSlot${index + 1}`);
+            const definition = input.definitions.find(skill => skill.id === id);
+            const label = button?.getChildByName('Label')?.getComponent(Label);
+            const control = button?.getComponent(Button);
+            if (label) label.string = `${index + 1} · ${definition?.name ?? '空位'}`;
+            if (control) control.interactable = available;
+        }
+        this.setButton('ClearSlots', !!input.canConfigureSlots && slots.some(id => id !== 0));
     }
 
     dispose(): void {
@@ -99,6 +113,8 @@ export class GameSkills {
     private description(row: SkillRow, input: SkillSnapshot): string {
         const activation = skillActivation(row.definition), mode = skillModeStatus(input, row.definition);
         if (!row.definition.active) return `${skillPassiveText(row)}${mode ? `\n${mode}` : ''}`;
+        const block = skillUseBlock(input, row);
+        if (block) return block.reason;
         if (activation === 'toggle' && row.definition.kind === 'thrusting') return `${mode} · 普攻时前方第2格有怪才触发`;
         if (activation === 'toggle') return `${mode} · 普攻按模式出招`;
         if (activation === 'charge') return `${mode} · 充能消耗魔法 ${row.cost}`;

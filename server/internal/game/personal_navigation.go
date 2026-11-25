@@ -47,6 +47,19 @@ func (b *personalNavigationWorkspace) findFirstStep(m *devconfig.MapTemplate, r 
 
 	// start 保存位置，用于当前步骤中的起点或开始时间。
 	start := self.Pos
+	// 玩家明确点击的空闲地格必须真正可达。追击与临时占用目标仍沿用靠近原目标的规则。
+	exact := false
+	if self == &r.Player && r.Destination != nil && *r.Destination == target &&
+		r.Navigation.Status == navigationActive && m.Walkable(target) {
+		goal := target.Y*m.Width + target.X
+		exact = b.unavailable[goal/64]&(uint64(1)<<(goal%64)) == 0
+	}
+	// preferred 优先沿点击目标的朝向，等长路径以同向和最小偏转为先。
+	preferred := 0
+	if exact {
+		preferred = int(facing(start, target, 0))
+	}
+	offsets := [...]int{0, 1, 7, 2, 6, 3, 5, 4}
 	// startCell 保存根据纵坐标与宽度的计算结果与横坐标计算的起点或开始时间地图格。
 	startCell := start.Y*m.Width + start.X
 	b.markUnavailable(startCell)
@@ -65,7 +78,10 @@ func (b *personalNavigationWorkspace) findFirstStep(m *devconfig.MapTemplate, r 
 		// cur 建立带初始值的点位，供本段继续处理。
 		cur := devconfig.Point{X: cell % m.Width, Y: cell / m.Width}
 		// d 接收遍历朝向集合时当前的元素。
-		for _, d := range directions {
+		for direction, d := range directions {
+			if exact && head == 0 {
+				d = directions[(preferred+offsets[direction])%len(directions)]
+			}
 			// q 组装点位所需的数据。
 			q := devconfig.Point{X: cur.X + d.X, Y: cur.Y + d.Y}
 			if !m.Contains(q) {
@@ -87,8 +103,8 @@ func (b *personalNavigationWorkspace) findFirstStep(m *devconfig.MapTemplate, r 
 			if head == 0 {
 				firstCell = uint16(nextCell)
 			}
-			// 延续原规则，到达目标或首次发现更接近目标的相邻格时取首步。
-			if q == target || startDistance > 1 && distance(q, target) == 1 {
+			// 确切目标以抵达为终点，避免错误邻格造成往返。追击仍可选择邻格。
+			if q == target || !exact && startDistance > 1 && distance(q, target) == 1 {
 				return devconfig.Point{X: int(firstCell) % m.Width, Y: int(firstCell) / m.Width}, true
 			}
 			b.markUnavailable(nextCell)

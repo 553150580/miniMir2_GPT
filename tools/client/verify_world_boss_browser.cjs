@@ -13,6 +13,9 @@ const expected = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(expected.baseUrl);
 const socket = new URL(expected.endpoint);
 const atlasTextures = new Set(expected.atlasTexturePaths ?? []);
+const normalSkillUI = process.env.MINIMIR_WORLD_BOSS_NORMAL_SKILL_UI === '1';
+const verifySkillSlots = process.env.MINIMIR_WORLD_BOSS_VERIFY_SKILL_SLOTS === '1';
+const verifyChallengeAuto = process.env.MINIMIR_WORLD_BOSS_VERIFY_CHALLENGE_AUTO === '1';
 const expectedBossProfile = process.env.MINIMIR_QA_WORLD_BOSS_PROFILE;
 const expectedBossFramePrefix = process.env.MINIMIR_QA_WORLD_BOSS_FRAME_PREFIX;
 if (expectedBossProfile || expectedBossFramePrefix) {
@@ -25,26 +28,28 @@ assert(socket.protocol === 'ws:' && socket.hostname === '127.0.0.1' && socket.pa
 
 const safe = 'Canvas/Safe/';
 const bossRoot = 'UIMgr/Panels/BossChallenge';
+const skillsRoot = 'UIMgr/Panels/Skills';
 const reconnect = 'Canvas/ReconnectDialog';
 const viewport = { width: 720, height: 1280 };
 const coldEntryTimeoutMs = 90000;
 
 // 此等待只读取游戏真实 Cocos 节点，点击继续走 touch 和 Button 的正常处理。
-async function touch(page, fullPath, choice) {
+async function touch(page, fullPath, choice, inspectDisabled = false) {
     // 单浏览器只在前台完整绘制一页。每次真实触屏前切到该页，开闭窗等待期间保持前台。
     await page.bringToFront();
-    const handle = await page.waitForFunction(({ fullPath, choice }) => {
+    const handle = await page.waitForFunction(({ fullPath, choice, inspectDisabled }) => {
         const root = cc.find(fullPath);
-        const node = choice == null ? root : root?.children.find(child => child.activeInHierarchy
-            && child.getChildByName('Text')?.getComponent(cc.Label)?.string.replace(/^● /u, '') === choice);
-        if (document.hidden || !node?.activeInHierarchy || node.getComponent(cc.Button)?.interactable === false) return null;
+        const node = typeof choice === 'number' ? root?.getComponent('List')?.rows.get(choice) : choice == null ? root
+            : root?.children.find(child => child.activeInHierarchy
+                && child.getChildByName('Text')?.getComponent(cc.Label)?.string.replace(/^● /u, '') === choice);
+        if (document.hidden || !node?.activeInHierarchy || !inspectDisabled && node.getComponent(cc.Button)?.interactable === false) return null;
         const bounds = node._uiProps?.uiTransformComp?.getBoundingBoxToWorld();
         if (!bounds) return null;
         const size = cc.view.getVisibleSize();
         const rect = document.querySelector('canvas').getBoundingClientRect();
         return { x: rect.x + (bounds.x + bounds.width / 2) / size.width * rect.width,
             y: rect.y + (size.height - bounds.y - bounds.height / 2) / size.height * rect.height };
-    }, { fullPath, choice }, { timeout: 20000 });
+    }, { fullPath, choice, inspectDisabled }, { timeout: 20000 });
     try {
         const position = await handle.jsonValue();
         const pressedAt = Date.now();
@@ -147,7 +152,8 @@ async function openedClient(browser, report, job, nickname) {
     const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
     const page = await context.newPage();
     const requests = await coldNetwork(context, page);
-    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [] };
+    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [],
+        skillIntents: [], skillSlots: [], autoIntents: [] };
     page.on('pageerror', error => report.errors.push(error.message));
     page.on('websocket', connection => {
         if (connection.url() !== expected.endpoint) {
@@ -168,6 +174,20 @@ async function openedClient(browser, report, job, nickname) {
             }
             if (message === 20017) frames.queries++;
             if (message === 20018) frames.entries++;
+            if (verifySkillSlots && message === 40031) {
+                const request = pb.SetSkillSlotsRequest.decode(payload.subarray(bodyOffset(payload)));
+                frames.skillSlots.push({ ids: request.skill_slot_ids, command: request.operation.command_seq.toString(),
+                    hasOperation: request.operation.op_id.length === 16 });
+            }
+            if (verifyChallengeAuto && message === 30004) {
+                const request = pb.AutoBattleIntent.decode(payload.subarray(bodyOffset(payload)));
+                frames.autoIntents.push({ scene: request.scene_epoch.toString(), enabled: request.enabled, count: request.monster_count });
+            }
+            if (normalSkillUI && (message === 30003 || message === 40014)) {
+                const type = message === 30003 ? pb.CastIntent : pb.CastWithMaterialRequest;
+                const cast = type.decode(payload.subarray(bodyOffset(payload)));
+                frames.skillIntents.push({ message, scene: cast.scene_epoch.toString(), skill: cast.skill_id, target: cast.target_handle });
+            }
         });
         connection.on('framereceived', ({ payload }) => {
             if (typeof payload === 'string' || payload.length < 6) return;
@@ -380,10 +400,131 @@ async function learnObserverSpell(caster) {
         const result = await session.connection.request(40010, { itemInstanceId: book.instanceId, skillId: 2, operation: operation() });
         if (result.errorCode) throw new Error('治愈术真实学习失败：' + result.errorCode);
     }, caster.session);
+    if (normalSkillUI) caster.ordinaryAssets = await observeSkillAssets(caster, 1);
+}
+
+async function observeSkillAssets(caster, kind) {
+    const view = await caster.page.waitForFunction(({ session, kind }) => {
+        const inventory = session.inventory, wallet = session.wallet;
+        if (!session.ready || session.entry.sceneKind !== kind || !inventory?.learnedSkills.some(row => row.skillId === 2) || !wallet) return null;
+        return { capacity: inventory.capacity, items: inventory.items.length, level: inventory.level, revision: inventory.revision.toString(),
+            walletRevision: wallet.revision.toString(), slots: inventory.skillSlotIds ?? [] };
+    }, { session: caster.session, kind }, { timeout: 8000 });
+    try { return await view.jsonValue(); } finally { await view.dispose(); }
+}
+
+// 在真实触屏技能面板写入原角色槽位，等待永久资产观察与客户端布局同步。
+async function setOrdinarySkillSlot(caster) {
+    const { page, session, frames } = caster;
+    const before = await observeSkillAssets(caster, 1);
+    const expected = before.slots.length === 4 ? before.slots.slice() : [0, 0, 0, 0];
+    const previous = expected.indexOf(2);
+    const target = previous === 0 ? 1 : 0;
+    if (previous >= 0) expected[previous] = 0;
+    expected[target] = 2;
+    const button = `/AttackSlot${target + 1}`;
+    await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
+    const selected = await chooseWorldSkill(caster, 2);
+    assert.equal(selected.learned, true);
+    await touch(page, safe + skillsRoot + button);
+    const view = await page.waitForFunction(({ session, panel, revision, expected, button }) => {
+        const inventory = session.inventory;
+        const label = cc.find(panel + button + '/Label')?.getComponent(cc.Label)?.string;
+        return inventory?.skillSlotIds?.join(',') === expected.join(',') && BigInt(inventory.revision.toString()) > BigInt(revision) && label?.includes('治愈术')
+            ? { ids: inventory.skillSlotIds, revision: inventory.revision.toString(), caption: label } : null;
+    }, { session, panel: safe + skillsRoot, revision: before.revision, expected, button }, { timeout: 10000 });
+    const confirmed = await view.jsonValue();
+    await view.dispose();
+    assert.equal(frames.skillSlots.length, 1);
+    assert.deepEqual(frames.skillSlots[0].ids, confirmed.ids);
+    assert(frames.skillSlots[0].hasOperation && BigInt(frames.skillSlots[0].command) > 0n);
+    await closeWorldSkillsUI(caster);
+    caster.ordinaryAssets = await observeSkillAssets(caster, 1);
+    assert.deepEqual(caster.ordinaryAssets.slots, confirmed.ids);
+    return { before: before.slots, target: target + 1, confirmed, request: frames.skillSlots[0] };
+}
+
+// 首次进入挑战默认开启自动，随后通过真实地图控件暂停以隔离手动施法和宠物回归。
+async function pauseChallengeAuto(client) {
+    const { page, session, frames } = client;
+    const toggle = safe + 'MapViewport/Actions/Auto';
+    const before = await page.waitForFunction(({ session, toggle }) => session.ready && session.entry.sceneKind === 4
+        && session.hosting?.autoBattleEnabled === true && cc.find(toggle)?.getComponent(cc.Toggle)?.isChecked === true
+        ? session.entry.sceneEpoch.toString() : null, { session, toggle }, { timeout: 7500 });
+    const scene = await before.jsonValue();
+    await before.dispose();
+    const count = frames.autoIntents.length;
+    await touch(page, toggle);
+    await page.waitForFunction(({ session, toggle, scene }) => session.ready && session.entry.sceneEpoch.toString() === scene
+        && session.hosting?.autoBattleEnabled === false && cc.find(toggle)?.getComponent(cc.Toggle)?.isChecked === false,
+    { session, toggle, scene }, { timeout: 7500 });
+    const intents = frames.autoIntents.slice(count);
+    assert.deepEqual(intents, [{ scene, enabled: false, count: 0 }]);
+    return { defaultEnabled: true, pausedByTouch: true, intents };
+}
+
+// 读取保存的列表用于定位，选中、禁用按钮点击和施法均走实际触屏事件。
+async function chooseWorldSkill(caster, skillId) {
+    const { page } = caster;
+    const position = await page.waitForFunction(({ panel, skillId }) => {
+        const list = cc.find(panel + '/List')?.getComponent('List');
+        const index = list?.items.findIndex(row => row.definition.id === skillId);
+        return list?.node.activeInHierarchy && index >= 0 ? { index } : null;
+    }, { panel: safe + skillsRoot, skillId });
+    const { index } = await position.jsonValue();
+    await position.dispose();
+    await page.evaluate(({ panel, index }) => cc.find(panel + '/List').getComponent('List').scrollToIndex(index),
+        { panel: safe + skillsRoot, index });
+    await touch(page, safe + skillsRoot + '/List', index);
+    const selected = await page.waitForFunction(({ panel, skillId }) => {
+        const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
+        const row = app.skills?.selected, root = cc.find(panel);
+        if (!root?.activeInHierarchy || row?.definition.id !== skillId) return null;
+        const label = key => root.getChildByPath(key)?.getComponent(cc.Label)?.string;
+        return { skill: skillId, learned: row.learned, enabled: root.getChildByName('Use').getComponent(cc.Button).interactable,
+            action: label('Use/Label'), detail: label('Message') };
+    }, { panel: safe + skillsRoot, skillId });
+    try { return await selected.jsonValue(); } finally { await selected.dispose(); }
+}
+
+async function prepareWorldSkillsUI(caster) {
+    const { page, ordinaryAssets } = caster;
+    const assets = await observeSkillAssets(caster, 4);
+    assert.equal(assets.capacity, ordinaryAssets.capacity);
+    assert.equal(assets.items, ordinaryAssets.items);
+    assert.equal(assets.level, ordinaryAssets.level);
+    assert.equal(assets.revision, assets.walletRevision);
+    assert(BigInt(assets.revision) >= BigInt(ordinaryAssets.revision));
+    if (verifySkillSlots) assert.deepEqual(assets.slots, ordinaryAssets.slots);
+    await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
+    const before = caster.frames.skillIntents.length;
+    const unlearned = await chooseWorldSkill(caster, 29);
+    assert.equal(unlearned.learned, false);
+    assert.equal(unlearned.enabled, false);
+    assert.match(unlearned.detail, /31级可学习/);
+    await touch(page, safe + skillsRoot + '/Use', undefined, true);
+    const restricted = await chooseWorldSkill(caster, 6);
+    assert.equal(restricted.enabled, false);
+    assert.equal(restricted.action, '本场禁用');
+    assert.match(restricted.detail, /首领挑战中不能使用消耗护符或毒粉的技能/);
+    await touch(page, safe + skillsRoot + '/Use', undefined, true);
+    const learned = await chooseWorldSkill(caster, 2);
+    assert.equal(learned.learned, true);
+    assert.equal(learned.enabled, true);
+    assert.equal(learned.action, '施放');
+    assert.equal(caster.frames.skillIntents.length, before, '触摸禁用技能不得生成施法请求');
+    return { assets, unlearned, restricted, learned, before };
+}
+
+async function closeWorldSkillsUI(caster) {
+    await caster.page.bringToFront();
+    await caster.page.touchscreen.tap(12, 200);
+    await caster.page.waitForFunction(panel => !cc.find(panel)?.activeInHierarchy, safe + skillsRoot);
 }
 
 // 由道士连接主动施法，在战士所属视图核对同一远端施法事件及实际 SpriteFrame。
 async function observeOtherSpell(observer, caster, casterHandle) {
+    const skillUI = normalSkillUI ? await prepareWorldSkillsUI(caster) : undefined;
     await observer.page.bringToFront();
     const samples = await observer.page.evaluateHandle(({ session, casterHandle }) => {
         const events = [];
@@ -395,7 +536,10 @@ async function observeOtherSpell(observer, caster, casterHandle) {
         return { events, stop: () => session.casts.delete(observe) };
     }, { session: observer.session, casterHandle });
     try {
-        await caster.page.evaluate(session => {
+        if (skillUI) {
+            await touch(caster.page, safe + skillsRoot + '/Use');
+            await observer.page.bringToFront();
+        } else await caster.page.evaluate(session => {
             const player = session.baseline.entities.find(entity => entity.entityHandle === session.entry.playerHandle);
             const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
             session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++app.inputSequence, skillId: 2,
@@ -421,6 +565,13 @@ async function observeOtherSpell(observer, caster, casterHandle) {
             const presentation = await visible.jsonValue();
             presentation.atlasTexture = atlasTextures.has(presentation.texture.path);
             if (atlasTextures.size) assert(presentation.atlasTexture, '旁观施法必须绘制当前包图集中的实际原帧');
+            if (skillUI) {
+                const intents = caster.frames.skillIntents.slice(skillUI.before);
+                const scene = caster.frames.transitions.at(-1).scene;
+                assert.deepEqual(intents, [{ message: 30003, scene, skill: 2, target: casterHandle }]);
+                presentation.normalSkillUI = { assets: skillUI.assets, unlearned: skillUI.unlearned, restricted: skillUI.restricted, learned: skillUI.learned, intents };
+                await closeWorldSkillsUI(caster);
+            }
             return presentation;
         } finally { await visible.dispose(); }
     } finally {
@@ -518,6 +669,11 @@ async function diagnose(client) {
             attaching: app?.attaching, mapReady: app?.world?.isMapReady,
             baselineScene: session.baseline?.sceneEpoch.toString(), entryScene: session.entry?.sceneEpoch.toString(),
             panelStatus: panel?.getChildByName('Status')?.getComponent(cc.Label)?.string,
+            hostingAuto: session.hosting?.autoBattleEnabled,
+            toggleAuto: cc.find('Canvas/Safe/MapViewport/Actions/Auto')?.getComponent(cc.Toggle)?.isChecked,
+            skillSlots: session.inventory?.skillSlotIds,
+            inventoryRevision: session.inventory?.revision?.toString(),
+            selectedSkill: app?.skills?.selected?.definition.id,
             reconnectMessage: cc.find('Canvas/ReconnectDialog/Panel/Message')?.getComponent(cc.Label)?.string };
     }, client.session).catch(() => null);
     const progress = await client.page.evaluate(data => data.steps, client.progress).catch(() => []);
@@ -527,7 +683,7 @@ async function diagnose(client) {
 async function main() {
     const report = { passed: false, errors: [], ruleVersion: expected.version, opensAt: expected.opensAt, expiresAt: expected.expiresAt,
         coldEntryOnly: expected.coldEntryOnly === true, cache: { isolatedContexts: 2, httpDisabled: true, serviceWorkersBlocked: true },
-        atlasTextureCount: atlasTextures.size, coldEntry: {} };
+        atlasTextureCount: atlasTextures.size, normalSkillUI, coldEntry: {} };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
     let warrior, tao;
@@ -556,6 +712,10 @@ async function main() {
         if (expected.version >= 30) {
             report.step = '由道士在普通场景学习治疗术';
             await learnObserverSpell(tao);
+            if (verifySkillSlots) {
+                report.step = '由道士通过普通技能页设置并确认永久技能槽';
+                report.skillSlot = await setOrdinarySkillSlot(tao);
+            }
         }
         report.step = '先由道士带着宠物入场，再让战士加入同一场次';
         await touch(tao.page, safe + 'BottomHUD/QuickNav/Boss');
@@ -563,8 +723,16 @@ async function main() {
         await bossPanel(tao, '开放中', true);
         report.step = '等待道士确认共享首领场景';
         const taoRoom = await coldEntry(tao, 'tao', report);
+        if (verifyChallengeAuto) {
+            report.step = '核对道士首领默认自动并触屏暂停';
+            report.challengeAuto = { tao: await pauseChallengeAuto(tao) };
+        }
         report.step = '等待战士确认共享首领场景';
         const warriorRoom = await coldEntry(warrior, 'warrior', report);
+        if (verifyChallengeAuto) {
+            report.step = '核对战士首领默认自动并触屏暂停';
+            report.challengeAuto.warrior = await pauseChallengeAuto(warrior);
+        }
         report.tapToEntryMs = {
             warrior: report.coldEntry.warrior.tapToEntryMs,
             tao: report.coldEntry.tao.tapToEntryMs,
@@ -588,7 +756,7 @@ async function main() {
         fs.writeFileSync(path.join(resultDir, 'world-boss-cold-entry-report.json'), JSON.stringify({
             measuredAt: report.coldEntryMeasuredAt, ruleVersion: report.ruleVersion, cache: report.cache,
             atlasTextureCount: report.atlasTextureCount, coldEntry: report.coldEntry, otherPlayerSpell: report.otherPlayerSpell,
-            worldBossAppearance: report.worldBossAppearance,
+            worldBossAppearance: report.worldBossAppearance, challengeAuto: report.challengeAuto, skillSlot: report.skillSlot,
         }, null, 2) + '\n', 'utf8');
         if (report.coldEntryOnly) {
             assert.deepEqual(report.errors, []);
@@ -646,6 +814,11 @@ async function main() {
         await bossPanel(tao, '开放中', true);
         await touch(tao.page, safe + bossRoot + '/Action');
         assert.equal((await map(tao, 1)).map, '1');
+        if (verifySkillSlots) {
+            report.skillSlot.afterReturn = (await observeSkillAssets(tao, 1)).slots;
+            assert.deepEqual(report.skillSlot.afterReturn, report.skillSlot.confirmed.ids);
+            assert.equal(tao.frames.skillSlots.length, 1);
+        }
         await absent(warrior, tao.roleName, corpse.handle);
         await touch(warrior.page, safe + 'BottomHUD/QuickNav/Boss');
         await bossPanel(warrior, '开放中', true);

@@ -41,7 +41,7 @@ func TestHostingDrainDuringControlledShutdownMongo(t *testing.T) {
 			w.meterHosting(r, 200*time.Millisecond, r.LastTick)
 		}
 		w.rooms[r.Role.ID] = r
-		prepared <- !r.Pending && r.hostSecondsOpen == 2 && r.HostMS == 200
+		prepared <- !r.Pending && r.hostSecondsOpen == 2 && r.hostRemainder == 200*time.Millisecond
 	}}
 	select {
 	// ok 表明查询、校验或类型转换是否成功。

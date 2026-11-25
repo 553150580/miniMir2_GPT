@@ -181,8 +181,32 @@ func buyTaoistSupplyAtVendor(c *client, f *devconfig.Fixture, itemID uint32, qua
 	c.t.Fatalf("当前城镇没有购买道士耗材 %d 的 NPC", itemID)
 }
 
-// buyTaoistSupplyOnMap 到 NPC 相邻地格后验证报价、原操作和商品来源。
-func buyTaoistSupplyOnMap(c *client, town *devconfig.MapTemplate, npc devconfig.TownNPC, offer devconfig.SkillShop, quantity int64) {
+// naturalEquipmentVendor 从真实城镇职责及商店目录定位原装备和报价。
+func naturalEquipmentVendor(t *testing.T, fixture *devconfig.Fixture, itemID uint32) (*devconfig.MapTemplate, devconfig.TownNPC, devconfig.SkillShop) {
+	t.Helper()
+	for _, mapID := range fixture.TownTravel.DestinationMapIDs {
+		town, found := fixture.MapByID(mapID)
+		if !found {
+			continue
+		}
+		for _, npc := range town.NPCs {
+			shop := fixture.NPCShopByRole(npc.Role)
+			if shop == nil {
+				continue
+			}
+			for _, offer := range shop.Offers {
+				if offer.ItemID == itemID && offer.Currency == "gold" && offer.Quantity == 1 && offer.PriceUnits > 0 {
+					return town, npc, offer
+				}
+			}
+		}
+	}
+	t.Fatalf("现行城镇没有装备%d的金币渠道", itemID)
+	return nil, devconfig.TownNPC{}, devconfig.SkillShop{}
+}
+
+// reachTownVendor 从当前场景走到指定城镇商人的相邻可走格。
+func reachTownVendor(c *client, town *devconfig.MapTemplate, npc devconfig.TownNPC) {
 	c.t.Helper()
 	if c.entry.RoomId != town.ID {
 		travelToBaseline(c, 1, town.ID)
@@ -209,8 +233,14 @@ func buyTaoistSupplyOnMap(c *client, town *devconfig.MapTemplate, npc devconfig.
 		}
 	}
 	if !near(c.player().Position) {
-		c.t.Fatalf("没有到达商品 %d 的 NPC 相邻地格", offer.ItemID)
+		c.t.Fatalf("没有到达商店 NPC %d 的相邻地格", npc.ID)
 	}
+}
+
+// buyTaoistSupplyOnMap 到 NPC 相邻地格后验证报价、原操作和商品来源。
+func buyTaoistSupplyOnMap(c *client, town *devconfig.MapTemplate, npc devconfig.TownNPC, offer devconfig.SkillShop, quantity int64) {
+	c.t.Helper()
+	reachTownVendor(c, town, npc)
 	request := c.send(p.MsgC2SVendorQuote, &pb.VendorQuoteRequest{SceneEpoch: c.entry.SceneEpoch, NpcId: npc.ID, Action: 1, OfferId: offer.ID, Quantity: quantity})
 	frame := travelUntilWithin(c, 3*time.Second, func(frame wire.Frame) bool { return frame.ID == p.MsgS2CVendorQuote && frame.Request == request })
 	var quote pb.VendorQuoteResult

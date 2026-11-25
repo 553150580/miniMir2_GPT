@@ -51,6 +51,19 @@ message PersonalBossInfo {
   repeated PersonalBossHistoryEntry history = 16;
   repeated ChallengePendingReward pending_rewards = 17;
   uint32 pending_reward_capacity = 18;
+  repeated PersonalBossTemplateChoice templates = 19;
+}
+
+// 单个可选个人首领的入场资格；每日成功次数及活动场次仍为角色共用。
+message PersonalBossTemplateChoice {
+  uint32 template_id = 1;
+  string display_name = 2;
+  uint64 map_id = 3;
+  uint32 monster_id = 4;
+  uint32 minimum_level = 5;
+  bool can_enter = 6;
+  uint32 eligibility_reason = 7;
+  int64 available_at_unix_ms = 8;
 }
 
 // 每笔待领对应已确认的原挑战。物品的实例、数量和绑定在挑战结算时冻结。

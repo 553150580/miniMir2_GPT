@@ -26,6 +26,7 @@ type AssetRequest struct {
 	ItemIDs          []string                // 批量操作选择的库存实例编号列表。
 	Slot             uint32                  // 换装或卸装指定的装备槽。
 	Benefit          uint32                  // 当前领取托管时长所请求的权益类型。
+	HostingClaimAt   time.Time               `json:"-"` // 服务端受理原领取的时刻，由同一任务重试复用。
 	ValidRevive      bool                    // 房间判断本次复活选择是否有对应的有效现场。
 	ReviveDeathID    string                  // 请求复活的原死亡身份。
 	ItemDefinitionID uint32                  // 需要和物品实例一致的配置物品编号。
@@ -47,6 +48,7 @@ type AssetRequest struct {
 
 	TaskCodex         *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID string                    // 领取的原挑战待领编号。
+	SkillSlotIDs      []uint32                  // 四个有序技能槽，零为合法空位。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -85,6 +87,14 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	var taskEventAt time.Time // 事务重试在同一次任务处理内采用同一个运营时点。
 	if s.Cfg.Fixture.TasksCodex != nil {
 		taskEventAt = time.Now()
+	}
+	// hostingClaimAt 固定领取的资格和运营日，数据库重试期间不再读取时钟。
+	hostingClaimAt := q.HostingClaimAt
+	if q.Kind == AssetClaimHostingTime {
+		if hostingClaimAt.IsZero() {
+			hostingClaimAt = time.Now()
+		}
+		hostingClaimAt = hostingClaimAt.UTC().Truncate(time.Millisecond)
 	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
@@ -168,6 +178,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var vendor *VendorReceipt
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
+		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetVendor:
@@ -198,36 +209,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case "set_item_lock":
 			r, businessCode = setItemLock(r, q, s.Cfg.Fixture)
-		case "claim_hosting":
-			if q.Benefit != 0 && q.Benefit != 1 {
-				businessCode = p.CodeInvalidArgument
-				break
-			}
-			// 按上海运营日结算当日差额，卡权益变化时仅补足未领取部分。
-			// now 记录本次处理开始时的时间。
-			now := time.Now()
-			// day 是领取记录使用的上海日期键。
-			day := shanghaiOperatingDay(now)
-			if r.ClaimDay != day {
-				r.ClaimDay = day
-				r.ClaimedSeconds = 0
-			}
-			// limit 是普通角色当日可领取的托管秒数，有卡时改为十二小时。
-			limit := int64(6 * 3600)
-			if r.HostingCardUntil.After(now) {
-				limit = 12 * 3600
-			}
-			// delta 是当天额度扣除已领取部分后的可补领秒数。
-			delta := limit - r.ClaimedSeconds
-			if delta <= 0 {
-				businessCode = p.CodeOperationConflict
-				break
-			}
-			r.HostingSeconds, e = add(r.HostingSeconds, delta)
+		case AssetClaimHostingTime:
+			r, hostingClaim, businessCode, e = applyHostingClaim(r, q.Benefit, hostingClaimAt, s.Cfg.Fixture.HostingBenefits)
 			if e != nil {
 				return e
 			}
-			r.ClaimedSeconds += delta
 		case "revive":
 			if !q.ValidRevive || r.RetiredDeathID != "" && r.RetiredDeathID != q.ReviveDeathID {
 				businessCode = p.CodeInvalidArgument
@@ -256,6 +242,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID)
 		case AssetChallengeRewardClaim:
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
+		case AssetSetSkillSlots:
+			r, businessCode = setSkillSlots(r, &s.Cfg.Fixture, q.SkillSlotIDs)
 		case "set_casting_supply":
 			r, businessCode = setCastingSupply(r, q, s.Cfg.Fixture)
 		case "cast_material":
@@ -301,6 +289,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Vendor = vendor
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
+		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
+			op.SkillSlotIDs = r.SkillSlotIDs
+		}
+		op.HostingClaim = hostingClaim
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -350,6 +342,14 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		if challengeReward != nil {
 			audit["challenge_reward_claim"] = challengeReward
+		}
+		if op.SkillSlotIDs != nil {
+			audit["skill_slot_ids"] = op.SkillSlotIDs
+		}
+		if hostingClaim != nil {
+			audit["hosting_claim"] = hostingClaim
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
@@ -429,4 +429,5 @@ type Settlement struct {
 	WearDeathID      string          `json:"wear_death_id,omitempty"`  // 死亡磨损对应的原死亡标识。
 
 	OrdinaryEquipment *OrdinaryEquipmentPlan `json:"ordinary_equipment,omitempty"` // 高品质掉落在原击杀冻结的降档方案。
+	HostingKillBonus  *HostingKillBonus      `json:"hosting_kill_bonus,omitempty"` // 普通怪原击杀享受的托管卡直接收益。
 }

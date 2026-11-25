@@ -32,10 +32,10 @@ func (need *automaticManaNeed) ready(r *room, plan *preparedCast, code uint32) b
 // castAutomatically 尝试自动受理无需材料的技能，仅缺魔法值时记录该技能消耗供本轮尝试用药。
 // w 持有房间 r；id 是技能编号，handle 是目标实体句柄，direction 是施法朝向，ground 是可选目标格。
 // now 用于行动时钟，need 保存当前决策中的补蓝条件。
-func (w *worker) castAutomatically(r *room, id, handle, direction uint32, now time.Time, need *automaticManaNeed, ground *pb.GridPoint) bool {
+func (w *worker) castAutomatically(r *room, id, handle, direction uint32, now time.Time, need *automaticManaNeed, ground *pb.GridPoint, input uint32) bool {
 	// plan 保存自动施法准备结果，code 区分成功、仅缺魔法值和其他限制。
 	plan, code := w.prepareCastRecordingMana(r, id, handle, direction, now, false, ground)
-	return need.ready(r, plan, code) && w.acceptPreparedCast(r, plan, 0, now) == 0
+	return need.ready(r, plan, code) && w.acceptPreparedCast(r, plan, input, now) == 0
 }
 
 // castWithManaRecovery 受理手动施法。新版规则下，合法意图仅缺魔法值时可另行提交用药。
@@ -58,7 +58,7 @@ func (w *worker) castWithManaRecovery(r *room, q *pb.CastIntent, now time.Time) 
 // tryManaPotion 在合法施法仅缺魔法值、没有剩余药水恢复且可用药时，提交一笔背包药水消耗。
 // w 持有房间 r；need 给出施法所需的魔法值，now 用来判断用药冷却。
 func (w *worker) tryManaPotion(r *room, need automaticManaNeed, now time.Time) bool {
-	if r.Pending || r.Isolated || need.cost <= r.Player.MP || r.Potions.MP > 0 || potionGate(r, r.Scene, now) != 0 || r.Role.SourceSeq == math.MaxInt64 {
+	if r.bossBattle != nil || r.Pending || r.Isolated || need.cost <= r.Player.MP || r.Potions.MP > 0 || potionGate(r, r.Scene, now) != 0 || r.Role.SourceSeq == math.MaxInt64 {
 		return false
 	}
 	// fixture 提供允许的魔法药水定义和本次经济操作应匹配的规则版本。

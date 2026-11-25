@@ -116,6 +116,51 @@ test('真实AppRoot地面瞄准、取消与提交均不改原导航；提交只�
     assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,23);assert.equal(sent[0].value.targetHandle,0);assert.deepEqual(sent[0].value.targetGrid,{x:4,y:4});
     assert.deepEqual(instance.nav.state.target,{x:9,y:8});assert.equal(instance.aim,null);
 });
+test('同一普通图原地复活后不得确认上条生命的地面或方向瞄准',()=>{
+    const {instance,session,sent,shown,row,definitions,definition}=app(),errors=[];
+    definitions.push(definition(10,'lightning','enemy_direction'));
+    session.inventory.learnedSkills.push({skillId:10,level:0});
+    instance.error=error=>errors.push(error.message);instance.nav.setGroundTarget({x:9,y:8});
+    for(const id of [23,10]){
+        const player=session.baseline.entities[0], requests=sent.length;
+        player.life=Long.fromString('9007199254740993',true);instance.castSkill(row(id));
+        assert.equal(instance.aim.life,'9007199254740993');
+        session.baseline.entities[0]={...player,life:player.life.add(1)};
+        assert.equal(instance.consumeGround({x:4,y:4}),true);
+        assert.equal(sent.length,requests);assert.equal(instance.aim,null);assert.equal(shown.at(-1),null);
+        assert.match(errors.at(-1),/瞄准状态已变化/);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+        instance.castSkill(row(id));instance.consumeGround({x:4,y:4});assert.equal(sent.at(-1).value.skillId,id);
+    }
+});
+test('技能入口遵循普通、个人首领和世界首领的已定场景门槛',()=>{
+    const {instance,session,sent,row,definitions,definition}=app();
+    definitions.push(definition(21,'teleport','friendly_self'),definition(22,'fire_wall','enemy_grid'),
+        definition(28,'revelation','enemy_entity'),definition(20,'electric_shock','enemy_entity'),
+        {...definition(13,'soul_fire_ball','enemy_entity'),material_item_id:187,material_quantity:1});
+    session.inventory.learnedSkills.push(...[13,20,21,22,28].map(skillId=>({skillId,level:0})));
+    session.entry.sceneKind=3;
+    for (const [id,reason] of [[13,/护符或毒粉/],[20,/允许捕获宠物的普通地图/],[21,/瞬息移动/]]) {
+        assert.throws(()=>instance.castSkill(row(id)),reason);
+        assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(id)),'本场禁用');
+        assert.equal(models.skillQuickStateLabel(instance.skillSnapshot(),row(id)),'禁用');
+        assert.match(models.skillDescriptionLines(row(id),instance.skillSnapshot()).join('\n'),reason);
+    }
+    assert.equal(sent.length,0);
+    instance.castSkill(row(22));assert(instance.aim,'个人首领仍可瞄准火墙');instance.cancelAim();
+    instance.selectedTarget={handle:3,life:'0'};instance.castSkill(row(28));assert.equal(sent.at(-1).value.skillId,28);
+
+    session.entry.sceneKind=4;
+    assert.throws(()=>instance.castSkill(row(22)),/世界首领场中不能布置火墙/);
+    assert.throws(()=>instance.castSkill(row(28)),/世界首领场中不能使用心灵启示/);
+    assert.equal(sent.length,1);
+    instance.castSkill(row(1));assert.equal(sent.at(-1).value.skillId,1);
+
+    session.entry.sceneKind=1;
+    instance.castSkill(row(20));assert.equal(sent.at(-1).value.skillId,20);
+    session.entry.sceneKind=2;
+    assert.throws(()=>instance.castSkill(row(20)),/允许捕获宠物的普通地图/);
+    assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(21)),'施放','城镇保留现行瞬移语义');
+});
 test('真实AppRoot可提交blocked center，越界但仍在射程内也必须拒绝，导航始终保留',()=>{
     const {instance,sent,row}=app(),errors=[];
     instance.world.map={width:4,height:4,cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
@@ -207,6 +252,26 @@ test('真实AppRoot材料瞄准期间原护符变化拒绝，不换用背包；�
     await assert.rejects(instance.setCastingSupply(false),/已变化/);assert.equal(calls.length,0);
 });
 
+test('已装合规护符的低蓝手动火符、群体防护与新召唤交给原材料事务处理',async()=>{
+    const {instance,session,sent,row,definitions,definition}=app(),calls=[];
+    definitions.push(...[
+        definition(13,'soul_fire_ball','enemy_entity'),definition(14,'soul_shield','friendly_grid'),definition(17,'summon_pet','friendly_self'),
+    ].map(skill=>({...skill,job_id:2,material_item_id:187,material_quantity:1})));
+    session.role.job=2;session.inventory.learnedSkills.push(...[13,14,17].map(skillId=>({skillId,level:0})));
+    session.baseline.entities[0].mp='0';session.entry.sceneEpoch=Long.UONE;
+    const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.UONE,quantity:Long.fromInt(5),bound:true};
+    session.inventory.equipped=[{slot:100,item}];instance.world.gameplay.casting_supply={enabled:true,slot:100,item_ids:[181,187]};
+    instance.economic=(id,value)=>{calls.push({id,value});return Promise.resolve();};
+    await instance.castSkill(row(13));
+    instance.castSkill(row(14));assert(instance.aim.supply);instance.consumeGround({x:4,y:4});
+    await instance.castSkill(row(17));
+    assert.deepEqual(calls.map(({id,value})=>[id,value.skillId,value.casterLife.toString(),value.materialVersion.toString()]),[[40014,13,'0','1'],[40014,14,'0','1'],[40014,17,'0','1']]);
+    assert(calls.every(({value})=>value.materialInstanceId.every(byte=>byte===7)));assert.equal(calls[0].value.targetHandle,3);assert.deepEqual(calls[1].value.targetGrid,{x:4,y:4});
+    assert(!('targetGrid' in calls[2].value));assert.deepEqual(sent,[]);assert.equal(item.quantity.toString(),'5');assert.equal(session.baseline.entities[0].mp,'0');
+    session.inventory.equipped[0].item={...item,itemId:181};
+    assert.throws(()=>instance.castSkill(row(13)),/对应施法护符/);assert.equal(calls.length,3);
+});
+
 test('实际disabled护符门禁在Use/快捷共用施法入口和装卸入口前拒绝，不进瞄准或发送任何材料请求',async()=>{
     const {instance,session,row,definitions,definition,sent}=app();definitions.push({...definition(14,'soul_shield','friendly_grid'),material_item_id:187,material_quantity:1});session.inventory.learnedSkills.push({skillId:14,level:0});
     instance.world.gameplay.casting_supply={enabled:false,slot:100,item_ids:[187]};instance.nav.setGroundTarget({x:9,y:8});instance.economic=()=>{throw new Error('禁止创建经济请求');};
@@ -256,6 +321,9 @@ test('实际AppRoot新召仍经原材料RPC，definition或实体展示名不能
 test('实际GameSkills保存Use按Owned模式刷新，禁材料不挡Recall，NoPets单独禁召且不改描述为每次耗符',()=>{
  const {instance,row,session}=summonApp();session.baseline.ownedPet=ownedSummon();const {GameSkills}=load(path.join(root,'client/assets/scripts/app/GameSkills.ts'),id=>id==='./SkillModel'?models:{}),nodes=new Map();
  const node=name=>{if(!nodes.has(name)){const component={string:'',interactable:false,setIsCheckedWithoutNotify(){}};nodes.set(name,{active:true,getComponent:()=>component,component});}return nodes.get(name);};
- const skills=Object.create(GameSkills.prototype);Object.assign(skills,{panel:{getChildByPath:node},list:{setItems(){}},rows:[],selectedId:17,key:'',quickSkillId:17});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,true);assert.equal(node('Use/Label').component.string,'召回');assert.match(node('Message').component.string,/不耗护符/);
+ const panel={getChildByPath:node,getChildByName:name=>({getComponent:()=>node(name).component,getChildByName:child=>node(name+'/'+child)})};
+ const skills=Object.create(GameSkills.prototype);Object.assign(skills,{panel,list:{setItems(){}},rows:[],selectedId:17,key:'',quickSkillId:17});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,true);assert.equal(node('Use/Label').component.string,'召回');assert.match(node('Message').component.string,/不耗护符/);
+ for(const sceneKind of [3,4]){session.entry.sceneKind=sceneKind;skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'本场禁用');assert.match(node('Message').component.string,/不能召唤或召回宠物/);}
+ session.entry.sceneKind=1;
  session.baseline.ownedPet=ownedSummon({recallSkillIds:[]});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'耗材未开放');session.baseline.ownedPet=ownedSummon();instance.world.gameplay.map_catalog[0].no_pets=true;skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'此图禁召');const description=models.skillDescriptionLines(row(17),instance.skillSnapshot()).join('');assert.match(description,/新召唤消耗/);assert(!description.includes('每次消耗'));
 });

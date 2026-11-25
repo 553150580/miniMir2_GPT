@@ -100,6 +100,10 @@ func buildVendorPurchase(r domain.Role, f *devconfig.Fixture, shop *devconfig.NP
 	if !exists || !known || q.Quantity > offer.MaxPurchaseQuantity || r.Level < offer.RequiredRoleLevel || len(q.InstanceId) != 0 || q.ItemVersion != 0 {
 		return vendorPlan{}, p.CodeVendorItemBlocked
 	}
+	// 报价与最终提交共用规则，不能通过手工指定商品号购买其他职业专用物品。
+	if len(definition.AllowedJobs) != 0 && !slices.Contains(definition.AllowedJobs, r.Job) {
+		return vendorPlan{}, p.CodeVendorItemBlocked
+	}
 	// quantity 保存由相乘取得的数量，quantityOK 保存由相乘取得的数量成功标记。
 	quantity, quantityOK := multiply(q.Quantity, offer.Quantity)
 	// price 保存由相乘取得的“price”，priceOK 保存由相乘取得的“price”成功标记。

@@ -20,9 +20,11 @@ export interface SkillDefinition {
 export interface SkillInventory {
     revision: PotionInteger; level: number; items: readonly PotionItem[];
     learnedSkills?: readonly { skillId: number; level: number }[];
+    skillSlotIds?: readonly number[];
 }
 export interface SkillSnapshot {
     ready: boolean; roleIdentity: string; job: number; sceneEpoch: PotionInteger; ruleVersion: PotionInteger;
+    sceneKind?: number;
     inventory: SkillInventory | null; definitions: readonly SkillDefinition[]; modes?: SkillModeState | null; modesReceivedAt?: number;
     castingSupply?: { name: string; quantity: string } | null;
     castingSupplyEnabled?: boolean;
@@ -32,8 +34,27 @@ export interface SkillSnapshot {
     ownedPet?: OwnedPetState | null;
     autoSkillSettings?: AutoSkillSettings;
     modePending?: { skillId: number; enabled: boolean };
+    canConfigureSlots?: boolean;
     statusDefinitions?: readonly { id: number; duration_rule?: { kind?: string; duration_ms?: number; stat_multiplier: number; seconds_by_level: readonly number[] };
         attribute_effects: { value_by_level: readonly number[]; target_level_divisor?: number; target_level_add?: number } }[];
+}
+
+export const attackSkillSlotCount = 4;
+
+// attackSkillSlotIDs 返回服务端已确认的有序槽位；旧视图缺省时仍为四个可配置空位。
+export function attackSkillSlotIDs(value?: readonly number[]): number[] {
+    if (!value || value.length !== attackSkillSlotCount || value.some(id => !Number.isSafeInteger(id) || id < 0 || id > 0xffffffff)) {
+        return Array<number>(attackSkillSlotCount).fill(0);
+    }
+    return value.slice();
+}
+
+// 能力判断与权威持久槽一致，被动、召唤和主动位移继续由原入口处理。
+export function canQueueSkill(row?: SkillRow | null): boolean {
+    if (!row?.learned) return false;
+    const definition = row.definition;
+    return ['half_moon', 'thrusting', 'flaming_sword'].includes(definition.kind) ||
+        !!(definition.auto_enabled && skillActivation(definition) === 'cast' && !definition.displacement && definition.kind !== 'teleport');
 }
 export interface SkillModeEntry { skillId: number; enabled: boolean; ready: boolean; remainingMs: number; cooldownRemainingMs: number; }
 export interface SkillModeState { sceneEpoch: PotionInteger; revision: PotionInteger; playerLife: PotionInteger; serverTimeUnixMs: PotionInteger; states: readonly SkillModeEntry[]; }
@@ -140,10 +161,30 @@ export function isSummonRecall(snapshot: SkillSnapshot, row: SkillRow): boolean 
 export function needsCastingSupply(snapshot: SkillSnapshot, row: SkillRow): boolean {
     return !!row.definition.material_quantity && !isSummonRecall(snapshot, row);
 }
+
+// 只公开服务端已明确拒绝的场景和配置；射程、冷却、目标及资源仍以原技能请求校验。
+export function skillUseBlock(snapshot: SkillSnapshot, row: SkillRow): { reason: string; action: string; quick: string } | undefined {
+    const kind = row.definition.kind, scene = snapshot.sceneKind;
+    let reason: string | undefined;
+    if (kind === 'electric_shock' && (snapshot.mapNoPets || scene !== undefined && scene !== 1)) reason = '诱惑之光只能在允许捕获宠物的普通地图使用';
+    else if (kind === 'trap_hexagon' && scene !== undefined && scene !== 1) reason = '困魔咒只能在普通野外地图使用';
+    else if (scene === 3 || scene === 4) {
+        if (kind === 'summon_pet') reason = '首领挑战中不能召唤或召回宠物';
+        else if (kind === 'teleport') reason = '首领挑战中不能使用瞬息移动';
+        else if (row.definition.material_quantity) reason = '首领挑战中不能使用消耗护符或毒粉的技能';
+        else if (scene === 4 && kind === 'fire_wall') reason = '世界首领场中不能布置火墙';
+        else if (scene === 4 && kind === 'revelation') reason = '世界首领场中不能使用心灵启示';
+    }
+    if (reason) return { reason, action: '本场禁用', quick: '禁用' };
+    if (kind === 'summon_pet' && snapshot.mapNoPets) return { reason: '当前地图禁止召唤', action: '此图禁召', quick: '禁召' };
+    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false)
+        return { reason: kind === 'poisoning' ? '施法毒粉暂未开放' : '施法护符暂未开放', action: '耗材未开放', quick: '未开放' };
+}
+
 export function skillActionLabel(snapshot: SkillSnapshot, row: SkillRow): string {
-    if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '此图禁召';
+    const block = skillUseBlock(snapshot, row);
+    if (block) return block.action;
     if (isSummonRecall(snapshot, row)) return '召回';
-    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '耗材未开放';
     const activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     if (activation === 'toggle') return state?.enabled ? '关闭' : '开启';
     if (activation === 'charge') return state?.ready ? '已就绪' : '充能';
@@ -158,13 +199,15 @@ export function skillQuickLabel(definition: SkillDefinition): string {
     return ({ summon_pet: '召唤', teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲', turn_undead: '圣言' } as Record<string, string>)[definition.kind] ?? definition.name;
 }
 export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
-    if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '禁召';
-    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '未开放';
+    const block = skillUseBlock(snapshot, row);
+    if (block) return block.quick;
     const label = skillQuickLabel(row.definition), activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     return activation === 'toggle' && state ? `${label}${state.enabled ? '开' : '关'}` : activation === 'charge' && state?.ready ? `${label}备` : label;
 }
 export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): string[] {
     const definition = row.definition, lines = [row.status, `魔法消耗 ${row.cost}`];
+    const block = skillUseBlock(snapshot, row);
+    if (block) lines.push(block.reason);
     if (definition.displacement) {
         const rules=definition.displacement, low=rules.distance_base_by_level[row.level], high=low+rules.distance_random_bound-1;
         if (definition.kind==='repulsion') lines.push('尝试推开周围等级较低的敌人', `本阶推开距离 ${low}–${high}格`, '不会对怪物造成伤害');
@@ -213,13 +256,15 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
     lines.push(`${definition.learn_level}级可使用对应技能书学习`, '升级需选择书本与书页，先查看报价');
     return lines;
 }
-export function createSkillLearnPreview(snapshot: SkillSnapshot, skillId: number): SkillLearnPreview {
+export function createSkillLearnPreview(snapshot: SkillSnapshot, skillId: number, selected?: Uint8Array): SkillLearnPreview {
     if (!snapshot.ready || !snapshot.inventory || !snapshot.roleIdentity) throw new Error('角色与背包尚未同步');
     const row = skillRows(snapshot).find(value => value.definition.id === skillId);
     if (!row) throw new Error('当前职业不能学习此技能');
     if (row.learned) throw new Error('已经学会此技能');
     if (snapshot.inventory.level < row.definition.learn_level) throw new Error(`需要达到${row.definition.learn_level}级`);
-    const book = snapshot.inventory.items.find(item => item.itemId === row.definition.book_item_id && integer(item.quantity) > 0n);
+    const selectedId = selected && hex(selected);
+    const book = snapshot.inventory.items.find(item => item.itemId === row.definition.book_item_id && integer(item.quantity) > 0n
+        && (!selectedId || hex(item.instanceId) === selectedId));
     if (!book) throw new Error('背包中没有对应技能书');
     return Object.freeze({ skillId, roleIdentity: snapshot.roleIdentity, sceneEpoch: integer(snapshot.sceneEpoch).toString(),
         ruleVersion: integer(snapshot.ruleVersion).toString(), revision: integer(snapshot.inventory.revision).toString(),

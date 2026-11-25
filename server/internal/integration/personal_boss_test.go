@@ -163,7 +163,8 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: ordinaryScene, BaselineId: c.entry.BaselineId})
 	tooEarly := c.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: c.entry.SceneEpoch, TargetHandle: boss.EntityHandle})
 	travelExpectError(c, p.MsgC2SCastIntent, tooEarly, p.CodeLineRecovering)
-	travelAcknowledge(c, false)
+	travelAcknowledge(c, false, false)
+	requireChallengeAuto(c, false)
 	// 核验原角落的普通怪在新场景已确认后继续真实格子战斗。耐久、用药等
 	// 其他合法来源也推进 SourceSeq，本断言必须读取明确属于原地图的击杀回执。
 	activeAt := time.Now().UTC().Truncate(time.Millisecond)
@@ -213,6 +214,23 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	if count != 0 {
 		t.Fatal("首领地图或模板写入了普通挂机收益", count)
 	}
+}
+
+// requireChallengeAuto 核对已确认挑战附着的独立自动战斗开关。
+func requireChallengeAuto(c *client, expected bool) {
+	if c.hosting == nil || c.hosting.AutoBattleEnabled != expected {
+		c.t.Fatalf("首领开关不同步：期望%t，收到%v", expected, c.hosting)
+	}
+}
+
+// setChallengeAuto 经真实协议切换挑战开关，保留固定首领数量。
+func setChallengeAuto(c *client, enabled bool) {
+	c.t.Helper()
+	request := c.send(p.MsgC2SAutoBattle, &pb.AutoBattleIntent{SceneEpoch: c.entry.SceneEpoch, Enabled: enabled})
+	travelUntilWithin(c, 3*time.Second, func(frame wire.Frame) bool {
+		return frame.ID == p.MsgS2CHostingState && frame.Request == request
+	})
+	requireChallengeAuto(c, enabled)
 }
 
 // waitForOrdinaryBossTestKill 等待隔离数据库中的真实普通击杀回执。

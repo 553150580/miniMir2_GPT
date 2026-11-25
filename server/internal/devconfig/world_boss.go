@@ -2,8 +2,10 @@
 package devconfig
 
 import (
+	"cmp"
 	"errors"
 	"math"
+	"slices"
 	"strings"
 	"time"
 )
@@ -38,37 +40,68 @@ type WorldBossConfig struct {
 // validateWorldBossRelease 解析独立怪物和归一化日程，拒绝未校验的发布模板。
 func (f *Fixture) validateWorldBossRelease() error {
 	def := f.WorldBossRelease
-	if def == nil {
+	if def == nil && len(f.WorldBossVariantReleases) == 0 {
 		return nil
 	}
 	f.WorldBoss = nil
-	if !def.Enabled {
+	f.WorldBossVariants = nil
+	if def == nil || !def.Enabled {
+		if len(f.WorldBossVariantReleases) > 0 {
+			return errors.New("世界首领轮换需要启用的主目录")
+		}
 		return nil
 	}
+	primary, err := f.parseWorldBossDefinition(*def)
+	if err != nil {
+		return err
+	}
+	f.WorldBoss = &primary
+	templates := map[uint32]bool{primary.TemplateID: true}
+	maps := map[uint64]bool{primary.Map.ID: true}
+	for _, definition := range f.WorldBossVariantReleases {
+		candidate, err := f.parseWorldBossDefinition(definition)
+		if err != nil {
+			return err
+		}
+		if templates[candidate.TemplateID] || maps[candidate.Map.ID] {
+			return errors.New("世界首领的模板和地图编号必须唯一")
+		}
+		templates[candidate.TemplateID], maps[candidate.Map.ID] = true, true
+		f.WorldBossVariants = append(f.WorldBossVariants, candidate)
+	}
+	return f.validateWorldBossRotation()
+}
+
+// parseWorldBossDefinition 解析独立模板并保留只属于该模板的各个开场时间。
+func (f *Fixture) parseWorldBossDefinition(def WorldBossDefinition) (WorldBossConfig, error) {
 	const dayMS = int64(24 * time.Hour / time.Millisecond)
 	monster, ok := f.ChallengeMonster(def.MonsterID)
-	if !ok || def.WindowMS <= 0 || def.WindowMS >= dayMS || def.ReturnDelayMS < 0 || def.ReturnDelayMS >= dayMS ||
+	if !def.Enabled || !ok || def.WindowMS <= 0 || def.WindowMS >= dayMS || def.ReturnDelayMS < 0 || def.ReturnDelayMS >= dayMS ||
 		strings.TrimSpace(def.DisplayName) == "" || def.MinimumLevel == 0 {
-		return errors.New("世界首领开发候选的怪物、时段、场次或等级无效")
+		return WorldBossConfig{}, errors.New("世界首领开发候选的怪物、时段、场次或等级无效")
 	}
 	offsets := make([]time.Duration, len(def.DailyOpenOffsetsMS))
 	for i, ms := range def.DailyOpenOffsetsMS {
 		if ms < 0 || ms >= dayMS {
-			return errors.New("世界首领开场时间超出运营日")
+			return WorldBossConfig{}, errors.New("世界首领开场时间超出运营日")
 		}
 		offsets[i] = time.Duration(ms) * time.Millisecond
 	}
-	f.WorldBoss = &WorldBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, MinimumLevel: def.MinimumLevel, Map: def.Map, Monster: monster,
+	candidate := WorldBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, MinimumLevel: def.MinimumLevel, Map: def.Map, Monster: monster,
 		DailyOpenOffsets: offsets, Window: time.Duration(def.WindowMS) * time.Millisecond, ReturnDelay: time.Duration(def.ReturnDelayMS) * time.Millisecond, ParticipantLimit: def.ParticipantLimit}
-	if !f.ValidWorldBoss() {
-		return errors.New("世界首领独立地图或窗口配置无效")
+	if !f.validWorldBoss(&candidate) {
+		return WorldBossConfig{}, errors.New("世界首领独立地图或窗口配置无效")
 	}
-	return nil
+	return candidate, nil
 }
 
 // ValidWorldBoss 校验共享模板、单个怪物、独立地图以及不可相互跨越的日程。
 func (f *Fixture) ValidWorldBoss() bool {
-	cfg := f.WorldBoss
+	return f.validWorldBoss(f.WorldBoss)
+}
+
+// validWorldBoss 校验单个模板，同时排除已用于个人首领的地图。
+func (f *Fixture) validWorldBoss(cfg *WorldBossConfig) bool {
 	if cfg == nil || cfg.TemplateID == 0 || cfg.Map.ID == 0 || cfg.Map.ID > math.MaxInt64 || cfg.Map.SceneKind != SceneKindWorldBoss ||
 		cfg.Map.CellBudget() <= 0 || cfg.Map.Width > maxPersonalGridSide || cfg.Map.Height > maxPersonalGridSide || len(cfg.Map.MonsterSpawns) != 1 ||
 		cfg.Map.MonsterSpawns[0] == cfg.Map.PlayerSpawn || !cfg.Map.Walkable(cfg.Map.PlayerSpawn) || !cfg.Map.Walkable(cfg.Map.MonsterSpawns[0]) ||
@@ -82,6 +115,11 @@ func (f *Fixture) ValidWorldBoss() bool {
 	if _, exists := f.MapByID(cfg.Map.ID); exists || f.PersonalBoss != nil && f.PersonalBoss.Map.ID == cfg.Map.ID {
 		return false
 	}
+	for _, personal := range f.PersonalBossVariants {
+		if personal.Map.ID == cfg.Map.ID {
+			return false
+		}
+	}
 	for i, offset := range cfg.DailyOpenOffsets {
 		if offset < 0 || offset >= 24*time.Hour || offset%time.Millisecond != 0 || i > 0 && offset < cfg.DailyOpenOffsets[i-1]+cfg.Window+cfg.ReturnDelay {
 			return false
@@ -89,4 +127,26 @@ func (f *Fixture) ValidWorldBoss() bool {
 	}
 	first, last := cfg.DailyOpenOffsets[0], cfg.DailyOpenOffsets[len(cfg.DailyOpenOffsets)-1]
 	return 24*time.Hour+first-last >= cfg.Window+cfg.ReturnDelay
+}
+
+// validateWorldBossRotation 拒绝任意模板之间的重复时段或终态展示重叠。
+func (f *Fixture) validateWorldBossRotation() error {
+	type period struct{ start, end time.Duration }
+	var windows []period
+	for _, entry := range append([]WorldBossConfig{*f.WorldBoss}, f.WorldBossVariants...) {
+		for _, offset := range entry.DailyOpenOffsets {
+			windows = append(windows, period{offset, offset + entry.Window + entry.ReturnDelay})
+		}
+	}
+	slices.SortFunc(windows, func(a, b period) int { return cmp.Compare(a.start, b.start) })
+	for i, value := range windows {
+		next := windows[(i+1)%len(windows)].start
+		if i == len(windows)-1 {
+			next += 24 * time.Hour
+		}
+		if next < value.end {
+			return errors.New("世界首领轮换时段重叠")
+		}
+	}
+	return nil
 }

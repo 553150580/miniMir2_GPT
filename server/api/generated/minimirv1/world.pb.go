@@ -189,8 +189,10 @@ type EnterWorldAck struct {
 	BaselineId uint64                 `protobuf:"varint,2,opt,name=baseline_id,json=baselineId,proto3" json:"baseline_id,omitempty"`
 	// 可选的本机角色偏好，在入场放行自动战斗前提交。
 	AutoSkillSettings *AutoSkillSettings `protobuf:"bytes,3,opt,name=auto_skill_settings,json=autoSkillSettings,proto3" json:"auto_skill_settings,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 只用于挑战场景，省略时新场默认开启并保持健康续接的原开关。
+	ChallengeAutoBattleEnabled *bool `protobuf:"varint,4,opt,name=challenge_auto_battle_enabled,json=challengeAutoBattleEnabled,proto3,oneof" json:"challenge_auto_battle_enabled,omitempty"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
 }
 
 func (x *EnterWorldAck) Reset() {
@@ -242,6 +244,13 @@ func (x *EnterWorldAck) GetAutoSkillSettings() *AutoSkillSettings {
 		return x.AutoSkillSettings
 	}
 	return nil
+}
+
+func (x *EnterWorldAck) GetChallengeAutoBattleEnabled() bool {
+	if x != nil && x.ChallengeAutoBattleEnabled != nil {
+		return *x.ChallengeAutoBattleEnabled
+	}
+	return false
 }
 
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
@@ -2230,6 +2239,9 @@ type AttackIntent struct {
 	InputSequence uint32                 `protobuf:"varint,2,opt,name=input_sequence,json=inputSequence,proto3" json:"input_sequence,omitempty"`
 	Direction     uint32                 `protobuf:"varint,3,opt,name=direction,proto3" json:"direction,omitempty"`
 	SkillId       uint32                 `protobuf:"varint,4,opt,name=skill_id,json=skillId,proto3" json:"skill_id,omitempty"`
+	// 点选目标时按原实体和出生代次核对，空时保持原方向普攻。
+	TargetHandle  uint32 `protobuf:"varint,5,opt,name=target_handle,json=targetHandle,proto3" json:"target_handle,omitempty"`
+	TargetLife    uint64 `protobuf:"varint,6,opt,name=target_life,json=targetLife,proto3" json:"target_life,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2288,6 +2300,20 @@ func (x *AttackIntent) GetDirection() uint32 {
 func (x *AttackIntent) GetSkillId() uint32 {
 	if x != nil {
 		return x.SkillId
+	}
+	return 0
+}
+
+func (x *AttackIntent) GetTargetHandle() uint32 {
+	if x != nil {
+		return x.TargetHandle
+	}
+	return 0
+}
+
+func (x *AttackIntent) GetTargetLife() uint64 {
+	if x != nil {
+		return x.TargetLife
 	}
 	return 0
 }
@@ -3453,13 +3479,15 @@ const file_world_proto_rawDesc = "" +
 	"\x19next_economic_command_seq\x18\b \x01(\x04R\x16nextEconomicCommandSeq\x12#\n" +
 	"\rplayer_handle\x18\t \x01(\rR\fplayerHandle\x120\n" +
 	"\x14server_transition_id\x18\n" +
-	" \x01(\tR\x12serverTransitionId\"\xa0\x01\n" +
+	" \x01(\tR\x12serverTransitionId\"\x8a\x02\n" +
 	"\rEnterWorldAck\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
 	"\vbaseline_id\x18\x02 \x01(\x04R\n" +
 	"baselineId\x12M\n" +
-	"\x13auto_skill_settings\x18\x03 \x01(\v2\x1d.minimir.v1.AutoSkillSettingsR\x11autoSkillSettings\"\x96\x01\n" +
+	"\x13auto_skill_settings\x18\x03 \x01(\v2\x1d.minimir.v1.AutoSkillSettingsR\x11autoSkillSettings\x12F\n" +
+	"\x1dchallenge_auto_battle_enabled\x18\x04 \x01(\bH\x00R\x1achallengeAutoBattleEnabled\x88\x01\x01B \n" +
+	"\x1e_challenge_auto_battle_enabled\"\x96\x01\n" +
 	"\x10MapTravelPrepare\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1b\n" +
@@ -3673,13 +3701,16 @@ const file_world_proto_rawDesc = "" +
 	"\rtarget_handle\x18\x04 \x01(\rR\ftargetHandle\x126\n" +
 	"\vtarget_grid\x18\x05 \x01(\v2\x15.minimir.v1.GridPointR\n" +
 	"targetGrid\x12\x1c\n" +
-	"\tdirection\x18\x06 \x01(\rR\tdirection\"\x8f\x01\n" +
+	"\tdirection\x18\x06 \x01(\rR\tdirection\"\xd5\x01\n" +
 	"\fAttackIntent\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12%\n" +
 	"\x0einput_sequence\x18\x02 \x01(\rR\rinputSequence\x12\x1c\n" +
 	"\tdirection\x18\x03 \x01(\rR\tdirection\x12\x19\n" +
-	"\bskill_id\x18\x04 \x01(\rR\askillId\"\x8e\x01\n" +
+	"\bskill_id\x18\x04 \x01(\rR\askillId\x12#\n" +
+	"\rtarget_handle\x18\x05 \x01(\rR\ftargetHandle\x12\x1f\n" +
+	"\vtarget_life\x18\x06 \x01(\x04R\n" +
+	"targetLife\"\x8e\x01\n" +
 	"\x0fSkillModeIntent\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12%\n" +
@@ -3905,6 +3936,7 @@ func file_world_proto_init() {
 		return
 	}
 	file_common_proto_init()
+	file_world_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

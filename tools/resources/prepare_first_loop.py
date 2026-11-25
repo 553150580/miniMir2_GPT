@@ -22,6 +22,8 @@ import prepare_npc_shops as npc_shops
 import personal_map_contract as personal_map
 import prepare_tasks_codex as tasks_codex
 import prepare_boss as bosses
+import prepare_hosting_benefits as hosting_benefits
+from creator_json_meta import content_meta_bytes
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -31,7 +33,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries','game_drop_quotas',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','game_entitlement_rules','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -972,6 +974,7 @@ def fixture_from_rows(tables):
             quotas=ordinary_hunt.compile_quotas(tables,result['ordinary_drop_pools'],items)
             if quotas:
                 result['drop_quotas']=quotas
+            result['hosting_benefits']=hosting_benefits.compile_benefits(tables['game_entitlement_rules'])
             result['_source_evidence']['ordinary_monster_appearances']=appearances
             catalog.extend(ordinary_maps[1:])
         if profile['rule_version']>=24:
@@ -1057,12 +1060,6 @@ def fixture_from_rows(tables):
 def public_gameplay(fixture):
     """客户端只接收显式展示白名单，来源、夹具说明和服务端内部字段留在源侧。"""
     boss_fields,boss_monsters=bosses.public_fields(fixture)
-    if fixture['rule_version'] >= 30 and boss_fields:
-        # 仅为客户端外观和图集提供本首领图真正可见的怪物编号。
-        monsters_by_map = {str(fixture[kind]['map']['id']): fixture[kind]['monster_id']
-                           for kind in ('personal_boss', 'world_boss')}
-        for entry in boss_fields['challenge_maps']:
-            entry['monster_definition_ids'] = [monsters_by_map[entry['id']]]
     potions=fixture['potions'];effects={effect['item_id']:effect for effect in potions['effects']}
     shared={field:potions[field] for field in POTION_FIELDS}
     items=[]
@@ -1181,5 +1178,11 @@ def main():
     if args.check:
         if read(public_path)!=gameplay:raise ValueError('public development gameplay metadata outdated')
     else:save(public_path,gameplay)
+    # 旧客户端可能仍持有前一版资源索引，变化的玩法投影使用独立导入地址。
+    public_meta=public_path.with_suffix('.json.meta')
+    metadata=content_meta_bytes('development/gameplay.json',public_path.read_bytes())
+    if args.check:
+        if public_meta.read_bytes()!=metadata:raise ValueError('公开玩法配置的导入地址已过期')
+    else:public_meta.write_bytes(metadata)
     print(json.dumps({'status':'checked' if args.check else 'generated','path':str(DEST),'sha256':config.sha256(DEST),'development_only':True,'runtime_ready':False},ensure_ascii=False))
 if __name__=='__main__':raise SystemExit(main())

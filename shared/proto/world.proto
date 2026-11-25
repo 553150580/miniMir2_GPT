@@ -23,6 +23,8 @@ message EnterWorldAck {
   uint64 baseline_id = 2;
   // 可选的本机角色偏好，在入场放行自动战斗前提交。
   AutoSkillSettings auto_skill_settings = 3;
+  // 只用于挑战场景，省略时新场默认开启并保持健康续接的原开关。
+  optional bool challenge_auto_battle_enabled = 4;
 }
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
 message MapTravelPrepare {
@@ -241,7 +243,15 @@ message MoveIntent {
 }
 message CastIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; uint32 target_handle = 4; GridPoint target_grid = 5; uint32 direction = 6; }
 // 近战按受理时的逻辑朝向取格；skill_id为0时由权威模式选技，其它值只校验预期。
-message AttackIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 direction = 3; uint32 skill_id = 4; }
+message AttackIntent {
+  uint64 scene_epoch = 1;
+  uint32 input_sequence = 2;
+  uint32 direction = 3;
+  uint32 skill_id = 4;
+  // 点选目标时按原实体和出生代次核对，空时保持原方向普攻。
+  uint32 target_handle = 5;
+  uint64 target_life = 6;
+}
 message SkillModeIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; bool enabled = 4; }
 message SkillModeEntry {
   uint32 skill_id = 1;

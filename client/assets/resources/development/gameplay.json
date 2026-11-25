@@ -6537,6 +6537,24 @@
       "name": "林地首领",
       "profile": "monster_scarecrow",
       "can_push": false
+    },
+    {
+      "definition_id": 80003,
+      "name": "骷髅精灵",
+      "profile": "monster_boss_bone_elite",
+      "can_push": false
+    },
+    {
+      "definition_id": 80004,
+      "name": "白野猪",
+      "profile": "monster_boss_white_boar",
+      "can_push": false
+    },
+    {
+      "definition_id": 80005,
+      "name": "祖玛教主",
+      "profile": "monster_boss_zuma_taurus",
+      "can_push": false
     }
   ],
   "challenge_maps": [
@@ -6545,6 +6563,9 @@
       "name": "个人首领挑战",
       "resource_key": "development/maps/personal-map",
       "floor_map_id": "1",
+      "monster_definition_ids": [
+        80001
+      ],
       "scene_kind": 3,
       "width": 13,
       "height": 13,
@@ -6552,16 +6573,50 @@
       "player_spawn": {
         "x": 6,
         "y": 6
-      },
+      }
+    },
+    {
+      "id": "82",
+      "name": "骷髅精灵战场",
+      "resource_key": "development/maps/personal-map",
+      "floor_map_id": "1",
       "monster_definition_ids": [
-        80001
-      ]
+        80003
+      ],
+      "scene_kind": 3,
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      }
+    },
+    {
+      "id": "83",
+      "name": "白野猪战场",
+      "resource_key": "development/maps/personal-map",
+      "floor_map_id": "1",
+      "monster_definition_ids": [
+        80004
+      ],
+      "scene_kind": 3,
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      }
     },
     {
       "id": "81",
       "name": "世界首领战场",
       "resource_key": "development/maps/personal-map",
       "floor_map_id": "1",
+      "monster_definition_ids": [
+        80002
+      ],
       "scene_kind": 4,
       "width": 13,
       "height": 13,
@@ -6569,10 +6624,24 @@
       "player_spawn": {
         "x": 6,
         "y": 6
-      },
+      }
+    },
+    {
+      "id": "84",
+      "name": "祖玛教主战场",
+      "resource_key": "development/maps/personal-map",
+      "floor_map_id": "1",
       "monster_definition_ids": [
-        80002
-      ]
+        80005
+      ],
+      "scene_kind": 4,
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      }
     }
   ],
   "world_boss": {
@@ -6583,12 +6652,39 @@
     "monster_id": 80002,
     "minimum_level": 1,
     "daily_open_offsets_ms": [
-      43200000,
-      72000000
+      43200000
     ],
     "window_ms": 3600000,
     "return_delay_ms": 5000
   },
+  "world_bosses": [
+    {
+      "map_id": "81",
+      "enabled": true,
+      "template_id": 2,
+      "display_name": "林地首领",
+      "monster_id": 80002,
+      "minimum_level": 1,
+      "daily_open_offsets_ms": [
+        43200000
+      ],
+      "window_ms": 3600000,
+      "return_delay_ms": 5000
+    },
+    {
+      "map_id": "84",
+      "enabled": true,
+      "template_id": 5,
+      "display_name": "祖玛教主",
+      "monster_id": 80005,
+      "minimum_level": 20,
+      "daily_open_offsets_ms": [
+        72000000
+      ],
+      "window_ms": 3600000,
+      "return_delay_ms": 5000
+    }
+  ],
   "pet_profiles": [
     {
       "definition_id": 2,

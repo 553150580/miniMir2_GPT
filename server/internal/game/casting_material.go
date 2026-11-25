@@ -27,6 +27,7 @@ func (w *worker) materialCast(r *room, frame wire.Frame) {
 	q := persistence.AssetRequest{Kind: "cast_material", Fingerprint: potionFingerprint(frame), Context: request.Operation, ItemID: domain.Hex(request.MaterialInstanceId), ItemVersion: request.MaterialVersion, SkillID: request.SkillId, SceneEpoch: request.SceneEpoch, CasterLife: request.CasterLife}
 	// plan 只在新的施法通过门禁后保存冻结的执行计划。
 	var plan *preparedCast
+	var mana automaticManaNeed // 仅原施法合法但缺蓝时，供拒绝回执确认后自动用药。
 	// 新绑定的输入窗口从1开始；查询旧回执不能把旧高序号写入新窗口。
 	// historical 表示指令序号已进入持久水位，应先重查原回执，避免用当前场景拒绝历史提交。
 	historical := q.Context.CommandSeq > 0 && q.Context.CommandSeq <= uint64(r.Role.EconomicSeq)
@@ -39,21 +40,28 @@ func (w *worker) materialCast(r *room, frame wire.Frame) {
 		case !acceptInput(r, request.InputSequence):
 			q.CastGateCode = p.CodeStaleInput
 		default:
-			plan, q.CastGateCode = w.prepareMaterialCast(r, q, &request, time.Now())
+			plan, q.CastGateCode = w.prepareMaterialCast(r, q, &request, time.Now(), &mana)
 		}
 	}
-	w.submitMaterialCast(r, q, plan, request.InputSequence, &frame)
+	w.submitMaterialCast(r, q, plan, request.InputSequence, &frame, mana)
 }
 
 // prepareMaterialCast 校验原操作与施法作用域并冻结计划，避免费用失败留下动作。
 // w 持有目标房间 r；q 固定消耗的材料身份，request 提供技能和目标，now 用于检查行动时钟。
-func (w *worker) prepareMaterialCast(r *room, q persistence.AssetRequest, request *pb.CastWithMaterialRequest, now time.Time) (*preparedCast, uint32) {
-	if w.isSummonSkill(request.SkillId) {
-		// plan 是尚未扣费的召唤方案，code 是其准备阶段的受理结果。
-		plan, code := w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
-		if code != 0 {
+func (w *worker) prepareMaterialCast(r *room, q persistence.AssetRequest, request *pb.CastWithMaterialRequest, now time.Time, recovery ...*automaticManaNeed) (*preparedCast, uint32) {
+	summon := w.isSummonSkill(request.SkillId)
+	if !summon {
+		if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
 			return nil, code
 		}
+	}
+	// 记录补蓝时继续检查完整的动作、场景和目标条件，排除只有魔法门槛未判断的请求。
+	recordMana := len(recovery) != 0 && w.e.Store.Cfg.Fixture.RuleVersion >= 24
+	plan, code := w.prepareCastWithMana(r, request.SkillId, request.TargetHandle, request.Direction, now, true, recordMana, request.TargetGrid)
+	if code != 0 && (!recordMana || code != p.CodeSkillResource) {
+		return nil, code
+	}
+	if summon {
 		// 乐观模式已过期：走正式失败回执，不耗符，不把材料RPC转为新的Recall。
 		if plan.Summon.Recall {
 			return nil, p.CodeSkillStateBlocked
@@ -62,18 +70,13 @@ func (w *worker) prepareMaterialCast(r *room, q persistence.AssetRequest, reques
 		if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
 			return nil, code
 		}
-		return plan, 0
 	}
-	// code 表示材料槽及指定实例是否满足当前技能消耗规则。
-	if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
+	if code != 0 {
+		recovery[0].ready(r, plan, code)
 		return nil, code
 	}
-	// plan 与 code 分别保存目标准入后的冻结施法和受理状态。
-	plan, code := w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
-	if code == 0 {
-		freezePoisonMaterial(r, q, plan)
-	}
-	return plan, code
+	freezePoisonMaterial(r, q, plan)
+	return plan, 0
 }
 
 // freezePoisonMaterial 锁定通过材料校验的同一实例的毒色；后续装备变化不重新选色。
@@ -112,7 +115,7 @@ func (w *worker) applyMaterialReceipt(r *room, receipt persistence.Operation, pl
 
 // 原随机持续时长和材料身份冻结在job闭包；未知提交只重查同一事务，不重新抽样或再次耗符。
 // w 为房间 r 提交原资产请求 q 和冻结的 plan。input 关联施法输入，frame 用于回答手动请求，自动施法时为空。
-func (w *worker) submitMaterialCast(r *room, q persistence.AssetRequest, plan *preparedCast, input uint32, frame *wire.Frame) {
+func (w *worker) submitMaterialCast(r *room, q persistence.AssetRequest, plan *preparedCast, input uint32, frame *wire.Frame, recovery ...automaticManaNeed) {
 	if plan != nil && (r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64) {
 		q.CastGateCode, plan = p.CodeSkillStateBlocked, nil
 	}
@@ -122,6 +125,9 @@ func (w *worker) submitMaterialCast(r *room, q persistence.AssetRequest, plan *p
 	r.MaterialGeneration++
 	// binding 固定原房间、角色授权、场景、出生代次及当前操作代次。
 	binding := materialCommitBinding{roleID: r.Role.ID, room: r, auth: r.Auth, scene: r.Scene, life: r.Player.Life, generation: r.MaterialGeneration, conn: r.Conn}
+	if len(recovery) != 0 {
+		binding.mana = recovery[0]
+	}
 	r.Pending = true
 	r.PendingOperationID = domain.Hex(q.Context.OpId)
 	r.PendingFingerprint = q.Fingerprint
@@ -157,6 +163,8 @@ type materialCommitBinding struct {
 	scene, life, generation uint64
 	// conn 是原请求的附着连接，操作结果只发给仍匹配的原连接。
 	conn Connection
+	// mana 只为本次新手动技能请求保留补蓝门槛，历史回执查询无候选。
+	mana automaticManaNeed
 }
 
 // finishMaterialCast 对齐原回调，重试未知提交并且仅在确认后推动技能和资产。
@@ -217,6 +225,11 @@ func (w *worker) finishMaterialCast(binding materialCommitBinding, q persistence
 		w.isolateRoom(r)
 		return
 	}
+	if respond && err == nil && binding.mana.cost > 0 && result.ErrorCode == p.CodeSkillResource &&
+		receipt.Kind == q.Kind && receipt.Code == p.CodeSkillResource && receipt.RoleID == binding.roleID && receipt.Digest == q.Fingerprint &&
+		r.Scene == binding.scene && r.Player.Life == binding.life {
+		w.tryManaPotion(r, binding.mana, time.Now())
+	}
 	w.assets(r)
 	w.snapshot(r)
 	w.after(r)
@@ -230,7 +243,7 @@ func hardAuthorityFailure(code uint32) bool {
 
 // autoMaterialCast 为自动施法冻结原材料、目标及施法计划，再提交同一扣料事务。
 // w 持有房间 r，skill 是本次技能，handle、direction 和 grid 分别表示实体、方向和地格，now 与 need 提供时钟和魔法值门槛。
-func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direction uint32, grid *pb.GridPoint, now time.Time, need *automaticManaNeed) bool {
+func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direction uint32, grid *pb.GridPoint, now time.Time, need *automaticManaNeed, input uint32) bool {
 	if !w.e.Store.Cfg.Fixture.CastingSupply.Enabled {
 		return false
 	}
@@ -269,6 +282,6 @@ func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direct
 	} else {
 		q.Fingerprint = persistence.Hash([]byte(fmt.Sprintf("auto:%d:%d:%d:%d:%s:%d:%d,%d", q.SourceSeq, q.SceneEpoch, q.CasterLife, q.SkillID, q.ItemID, q.ItemVersion, grid.GetX(), grid.GetY())))
 	}
-	w.submitMaterialCast(r, q, plan, 0, nil)
+	w.submitMaterialCast(r, q, plan, input, nil)
 	return true
 }

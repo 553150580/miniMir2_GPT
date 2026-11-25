@@ -345,6 +345,9 @@ export class GameWorldView {
                     placeholder.layer = body.layer;
                     placeholder.parent = node;
                     placeholder.setSiblingIndex(body.getSiblingIndex());
+                    const footprint = placeholder.addComponent(UITransform);
+                    footprint.setContentSize(28, 26);
+                    footprint.setAnchorPoint(.5, 0);
                     const drawing = placeholder.addComponent(Graphics);
                     drawing.fillColor = new Color(203, 150, 82, 255);
                     drawing.ellipse(0, 13, 14, 13); drawing.fill();
@@ -356,11 +359,14 @@ export class GameWorldView {
                 }
                 // 原PNG和WIL偏移已包含透明边；恢复auto-trim几何，避免逐帧伸缩。
                 for (const sprite of sprites) { sprite.type = Sprite.Type.SIMPLE; sprite.trim = false; }
-                node.on(Node.EventType.TOUCH_END, (event: EventTouch) => {
+                const selectEntity = (event: EventTouch) => {
                     event.propagationStopped = true;
                     const current = this.visuals.get(state.entityHandle);
                     if (current?.node === node) this.selected(current.state);
-                });
+                };
+                // 实体选择只使用实际身体。透明根容器和固定宽度的名字不阻挡地图点地。
+                const touchBody = profile ? body : placeholder ?? node;
+                touchBody.on(Node.EventType.TOUCH_END, selectEntity);
                 const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
                 visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
                     motion: sameLife ? replaced.motion : new EntityMotion(),

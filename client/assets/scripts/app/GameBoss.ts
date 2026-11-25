@@ -3,13 +3,30 @@ import { newOperationId } from './GameConnection';
 import type { GameConnection, Packet } from './GameConnection';
 import { protocolErrorMessage } from './GameErrors';
 
+interface WorldBossOffer {
+    display_name: string;
+    minimum_level: number;
+    map_id: string;
+    template_id: number;
+}
+
+interface PersonalBossOffer {
+    templateId: number;
+    displayName: string;
+    minimumLevel: number;
+    canEnter: boolean;
+    eligibilityReason: number;
+    availableAtUnixMs: { toString(): string };
+}
+
 interface BossContext {
     sceneEpoch: { toString(): string };
     sceneKind: number;
     ready: boolean;
     level: number;
     canClaimRewards: boolean;
-    worldBoss?: { display_name: string; minimum_level: number; map_id: string; template_id: number };
+    worldBoss?: WorldBossOffer;
+    worldBosses?: readonly WorldBossOffer[];
 }
 
 type BossSection = 3 | 4 | 'rewards';
@@ -94,6 +111,7 @@ export class GameBoss {
     private page = 0;
     private busy = false;
     private pendingPersonal = '';
+    private pendingPersonalTemplate = 0;
     private generation: number;
     private worldScene?: string;
     private serverClock?: { unix: number; monotonic: number };
@@ -186,9 +204,13 @@ export class GameBoss {
                 this.connection.send(20013, { sceneEpoch, challengeId: this.active.challengeId });
             } else if (this.section === 4 && sceneKind === 4 && this.world?.state === 3) {
                 this.connection.send(20019, { sceneEpoch, occurrenceId: this.world.occurrenceId });
-            } else if (this.section === 3 && sceneKind === 1 && this.personal?.canEnter) {
+            } else if (this.section === 3 && sceneKind === 1) {
+                const offer = this.personalPages()[this.page]?.offer;
+                if (!offer?.canEnter) return;
+                if (this.pendingPersonalTemplate !== offer.templateId) this.pendingPersonal = '';
+                this.pendingPersonalTemplate = offer.templateId;
                 this.pendingPersonal ||= Array.from(newOperationId(), byte => byte.toString(16).padStart(2, '0')).join('');
-                const response = await this.connection.request(20012, { sceneEpoch, challengeId: this.pendingPersonal, templateId: this.personal.templateId });
+                const response = await this.connection.request(20012, { sceneEpoch, challengeId: this.pendingPersonal, templateId: offer.templateId });
                 if (response?.errorCode) return;
             } else if (this.section === 4 && this.world && context.worldBoss && this.canEnterWorld(context)) {
                 if (!await this.enterWorld(context, this.world)) return;
@@ -217,33 +239,48 @@ export class GameBoss {
         const local = this.section === 3;
         const value = this.personal, world = this.world;
         const inside = context?.sceneKind === this.section;
-        const rows: string[] = local ? (value?.history ?? []).map((row: any) =>
-            `${dateText(row.finishedAtUnixMs)}  ${historyOutcomes[row.outcome] ?? '已结算'}  伤害 ${row.damage}${row.rewardGold && row.rewardGold.toString() !== '0' ? `  金币 +${row.rewardGold}` : ''}`)
-            : (world?.ranks ?? []).map(row => `${row.position}. ${row.displayName}  伤害 ${row.damage}`);
-        const pages = Math.max(1, Math.ceil(rows.length / pageSize));
+        const personalPages = local ? this.personalPages(inside ? this.active?.templateId : undefined) : [];
+        const ranks = (world?.ranks ?? []).map(row => `${row.position}. ${row.displayName}  伤害 ${row.damage}`);
+        const pages = Math.max(1, local ? personalPages.length : Math.ceil(ranks.length / pageSize));
         this.page = Math.max(0, Math.min(this.page, pages - 1));
+        const detail = personalPages[this.page], offer = detail?.offer;
         if (local) {
             const state = this.active?.state;
-            this.label('Headline', value?.displayName || '个人首领');
+            this.label('Headline', offer?.displayName || '个人首领');
             this.label('Status', inside && state ? personalState[state] : value
-                ? `${qualifications[value.eligibilityReason] ?? '资格待确认'}  今日 ${value.successes}/${value.dailyLimit}` : '等待查询');
-            this.label('Details', value?.open ? `等级 ${value.minimumLevel}   ${inside ? '结束' : '可挑战时刻'} ${dateText(inside ? this.active?.expiresAtUnixMs : value.availableAtUnixMs)}` : '');
+                ? `${qualifications[offer?.eligibilityReason ?? value.eligibilityReason] ?? '资格待确认'}  今日 ${value.successes}/${value.dailyLimit}` : '等待查询');
+            this.label('Details', offer ? `等级 ${offer.minimumLevel}   ${inside ? '结束' : '可挑战时刻'} ${dateText(inside ? this.active?.expiresAtUnixMs : offer.availableAtUnixMs)}` : '');
         } else {
-            this.label('Headline', context?.worldBoss?.display_name || '世界首领');
+            this.label('Headline', this.worldOffer(context, world?.templateId)?.display_name || '世界首领');
             this.label('Status', context?.worldBoss ? worldState[world?.state ?? 0] || '等待查询' : '尚未开放');
             this.label('Details', world ? `上海时间 ${dateText(world.opensAtUnixMs)} 开场 / ${dateText(world.expiresAtUnixMs)} 结束\n首领生命 ${world.hp}/${world.hpMax}` : '');
         }
-        this.label('Results', rows.slice(this.page * pageSize, (this.page + 1) * pageSize).join('\n') || (local ? '暂无挑战记录' : '暂无伤害排行'));
+        const rows = local ? detail?.rows ?? [] : ranks.slice(this.page * pageSize, (this.page + 1) * pageSize);
+        this.label('Results', rows.join('\n') || (local ? '暂无挑战记录' : '暂无伤害排行'));
         this.label('Page', `${this.page + 1}/${pages}`);
         this.label('Action/Label', inside ? '离开挑战' : '进入挑战');
         this.enable('Action', !!context?.ready && !this.busy && (inside ? (local ? this.active?.state : world?.state) === 3
-            : local ? context.sceneKind === 1 && value?.canEnter === true && !(this.active?.state > 0 && this.active.state < 4) : this.canEnterWorld(context)));
+            : local ? context.sceneKind === 1 && offer?.canEnter === true && !(this.active?.state > 0 && this.active.state < 4) : this.canEnterWorld(context)));
         this.enable('Previous', this.page > 0);
         this.enable('Next', this.page + 1 < pages);
         this.scheduleWorldRefresh(context);
     }
 
     private get pendingRewards(): PendingChallengeReward[] { return this.personal?.pendingRewards ?? []; }
+
+    // 复用保存的前后页按钮；每页只显示一个首领和该首领的最近明细。
+    private personalPages(active?: number): { offer: PersonalBossOffer; rows: string[] }[] {
+        const value = this.personal;
+        if (!value?.open) return [];
+        const choices: PersonalBossOffer[] = value.templates?.length ? value.templates : [value];
+        return choices.filter(choice => active === undefined || choice.templateId === active).flatMap(offer => {
+            const history = (value.history ?? []).filter((row: any) => choices.length === 1 || row.templateId === offer.templateId);
+            const rows = history.map((row: any) => `${dateText(row.finishedAtUnixMs)}  ${historyOutcomes[row.outcome] ?? '已结算'}  伤害 ${row.damage}`
+                + (row.rewardGold && row.rewardGold.toString() !== '0' ? `  金币 +${row.rewardGold}` : ''));
+            return Array.from({ length: Math.max(1, Math.ceil(rows.length / pageSize)) }, (_, page) =>
+                ({ offer, rows: rows.slice(page * pageSize, (page + 1) * pageSize) }));
+        });
+    }
 
     // 一个可领取奖包的附件超过原保存结果区时继续翻页，每页仍领取整个奖包。
     private rewardPages(): RewardPage[] {
@@ -267,8 +304,7 @@ export class GameBoss {
         this.label('Headline', '挑战奖励');
         this.label('Status', this.personal ? `待领取 ${this.pendingRewards.length}${capacity ? '/' + capacity : ''}` : '等待查询');
         if (page) {
-            const source = this.personal?.templateId === page.reward.templateId && this.personal.displayName
-                ? this.personal.displayName : `首领 ${page.reward.templateId}`;
+            const source = this.personalPages(page.reward.templateId)[0]?.offer.displayName ?? `首领 ${page.reward.templateId}`;
             this.label('Details', `${source} · ${dateText(page.reward.earnedAtUnixMs)}\n${page.reward.items?.length ?? 0} 项物品`);
         } else this.label('Details', context && context.sceneKind >= 3 ? '请返回原场景后领取' : '');
         const lines = page?.items.map(item => `${this.rewardActions.itemName(item.itemId) ?? `物品 ${item.itemId}`} ×${item.quantity}  ${item.bound ? '绑定' : '非绑定'}`
@@ -282,15 +318,22 @@ export class GameBoss {
     }
 
     private canEnterWorld(context: BossContext): boolean {
-        if (context.sceneKind !== 1 || !context.worldBoss || context.level < context.worldBoss.minimum_level || this.world?.state !== 3) return false;
+        const offer = this.worldOffer(context, this.world?.templateId);
+        if (context.sceneKind !== 1 || !offer || context.level < offer.minimum_level || this.world?.state !== 3) return false;
         const deadline = this.worldBoundary();
         return deadline === undefined || performance.now() < deadline;
     }
 
+    // 以响应中的模板匹配该时段的地图，避免拿午场资源进入晚场。
+    private worldOffer(context: BossContext | null, identity?: number): WorldBossOffer | undefined {
+        if (identity === undefined || context?.worldBoss?.template_id === identity) return context?.worldBoss;
+        return context?.worldBosses?.find(offer => offer.template_id === identity);
+    }
+
     // 首领地图在服务器保留席位前完成准备，从准备到派送均须保持原场次与角色附着。
     private async enterWorld(context: BossContext, offered: WorldBossObservation): Promise<boolean> {
-        const offer = context.worldBoss!;
-        if (offered.templateId !== offer.template_id) throw new Error('世界首领场次与当前模板不一致');
+        const offer = this.worldOffer(context, offered.templateId);
+        if (!offer) throw new Error('世界首领场次与当前模板不一致');
         const target = { mapId: offer.map_id, templateId: offered.templateId, occurrenceId: offered.occurrenceId };
         const generation = this.connection.generation;
         const attempt = new AbortController();
@@ -301,7 +344,7 @@ export class GameBoss {
             const next = this.context();
             return !attempt.signal.aborted && generation === this.connection.generation && this.canRefreshWorld(next)
                 && next.sceneKind === 1 && next.sceneEpoch.toString() === context.sceneEpoch.toString()
-                && next.worldBoss?.map_id === target.mapId && next.worldBoss.template_id === target.templateId ? next : null;
+                && this.worldOffer(next, target.templateId)?.map_id === target.mapId ? next : null;
         };
         try {
             prepared = await this.prepareWorldEntry(target, attempt.signal);
