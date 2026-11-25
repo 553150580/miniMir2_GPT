@@ -28,6 +28,7 @@ SHANGHAI = timezone(timedelta(hours=8))
 SCENE_KIND = 6
 MAX_UINT32 = (1 << 32) - 1
 MAX_INT64 = (1 << 63) - 1
+MAX_BIRTHS_PER_SIDE = 8  # 与服务端的单场宠物身份预算一致。
 TIMEOUT = 'effective_surviving_hp_ratio_defender_wins_tie'
 RANKING_TIEBREAK = 'earlier_last_challenge'
 SETTLEMENT_SEQUENCE = ['rank_rewards', 'score_to_exchange_1_to_1', 'clear_season_score']
@@ -159,7 +160,18 @@ def project_settlement(tables, sample, base_fixture, arena_rule):
     return result
 
 
-def project(tables, assembly, base_fixture, settlement_rewards=None):
+def project_summoning(sample):
+    """只接受完整的隔离选择，施法消耗和冷却保留既有技能配置。"""
+    if not isinstance(sample, dict) or set(sample) != {'allow_without_entry_pet', 'max_births_per_side'}:
+        raise ValueError('镜像竞技临时召唤需明确指定空槽首召与每侧出生上限')
+    allow_without_entry_pet = sample['allow_without_entry_pet']
+    if type(allow_without_entry_pet) is not bool:
+        raise ValueError('镜像竞技空槽首召须明确写为 true 或 false')
+    return {'allow_without_entry_pet': allow_without_entry_pet,
+            'max_births_per_side': require_integer(sample['max_births_per_side'], 1, MAX_BIRTHS_PER_SIDE, '每侧临时召唤上限')}
+
+
+def project(tables, assembly, base_fixture, settlement_rewards=None, summoning_rules=None):
     """编译显式隔离场景。工作簿提供制度，装配只提供本轮场景和待验证的候选选择。"""
     if not isinstance(assembly, dict) or set(assembly) != ASSEMBLY_FIELDS:
         raise ValueError('镜像竞技隔离装配需完整声明模板、场景、四个座位、零点、匹配和宠物规则')
@@ -219,6 +231,8 @@ def project(tables, assembly, base_fixture, settlement_rewards=None):
             'max_level_gap': require_integer(assembly['max_level_gap'], 0, MAX_UINT32, '候选等级差'), 'pet_death_policy': pet}
     if settlement_rewards is not None:
         rule.update(project_settlement(tables, settlement_rewards, base_fixture, rule))
+    if summoning_rules is not None:
+        rule['summoning'] = project_summoning(summoning_rules)
     public_map = {'id': str(identity), 'name': grid['display_name'], 'resource_key': key, 'floor_map_id': str(floor_id),
                   'scene_kind': SCENE_KIND, 'width': width, 'height': height, 'blocked': deepcopy(grid['blocked']),
                   'player_spawn': dict(spawns['attacker_spawn']), 'monster_definition_ids': []}
@@ -248,14 +262,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--assembly', required=True, type=Path, help='本轮显式场景装配 JSON')
     parser.add_argument('--settlement-rewards', type=output_file, help='可选的 .work 隔离结算奖量与兑换测试物品装配 JSON')
+    parser.add_argument('--summoning-rules', type=output_file, help='可选的 .work 隔离空槽首召与每侧出生上限装配 JSON')
     parser.add_argument('--fixture-out', required=True, type=output_file, help='独立运行规则输出文件')
     parser.add_argument('--public-out', type=output_file, help='可选的客户端公开目录输出文件')
     parser.add_argument('--check', action='store_true', help='只核对已经生成的投影')
     arguments = parser.parse_args()
     targets = [path for path in (arguments.fixture_out, arguments.public_out) if path is not None]
-    sources = {arguments.assembly.resolve(), arguments.settlement_rewards} - {None}
-    if len(set(targets)) != len(targets) or sources.intersection(targets) or arguments.settlement_rewards == arguments.assembly.resolve():
-        raise ValueError('镜像竞技隔离装配、服务端和客户端输出应使用不同文件')
+    sources = [path for path in (arguments.assembly.resolve(), arguments.settlement_rewards, arguments.summoning_rules) if path is not None]
+    if len(set([*sources, *targets])) != len(sources) + len(targets):
+        raise ValueError('镜像竞技隔离装配与各投影输出应使用不同文件')
     schema = configuration.load_json(ROOT / 'config/schema/catalog.json')
     tables, errors, _, _ = configuration.collect(schema)
     if errors:
@@ -270,7 +285,10 @@ def main():
     rewards = configuration.load_json(arguments.settlement_rewards) if arguments.settlement_rewards else None
     if arguments.settlement_rewards and rewards is None:
         raise ValueError('显式镜像赛季奖励装配不能写成空值')
-    rule, public_map = project(tables, assembly, fixture, rewards)
+    summoning = configuration.load_json(arguments.summoning_rules) if arguments.summoning_rules else None
+    if arguments.summoning_rules and summoning is None:
+        raise ValueError('显式镜像临时召唤装配不能写成空值')
+    rule, public_map = project(tables, assembly, fixture, rewards, summoning)
     fixture['mirror_arena'] = rule
     fixture['_source_evidence']['mirror_arena'] = {
         'tables': [RULES, STREAKS], 'workbook_sha256': configuration.sha256(workbook),
@@ -290,6 +308,11 @@ def main():
         if 'exchange' in rule:
             evidence['candidate_rules'].append('feather_exchange_points')
             evidence['season_settlement']['confirmed_rules'].append('feather_exchange_bound')
+    if arguments.summoning_rules:
+        fixture['_source_evidence']['mirror_arena']['summoning'] = {
+            'assembly_sha256': configuration.sha256(arguments.summoning_rules),
+            'scope': '空槽首召与每侧出生上限仅用于本轮隔离测试。施法冷却、蓝耗和材料沿用原技能规则。',
+        }
     write_projection(arguments.fixture_out, fixture, arguments.check)
     if arguments.public_out:
         public = configuration.load_json(BASE_PUBLIC)

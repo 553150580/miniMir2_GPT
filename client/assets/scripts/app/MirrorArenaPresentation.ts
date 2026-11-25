@@ -98,6 +98,10 @@ export class MirrorArenaPresentation {
             case 30007: view.acceptAttack(event.value); break;
             case 30008: view.acceptImpact(event.value); break;
             case 30012: view.acceptCastStep(event.value); break;
+            case 30015:
+                // 资源未就绪期间经过的时间计入出场动作；原视觉和音效按自己的完成时钟退出。
+                view.presentPetBorn({ event: event.value, elapsedMs: event.value.elapsedMs + Math.max(0, performance.now() - frame.receivedAt) });
+                break;
             }
         }
         active.sequence = sequence;

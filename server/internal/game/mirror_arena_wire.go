@@ -100,7 +100,15 @@ func (w *worker) sendMirrorCombatFrame(r *room, run *mirrorRun, now time.Time) {
 		FireWallCells: run.battle.fireWallCells(now)}
 	remaining := wire.MaxFrame - 32 - proto.Size(frame) // 为外层帧和后续字段标签留出空间。
 	for _, event := range observations {
-		raw, err := proto.Marshal(event.Message)
+		message := event.Message
+		if event.ID == p.MsgS2CPetBorn {
+			born := mirrorPetBornInFrame(event, frame, run.cfg.Map.ID, now)
+			if born == nil {
+				continue
+			}
+			message = born
+		}
+		raw, err := proto.Marshal(message)
 		if err != nil {
 			continue
 		}
@@ -112,4 +120,32 @@ func (w *worker) sendMirrorCombatFrame(r *room, run *mirrorRun, now time.Time) {
 		frame.Observations = append(frame.Observations, observation)
 	}
 	w.send(r, p.MsgS2CMirrorArenaCombatFrame, 0, frame)
+}
+
+// mirrorPetBornInFrame 只向带有原新生活体的当前镜像帧附加出生表现。
+// 镜像用战斗代次作为完整体语境，原事实不携带普通角色键或常规基线标识。
+func mirrorPetBornInFrame(event mirrorCombatObservation, frame *pb.MirrorArenaCombatFrame, mapID uint64, now time.Time) *pb.PetBorn {
+	born, ok := event.Message.(*pb.PetBorn)
+	if !ok || born == nil || born.SceneEpoch != frame.BattleSceneEpoch || born.MapId != mapID ||
+		born.EntityHandle < 103 || born.EntityHandle > 102+2*devconfig.MirrorArenaMaxBirthsPerSide || born.EntityLife == 0 ||
+		born.SourceCastId == 0 || born.SourceSkillId == 0 || event.bornAt.IsZero() ||
+		event.bornAt.UnixMilli() <= 0 || uint64(event.bornAt.UnixMilli()) != born.BornAtUnixMs {
+		return nil
+	}
+	elapsed, ok := petBornElapsed(event.bornAt, now)
+	if !ok {
+		return nil
+	}
+	for _, body := range frame.Entities {
+		if body.EntityKind != 2 || body.IsPetCorpse || body.Hp <= 0 || body.EntityHandle != born.EntityHandle ||
+			body.Life != born.EntityLife || body.DefinitionId != born.DefinitionId || body.Direction != born.Direction ||
+			body.MovementRevision != born.MovementRevision {
+			continue
+		}
+		out := proto.CloneOf(born)
+		out.BaselineId, out.StateSequence, out.ElapsedMs = frame.BattleSceneEpoch, frame.Sequence, elapsed
+		out.Role = nil
+		return out
+	}
+	return nil
 }

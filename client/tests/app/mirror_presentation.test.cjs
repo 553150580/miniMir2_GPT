@@ -34,6 +34,7 @@ function harness() {
         acceptAttack() { this.calls.push('attack'); }
         acceptImpact() { this.calls.push('impact'); }
         acceptCastStep() { this.calls.push('step'); }
+        presentPetBorn(value) { this.birth = value; this.calls.push('born'); }
         update() { this.calls.push('tick'); }
     }
     const { MirrorArenaPresentation } = load('MirrorArenaPresentation', { cc, './WorldAssets': { WorldAssets },
@@ -73,15 +74,19 @@ test('镜像进场复用大厅真实预载，仅消费该副流，按位移、�
     assert.equal(world.active, false);
 
     const frame = { battleKey: '镜像身份', sequence: '9007199254740999', entities: [{ position: { x: 12, y: 12 } }],
+        receivedAt: performance.now() - 50,
         fireWallCells: [{ x: 5, y: 4 }, { x: 13, y: 5 }],
-        observations: [30006, 30013, 30007, 30008, 30012].map(messageId => ({ messageId, value: {} })) };
+        observations: [...[30006, 30013, 30007, 30008, 30012].map(messageId => ({ messageId, value: {} })),
+            { messageId: 30015, value: { entityHandle: 103, elapsedMs: 15 } }] };
     assert(!renderer.apply({ ...frame, battleKey: '旧身份' }));
     assert(!renderer.apply({ ...frame, entities: [{ position: { x: 13, y: 3 } }] }));
     assert(renderer.apply(frame));
     assert(!renderer.apply(frame));
     assert(!renderer.apply({ ...frame, sequence: '9007199254740998' }));
     renderer.update(1);
-    assert.deepEqual(views[0].calls, ['movement', 'state', 'cast', 'attack', 'impact', 'step', 'tick']);
+    assert.deepEqual(views[0].calls, ['movement', 'state', 'cast', 'attack', 'impact', 'step', 'born', 'tick']);
+    assert.equal(views[0].birth.event.entityHandle, 103);
+    assert(views[0].birth.elapsedMs >= 65, '资源挂载期间的时间也计入出生表现');
     assert.deepEqual(views[0].baseline.fireWallCells, [{ x: 5, y: 4 }]);
     assert(world.active);
     renderer.reset();

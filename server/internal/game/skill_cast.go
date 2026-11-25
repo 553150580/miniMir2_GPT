@@ -239,7 +239,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		return nil, p.CodeSkillNotLearned
 	}
 	// 未接入角色 owner 的永久消耗前，私有挑战只运行本场的可独立结算动作。
-	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0 && r.currentWorld().mirrorCombat == nil) ||
+	if r.bossBattle != nil && (handler.Teleport || r.currentWorld().mirrorCombat == nil && (handler.Summon || s.MaterialQuantity > 0)) ||
 		r.worldBossObservation != nil && handler.Teleport {
 		return nil, p.CodeSkillStateBlocked
 	}

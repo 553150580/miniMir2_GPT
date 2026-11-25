@@ -2,6 +2,7 @@ import { travelInteger } from './MapTravelModel';
 import type { TravelInteger } from './MapTravelModel';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import type { DisplacementEvent } from './EntityDisplacement';
+import type { PetBornObservation } from './PetBornModel';
 
 // 镜像展示使用独立的场次、角色投影和观测流水。
 export const MirrorArenaPhase = { Preparing: 1, Fighting: 2, Settling: 3, Finished: 4 } as const;
@@ -45,7 +46,8 @@ export type MirrorCombatEvent =
     | { readonly messageId: 30007; readonly value: AttackEvent }
     | { readonly messageId: 30008; readonly value: ImpactEvent }
     | { readonly messageId: 30012; readonly value: CastStepEvent }
-    | { readonly messageId: 30013; readonly value: DisplacementEvent };
+    | { readonly messageId: 30013; readonly value: DisplacementEvent }
+    | { readonly messageId: 30015; readonly value: PetBornObservation };
 export type MirrorCombatMessageId = MirrorCombatEvent['messageId'];
 export type DecodeMirrorCombat = (id: MirrorCombatMessageId, payload: Uint8Array) => unknown;
 export interface MirrorEntity {
@@ -53,13 +55,18 @@ export interface MirrorEntity {
     readonly position: { x: number; y: number }; readonly direction: number; readonly life: TravelInteger;
     readonly hp: TravelInteger; readonly hpMax: TravelInteger; readonly mp: TravelInteger; readonly mpMax: TravelInteger;
     readonly displayName?: string;
+    readonly isPetCorpse?: boolean;
+    readonly movementRevision?: TravelInteger;
 }
 export interface MirrorArenaFrame {
     readonly battleKey: string; readonly sequence: string; readonly serverUnixMs: string;
+    readonly receivedAt: number; // 本地单调时钟，资源挂载耗时也计入出场表现。
     readonly entities: readonly MirrorEntity[]; readonly observations: readonly MirrorCombatEvent[];
     readonly fireWallCells: readonly { x: number; y: number }[];
 }
 const maxMirrorGridSide = 17; // 与服务端挑战地图的尺寸门禁一致；实际地图范围由独立视口再次核对。
+const mirrorPetFirst = 101, mirrorPetLast = 118; // 奇数归进攻方，偶数归防守方。
+const mirrorBirthFirst = 103; // 101/102 为入场时原有宠物，完整帧只恢复身体。
 export interface MirrorArenaSnapshot {
     readonly enabled: boolean; readonly attached: boolean; readonly pending: boolean; readonly errorCode: number;
     readonly lobby: MirrorArenaLobby | null; readonly battle: MirrorBattle | null; readonly frame: MirrorArenaFrame | null;
@@ -180,19 +187,25 @@ export function readMirrorState(value: unknown, scene: string, rule: string): Mi
 }
 
 export function isMirrorCombatMessage(value: unknown): value is MirrorCombatMessageId {
-    return value === 30006 || value === 30007 || value === 30008 || value === 30012 || value === 30013;
+    return value === 30006 || value === 30007 || value === 30008 || value === 30012 || value === 30013 || value === 30015;
 }
+
+function petHandle(handle: number): boolean { return handle >= mirrorPetFirst && handle <= mirrorPetLast; }
+function combatHandle(handle: number): boolean { return handle === 1 || handle === 2 || petHandle(handle); }
 
 function validEntity(value: unknown): value is MirrorEntity {
     const entity = fields(value), handle = u32(entity.entityHandle), kind = u32(entity.entityKind);
     if (handle === 1 || handle === 2) {
         if (kind !== 1) return false;
         u32(entity.definitionId, 2);
-    } else if ((handle !== 101 && handle !== 102) || kind !== 2 || !u32(entity.definitionId)) return false;
+    } else if (!petHandle(handle) || kind !== 2 || !u32(entity.definitionId)) return false;
     gridPoint(entity.position);
     u32(entity.direction, 7);
     u64(entity.life, true);
-    return BigInt(nonnegativeI64(entity.hp)) <= BigInt(nonnegativeI64(entity.hpMax, true)) &&
+    const hp = nonnegativeI64(entity.hp);
+    if (entity.isPetCorpse != null && typeof entity.isPetCorpse !== 'boolean' || entity.isPetCorpse && (kind !== 2 || hp !== '0')) return false;
+    u64(entity.movementRevision ?? '0');
+    return BigInt(hp) <= BigInt(nonnegativeI64(entity.hpMax, true)) &&
         BigInt(nonnegativeI64(entity.mp)) <= BigInt(nonnegativeI64(entity.mpMax));
 }
 
@@ -201,22 +214,89 @@ function gridPoint(value: unknown): { x: number; y: number } {
     return { x: u32(point.x, maxMirrorGridSide - 1), y: u32(point.y, maxMirrorGridSide - 1) };
 }
 
-// 只解码镜像允许的五种表演事件，未知或残缺的事件不会影响合法的整帧实体。
-function readObservation(value: unknown, epoch: string, decode: DecodeMirrorCombat): MirrorCombatEvent | null {
+interface MirrorBodyLife { life: bigint; definitionId: number; dead: boolean; retired: boolean; }
+
+// 各句柄只保留最后一个身体，另保留单侧宠物出生水位。同一场次换票时沿用原记录。
+export class MirrorFrameLifetimes {
+    private readonly bodies = new Map<number, MirrorBodyLife>();
+    private newestPet = [0n, 0n];
+
+    clear(): void { this.bodies.clear(); this.newestPet = [0n, 0n]; }
+
+    accept(entities: ReadonlyMap<number, MirrorEntity>): Set<number> | null {
+        const fresh = new Set<number>(), next = this.newestPet.slice();
+        for (const [handle, body] of Array.from(entities)) {
+            const previous = this.bodies.get(handle), life = BigInt(body.life.toString()), dead = body.hp.toString() === '0';
+            if (previous && (life < previous.life || life === previous.life &&
+                (previous.retired || previous.dead && !dead || previous.definitionId !== body.definitionId))) return null;
+            if (!petHandle(handle)) continue;
+            const side = handle % 2;
+            if (!previous || life > previous.life) {
+                if (!dead) {
+                    if (life <= this.newestPet[side]) return null;
+                    fresh.add(handle);
+                }
+                if (life > next[side]) next[side] = life;
+            }
+        }
+        // 有效帧才更新水位。已经消失的身体只能用更高代次重新占据旧句柄。
+        for (const [handle, body] of Array.from(this.bodies)) if (!entities.has(handle)) body.retired = true;
+        for (const [handle, body] of Array.from(entities)) this.bodies.set(handle, { life: BigInt(body.life.toString()),
+            definitionId: body.definitionId, dead: body.hp.toString() === '0', retired: false });
+        this.newestPet = next;
+        return fresh;
+    }
+}
+
+interface MirrorObservationFrame {
+    readonly battle: MirrorBattle; readonly sequence: string; readonly serverUnixMs: string;
+    readonly bodies: ReadonlyMap<number, MirrorEntity>; readonly freshPets: Set<number>;
+}
+
+// 新生必须来自当前完整帧中的新身体，使用镜像身份代替普通角色的附着身份。
+function readMirrorBirth(event: Record<string, unknown>, frame: MirrorObservationFrame): PetBornObservation | null {
+    const entityHandle = u32(event.entityHandle), body = frame.bodies.get(entityHandle);
+    if (entityHandle < mirrorBirthFirst || !body || !frame.freshPets.has(entityHandle)) return null;
+    const baselineId = u64(event.baselineId, true), stateSequence = u64(event.stateSequence, true), mapId = u64(event.mapId, true);
+    const entityLife = u64(event.entityLife, true), definitionId = u32(event.definitionId), direction = u32(event.direction ?? 0, 7);
+    const movementRevision = u64(event.movementRevision ?? '0'), sourceSkillId = u32(event.sourceSkillId);
+    const sourceCastId = u64(event.sourceCastId, true), bornAtUnixMs = u64(event.bornAtUnixMs, true), elapsedMs = u32(event.elapsedMs ?? 0);
+    if (baselineId !== frame.battle.epoch || stateSequence !== frame.sequence || mapId !== frame.battle.mapId ||
+        entityLife !== body.life.toString() || definitionId !== body.definitionId || direction !== body.direction ||
+        movementRevision !== (body.movementRevision?.toString() ?? '0') || body.isPetCorpse || body.hp.toString() === '0' ||
+        BigInt(bornAtUnixMs) > BigInt(frame.serverUnixMs) || sourceSkillId !== 30 && (sourceSkillId !== 17 || direction !== 5)) return null;
+    frame.freshPets.delete(entityHandle); // 合并包内同一身体也只接收一次真实出生。
+    return { sceneEpoch: frame.battle.epoch, baselineId, stateSequence, entityHandle, entityLife, definitionId, mapId,
+        sourceCastId, sourceSkillId, bornAtUnixMs, movementRevision, direction, role: '', elapsedMs };
+}
+
+// 只转发本场当前生命的表现；死亡后抵达的投射物仍按命中方的原生命处理。
+function readObservation(value: unknown, frame: MirrorObservationFrame, decode: DecodeMirrorCombat): MirrorCombatEvent | null {
     try {
         const { messageId, payload } = fields(value);
         if (!isMirrorCombatMessage(messageId) || !(payload instanceof Uint8Array) || !payload.length) return null;
         const event = fields(decode(messageId, payload));
-        if (u64(event.sceneEpoch, true) !== epoch) return null;
+        if (u64(event.sceneEpoch, true) !== frame.battle.epoch) return null;
+        if (messageId === 30015) {
+            const born = readMirrorBirth(event, frame);
+            return born && { messageId, value: born };
+        }
         if (messageId === 30013) {
-            if (![1, 2, 101, 102].includes(u32(event.entityHandle))) return null;
-            u64(event.entityLife, true);
+            if (frame.bodies.get(u32(event.entityHandle))?.life.toString() !== u64(event.entityLife, true)) return null;
             u64(event.movementRevision, true);
         } else {
-            // 跨时刻飞行道具可能在来源身体已阵亡后命中，仍验证它的原句柄和同场身份。
-            const handles = [0, 1, 2, 101, 102], caster = u32(event.casterHandle);
-            if (!handles.includes(caster) || !caster && messageId !== 30008) return null;
-            if (messageId !== 30012 && !handles.includes(u32(event.targetHandle))) return null;
+            const caster = u32(event.casterHandle);
+            if (messageId === 30008 ? caster !== 0 && !combatHandle(caster) :
+                frame.bodies.get(caster)?.life.toString() !== u64(event.casterLife, true)) return null;
+            if (messageId !== 30012) {
+                const target = u32(event.targetHandle);
+                if (target && !combatHandle(target)) return null;
+                if (target && messageId !== 30007) {
+                    const body = frame.bodies.get(target), targetLife = u64(event.targetLife, true);
+                    // 原目标已消失时只保留权威失效结果，用来终止原弹道。
+                    if (body ? body.life.toString() !== targetLife : messageId !== 30008 || event.outcome !== 3) return null;
+                }
+            }
             if (messageId === 30006 || messageId === 30012) u64(event.castId, true);
             else u64(event.eventId, true);
         }
@@ -225,7 +305,8 @@ function readObservation(value: unknown, epoch: string, decode: DecodeMirrorComb
 }
 
 // 原场、连接、双方身体和整帧序号均通过后才交给独立视口。
-export function readMirrorFrame(value: unknown, scene: string, battle: MirrorBattle, lastSequence: string, decode: DecodeMirrorCombat): MirrorArenaFrame | null {
+export function readMirrorFrame(value: unknown, scene: string, battle: MirrorBattle, lastSequence: string, decode: DecodeMirrorCombat,
+    lifetimes = new MirrorFrameLifetimes(), receivedAt = 0): MirrorArenaFrame | null {
     try {
         if (battle.phase < MirrorArenaPhase.Fighting || battle.phase >= MirrorArenaPhase.Finished) return null;
         const frame = fields(value);
@@ -233,17 +314,30 @@ export function readMirrorFrame(value: unknown, scene: string, battle: MirrorBat
             u64(frame.battleSceneEpoch, true) !== battle.epoch) return null;
         const sequence = u64(frame.sequence, true), serverUnixMs = nonnegativeI64(frame.serverUnixMs, true);
         if (BigInt(sequence) <= BigInt(lastSequence)) return null;
-        const entities = list(frame.entities, 4);
+        const entities = list(frame.entities, 2 + mirrorPetLast - mirrorPetFirst + 1);
         if (entities.length < 2 || !entities.every(validEntity)) return null;
-        const handles = new Set(entities.map(entity => entity.entityHandle));
-        if (handles.size !== entities.length || !handles.has(1) || !handles.has(2)) return null;
+        const bodies = new Map(entities.map(entity => [entity.entityHandle, entity]));
+        if (bodies.size !== entities.length || !bodies.has(1) || !bodies.has(2)) return null;
+        const pets = [new Set<string>(), new Set<string>()], living = [0n, 0n], highest = [0n, 0n];
+        for (const entity of entities) {
+            if (!petHandle(entity.entityHandle)) continue;
+            const side = entity.entityHandle % 2, life = entity.life.toString(), live = entity.hp.toString() !== '0', epoch = BigInt(life);
+            if (pets[side].has(life) || live && living[side] > 0n) return null;
+            pets[side].add(life);
+            if (live) living[side] = epoch;
+            if (epoch > highest[side]) highest[side] = epoch;
+        }
+        if (living.some((life, side) => life > 0n && life < highest[side])) return null;
         const fireWallCells = list(frame.fireWallCells ?? [], maxMirrorGridSide * maxMirrorGridSide).map(gridPoint);
         if (new Set(fireWallCells.map(point => point.x + point.y * maxMirrorGridSide)).size !== fireWallCells.length) return null;
+        const wireObservations = list(frame.observations, 64), freshPets = lifetimes.accept(bodies);
+        if (!freshPets) return null;
         const observations: MirrorCombatEvent[] = [];
-        for (const raw of list(frame.observations, 64)) {
-            const event = readObservation(raw, battle.epoch, decode);
+        const scope = { battle, sequence, serverUnixMs, bodies, freshPets };
+        for (const raw of wireObservations) {
+            const event = readObservation(raw, scope, decode);
             if (event) observations.push(event);
         }
-        return { battleKey: battle.key, sequence, serverUnixMs, entities, observations, fireWallCells };
+        return { battleKey: battle.key, sequence, serverUnixMs, receivedAt, entities, observations, fireWallCells };
     } catch { return null; }
 }

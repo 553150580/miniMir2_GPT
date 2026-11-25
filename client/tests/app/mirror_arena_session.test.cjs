@@ -68,6 +68,12 @@ function observation(messageId, codec, input) {
     return { messageId, payload: pb.minimir.v1[codec].encode(input).finish() };
 }
 
+function petBorn(handle, life, sequence, overrides = {}) {
+    return observation(30015, 'PetBorn', { scene_epoch: battleEpoch, baseline_id: battleEpoch, state_sequence: sequence,
+        entity_handle: handle, entity_life: life, definition_id: 2, map_id: battleMap, source_cast_id: long(7),
+        source_skill_id: handle % 2 ? 17 : 30, born_at_unix_ms: seasonStart.add(550), direction: 5, elapsed_ms: 50, ...overrides });
+}
+
 // 请求观察器保留真实 protobuf 编解码顺序，模拟 GameConnection 在同一帧内同步确认回复。
 function fixture() {
     const listeners = new Set(), statuses = new Set(), sent = [];
@@ -272,7 +278,8 @@ test('保存原名单，确认首帧后才接收独立表现，不重播旧包�
     readyWire.reply(battle(2));
 
     const cast = observation(30006, 'CastAccepted', { scene_epoch: battleEpoch, cast_id: long('9007199254741111'),
-        caster_handle: 2, target_handle: 1, skill_id: 1, origin: { x: 2, y: 2 }, target_grid: { x: 1, y: 2 }, direction: 7 });
+        caster_handle: 2, target_handle: 1, caster_life: Long.UONE, target_life: Long.UONE,
+        skill_id: 1, origin: { x: 2, y: 2 }, target_grid: { x: 1, y: 2 }, direction: 7 });
     const wrong = observation(30008, 'CombatImpact', { scene_epoch: scene, event_id: long(8), caster_handle: 2, target_handle: 1 });
     f.push(20027, frame({ observations: [cast, wrong, { messageId: 40005, payload: new Uint8Array([8, 1]) }] }));
     await ready;
@@ -409,4 +416,67 @@ test('镜像火墙只允许合法独立格；重复或越界整帧丢弃，旧�
     for (const invalid of [[{ x: 1, y: 0 }, { x: 1, y: 0 }], [{ x: 17, y: 0 }], [{ x: 0, y: .5 }], new Array(290).fill({ x: 0, y: 0 })]) {
         assert.equal(parse(frame({ fireWallCells: invalid })), null);
     }
+});
+
+test('补召完整帧核对两侧唯一活宠、多个原尸和所有原出生字段', () => {
+    const current = { key: '补召场', challenge: { id: model.mirrorID(challengeId) }, epoch: battleEpoch.toString(), phase: 2, mapId: battleMap.toString() };
+    const raw = (entities, observations) => wire.decodePacket(wire.encodePacket(20027, 0, Long.UONE, frame({ entities, observations }))).value;
+    const parse = (entities, observations) => model.readMirrorFrame(raw(entities, observations), scene.toString(), current, '0', wire.decodeMirrorCombatPayload);
+    const dead = body(101, { hp: Long.ZERO, isPetCorpse: true });
+    const older = body(103, { life: long(2), hp: Long.ZERO, isPetCorpse: true });
+    const alive = body(105, { life: long(3), direction: 5 }), other = body(104, { life: long(1), direction: 5 });
+    const bodies = [body(1), body(2), dead, older, alive, other];
+    const birth = petBorn(105, long(3), firstSequence), defense = petBorn(104, long(1), firstSequence);
+    const invalidBirth = [petBorn(101, Long.UONE, firstSequence), petBorn(103, long(2), firstSequence),
+        petBorn(105, Long.UONE, firstSequence), petBorn(105, long(3), secondSequence),
+        ...[{ scene_epoch: scene }, { baseline_id: scene }, { map_id: battleMap.add(1) }, { definition_id: 3 }, { movement_revision: Long.UONE },
+            { direction: 6 }, { source_skill_id: 1 }, { source_cast_id: Long.UZERO }, { born_at_unix_ms: seasonStart.add(800) }]
+            .map(change => petBorn(105, long(3), firstSequence, change))];
+    const result = parse(bodies, [...invalidBirth, birth, birth, defense]);
+    assert.equal(result.entities.length, 6);
+    assert.deepEqual(result.observations.map(event => [event.messageId, event.value.entityHandle, event.value.entityLife]),
+        [[30015, 105, '3'], [30015, 104, '1']]);
+    for (const bad of [body(119), body(107, { life: long(4) }), body(108, { life: long(2) }),
+        body(109, { life: long(3), hp: Long.ZERO, isPetCorpse: true }), body(109, { life: long(4), isPetCorpse: true }),
+        body(109, { life: long(4), hp: Long.ZERO, isPetCorpse: true })]) {
+        assert.equal(parse([...bodies, bad], []), null);
+    }
+    assert.equal(parse([{ ...bodies[0], hp: Long.ZERO, isPetCorpse: true }, ...bodies.slice(1)], []), null);
+});
+
+test('原场换票续用宠物水位，同句柄旧出生与动作不会附到新生命', async t => {
+    const f = fixture(); t.after(f.cleanup);
+    await openLobby(f);
+    const start = f.session.challenge(offerId);
+    f.sent[1].reply(battle(1));
+    await start;
+    const ready = f.session.ready(f.session.snapshot.battle.key);
+    f.sent[2].reply(battle(2));
+    await ready;
+    const originalPet = body(103, { life: long(2), direction: 5 });
+    const roster = [body(1), body(2)];
+    f.push(20027, frame({ entities: [...roster, originalPet], observations: [petBorn(103, long(2), firstSequence)] }));
+    assert.equal(f.session.snapshot.frame.observations.length, 1);
+    f.detach();
+    f.attach(1);
+    const read = await f.next(3);
+    read.reply(battle(2));
+    f.push(20027, frame({ sequence: secondSequence, entities: [...roster, originalPet], observations: [petBorn(103, long(2), secondSequence)] }));
+    assert.equal(f.session.snapshot.frame.entities.at(-1).life.toString(), '2');
+    assert.deepEqual(f.session.snapshot.frame.observations, []);
+
+    const third = secondSequence.add(1), fourth = third.add(1), fifth = fourth.add(1);
+    f.push(20027, frame({ sequence: third, entities: [...roster, { ...originalPet, hp: Long.ZERO, isPetCorpse: true }] }));
+    f.push(20027, frame({ sequence: fourth, entities: roster }));
+    for (const invalid of [originalPet, { ...originalPet, entityHandle: 105 }, { ...originalPet, life: Long.UONE }]) {
+        f.push(20027, frame({ sequence: fifth, entities: [...roster, invalid] }));
+        assert.equal(f.session.snapshot.frame.sequence, fourth.toString());
+    }
+    const oldAttack = observation(30007, 'AttackAccepted', { scene_epoch: battleEpoch, event_id: Long.UONE, caster_handle: 103, caster_life: long(2), target_handle: 2 });
+    const oldMove = observation(30013, 'EntityDisplacement', { scene_epoch: battleEpoch, entity_handle: 103, entity_life: long(2), movement_revision: Long.UONE });
+    const oldImpact = observation(30008, 'CombatImpact', { scene_epoch: battleEpoch, event_id: Long.UONE, caster_handle: 2, target_handle: 103, target_life: long(2) });
+    const newPet = { ...originalPet, life: long(3) };
+    f.push(20027, frame({ sequence: fifth, entities: [...roster, newPet], observations: [oldAttack, oldMove, oldImpact, petBorn(103, long(2), fifth), petBorn(103, long(3), fifth)] }));
+    assert.equal(f.session.snapshot.frame.entities.at(-1).life.toString(), '3');
+    assert.deepEqual(f.session.snapshot.frame.observations.map(event => event.messageId), [30015]);
 });

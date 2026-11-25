@@ -17,7 +17,9 @@ func (b *mirrorCombat) finish(winner, cause uint32, at time.Time) {
 		return
 	}
 	b.result = mirrorCombatResult{Winner: winner, Cause: cause, FinishedAt: at}
-	for _, side := range b.sides {
+	for i := range b.sides {
+		side := &b.sides[i]
+		side.pendingSummon = nil
 		world := side.room.currentWorld()
 		world.Attacks, world.Casts, world.FireWalls = nil, nil, nil
 	}
@@ -26,17 +28,21 @@ func (b *mirrorCombat) finish(winner, cause uint32, at time.Time) {
 // survivingLife 仅计算原本人及原入场宠物的剩余生命；死亡的宠物仍计入冻结的分母。
 func (s *mirrorCombatSide) survivingLife() int64 {
 	life := s.room.Player.HP
-	if s.room.Pet != nil {
-		life += s.room.Pet.HP
+	if pet := s.room.Pet; pet != nil && pet.Handle == s.entryPet.Handle && pet.Life == s.entryPet.Life {
+		life += pet.HP
 	}
 	return life
 }
 
+// hasSurvivors 按当前活体判断全灭。场内出生的宠物能参战，但不参与超时生命比。
+func (s *mirrorCombatSide) hasSurvivors() bool {
+	return s.room.Player.HP > 0 || s.room.Pet != nil && s.room.Pet.HP > 0
+}
+
 func (b *mirrorCombat) checkDefeat(at time.Time) {
-	attacker, defender := b.sides[0].survivingLife(), b.sides[1].survivingLife()
-	if attacker == 0 {
+	if !b.sides[0].hasSurvivors() {
 		b.finish(2, mirrorDefeat, at)
-	} else if defender == 0 {
+	} else if !b.sides[1].hasSurvivors() {
 		b.finish(1, mirrorDefeat, at)
 	}
 }
@@ -69,6 +75,7 @@ func (w *worker) advanceMirrorCombat(b *mirrorCombat, now time.Time) {
 		if b.acceptsActions(item.event.At) && !item.room.Isolated {
 			if index == 0 || !item.event.At.Equal(b.due[index-1].event.At) {
 				for _, side := range b.sides {
+					expireMirrorPetCorpses(side.room, item.event.At)
 					tickEntityStatuses([]*entity{&side.room.Player, side.room.Pet}, item.event.At)
 				}
 			}
@@ -87,6 +94,9 @@ func (w *worker) advanceMirrorCombat(b *mirrorCombat, now time.Time) {
 	if b.sides[0].room.Isolated || b.sides[1].room.Isolated {
 		b.finish(0, mirrorInterrupted, until)
 		return
+	}
+	for _, side := range b.sides {
+		expireMirrorPetCorpses(side.room, until)
 	}
 	if !now.Before(b.deadline) {
 		b.finishTimeout()
@@ -142,7 +152,11 @@ func (w *worker) stepMirrorSide(r *room, now time.Time) {
 func (w *worker) applyMirrorDamage(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context []hitContext) {
 	b := world.mirrorCombat
 	if world != r.currentWorld() || from == nil || target == nil || damage <= 0 || target.HP <= 0 ||
-		from != &r.Player && from != r.Pet || !slices.Contains(world.combatOpponents(), target) {
+		!slices.Contains(world.combatOpponents(), target) {
+		return
+	}
+	// 原宠死前已受理的动作仍按原到期时间处理，不得转给新出生宠物。
+	if from != &r.Player && from != r.Pet && (!from.IsPetCorpse || !slices.ContainsFunc(world.PetCorpses, func(c *petCorpse) bool { return c.Body == from })) {
 		return
 	}
 	at := now
@@ -165,8 +179,12 @@ func (w *worker) applyMirrorDamage(r *room, world *worldState, from, target *ent
 	target.Action = 4
 	removeDeathStatuses(target)
 	opponent := b.sides[1-world.mirrorSide].room
+	if target == opponent.Pet {
+		archiveMirrorPet(opponent, now)
+	}
 	if target == &opponent.Player && opponent.Pet != nil && b.config.PetDeathPolicy == devconfig.MirrorArenaPetFollowsOwnerDeath {
 		opponent.Pet.HP, opponent.Pet.Action = 0, 4
 		removeDeathStatuses(opponent.Pet)
+		archiveMirrorPet(opponent, now)
 	}
 }

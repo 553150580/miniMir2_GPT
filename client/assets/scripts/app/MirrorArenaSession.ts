@@ -4,7 +4,7 @@ import type { GameConnection, Packet } from './GameConnection';
 import { protocolErrorMessage } from './GameErrors';
 import { attachmentKey, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity, TravelInteger } from './MapTravelModel';
-import { mirrorID, MirrorArenaPhase, readMirrorFrame, readMirrorState } from './MirrorArenaModel';
+import { mirrorID, MirrorArenaPhase, MirrorFrameLifetimes, readMirrorFrame, readMirrorState } from './MirrorArenaModel';
 import type { MirrorArenaFrame, MirrorArenaLobby, MirrorArenaSnapshot, MirrorBattle } from './MirrorArenaModel';
 import { CodeLineRecovering, CodeOperationPending, CodeServerBusy } from '../generated/protocol_ids';
 
@@ -43,6 +43,7 @@ export class MirrorArenaSession {
     private frame: MirrorArenaFrame | null = null;
     private original: MirrorBattle | null = null; // 同角色换票时保留的身份和高水位，不作为新票的授权。
     private lastSequence = '0';
+    private readonly lifetimes = new MirrorFrameLifetimes(); // 同场换票沿用身体与出生水位。
     private proposal: RequestTarget | null = null;
     private recovering = ''; // 大厅读到永久活动记录，等待原连接执行权接回。
     private retired = new Set<string>();
@@ -163,6 +164,7 @@ export class MirrorArenaSession {
         if (this.retired.size > 32) this.retired.delete(this.retired.values().next().value!);
         this.original = this.battle = this.frame = null;
         this.lastSequence = '0';
+        this.lifetimes.clear();
     }
 
     private readScope(): BoundScope | null {
@@ -201,6 +203,7 @@ export class MirrorArenaSession {
         this.retired.clear();
         this.queried = false;
         this.lastSequence = '0';
+        this.lifetimes.clear();
     }
 
     private requireScope(): BoundScope {
@@ -293,7 +296,8 @@ export class MirrorArenaSession {
         if (packet.id === stateID) {
             this.applyState(packet.value, scope);
         } else if (this.battle) {
-            const frame = readMirrorFrame(packet.value, scope.scene, this.battle, this.lastSequence, decodeMirrorCombatPayload);
+            const frame = readMirrorFrame(packet.value, scope.scene, this.battle, this.lastSequence, decodeMirrorCombatPayload,
+                this.lifetimes, performance.now());
             if (frame) {
                 this.frame = frame;
                 this.lastSequence = frame.sequence;
@@ -331,7 +335,7 @@ export class MirrorArenaSession {
                     original.challenge.finishedAtUnixMs !== challenge.finishedAtUnixMs)) return null;
             if (value.lobby.dailyLimit > 0) this.applyLobby(value);
             else this.mergeScore(value.lobby);
-            if (!sameChallenge) { this.lastSequence = '0'; this.frame = null; }
+            if (!sameChallenge) { this.lastSequence = '0'; this.frame = null; this.lifetimes.clear(); }
             const key = JSON.stringify([scope.key, challenge.id, value.epoch]);
             this.battle = this.original = { key, challenge, epoch: value.epoch, mapId: value.mapId,
                 phase: value.phase, deadlineUnixMs: value.deadlineUnixMs };

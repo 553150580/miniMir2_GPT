@@ -21,6 +21,9 @@ func (w *worker) castQueuedAttackSkill(r *room, skill devconfig.Skill, focus *en
 		return false
 	}
 	if handler.Summon {
+		if r.currentWorld().mirrorCombat != nil {
+			return skill.AttackSlotSummon() && w.mirrorMaterialCast(r, skill, 0, attackDirection, nil, now, need, input)
+		}
 		// 队列只补空缺的活宠位置，召回和主动换宠仍由独立施法入口处理。
 		m, known := w.currentMap(r)
 		return skill.AttackSlotSummon() && r.Pet == nil && r.bossBattle == nil && r.worldBossObservation == nil && r.worldBossCombat == nil &&

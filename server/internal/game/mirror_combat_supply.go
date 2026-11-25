@@ -85,7 +85,8 @@ func (w *worker) mirrorPotion(r *room, need automaticManaNeed, now time.Time) bo
 // mirrorMaterialCast 复用原技能命中、蓝耗、毒色和冷却，仅在同帧成功后扣临时副本。
 func (w *worker) mirrorMaterialCast(r *room, skill devconfig.Skill, handle, direction uint32, grid *pb.GridPoint, now time.Time, need *automaticManaNeed, input uint32) bool {
 	world := r.currentWorld()
-	material := &world.mirrorCombat.sides[world.mirrorSide].material
+	side := &world.mirrorCombat.sides[world.mirrorSide]
+	material := &side.material
 	if skill.MaterialQuantity <= 0 || material.Quantity < skill.MaterialQuantity || !skill.AcceptsMaterial(material.ItemID) ||
 		!w.e.Store.Cfg.Fixture.CastingSupply.Enabled || !w.e.Store.Cfg.Fixture.IsCastingSupply(material.ItemID) {
 		return false
@@ -101,8 +102,15 @@ func (w *worker) mirrorMaterialCast(r *room, skill devconfig.Skill, handle, dire
 	if !need.ready(r, plan, code) {
 		return false
 	}
+	if plan.Summon != nil {
+		// 只有通过本侧材料和蓝耗检查才可预约。重复排队不会消耗第二份材料。
+		side.pendingSummon = plan.Summon
+	}
 	plan.PoisonColor = color
 	if w.acceptPreparedCast(r, plan, input, now) != 0 {
+		if plan.Summon != nil {
+			side.pendingSummon = nil
+		}
 		return false
 	}
 	material.Quantity -= skill.MaterialQuantity

@@ -119,6 +119,17 @@ async function openSeason(page) {
     await label(page, season + '/Title', '镜像赛季');
 }
 
+// 领奖文案早于原目录查询回执。等旧行移除并重新排版后，再按新行坐标触屏。
+async function waitForClaimRefresh(page, claimed) {
+    await wait(page, ({ claimed, content, confirm, refresh }) => {
+        const refreshed = cc.find(refresh)?.getComponent(cc.Button)?.interactable;
+        const rows = cc.find(content)?.children.filter(row => row.activeInHierarchy) ?? [];
+        return refreshed && !cc.find(confirm)?.activeInHierarchy &&
+            rows.every(row => !row.getChildByName('Text')?.getComponent(cc.Label)?.string.includes(claimed));
+    }, { claimed, content, confirm, refresh: season + '/Refresh' });
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
 function verifyStandings(state) {
     assert(state?.season_settlement_enabled && state.own_rank === 2);
     assert.equal(state.season_points.toString(), expected.currentPoints);
@@ -170,12 +181,15 @@ async function main() {
         await touch(page, season + '/Tabs/Rewards');
         await page.screenshot({ path: path.join(output, 'season-rewards.png') });
         for (const name of ['赛季排名奖', '赛季参与奖']) {
+            report.step = '触屏选择' + name;
             await touch(page, content, name);
             await label(page, season + '/Detail', name === '赛季参与奖' ? '赛季参与奖 · 绑定元宝' : '第 1 名 · 绑定元宝');
+            report.step = '确认领取' + name + '并等待待领奖目录刷新';
             await touch(page, season + '/Claim');
             await label(page, confirmMessage, '领取' + name);
             await touch(page, confirm);
             await label(page, season + '/Status', '已领取赛季奖励');
+            await waitForClaimRefresh(page, name);
         }
         await label(page, season + '/Detail', '暂无待领奖项');
         await wallet(page, session, expectedWallet);
@@ -253,12 +267,15 @@ async function main() {
     } catch (error) {
         report.error = error.message;
         await page.screenshot({ path: path.join(output, 'season-failed.png') }).catch(() => {});
-        report.observed = await page.evaluate(({ lobby, season }) => {
+        report.observed = await page.evaluate(({ lobby, season, content }) => {
             const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0], value = sub =>
                 cc.find(season + '/' + sub)?.getComponent(cc.Label)?.string;
+            const rows = cc.find(content)?.children.filter(row => row.activeInHierarchy)
+                .map(row => row.getChildByName('Text')?.getComponent(cc.Label)?.string);
             return { scene: cc.director.getScene()?.name, menu: app?.ui?.top?.name, lobby: cc.find(lobby)?.activeInHierarchy,
-                ledger: cc.find(season)?.activeInHierarchy, headline: value('Headline'), balance: value('Balance'), status: value('Status') };
-        }, { lobby, season }).catch(() => null);
+                ledger: cc.find(season)?.activeInHierarchy, headline: value('Headline'), balance: value('Balance'), status: value('Status'),
+                detail: value('Detail'), rows };
+        }, { lobby, season, content }).catch(() => null);
         report.wire = { requests: Array.from(wire.requests.values(), row => row.id), responseCodes: Array.from(wire.replies.values(), result => result.error_code),
             seasonResponses: wire.states.filter(row => row.data.season_settlement_enabled).length, sockets: wire.sockets };
         throw new Error(report.step + '：' + error.message + ' ' + JSON.stringify(report.observed));

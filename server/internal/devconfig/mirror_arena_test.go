@@ -2,6 +2,7 @@
 package devconfig
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 )
@@ -39,6 +40,9 @@ func TestMirrorArenaExplicitFixtureAndLimits(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := f.MirrorArena
+	if a.Summoning != nil {
+		t.Fatal("未装配临时召唤的镜像规则须保持关闭")
+	}
 	if a.SeasonAnchor.Format(time.RFC3339) != "2026-12-24T00:00:00+08:00" || a.Duration != time.Minute ||
 		!a.Map.Walkable(a.AttackerSpawn) || a.Map.Walkable(Point{5, 5}) || a.Map.TeleportWalkable(a.AttackerSpawn) ||
 		a.Map.PlayerSpawn != a.AttackerSpawn || a.Map.PetSpawn != a.AttackerPetSpawn ||
@@ -81,6 +85,48 @@ func TestMirrorArenaExplicitFixtureAndLimits(t *testing.T) {
 	f.MirrorArenaRelease.StreakPoints[0].Points = 9
 	if a.Map.Blocked[0] != (Point{5, 5}) || a.WinPoints(1) != 5 {
 		t.Fatal("装配后的原地图和积分档仍共享输入切片")
+	}
+}
+
+func TestMirrorArenaSummoningConfiguration(t *testing.T) {
+	for _, sample := range []struct {
+		name     string                    // 隔离装配场景。
+		block    string                    // 夹具中实际使用的召唤规则对象。
+		expected *MirrorArenaSummoningRule // 校验通过后的冻结规则。
+	}{
+		{"空槽首召候选", `{"allow_without_entry_pet":true,"max_births_per_side":2}`, &MirrorArenaSummoningRule{AllowWithoutEntryPet: true, MaxBirthsPerSide: 2}},
+		{"明确禁止空槽首召", `{"allow_without_entry_pet":false,"max_births_per_side":1}`, &MirrorArenaSummoningRule{MaxBirthsPerSide: 1}},
+		{"技术上界", `{"allow_without_entry_pet":false,"max_births_per_side":8}`, &MirrorArenaSummoningRule{MaxBirthsPerSide: MirrorArenaMaxBirthsPerSide}},
+		{"空对象", `{}`, nil},
+		{"省略空槽策略", `{"max_births_per_side":2}`, nil},
+		{"省略上限", `{"allow_without_entry_pet":true}`, nil},
+		{"空槽策略不能为null", `{"allow_without_entry_pet":null,"max_births_per_side":2}`, nil},
+		{"上限不能为null", `{"allow_without_entry_pet":false,"max_births_per_side":null}`, nil},
+		{"上限非布尔", `{"allow_without_entry_pet":true,"max_births_per_side":true}`, nil},
+		{"零次上限", `{"allow_without_entry_pet":true,"max_births_per_side":0}`, nil},
+		{"超出技术上界", `{"allow_without_entry_pet":true,"max_births_per_side":9}`, nil},
+		{"未知附加冷却", `{"allow_without_entry_pet":true,"max_births_per_side":2,"cooldown_ms":1000}`, nil},
+	} {
+		t.Run(sample.name, func(t *testing.T) {
+			f := mirrorArenaFixture()
+			err := json.Unmarshal([]byte(`{"summoning":`+sample.block+`}`), f.MirrorArenaRelease)
+			if err == nil {
+				err = f.ValidateMirrorArena()
+			}
+			if sample.expected == nil {
+				if err == nil || f.MirrorArena != nil {
+					t.Fatalf("非法临时召唤规则进入运行配置：%v", err)
+				}
+				return
+			}
+			if err != nil || f.MirrorArena == nil || f.MirrorArena.Summoning == nil || *f.MirrorArena.Summoning != *sample.expected {
+				t.Fatalf("未得到预期的临时召唤策略：%+v %v", f.MirrorArena, err)
+			}
+			f.MirrorArenaRelease.Summoning.MaxBirthsPerSide = 0
+			if *f.MirrorArena.Summoning != *sample.expected {
+				t.Fatal("修改装配输入影响了已冻结的场次策略")
+			}
+		})
 	}
 }
 

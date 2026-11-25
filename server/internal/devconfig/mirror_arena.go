@@ -59,6 +59,7 @@ type MirrorArenaDefinition struct {
 	MatchPolicy         string                       `json:"match_policy"`          // 隔离试测明确选择的一种职业范围。
 	MaxLevelGap         uint32                       `json:"max_level_gap"`         // 隔离试测固定等级差，不推算综合战力。
 	PetDeathPolicy      string                       `json:"pet_death_policy"`      // 隔离试测明确选择的主人阵亡后宠物规则。
+	Summoning           *MirrorArenaSummoningRule    `json:"summoning,omitempty"`   // 显式装配双方的临时召唤策略，空值关闭。
 	Settlement          *MirrorArenaSeasonSettlement `json:"settlement,omitempty"`  // 隔离赛季派奖；未装配时不启用封账。
 	Exchange            *MirrorArenaExchangeRule     `json:"exchange,omitempty"`    // 单独启用的隔离积分兑换。
 }
@@ -86,6 +87,7 @@ type MirrorArenaConfig struct {
 	MatchPolicy         string                       // 当前隔离候选是否允许跨职业。
 	MaxLevelGap         uint32                       // 当前候选允许的绝对等级差。
 	PetDeathPolicy      string                       // 主体阵亡后已参战宠物如何处理。
+	Summoning           *MirrorArenaSummoningRule    // 双方共用的已冻结临时召唤策略。
 	Settlement          *MirrorArenaSeasonSettlement // 经过验证的只读赛季结算奖表。
 	Exchange            *MirrorArenaExchangeRule     // 经过验证的只读绑定兑换配置。
 }
@@ -148,6 +150,9 @@ func (f *Fixture) ValidateMirrorArena() error {
 	if definition.TemplateID == 0 || strings.TrimSpace(definition.DisplayName) == "" || !f.validMirrorArenaMap(definition) {
 		return errors.New("镜像竞技缺少合法的独立地图、显示名称或连通落点")
 	}
+	if rule := definition.Summoning; rule != nil && (rule.MaxBirthsPerSide == 0 || rule.MaxBirthsPerSide > MirrorArenaMaxBirthsPerSide) {
+		return errors.New("镜像竞技每侧临时召唤上限超出支持范围")
+	}
 	if err := f.validateMirrorArenaSettlement(definition); err != nil {
 		return err
 	}
@@ -166,6 +171,10 @@ func (f *Fixture) ValidateMirrorArena() error {
 		LossPoints: definition.LossPoints, StreakPoints: slices.Clone(definition.StreakPoints), TimeoutPolicy: definition.TimeoutPolicy,
 		MatchPolicy: definition.MatchPolicy, MaxLevelGap: definition.MaxLevelGap, PetDeathPolicy: definition.PetDeathPolicy,
 		Settlement: definition.Settlement.clone(),
+	}
+	if definition.Summoning != nil {
+		summoning := *definition.Summoning
+		f.MirrorArena.Summoning = &summoning
 	}
 	if definition.Exchange != nil {
 		exchange := *definition.Exchange

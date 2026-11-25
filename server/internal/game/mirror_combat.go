@@ -25,15 +25,19 @@ type mirrorCombatResult struct {
 }
 
 type mirrorCombatSide struct {
-	room        *room                       // 该侧唯一临时角色，保留原角色职业及技能时钟。
-	potions     []domain.MirrorCombatSupply // 入场药剂数量的本场副本。
-	material    domain.MirrorCombatSupply   // 临时专槽耗材数量。
-	initialLife int64                       // 冻结角色与唯一入场宠物的生命分母。
+	room          *room                       // 该侧唯一临时角色，保留原角色职业及技能时钟。
+	potions       []domain.MirrorCombatSupply // 入场药剂数量的本场副本。
+	material      domain.MirrorCombatSupply   // 临时专槽耗材数量。
+	initialLife   int64                       // 冻结角色与唯一入场宠物的生命分母。
+	entryPet      actorRef                    // 唯一可参与超时生命比较的原上阵宠物身份。
+	births        uint32                      // 本侧已经成功出生的新宠数量。
+	pendingSummon *summonPetPlan              // 已受理、尚未到时的本侧唯一出生计划。
 }
 
 type mirrorCombatObservation struct {
 	ID      uint16        // 已登记的公共战斗表现消息号。
 	Message proto.Message // 仍携本场唯一角色、施法和命中身份。
+	bornAt  time.Time     // 出生观察独用的单调时点，供发送时计算经过时间。
 }
 
 type mirrorCombat struct {
@@ -96,13 +100,19 @@ func (w *worker) newMirrorCombat(config *devconfig.MirrorArenaConfig, fighters [
 		}
 		occupied[petStarts[index]] = struct{}{}
 		side := &b.sides[index]
-		definition, _ := w.e.Store.Cfg.Fixture.PetRuntime.DefinitionByBodyID(pet.DefinitionID)
+		profiles := w.e.Store.Cfg.Fixture.PetRuntime
+		definition, known := profiles.DefinitionByBodyID(pet.DefinitionID)
+		if !known && config.Summoning != nil && profiles != nil && len(profiles.Definitions) != 0 {
+			// 普通诱惑获得的宠物使用首个职业宠物定义的生命周期，镜像保留同一尸体期限。
+			definition.Lifecycle = profiles.Definitions[0].Lifecycle
+		}
 		actor := &entity{Handle: uint32(101 + index), Kind: 2, Def: pet.DefinitionID, Pos: petStarts[index], Life: 1,
 			Direction: facing(petStarts[index], starts[1-index], 0), HP: pet.Fighter.HP, MaxHP: pet.Fighter.HP, MP: pet.Fighter.MP, MaxMP: pet.Fighter.MP,
 			PetRuntime: &petRuntimeState{Definition: definition, Fighter: pet.Fighter, Level: pet.Level}}
 		side.room.Pet, side.room.PetWorld, side.room.PetLifeSequence = actor, ref, actor.Life
 		side.room.recordPetPosition()
 		side.initialLife += pet.Fighter.HP
+		side.entryPet = referenceIn(side.room.currentWorld(), actor)
 	}
 	return b
 }
@@ -152,6 +162,9 @@ func (w *worker) mirrorCombatEntities(b *mirrorCombat) []*pb.EntityState {
 		out = append(out, avatar)
 		if owner.Pet != nil {
 			out = append(out, w.worldBossBodyView(owner, owner.Pet))
+		}
+		for _, corpse := range owner.currentWorld().PetCorpses {
+			out = append(out, w.worldBossBodyView(owner, corpse.Body))
 		}
 	}
 	return out

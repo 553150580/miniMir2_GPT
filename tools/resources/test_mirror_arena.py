@@ -36,11 +36,39 @@ class TestMirrorArenaProjection(unittest.TestCase):
         self.assertNotIn('feather_exchange_points', rule)
         self.assertNotIn('settlement', rule)
         self.assertNotIn('exchange', rule)
+        self.assertNotIn('summoning', rule)
         self.assertEqual(public_map['id'], '90001')
         self.assertEqual(public_map['floor_map_id'], '1')
         self.assertEqual(public_map['scene_kind'], 6)
         self.assertEqual(public_map['monster_definition_ids'], [])
         self.assertEqual(public_map['resource_key'], self.fixture['map']['resource_key'])
+
+    def test_explicit_summoning_is_isolated_and_keeps_existing_skill_rules(self):
+        sample = {'allow_without_entry_pet': True, 'max_births_per_side': 2}
+        default, default_map = arena.project(self.tables, self.assembly, self.fixture, self.season_sample())
+        enabled, enabled_map = arena.project(self.tables, self.assembly, self.fixture, self.season_sample(), sample)
+        self.assertEqual(enabled, {**default, 'summoning': sample})
+        self.assertEqual(enabled_map, default_map)
+        self.assertNotIn('mirror_arena', self.fixture)
+        sample['max_births_per_side'] = 1
+        self.assertEqual(enabled['summoning']['max_births_per_side'], 2)
+        self.assertEqual(arena.project_summoning({'allow_without_entry_pet': False, 'max_births_per_side': 8}),
+                         {'allow_without_entry_pet': False, 'max_births_per_side': 8})
+
+    def test_summoning_rejects_omitted_fields_and_unapproved_parameters(self):
+        for sample in (
+            None, [], {}, {'max_births_per_side': 2}, {'allow_without_entry_pet': False},
+            {'allow_without_entry_pet': None, 'max_births_per_side': 2},
+            {'allow_without_entry_pet': 1, 'max_births_per_side': 2},
+            {'allow_without_entry_pet': 'false', 'max_births_per_side': 2},
+            {'allow_without_entry_pet': True, 'max_births_per_side': True},
+            {'allow_without_entry_pet': True, 'max_births_per_side': 2.0},
+            {'allow_without_entry_pet': True, 'max_births_per_side': 0},
+            {'allow_without_entry_pet': True, 'max_births_per_side': 9},
+            {'allow_without_entry_pet': True, 'max_births_per_side': 2, 'cooldown_ms': 1000},
+        ):
+            with self.subTest(sample=sample), self.assertRaises(ValueError):
+                arena.project_summoning(sample)
 
     def test_missing_scope_partition_and_non_candidate_rules_are_rejected(self):
         for params in (

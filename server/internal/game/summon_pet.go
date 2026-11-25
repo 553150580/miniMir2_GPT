@@ -23,6 +23,8 @@ type summonPetPlan struct {
 	Front devconfig.Point
 	// Direction 保存受理时的施法朝向，供继承主人朝向的宠物出生使用。
 	Direction uint32
+	// MirrorBirth 只在镜像使用，记录本侧下一次合法出生的序号。
+	MirrorBirth uint32
 }
 
 // Crystal BoneFamiliar构造使用DownLeft，属于固定八向枚举，不是玩法调参。
@@ -54,6 +56,9 @@ func (w *worker) applyPetMapEntryPolicy(r *room, m *devconfig.MapTemplate) {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，skill 记录技能，direction 记录朝向，使用数值表示。
 // now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) prepareSummonPet(r *room, skill devconfig.Skill, direction uint32, now time.Time) (*summonPetPlan, uint32) {
+	if b := r.currentWorld().mirrorCombat; b != nil {
+		return w.prepareMirrorSummon(r, skill, direction, now)
+	}
 	// m 接收当前状态地图供后续步骤使用，known 保存由当前状态地图取得的已知状态。
 	m, known := w.currentMap(r)
 	if !w.sourcePetLifecycle() || !known || m.NoPets == nil || *m.NoPets || skill.Summon == nil {
@@ -116,6 +121,9 @@ func (w *worker) summonPlanCurrent(r *room, plan *preparedCast) bool {
 	if plan.Summon == nil {
 		return true
 	}
+	if plan.Summon.MirrorBirth != 0 {
+		return mirrorSummonReserved(r, plan.Summon)
+	}
 	if plan.Summon.Recall {
 		return r.matchesActivePet(plan.Summon.Pet)
 	}
@@ -129,6 +137,10 @@ func (w *worker) resolveSummonPet(r *room, origin *worldState, cast pendingCast,
 	// plan 保存召唤，用于当前步骤中的计划。
 	plan := cast.Summon
 	if plan == nil || r.Pending || r.Isolated {
+		return
+	}
+	if origin != nil && origin.mirrorCombat != nil {
+		w.resolveMirrorSummon(r, origin, cast, now)
 		return
 	}
 	if !plan.Recall {
