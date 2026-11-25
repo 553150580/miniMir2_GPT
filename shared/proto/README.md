@@ -2,6 +2,8 @@
 
 `40032 HostingQuoteRequest` 查询已确认场景的托管补时报价。零秒只查询当前等级档、规则和购买粒度。实际数量由 `40033 HostingQuoteResult` 回传报价编号、精确整数费用、两个钱包各自应扣金额及有效期。`40007 BuyHostingTimeRequest` 用原报价编号、秒数和经济操作身份成交。`40005 OperationResult` 的 `hosting_purchase` 在成交及同一操作重放时返回原报价和原到账余额。没有生效且已审定的价格时，旧版日领和托管流程继续可用。
 
+`20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。
+
 `30016 AutoTargetIntent` 允许当前自动战斗在没有存活目标时采用玩家点选的野外活怪。服务端核验场景、共享输入序号、怪物句柄以及 `uint64` 生命代次。当前目标存活时保持该目标。未发送该意图的客户端继续由服务端自动选怪。
 
 技能控制沿用规则 24。入场确认 `EnterWorldAck` 和 `30004 AutoBattleIntent` 可提交角色的自动施法偏好，`30005 HostingState` 回显服务端当前设置。只提交偏好时 `monster_count` 为零，在线自动战斗开关和刷怪数量沿用当前状态。旧客户端省略偏好字段保持原规则。`30009 SkillModeIntent` 成功时以同请求序号返回 `30010 SkillModeState`，客户端收到确认后更新开关。

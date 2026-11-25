@@ -22,6 +22,8 @@ type WorldBossDefinition struct {
 	WindowMS           int64       `json:"window_ms"`             // 场次有效窗口。
 	ReturnDelayMS      int64       `json:"return_delay_ms"`       // 击杀/逃走后展示终态再返回的时间。
 	ParticipantLimit   int         `json:"participant_limit"`     // 每运行服单场有效参与人数。
+
+	Rewards *WorldBossRewards `json:"rewards,omitempty"` // 仅有独立来源且显式装配时开放奖励。
 }
 
 // WorldBossConfig 冻结每个运行服使用的一个候选首领模板和场次日程。
@@ -35,6 +37,8 @@ type WorldBossConfig struct {
 	Window           time.Duration   // 每场从真实开场起生效的可参加时长。
 	ReturnDelay      time.Duration   // 击杀和到期时终态展示后返回原挂机图的时间。
 	ParticipantLimit int             // 计入本场终生参战名额，离开后仍保留原归属贡献。
+
+	Rewards *WorldBossRewards // 本模板在装载时冻结的参与、排名和超时奖励。
 }
 
 // validateWorldBossRelease 解析独立怪物和归一化日程，拒绝未校验的发布模板。
@@ -88,7 +92,11 @@ func (f *Fixture) parseWorldBossDefinition(def WorldBossDefinition) (WorldBossCo
 		offsets[i] = time.Duration(ms) * time.Millisecond
 	}
 	candidate := WorldBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, MinimumLevel: def.MinimumLevel, Map: def.Map, Monster: monster,
-		DailyOpenOffsets: offsets, Window: time.Duration(def.WindowMS) * time.Millisecond, ReturnDelay: time.Duration(def.ReturnDelayMS) * time.Millisecond, ParticipantLimit: def.ParticipantLimit}
+		DailyOpenOffsets: offsets, Window: time.Duration(def.WindowMS) * time.Millisecond, ReturnDelay: time.Duration(def.ReturnDelayMS) * time.Millisecond,
+		ParticipantLimit: def.ParticipantLimit, Rewards: def.Rewards.clone()}
+	if !f.ValidWorldBossRewards(&candidate) {
+		return WorldBossConfig{}, errors.New("世界首领的贡献门槛、排名档或物品奖励无效")
+	}
 	if !f.validWorldBoss(&candidate) {
 		return WorldBossConfig{}, errors.New("世界首领独立地图或窗口配置无效")
 	}
@@ -97,7 +105,7 @@ func (f *Fixture) parseWorldBossDefinition(def WorldBossDefinition) (WorldBossCo
 
 // ValidWorldBoss 校验共享模板、单个怪物、独立地图以及不可相互跨越的日程。
 func (f *Fixture) ValidWorldBoss() bool {
-	return f.validWorldBoss(f.WorldBoss)
+	return f.validWorldBoss(f.WorldBoss) && f.ValidWorldBossRewards(f.WorldBoss)
 }
 
 // validWorldBoss 校验单个模板，同时排除已用于个人首领的地图。

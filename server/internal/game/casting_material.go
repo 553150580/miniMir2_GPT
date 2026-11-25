@@ -192,8 +192,9 @@ func (w *worker) finishMaterialCast(binding materialCommitBinding, q persistence
 	}
 	// 迟到的永久事实仍更新同角色资产观察；旧job无权释放新一代Pending或复用新连接的request。
 	if err == nil && current != nil && role.ID == binding.roleID && role.Revision >= current.Role.Revision {
+		previousPrivilege := current.Role.PrivilegeUntil
 		current.Role = role
-		transitionEventPrivilege(current, time.Now(), role.PrivilegeUntil)
+		w.acceptRolePrivilege(current, time.Now(), previousPrivilege)
 		w.refreshPlayerStats(current)
 	}
 	if !owns {

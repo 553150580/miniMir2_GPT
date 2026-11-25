@@ -52,6 +52,9 @@ message PersonalBossInfo {
   repeated ChallengePendingReward pending_rewards = 17;
   uint32 pending_reward_capacity = 18;
   repeated PersonalBossTemplateChoice templates = 19;
+  // 世界奖励按永久角色查找，独立于个人首领奖励的容量。
+  repeated ChallengePendingReward world_pending_rewards = 20;
+  bool world_pending_rewards_more = 21;
 }
 
 // 单个可选个人首领的入场资格；每日成功次数及活动场次仍为角色共用。
@@ -72,6 +75,8 @@ message ChallengePendingReward {
   uint32 template_id = 2;
   int64 earned_at_unix_ms = 3;
   repeated ItemView items = 4;
+  string source_kind = 5;
+  uint32 source_rank = 6;
 }
 
 // 领取整笔待领；库存不足时保留原记录。

@@ -69,6 +69,8 @@ type Engine struct {
 	stopped          atomic.Bool                   // 表示已冻结新增游戏操作，停服时仍可处理已受理回执。
 	TownGrids        map[uint64]*townnav.Grid      // 按城镇地图编号保存可共用的导航静态网格。
 	sharedTowns      sharedTownDirectory           // 当前引擎每个运行服的共享城镇席位与动态占格。
+
+	worldBossPrivileges worldBossPrivilegeBook // 跨分片记录关联场次的原角色特权确认时序。
 }
 
 // workerCount 固定角色散列的分片数量。
@@ -492,7 +494,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if r != nil && r.worldBossObservation != nil {
-			w.suspendWorldBossObservation(r)
+			w.suspendWorldBossObservation(r, time.Now())
 		}
 		if r != nil && w.queueEntryAfterSettlement(r, c) {
 			return
@@ -528,8 +530,13 @@ func (w *worker) command(c command) {
 	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			// at 同时界定原连接的场次暂挂和离线托管开始。
+			at := c.at
+			if at.IsZero() {
+				at = time.Now()
+			}
 			r.entryAck = nil
-			w.suspendWorldBossObservation(r)
+			w.suspendWorldBossObservation(r, at)
 			w.detachPersonalBoss(r)
 			w.leaveSharedTown(r)
 			w.cancelMapTravelOnDetach(r)
@@ -543,11 +550,6 @@ func (w *worker) command(c command) {
 			r.Manual = false
 			r.LastTick = time.Now()
 			r.HostSession = domain.ID()
-			// at 保存当前处理所用的发生时间。
-			at := c.at
-			if at.IsZero() {
-				at = time.Now()
-			}
 			// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown {
 				r.HostSession = ""

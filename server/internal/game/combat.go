@@ -779,8 +779,9 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 	}
 	// 只采纳不落后于内存资产视图的持久版本，避免回执重放倒退状态。
 	if role.Revision >= r.Role.Revision {
+		previousPrivilege := r.Role.PrivilegeUntil
 		r.Role = role
-		transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
+		w.acceptRolePrivilege(r, time.Now(), previousPrivilege)
 		w.refreshPlayerStats(r)
 	}
 	if len(finished) > 0 {

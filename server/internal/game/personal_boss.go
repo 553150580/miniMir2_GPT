@@ -177,7 +177,9 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 			owner.personalBoss = nil
 			return
 		}
+		previousPrivilege := owner.Role.PrivilegeUntil
 		owner.Role = role
+		w.acceptRolePrivilege(owner, time.Now(), previousPrivilege)
 		w.installPersonalBoss(owner, run, template, snapshot, grant, time.Now())
 	})
 }
@@ -313,7 +315,9 @@ func (w *worker) recoverPersonalBoss(owner *room) {
 		return store.RecoverPersonalBoss(w.e.ctx, auth)
 	}, func(role domain.Role, _ persistence.PersonalBossChallenge, err error) {
 		if err == nil {
+			previousPrivilege := owner.Role.PrivilegeUntil
 			owner.Role = role
+			w.acceptRolePrivilege(owner, time.Now(), previousPrivilege)
 			w.assets(owner)
 		} else if hardAuthorityFailure(persistence.Code(err)) {
 			w.isolateRoom(owner)

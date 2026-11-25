@@ -200,6 +200,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		// 按角色定位挑战记录和结束时间，永久回执不设过期索引。
 		personalBossCollection:    {{Keys: bson.D{{Key: "role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}}},
 		worldBossResultCollection: worldBossResultIndexes(),
+		worldBossRewardCollection: worldBossRewardIndexes(),
 	}
 	// name 定位目标集合，models 是为该集合建立的索引列表。
 	for name, models := range indexes {

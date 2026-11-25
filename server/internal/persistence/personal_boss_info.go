@@ -43,6 +43,9 @@ type PersonalBossInfo struct {
 	PendingRewards        []domain.ChallengePendingReward // 该永久绑定角色的全部未领原附件。
 	PendingRewardCapacity uint32                          // 当前发布允许为新挑战预留的待领笔数。
 	Templates             []PersonalBossTemplateChoice    // 同一次查询读取的实际个人挑战菜单。
+
+	WorldPendingRewards     []domain.ChallengePendingReward // 已确认的世界首领附件，独立于个人待领额度。
+	WorldPendingRewardsMore bool                            // 仍有未投影的后续附件，先领最早的附件即可继续查看。
 }
 
 // PersonalBossTemplateChoice 保存单模板的等级、地图和独立冷却资格。
@@ -147,6 +150,10 @@ func (s *Store) QueryPersonalBoss(ctx context.Context, a Auth) (PersonalBossInfo
 		}
 		state := personalBossProgress(r)
 		out = personalBossAvailability(r, state, template, now)
+		out.WorldPendingRewards, out.WorldPendingRewardsMore, err = s.queryPendingWorldBossRewards(tc, r)
+		if err != nil {
+			return err
+		}
 		if state.ActiveChallengeID != "" {
 			record, err := s.readPersonalBoss(tc, state.ActiveChallengeID)
 			if err != nil {

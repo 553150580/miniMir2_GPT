@@ -34370,6 +34370,8 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [pending_rewards] PersonalBossInfo pending_rewards
              * @property {number|null} [pending_reward_capacity] PersonalBossInfo pending_reward_capacity
              * @property {Array.<minimir.v1.PersonalBossTemplateChoice.$Properties>|null} [templates] PersonalBossInfo templates
+             * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [world_pending_rewards] PersonalBossInfo world_pending_rewards
+             * @property {boolean|null} [world_pending_rewards_more] PersonalBossInfo world_pending_rewards_more
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -34398,6 +34400,7 @@ $root.minimir = (function() {
                 this.history = [];
                 this.pending_rewards = [];
                 this.templates = [];
+                this.world_pending_rewards = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -34557,6 +34560,22 @@ $root.minimir = (function() {
             PersonalBossInfo.prototype.templates = $util.emptyArray;
 
             /**
+             * PersonalBossInfo world_pending_rewards.
+             * @member {Array.<minimir.v1.ChallengePendingReward.$Properties>} world_pending_rewards
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.world_pending_rewards = $util.emptyArray;
+
+            /**
+             * PersonalBossInfo world_pending_rewards_more.
+             * @member {boolean} world_pending_rewards_more
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.world_pending_rewards_more = false;
+
+            /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @function create
              * @memberof minimir.v1.PersonalBossInfo
@@ -34629,6 +34648,11 @@ $root.minimir = (function() {
                 if (message.templates != null && message.templates.length)
                     for (var i = 0; i < message.templates.length; ++i)
                         $root.minimir.v1.PersonalBossTemplateChoice.encode(message.templates[i], writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
+                if (message.world_pending_rewards != null && message.world_pending_rewards.length)
+                    for (var i = 0; i < message.world_pending_rewards.length; ++i)
+                        $root.minimir.v1.ChallengePendingReward.encode(message.world_pending_rewards[i], writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
+                if (message.world_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "world_pending_rewards_more") && message.world_pending_rewards_more !== false)
+                    writer.uint32(/* id 21, wireType 0 =*/168).bool(message.world_pending_rewards_more);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -34854,6 +34878,23 @@ $root.minimir = (function() {
                             message.templates.push($root.minimir.v1.PersonalBossTemplateChoice.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 20: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.world_pending_rewards && message.world_pending_rewards.length))
+                                message.world_pending_rewards = [];
+                            message.world_pending_rewards.push($root.minimir.v1.ChallengePendingReward.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 21: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.world_pending_rewards_more = value;
+                            else
+                                delete message.world_pending_rewards_more;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -34977,6 +35018,18 @@ $root.minimir = (function() {
                             return "templates." + error;
                     }
                 }
+                if (message.world_pending_rewards != null && $Object.hasOwnProperty.call(message, "world_pending_rewards")) {
+                    if (!$Array.isArray(message.world_pending_rewards))
+                        return "world_pending_rewards: array expected";
+                    for (var i = 0; i < message.world_pending_rewards.length; ++i) {
+                        var error = $root.minimir.v1.ChallengePendingReward.verify(message.world_pending_rewards[i], _depth + 1);
+                        if (error)
+                            return "world_pending_rewards." + error;
+                    }
+                }
+                if (message.world_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "world_pending_rewards_more"))
+                    if (typeof message.world_pending_rewards_more !== "boolean")
+                        return "world_pending_rewards_more: boolean expected";
                 return null;
             };
 
@@ -35383,6 +35436,8 @@ $root.minimir = (function() {
              * @property {number|null} [template_id] ChallengePendingReward template_id
              * @property {Long|null} [earned_at_unix_ms] ChallengePendingReward earned_at_unix_ms
              * @property {Array.<minimir.v1.ItemView.$Properties>|null} [items] ChallengePendingReward items
+             * @property {string|null} [source_kind] ChallengePendingReward source_kind
+             * @property {number|null} [source_rank] ChallengePendingReward source_rank
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -35448,6 +35503,22 @@ $root.minimir = (function() {
             ChallengePendingReward.prototype.items = $util.emptyArray;
 
             /**
+             * ChallengePendingReward source_kind.
+             * @member {string} source_kind
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.source_kind = "";
+
+            /**
+             * ChallengePendingReward source_rank.
+             * @member {number} source_rank
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.source_rank = 0;
+
+            /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ChallengePendingReward
@@ -35488,6 +35559,10 @@ $root.minimir = (function() {
                 if (message.items != null && message.items.length)
                     for (var i = 0; i < message.items.length; ++i)
                         $root.minimir.v1.ItemView.encode(message.items[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind") && message.source_kind !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.source_kind);
+                if (message.source_rank != null && $Object.hasOwnProperty.call(message, "source_rank") && message.source_rank !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.source_rank);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -35580,6 +35655,24 @@ $root.minimir = (function() {
                             message.items.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.source_kind = value;
+                            else
+                                delete message.source_kind;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.source_rank = value;
+                            else
+                                delete message.source_rank;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -35646,6 +35739,12 @@ $root.minimir = (function() {
                             return "items." + error;
                     }
                 }
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind"))
+                    if (!$util.isString(message.source_kind))
+                        return "source_kind: string expected";
+                if (message.source_rank != null && $Object.hasOwnProperty.call(message, "source_rank"))
+                    if (!$util.isInteger(message.source_rank))
+                        return "source_rank: integer expected";
                 return null;
             };
 

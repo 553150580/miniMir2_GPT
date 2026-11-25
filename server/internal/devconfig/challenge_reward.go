@@ -28,10 +28,17 @@ func (f *Fixture) validChallengeItemReward(reward *ChallengeItemReward) bool {
 	}
 	for _, line := range reward.Items {
 		item, exists := f.Item(line.ItemID)
-		if !exists || line.Quantity <= 0 || item.Stackable && line.Quantity > item.MaxStack ||
-			!item.Stackable && line.Quantity != 1 {
+		if !exists || !item.validChallengeRewardQuantity(line.Quantity) {
 			return false
 		}
 	}
 	return true
+}
+
+// validChallengeRewardQuantity 检查一个附件实例能保存的数量，按原物品定义区分单件与堆叠。
+func (i Item) validChallengeRewardQuantity(quantity int64) bool {
+	if i.Stackable {
+		return quantity > 0 && quantity <= i.MaxStack
+	}
+	return quantity == 1
 }

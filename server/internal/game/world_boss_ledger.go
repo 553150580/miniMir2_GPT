@@ -153,11 +153,13 @@ func (w *worker) persistWorldBossFinish(arena *worldBossArena, now time.Time) {
 	if !exists {
 		return
 	}
+	w.freezeWorldBossRewardEvidence(arena)
 	finish := persistence.WorldBossFinish{Outcome: persistence.WorldBossOutcome(proposal.kind), FinishedAt: proposal.finishedAt,
 		HPRemaining: proposal.hpRemaining, Contributions: make([]persistence.WorldBossContribution, 0, len(proposal.contributions))}
 	for _, row := range proposal.contributions {
 		finish.Contributions = append(finish.Contributions, persistence.WorldBossContribution{RoleID: row.grant.roleID, DisplayName: arena.names[row.grant.roleID],
-			ReservationID: row.grant.reservationID, CombatSnapshot: row.grant.combatSnapshot, JoinedAt: row.joinedAt, Damage: row.damage})
+			ReservationID: row.grant.reservationID, CombatSnapshot: row.grant.combatSnapshot, JoinedAt: row.joinedAt, Damage: row.damage,
+			RewardEvidence: arena.rewardEvidence[row.grant.roleID]})
 	}
 	ledger := w.worldBossLedgers[arena.spec.RunID]
 	arena.finishing = w.submit(job{target: w, settlement: true, run: func() func(*worker) {

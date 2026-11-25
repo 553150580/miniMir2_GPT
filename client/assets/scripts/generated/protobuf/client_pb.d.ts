@@ -13121,6 +13121,12 @@ export namespace minimir {
             /** PersonalBossInfo templates. */
             templates: minimir.v1.PersonalBossTemplateChoice.$Properties[];
 
+            /** PersonalBossInfo world_pending_rewards. */
+            world_pending_rewards: minimir.v1.ChallengePendingReward.$Properties[];
+
+            /** PersonalBossInfo world_pending_rewards_more. */
+            world_pending_rewards_more: boolean;
+
             /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -13240,6 +13246,12 @@ export namespace minimir {
 
                 /** PersonalBossInfo templates */
                 templates?: (minimir.v1.PersonalBossTemplateChoice.$Properties[]|null);
+
+                /** PersonalBossInfo world_pending_rewards */
+                world_pending_rewards?: (minimir.v1.ChallengePendingReward.$Properties[]|null);
+
+                /** PersonalBossInfo world_pending_rewards_more */
+                world_pending_rewards_more?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -13418,6 +13430,12 @@ export namespace minimir {
             /** ChallengePendingReward items. */
             items: minimir.v1.ItemView.$Properties[];
 
+            /** ChallengePendingReward source_kind. */
+            source_kind: string;
+
+            /** ChallengePendingReward source_rank. */
+            source_rank: number;
+
             /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @param [properties] Properties to set
@@ -13492,6 +13510,12 @@ export namespace minimir {
 
                 /** ChallengePendingReward items */
                 items?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** ChallengePendingReward source_kind */
+                source_kind?: (string|null);
+
+                /** ChallengePendingReward source_rank */
+                source_rank?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

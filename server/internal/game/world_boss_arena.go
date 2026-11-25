@@ -33,6 +33,9 @@ type worldBossArena struct {
 	eventID       uint64                       // 同场战斗观察事件的有序分配水位。
 	lastTick      time.Time                    // 避免旧逻辑帧回拨全场时钟。
 	lastState     time.Time                    // 最近一次合并发送共享排行榜的时刻。
+
+	rewardMembers  map[string]*worldBossRewardMember               // 已确认席位的参与和永久特权观察，离场后保留。
+	rewardEvidence map[string]*persistence.WorldBossRewardEvidence // 首次场次终态冻结的原事实，持久重试不重取当前值。
 }
 
 // worldBossSeat 保存世界 actor 自行拥有的战斗身体和只读原入场授权。
@@ -42,6 +45,8 @@ type worldBossSeat struct {
 	shown       bool                  // 已向原连接发送独立地图及首基线。
 	done        bool                  // 已通知唯一场次终态，等待自动返回。
 	priorEpoch  int64                 // 暂挂时最后认证代次，防止旧票进入已撤销的席位。
+
+	privilegeOffer *worldBossPrivilegeWitness // 首基线确认前暂存的原角色特权观察引用。
 }
 
 // worldBossStatus 为查询返回当前开放、终态或下一场的日程与共享进度。
@@ -138,7 +143,7 @@ func (w *worker) reserveRecoveredWorldBoss(enter worldBossEnter, now time.Time) 
 	}
 	if arena.challenge.finish == nil {
 		if previous := arena.seats[enter.role.ID]; previous != nil && shouldSuspendWorldBoss(previous) {
-			w.suspendWorldBossSeat(arena, previous)
+			w.suspendWorldBossSeat(arena, previous, now)
 		}
 		if saved := arena.resumable[enter.role.ID]; saved != nil {
 			if !arena.resumeSeat(enter, saved, now) {
@@ -244,11 +249,15 @@ func (w *worker) showWorldBoss(enter worldBossEnter, arena *worldBossArena) {
 	owner.Manual, owner.Destination, owner.PetBornReady = false, nil, nil
 	owner.Navigation = navigationState{}
 	obs.shown = true
+	key := worldBossPrivilegeKey{runID: obs.occurrence.runID, roleID: owner.Role.ID}
+	watch := w.e.worldBossPrivileges.offer(key, obs.occurrence.id, time.Now(), owner.Role.PrivilegeUntil)
 	if !w.postWorldBoss(obs.actor, func(actor *worker) {
 		seat := arena.seats[obs.auth.RoleID]
 		if seat == nil || seat.observation != obs || obs.revoked.Load() || !obs.conn.Alive() {
+			actor.e.worldBossPrivileges.confirmOffer(watch, false)
 			return
 		}
+		seat.privilegeOffer = watch
 		seat.shown = true
 		actor.send(seat.room, p.MsgS2CWorldBossState, enter.request, arena.state(obs.scene, worldBossEntering))
 		if entry := actor.enterLineResult(seat.room); entry != nil {
@@ -258,6 +267,7 @@ func (w *worker) showWorldBoss(enter worldBossEnter, arena *worldBossArena) {
 			actor.baseline(seat.room)
 		}
 	}) {
+		w.e.worldBossPrivileges.confirmOffer(watch, false)
 		w.detachWorldBoss(owner)
 		obs.conn.Close("world boss actor busy")
 	}
@@ -285,6 +295,7 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 			w.advanceWorldBossEvents(arena, until)
 			arena.challenge.expire(now)
 		}
+		arena.noteRewardPresence(child.Role.ID, persistence.WorldBossPresenceLeft, now)
 		w.removeWorldBossSeat(arena, seat, worldBossLeft)
 		return
 	}
@@ -305,6 +316,7 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 			w.removeWorldBossSeat(arena, seat, worldBossLeft)
 			return
 		}
+		w.confirmWorldBossRewardMember(arena, seat, now)
 		if ack.ChallengeAutoBattleEnabled != nil {
 			child.Auto = *ack.ChallengeAutoBattleEnabled
 			if !child.Auto {
@@ -340,6 +352,7 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 
 // removeWorldBossSeat 归还战斗占格，由原角色 owner 完成连接返回。
 func (w *worker) removeWorldBossSeat(arena *worldBossArena, seat *worldBossSeat, phase uint32) {
+	w.discardWorldBossRewardOffer(seat)
 	obs := seat.observation
 	obs.finalReturn.Store(true)
 	delete(arena.seats, obs.auth.RoleID)

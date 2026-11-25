@@ -105,8 +105,9 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 				r.Melee.Revision++
 			}
 		}
+		previousPrivilege := r.Role.PrivilegeUntil
 		r.Role = role
-		transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
+		w.acceptRolePrivilege(r, time.Now(), previousPrivilege)
 		// 仓储只迁移背包及仓库，不改变已穿属性或任何临时身体状态。
 		if q.Kind != "warehouse" && !autoPotion {
 			w.refreshPlayerStats(r)

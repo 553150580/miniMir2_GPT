@@ -4,6 +4,7 @@ package game
 import (
 	"math"
 	"minimir/internal/devconfig"
+	"minimir/internal/persistence"
 	"time"
 )
 
@@ -14,12 +15,14 @@ func shouldSuspendWorldBoss(seat *worldBossSeat) bool {
 }
 
 // suspendWorldBossSeat 暂停原战斗身体，撤销旧输入且保留已确认的生命和参与事实。
-func (w *worker) suspendWorldBossSeat(arena *worldBossArena, seat *worldBossSeat) {
+func (w *worker) suspendWorldBossSeat(arena *worldBossArena, seat *worldBossSeat, now time.Time) {
 	child, obs := seat.room, seat.observation
 	if arena.challenge.participants[child.Role.ID] == nil {
 		w.removeWorldBossSeat(arena, seat, worldBossLeft)
 		return
 	}
+	arena.noteRewardPresence(child.Role.ID, persistence.WorldBossPresenceOffline, obs.suspension.at(now))
+	w.discardWorldBossRewardOffer(seat)
 	delete(arena.seats, child.Role.ID)
 	obs.revoked.Store(true)
 	seat.priorEpoch, seat.observation = obs.auth.SessionEpoch, nil

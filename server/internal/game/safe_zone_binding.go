@@ -190,7 +190,9 @@ func (w *worker) finishSafeZoneBinding(fact *safeZoneBindingFact, role domain.Ro
 		return
 	}
 	if role.Revision >= r.Role.Revision {
+		previousPrivilege := r.Role.PrivilegeUntil
 		r.Role = role
+		w.acceptRolePrivilege(r, time.Now(), previousPrivilege)
 	}
 	r.resumeAfterPending(time.Now())
 	r.PendingRetry = nil

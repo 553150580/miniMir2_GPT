@@ -112,6 +112,22 @@ test('满包拒绝和未决领取后，原奖励可见且禁止在挑战或经�
     assert.deepEqual(f.claims, [bytes(7)]);
 });
 
+test('世界击杀与超时奖励各保留来源、原排名和领取编号，独立显示待领数量', async t => {
+    const ranked = { ...reward(11), sourceKind: 'world_boss', sourceRank: 2 };
+    const timeout = { ...reward(12), sourceKind: 'world_boss_timeout', sourceRank: 0 };
+    const f = panelFixture(t, personal({ pendingRewardCapacity: 8, pendingRewards: [reward(3)],
+        worldPendingRewards: [ranked, timeout], worldPendingRewardsMore: true }));
+    await f.view.show('rewards');
+    assert.equal(f.label('Status'), '个人 1/8 · 世界 2+');
+    assert.match(f.label('Details'), /首领 1/);
+    f.view.turn(1);
+    assert.match(f.label('Details'), /世界首领 · 第2名/);
+    f.view.turn(1);
+    assert.match(f.label('Details'), /世界首领 · 超时奖励/);
+    await f.view.action();
+    assert.deepEqual(f.claims, [timeout.rewardId]);
+});
+
 test('掉线后原场景的迟到查询不能覆盖新队列，终态后自动刷新可领取状态', async t => {
     const f = panelFixture(t, personal());
     const replies = [];

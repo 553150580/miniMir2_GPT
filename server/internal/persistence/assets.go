@@ -247,6 +247,13 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID)
 		case AssetChallengeRewardClaim:
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
+			if businessCode == p.CodeOperationConflict {
+				// 个人附件没有原编号时，再查同角色、同永久入口的世界首领附件。
+				r, challengeReward, businessCode, e = s.claimWorldBossReward(tc, r, q.ChallengeRewardID, opID)
+				if e != nil {
+					return e
+				}
+			}
 		case AssetSetSkillSlots:
 			r, businessCode = setSkillSlots(r, &s.Cfg.Fixture, q.SkillSlotIDs)
 		case "set_casting_supply":

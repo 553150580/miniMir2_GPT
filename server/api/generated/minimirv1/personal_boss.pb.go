@@ -280,8 +280,11 @@ type PersonalBossInfo struct {
 	PendingRewards        []*ChallengePendingReward     `protobuf:"bytes,17,rep,name=pending_rewards,json=pendingRewards,proto3" json:"pending_rewards,omitempty"`
 	PendingRewardCapacity uint32                        `protobuf:"varint,18,opt,name=pending_reward_capacity,json=pendingRewardCapacity,proto3" json:"pending_reward_capacity,omitempty"`
 	Templates             []*PersonalBossTemplateChoice `protobuf:"bytes,19,rep,name=templates,proto3" json:"templates,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
+	// 世界奖励按永久角色查找，独立于个人首领奖励的容量。
+	WorldPendingRewards     []*ChallengePendingReward `protobuf:"bytes,20,rep,name=world_pending_rewards,json=worldPendingRewards,proto3" json:"world_pending_rewards,omitempty"`
+	WorldPendingRewardsMore bool                      `protobuf:"varint,21,opt,name=world_pending_rewards_more,json=worldPendingRewardsMore,proto3" json:"world_pending_rewards_more,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *PersonalBossInfo) Reset() {
@@ -447,6 +450,20 @@ func (x *PersonalBossInfo) GetTemplates() []*PersonalBossTemplateChoice {
 	return nil
 }
 
+func (x *PersonalBossInfo) GetWorldPendingRewards() []*ChallengePendingReward {
+	if x != nil {
+		return x.WorldPendingRewards
+	}
+	return nil
+}
+
+func (x *PersonalBossInfo) GetWorldPendingRewardsMore() bool {
+	if x != nil {
+		return x.WorldPendingRewardsMore
+	}
+	return false
+}
+
 // 单个可选个人首领的入场资格；每日成功次数及活动场次仍为角色共用。
 type PersonalBossTemplateChoice struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
@@ -555,6 +572,8 @@ type ChallengePendingReward struct {
 	TemplateId     uint32                 `protobuf:"varint,2,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
 	EarnedAtUnixMs int64                  `protobuf:"varint,3,opt,name=earned_at_unix_ms,json=earnedAtUnixMs,proto3" json:"earned_at_unix_ms,omitempty"`
 	Items          []*ItemView            `protobuf:"bytes,4,rep,name=items,proto3" json:"items,omitempty"`
+	SourceKind     string                 `protobuf:"bytes,5,opt,name=source_kind,json=sourceKind,proto3" json:"source_kind,omitempty"`
+	SourceRank     uint32                 `protobuf:"varint,6,opt,name=source_rank,json=sourceRank,proto3" json:"source_rank,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -615,6 +634,20 @@ func (x *ChallengePendingReward) GetItems() []*ItemView {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *ChallengePendingReward) GetSourceKind() string {
+	if x != nil {
+		return x.SourceKind
+	}
+	return ""
+}
+
+func (x *ChallengePendingReward) GetSourceRank() uint32 {
+	if x != nil {
+		return x.SourceRank
+	}
+	return 0
 }
 
 // 领取整笔待领；库存不足时保留原记录。
@@ -813,7 +846,7 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x12expires_at_unix_ms\x18\x05 \x01(\x03R\x0fexpiresAtUnixMs\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x06 \x01(\rR\terrorCode\"\x13\n" +
-	"\x11PersonalBossQuery\"\xa7\x06\n" +
+	"\x11PersonalBossQuery\"\xbc\a\n" +
 	"\x10PersonalBossInfo\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x01 \x01(\rR\terrorCode\x12\x12\n" +
@@ -838,7 +871,9 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\ahistory\x18\x10 \x03(\v2$.minimir.v1.PersonalBossHistoryEntryR\ahistory\x12K\n" +
 	"\x0fpending_rewards\x18\x11 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x0ependingRewards\x126\n" +
 	"\x17pending_reward_capacity\x18\x12 \x01(\rR\x15pendingRewardCapacity\x12D\n" +
-	"\ttemplates\x18\x13 \x03(\v2&.minimir.v1.PersonalBossTemplateChoiceR\ttemplates\"\xb8\x02\n" +
+	"\ttemplates\x18\x13 \x03(\v2&.minimir.v1.PersonalBossTemplateChoiceR\ttemplates\x12V\n" +
+	"\x15world_pending_rewards\x18\x14 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x13worldPendingRewards\x12;\n" +
+	"\x1aworld_pending_rewards_more\x18\x15 \x01(\bR\x17worldPendingRewardsMore\"\xb8\x02\n" +
 	"\x1aPersonalBossTemplateChoice\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x01(\rR\n" +
 	"templateId\x12!\n" +
@@ -849,13 +884,17 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\rminimum_level\x18\x05 \x01(\rR\fminimumLevel\x12\x1b\n" +
 	"\tcan_enter\x18\x06 \x01(\bR\bcanEnter\x12-\n" +
 	"\x12eligibility_reason\x18\a \x01(\rR\x11eligibilityReason\x12/\n" +
-	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\xad\x01\n" +
+	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\xef\x01\n" +
 	"\x16ChallengePendingReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12\x1f\n" +
 	"\vtemplate_id\x18\x02 \x01(\rR\n" +
 	"templateId\x12)\n" +
 	"\x11earned_at_unix_ms\x18\x03 \x01(\x03R\x0eearnedAtUnixMs\x12*\n" +
-	"\x05items\x18\x04 \x03(\v2\x14.minimir.v1.ItemViewR\x05items\"o\n" +
+	"\x05items\x18\x04 \x03(\v2\x14.minimir.v1.ItemViewR\x05items\x12\x1f\n" +
+	"\vsource_kind\x18\x05 \x01(\tR\n" +
+	"sourceKind\x12\x1f\n" +
+	"\vsource_rank\x18\x06 \x01(\rR\n" +
+	"sourceRank\"o\n" +
 	"\x14ClaimChallengeReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xe7\x02\n" +
@@ -904,13 +943,14 @@ var file_personal_boss_proto_depIdxs = []int32{
 	8,  // 0: minimir.v1.PersonalBossInfo.history:type_name -> minimir.v1.PersonalBossHistoryEntry
 	6,  // 1: minimir.v1.PersonalBossInfo.pending_rewards:type_name -> minimir.v1.ChallengePendingReward
 	5,  // 2: minimir.v1.PersonalBossInfo.templates:type_name -> minimir.v1.PersonalBossTemplateChoice
-	9,  // 3: minimir.v1.ChallengePendingReward.items:type_name -> minimir.v1.ItemView
-	10, // 4: minimir.v1.ClaimChallengeReward.operation:type_name -> minimir.v1.OperationContext
-	5,  // [5:5] is the sub-list for method output_type
-	5,  // [5:5] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	6,  // 3: minimir.v1.PersonalBossInfo.world_pending_rewards:type_name -> minimir.v1.ChallengePendingReward
+	9,  // 4: minimir.v1.ChallengePendingReward.items:type_name -> minimir.v1.ItemView
+	10, // 5: minimir.v1.ClaimChallengeReward.operation:type_name -> minimir.v1.OperationContext
+	6,  // [6:6] is the sub-list for method output_type
+	6,  // [6:6] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_personal_boss_proto_init() }

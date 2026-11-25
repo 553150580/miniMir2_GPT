@@ -1,4 +1,4 @@
-// 本文件记录运行服世界首领的唯一预约及永久终态。写入必须经过当前运行服和游戏节点租约，本模块不分配奖励。
+// 本文件记录运行服世界首领的唯一预约及永久终态。写入经过当前运行服和游戏节点租约，并同时保存已确认奖励。
 package persistence
 
 import (
@@ -54,6 +54,8 @@ type WorldBossContribution struct {
 	CombatSnapshot string    `bson:"combat_snapshot"` // 原入场战斗快照摘要。
 	JoinedAt       time.Time `bson:"joined_at"`       // 该席位首次确认参战的绝对时间。
 	Damage         int64     `bson:"damage"`          // 对共享生命实际生效的伤害，已合并原宠物归属。
+
+	RewardEvidence *WorldBossRewardEvidence `bson:"reward_evidence,omitempty" json:",omitempty"` // 首领原终态对应的永久归属、席位和特权状态。
 }
 
 // WorldBossFinish 保存世界 actor 冻结的终态与有效贡献。
@@ -181,6 +183,10 @@ func (s *Store) FinishWorldBoss(ctx context.Context, spec WorldBossSpec, finish 
 		}
 		if len(finish.Contributions) > template.ParticipantLimit {
 			return Fail(p.CodeInvalidArgument, "世界首领贡献超过原场次人数")
+		}
+		// 确认原终态的同一事务冻结附件。旧结果重放不再次读取奖表或生成实例。
+		if err = s.writeWorldBossRewards(tc, spec, finish, template.Rewards); err != nil {
+			return err
 		}
 		record.WorldBossFinish, record.ProgressKnown, record.FinishHash = finish, true, digest
 		write, err := collection.ReplaceOne(tc, bson.M{"_id": record.ID, "outcome": WorldBossActive}, record)
@@ -318,7 +324,7 @@ func (s *Store) worldBossTemplate(spec WorldBossSpec) (*devconfig.WorldBossConfi
 	}
 	local := spec.OpensAt.In(time.FixedZone("Asia/Shanghai", 8*60*60))
 	midnight := time.Date(local.Year(), local.Month(), local.Day(), 0, 0, 0, 0, local.Location())
-	if !slices.Contains(row.DailyOpenOffsets, local.Sub(midnight)) || !spec.OpensAt.Add(row.Window).Equal(spec.ClosesAt) ||
+	if !fixture.ValidWorldBossRewards(row) || !slices.Contains(row.DailyOpenOffsets, local.Sub(midnight)) || !spec.OpensAt.Add(row.Window).Equal(spec.ClosesAt) ||
 		spec.HPMax != row.Monster.HP {
 		return nil, Fail(p.CodeInvalidArgument, "世界首领原日程或模板生命不符")
 	}
@@ -365,6 +371,15 @@ func normalizeWorldBossFinish(spec WorldBossSpec, finish WorldBossFinish) (World
 			row.JoinedAt.Before(spec.OpensAt) || !row.JoinedAt.Before(spec.ClosesAt) || row.JoinedAt.After(finish.FinishedAt) ||
 			row.Damage < 0 || row.Damage > remaining {
 			return invalid("世界首领存在错误入场事实或超量贡献")
+		}
+		if row.RewardEvidence != nil {
+			// 复制首领分片原证据，读写和重试不共享封包内的指针。
+			evidence := *row.RewardEvidence
+			if evidence.Origin == 0 || evidence.Origin > math.MaxInt64 || evidence.Presence < WorldBossPresenceOnline || evidence.Presence > WorldBossPresenceDefeated {
+				return invalid("世界首领奖励的永久入口或席位状态无效")
+			}
+			evidence.PrivilegeUntil = worldBossTime(evidence.PrivilegeUntil)
+			row.RewardEvidence = &evidence
 		}
 		if _, exists := roles[row.RoleID]; exists {
 			return invalid("同一角色具有重复世界首领贡献")

@@ -67,6 +67,7 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		CanEnter: info.EligibilityReason == persistence.PersonalBossEligible, EligibilityReason: info.EligibilityReason,
 		AvailableAtUnixMs: optionalBossUnixMillis(info.AvailableAt), ActiveChallengeId: info.ActiveChallengeID, ActiveExpiresAtUnixMs: optionalBossUnixMillis(info.ActiveExpiresAt)}
 	out.PendingRewardCapacity = info.PendingRewardCapacity
+	out.WorldPendingRewardsMore = info.WorldPendingRewardsMore
 	for _, option := range info.Templates {
 		reason := option.EligibilityReason
 		if outside && reason == persistence.PersonalBossEligible {
@@ -77,11 +78,10 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 			EligibilityReason: reason, AvailableAtUnixMs: optionalBossUnixMillis(option.AvailableAt)})
 	}
 	for _, reward := range info.PendingRewards {
-		entry := &pb.ChallengePendingReward{RewardId: domain.Bytes(reward.RewardID), TemplateId: reward.TemplateID, EarnedAtUnixMs: reward.EarnedAt.UnixMilli()}
-		for _, item := range reward.Items {
-			entry.Items = append(entry.Items, item.Proto())
-		}
-		out.PendingRewards = append(out.PendingRewards, entry)
+		out.PendingRewards = append(out.PendingRewards, pendingChallengeRewardPB(reward))
+	}
+	for _, reward := range info.WorldPendingRewards {
+		out.WorldPendingRewards = append(out.WorldPendingRewards, pendingChallengeRewardPB(reward))
 	}
 	for _, previous := range info.History {
 		out.History = append(out.History, &pb.PersonalBossHistoryEntry{ChallengeId: previous.ChallengeID, TemplateId: previous.TemplateID,
@@ -90,6 +90,16 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 			RewardGold: previous.RewardGold, RewardBound: previous.RewardBound})
 	}
 	w.send(owner, p.MsgS2CPersonalBossInfo, frame.Request, out)
+}
+
+// pendingChallengeRewardPB 只展示原奖励实例；领取后不会再次生成物品或判绑定。
+func pendingChallengeRewardPB(reward domain.ChallengePendingReward) *pb.ChallengePendingReward {
+	entry := &pb.ChallengePendingReward{RewardId: domain.Bytes(reward.RewardID), TemplateId: reward.TemplateID,
+		EarnedAtUnixMs: reward.EarnedAt.UnixMilli(), SourceKind: reward.SourceKind, SourceRank: reward.SourceRank}
+	for _, item := range reward.Items {
+		entry.Items = append(entry.Items, item.Proto())
+	}
+	return entry
 }
 
 // optionalBossUnixMillis 用零区分从未开始冷却或没有活动预约的时间。

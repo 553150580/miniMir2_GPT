@@ -149,6 +149,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 		w.refreshPlayerStats(r)
 	}
 	transitionEventPrivilege(r, now, role.PrivilegeUntil)
+	w.observeWorldBossPrivilege(r, now)
 	r.InputSequence = 0
 	r.Manual = false
 	r.Conn = c.conn

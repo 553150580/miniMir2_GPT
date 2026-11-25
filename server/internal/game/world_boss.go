@@ -39,18 +39,19 @@ type worldBossOccurrence struct {
 // worldBossObservation 跨分片传递的原会话身份在初始化后只读。
 // shown 和 returnRequested 仅归角色 owner 使用，revoked 在两处分片间同步原附着失效。
 type worldBossObservation struct {
-	occurrence worldBossOccurrence // 本次申请的场次身份。
-	owner      *worker             // 保留永久写权限和原挂机角色的分片。
-	actor      *worker             // 独占该运行服共享场次的分片。
-	conn       Connection          // 原在线附着及其线程安全投递入口。
-	auth       persistence.Auth    // 原角色、账号和会话代次。
-	scene      uint64              // 此连接观察共享场次用的场景代次。
-	baseline   uint64              // 此连接必须确认的场景基线。
-	assets     roleAssetView       // 原角色 owner 冻结的只读资产视图，供匹配场次 ACK 后同步。
-	shown      bool                // 角色 owner 已暂停本连接的普通场景投影。
-	started    atomic.Bool         // 已由场次分片真正提交新场景首帧，离开时据此决定是否发返回场景。
-	revoked    atomic.Bool         // 本席位的原命令和投递已经失效。
-	rejoin     atomic.Bool         // 原连接断开或接管，允许保留已确认席位等候新认证。
+	occurrence worldBossOccurrence  // 本次申请的场次身份。
+	owner      *worker              // 保留永久写权限和原挂机角色的分片。
+	actor      *worker              // 独占该运行服共享场次的分片。
+	conn       Connection           // 原在线附着及其线程安全投递入口。
+	auth       persistence.Auth     // 原角色、账号和会话代次。
+	scene      uint64               // 此连接观察共享场次用的场景代次。
+	baseline   uint64               // 此连接必须确认的场景基线。
+	assets     roleAssetView        // 原角色 owner 冻结的只读资产视图，供匹配场次 ACK 后同步。
+	shown      bool                 // 角色 owner 已暂停本连接的普通场景投影。
+	started    atomic.Bool          // 已由场次分片真正提交新场景首帧，离开时据此决定是否发返回场景。
+	revoked    atomic.Bool          // 本席位的原命令和投递已经失效。
+	rejoin     atomic.Bool          // 原连接断开或接管，允许保留已确认席位等候新认证。
+	suspension *worldBossSuspension // 独立保存断线时刻，场次证据无需保留连接及原资产视图。
 
 	returnRequested bool        // 已离开共享场次，待普通房间的在途操作确认后返回。
 	finalReturn     atomic.Bool // 场次分片永久释放席位，旧连接不能再申请接回。
@@ -232,8 +233,8 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, cfg 
 		return
 	}
 	obs := &worldBossObservation{occurrence: occurrence, owner: w, actor: w.e.workers[occurrence.runID%uint64(len(w.e.workers))],
-		conn: owner.Conn, auth: owner.Auth, scene: owner.Scene + 1, baseline: baseline, assets: assets}
-	role := domain.Role{ID: owner.Role.ID, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level,
+		conn: owner.Conn, auth: owner.Auth, scene: owner.Scene + 1, baseline: baseline, assets: assets, suspension: &worldBossSuspension{}}
+	role := domain.Role{ID: owner.Role.ID, Origin: owner.Role.Origin, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level,
 		EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills, HostingSeconds: owner.Role.HostingSeconds,
 		SkillSlotIDs: snapshot.SkillSlotIDs}
 	enter := worldBossEnter{observation: obs, snapshot: snapshot, role: role, store: store, snapshotID: snapshotID, request: frame.Request, resumeOnly: resumeOnly}
@@ -247,8 +248,11 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, cfg 
 }
 
 // suspendWorldBossObservation 撤销旧会话输入权，并记住普通场景新 ACK 后应接回的场次。
-func (w *worker) suspendWorldBossObservation(owner *room) {
+func (w *worker) suspendWorldBossObservation(owner *room, at time.Time) {
 	if obs := owner.worldBossObservation; obs != nil && obs.started.Load() && !obs.finalReturn.Load() {
+		if obs.suspension != nil {
+			obs.suspension.unixNano.Store(at.UnixNano())
+		}
 		obs.rejoin.Store(true)
 		owner.worldBossResume = obs.occurrence
 	}

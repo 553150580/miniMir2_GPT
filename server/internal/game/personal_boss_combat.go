@@ -92,6 +92,9 @@ func (w *worker) applyPersonalBossDamage(r *room, from, target *entity, amount i
 		if amount == 0 {
 			return
 		}
+		if r.worldBossCombat != nil && battle.challenge.finish != nil {
+			w.freezeWorldBossRewardEvidence(r.worldBossCombat)
+		}
 	case &r.Player, r.Pet:
 		if from != battle.boss {
 			return
@@ -107,8 +110,12 @@ func (w *worker) applyPersonalBossDamage(r *room, from, target *entity, amount i
 	}
 	removeDeathStatuses(target)
 	target.Action = 4
-	if target == &r.Player && r.worldBossCombat == nil {
-		battle.challenge.playerDefeated(battle.grant, at)
+	if target == &r.Player {
+		if arena := r.worldBossCombat; arena != nil {
+			arena.noteRewardPresence(r.Role.ID, persistence.WorldBossPresenceDefeated, at)
+		} else {
+			battle.challenge.playerDefeated(battle.grant, at)
+		}
 	}
 	if target == r.Pet && w.petRuntimeEnabled() && !w.archivePetDeath(r, r.currentWorld(), reference(r, target), now) {
 		w.isolateRoom(r)
@@ -199,7 +206,9 @@ func (w *worker) finishPersonalBoss(owner *room) {
 			w.isolateRoom(owner)
 			return
 		}
+		previousPrivilege := owner.Role.PrivilegeUntil
 		owner.Role = role
+		w.acceptRolePrivilege(owner, time.Now(), previousPrivilege)
 		w.restoreAfterPersonalBoss(owner, run)
 	})
 }

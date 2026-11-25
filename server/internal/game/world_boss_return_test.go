@@ -114,7 +114,7 @@ func TestWorldBossReturnPreservesActorFirstHealthyReconnect(t *testing.T) {
 	obs := worldBossReturnObservation(t, w, owner, time.Now())
 	arena := w.worldBossArenas[obs.occurrence.runID]
 	seat := arena.seats[owner.Role.ID]
-	w.suspendWorldBossSeat(arena, seat)
+	w.suspendWorldBossSeat(arena, seat, time.Now())
 	if !obs.revoked.Load() || obs.finalReturn.Load() || arena.resumable[owner.Role.ID] != seat {
 		t.Fatal("场次先撤回原输入时未保存同一健康身体")
 	}

@@ -4,6 +4,7 @@ package game
 import (
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
+	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"sort"
 	"time"
@@ -164,8 +165,9 @@ func (w *worker) stepWorldBoss(arena *worldBossArena, now time.Time) {
 		if obs.revoked.Load() || !obs.conn.Alive() || obs.conn.Binding() != uint64(obs.auth.SessionEpoch) || child.Isolated ||
 			!child.Ready && !now.Before(child.AwaitUntil) && now.Before(arena.occurrence.closesAt) {
 			if arena.challenge.finish == nil && now.Before(arena.occurrence.closesAt) && shouldSuspendWorldBoss(seat) {
-				w.suspendWorldBossSeat(arena, seat)
+				w.suspendWorldBossSeat(arena, seat, now)
 			} else {
+				arena.noteRewardPresence(child.Role.ID, persistence.WorldBossPresenceOffline, obs.suspension.at(now))
 				w.removeWorldBossSeat(arena, seat, worldBossLeft)
 			}
 		}
@@ -178,6 +180,7 @@ func (w *worker) stepWorldBoss(arena *worldBossArena, now time.Time) {
 	}
 	if arena.challenge.finish != nil {
 		finish := arena.challenge.finish
+		w.freezeWorldBossRewardEvidence(arena)
 		clear(arena.resumable)
 		w.persistWorldBossFinish(arena, now)
 		if arena.result == nil {
@@ -213,6 +216,7 @@ func (w *worker) stepWorldBoss(arena *worldBossArena, now time.Time) {
 			continue
 		}
 		if child.Player.HP <= 0 {
+			arena.noteRewardPresence(child.Role.ID, persistence.WorldBossPresenceDefeated, now)
 			w.removeWorldBossSeat(arena, seat, worldBossDefeated)
 			continue
 		}
