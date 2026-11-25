@@ -25,7 +25,8 @@ import (
 	"minimir/internal/wire"
 )
 
-const referenceGoldSlots = 4
+// referenceGoldWarmupSlots 固定三职业到首技能的前置战斗，避免比较时混入不同成长前态。
+const referenceGoldWarmupSlots = 4
 
 // goldSampleIncome 区分直接与回收收入，并保留实际结算的绑定属性。
 type goldSampleIncome struct {
@@ -85,6 +86,7 @@ type goldSampleSummary struct {
 	RoleID            string           `json:"role_id"`
 	MapID             uint64           `json:"map_id"`
 	MonsterSlots      int              `json:"monster_slots"`
+	WarmupSlots       int              `json:"warmup_slots"`
 	Start             time.Time        `json:"window_start_inclusive"`
 	End               time.Time        `json:"window_end_exclusive"`
 	CutoffObservedMS  int64            `json:"cutoff_observed_lag_ms"`
@@ -113,10 +115,10 @@ type goldSampleSummary struct {
 func TestHostingReferenceGoldSampleMongoWS(t *testing.T) {
 	cfg, ctx, store := m1FieldServices(t, m1FieldConfig(t))
 	fixture := &cfg.Fixture
-	if fixture.Map.ID != 1 || fixture.Map.Width != 13 || fixture.Map.Height != 13 || len(fixture.Map.MonsterSpawnIDs) < referenceGoldSlots {
-		t.Fatal("当前规则已不具备林间战场四槽采样前提")
+	window, repeats, slots := goldSampleParameters(t)
+	if fixture.Map.ID != 1 || fixture.Map.Width != 13 || fixture.Map.Height != 13 || len(fixture.Map.MonsterSpawnIDs) < max(referenceGoldWarmupSlots, slots) {
+		t.Fatal("当前规则已不具备林间战场及本次样本所需的怪槽")
 	}
-	window, repeats := goldSampleParameters(t)
 	for _, job := range []struct {
 		id, skill uint32
 		name      string
@@ -126,16 +128,16 @@ func TestHostingReferenceGoldSampleMongoWS(t *testing.T) {
 				// 角色筹备串行走正常认证入口，战斗并行测量各自独立窗口。
 				endpoint, token, key := m1FieldRole(t, cfg, job.id)
 				t.Parallel()
-				runReferenceGoldSample(t, ctx, store, cfg, endpoint, token, key, job.id, job.skill, repeat, window)
+				runReferenceGoldSample(t, ctx, store, cfg, endpoint, token, key, job.id, job.skill, repeat, slots, window)
 			})
 		}
 	}
 }
 
-// goldSampleParameters 默认裁定 20 分钟，可显式运行更短的诊断或重复试验。
-func goldSampleParameters(t *testing.T) (time.Duration, int) {
+// goldSampleParameters 默认裁定 20 分钟四怪；一怪与八怪使用同一真实前态。
+func goldSampleParameters(t *testing.T) (time.Duration, int, int) {
 	t.Helper()
-	window, repeats := 20*time.Minute, 1
+	window, repeats, slots := 20*time.Minute, 1, referenceGoldWarmupSlots
 	if text := os.Getenv("MINIMIR_GOLD_SAMPLE_DURATION"); text != "" {
 		duration, err := time.ParseDuration(text)
 		must(t, err)
@@ -152,11 +154,19 @@ func goldSampleParameters(t *testing.T) (time.Duration, int) {
 		}
 		repeats = count
 	}
-	return window, repeats
+	if text := os.Getenv("MINIMIR_GOLD_SAMPLE_MONSTER_SLOTS"); text != "" {
+		switch text {
+		case "1", "4", "8":
+			slots, _ = strconv.Atoi(text)
+		default:
+			t.Fatal("采样怪槽必须为1、4或8")
+		}
+	}
+	return window, repeats, slots
 }
 
 // runReferenceGoldSample 建立真实前态、锁定窗口，最后核对收支和双边流水。
-func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistence.Store, cfg devconfig.Config, endpoint, token string, key *pb.RoleKey, job, skillID uint32, repeat int, window time.Duration) {
+func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistence.Store, cfg devconfig.Config, endpoint, token string, key *pb.RoleKey, job, skillID uint32, repeat, slots int, window time.Duration) {
 	t.Helper()
 	fixture := &cfg.Fixture
 	skill, known := fixture.Skill(skillID)
@@ -182,10 +192,7 @@ func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistenc
 	if c.entry.RoomId != fixture.Map.ID || c.entry.ResourceVersion != fixture.RuleVersion {
 		t.Fatal("样本没有进入当前规则的林间战场")
 	}
-	c.auto(false, referenceGoldSlots)
-	travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool {
-		return frame.ID == p.MsgS2CSceneBaseline && travelCount(c.scene, 3) == referenceGoldSlots
-	})
+	setReferenceGoldSlots(c, referenceGoldWarmupSlots)
 	equipNaturalUpgradeStarter(c, fixture)
 	spare := naturalGrowthItem(c, 218, "")
 	if spare == nil || spare.SourceKind != "" {
@@ -213,13 +220,16 @@ func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistenc
 			}
 		}
 	}
-	c.auto(true, referenceGoldSlots)
-	awaitNaturalEquipmentFunds(t, c, read, skill.LearnLevel, 0, referenceGoldSlots, &warmKills, &warmDeaths)
-	c.auto(false, referenceGoldSlots)
+	c.auto(true, referenceGoldWarmupSlots)
+	awaitNaturalEquipmentFunds(t, c, read, skill.LearnLevel, 0, referenceGoldWarmupSlots, &warmKills, &warmDeaths)
+	c.auto(false, referenceGoldWarmupSlots)
 	// 原攻防与耐久写入清完，再学习赠书并取采样前的钱包和来源水位。
 	time.Sleep(4 * time.Second)
 	c.onFrame = nil
 	naturalEquipmentLearnStarter(t, c, fixture, job)
+	if slots != referenceGoldWarmupSlots {
+		setReferenceGoldSlots(c, slots)
+	}
 	before := read()
 	rank, learned := before.Skill(skillID)
 	if !learned || rank != skill.LearnedLevel || before.Level != skill.LearnLevel ||
@@ -227,9 +237,9 @@ func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistenc
 		t.Fatalf("职业%d没有从无卡原装自然到首技能的统一前态，等级%d", job, before.Level)
 	}
 	sample := goldSampleSummary{Job: job, Repeat: repeat, RuleVersion: fixture.RuleVersion, ConfigHash: fixture.Hash, RoleID: roleID,
-		MapID: fixture.Map.ID, MonsterSlots: referenceGoldSlots, BeforeLevel: before.Level, StarterSkill: skillID, StarterSkillRank: rank,
+		MapID: fixture.Map.ID, MonsterSlots: slots, WarmupSlots: referenceGoldWarmupSlots, BeforeLevel: before.Level, StarterSkill: skillID, StarterSkillRank: rank,
 		EquipmentIDs: []uint32{218, 193}, RecycleQualityIDs: policy.QualityIds, StartSource: before.SourceSeq}
-	t.Logf("职业%d重复%d进入%s独立采样，等级%d，暖机%d杀%d死，规则%d配置%s", job, repeat, window, before.Level, warmKills, warmDeaths, fixture.RuleVersion, fixture.Hash)
+	t.Logf("职业%d重复%d进入%s独立采样，%d怪，等级%d，暖机%d杀%d死，规则%d配置%s", job, repeat, window, slots, before.Level, warmKills, warmDeaths, fixture.RuleVersion, fixture.Hash)
 	observeGoldSample(t, c, &sample, window)
 	time.Sleep(4 * time.Second)
 	after := read()
@@ -242,6 +252,14 @@ func runReferenceGoldSample(t *testing.T, ctx context.Context, store *persistenc
 	encoded, err := json.Marshal(sample)
 	must(t, err)
 	t.Logf("毛金币采样 %s", encoded)
+}
+
+// setReferenceGoldSlots 等到服务端新基线确实按指定槽数更新后再继续。
+func setReferenceGoldSlots(c *client, slots int) {
+	c.auto(false, uint32(slots))
+	travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool {
+		return frame.ID == p.MsgS2CSceneBaseline && travelCount(c.scene, 3) == slots
+	})
 }
 
 // observeGoldSample 按协议确认启停，以服务所在同机的 UTC 毫秒裁定固定窗口。
@@ -279,7 +297,7 @@ func observeGoldSample(t *testing.T, c *client, sample *goldSampleSummary, windo
 	}
 	stopHeartbeat := goldSampleHeartbeat(c, deadline)
 	defer stopHeartbeat()
-	c.auto(true, referenceGoldSlots)
+	c.auto(true, uint32(sample.MonsterSlots))
 	for time.Now().Before(deadline) {
 		frame := c.read()
 		if frame.ID != p.MsgS2CDeathNotice || !time.Now().Before(deadline) {
@@ -295,13 +313,13 @@ func observeGoldSample(t *testing.T, c *client, sample *goldSampleSummary, windo
 		c.inventoryAt(result.NewRevision)
 		c.until(func(frame wire.Frame) bool { return frame.ID == p.MsgS2CSceneBaseline && c.player().GetHp() > 0 })
 		if time.Now().Before(deadline) {
-			c.auto(true, referenceGoldSlots)
+			c.auto(true, uint32(sample.MonsterSlots))
 		}
 	}
 	sample.CutoffObservedMS = time.Since(deadline).Milliseconds()
 	setActive(deadline, false)
 	c.onFrame = nil
-	c.auto(false, referenceGoldSlots)
+	c.auto(false, uint32(sample.MonsterSlots))
 	sample.AutomaticActiveMS = activeTime.Milliseconds()
 	sample.StoppedMS = window.Milliseconds() - sample.AutomaticActiveMS
 }
