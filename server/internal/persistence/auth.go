@@ -358,6 +358,16 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 // allowTakeover 为假时只查证已提交会话，已断开的请求不再发起新的接管。
 // 拒绝时若已在持久围栏内读到角色，返回该视图供房间核对旧会话是否仍有效。
 func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allowTakeover bool) (domain.Role, Auth, error) {
+	return s.enterTicket(ctx, t, attempt, allowTakeover, nil)
+}
+
+// EnterTicketWithPersonalBoss 将仍在同一执行器内的挑战与原角色会话一并移交给新票据。
+func (s *Store) EnterTicketWithPersonalBoss(ctx context.Context, t Ticket, attempt string, allowTakeover bool, previous Auth, grant PersonalBossChallenge) (domain.Role, Auth, error) {
+	return s.enterTicket(ctx, t, attempt, allowTakeover, &personalBossResume{previous: previous, grant: grant})
+}
+
+// enterTicket 原子确认票据、角色会话以及同一执行器证明存在的临时挑战。
+func (s *Store) enterTicket(ctx context.Context, t Ticket, attempt string, allowTakeover bool, resume *personalBossResume) (domain.Role, Auth, error) {
 	if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID || t.GameNodeID != s.Cfg.NodeID {
 		return domain.Role{}, Auth{}, Fail(p.CodeRouteChanged, "票据目标运行代次过期")
 	}
@@ -439,6 +449,11 @@ func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allow
 			}
 			r, migration, err = experienceWithContract(r, 0, contract)
 			if err != nil {
+				return err
+			}
+		}
+		if resume != nil {
+			if err := s.transferPersonalBossSession(tc, r, *resume); err != nil {
 				return err
 			}
 		}

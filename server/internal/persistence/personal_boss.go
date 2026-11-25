@@ -96,7 +96,7 @@ type personalBossRecord struct {
 	PersonalBossChallenge `bson:",inline"`
 	OwnerInstance         string `bson:"owner_instance"`          // 初次预约的游戏节点进程实例。
 	RunEpoch              int64  `bson:"run_epoch"`               // 初次预约的运行服所有权代次。
-	SessionEpoch          int64  `bson:"session_epoch"`           // 初次预约的角色会话代次。
+	SessionEpoch          int64  `bson:"session_epoch"`           // 当前执行器可提交原预约的角色会话代次。
 	BeginDigest           string `bson:"begin_digest"`            // 初次预约内容摘要。
 	FinishDigest          string `bson:"finish_digest,omitempty"` // 首次确认的结束提案内容摘要。
 

@@ -125,12 +125,18 @@ func (w *worker) stepPersonalBoss(owner *room, now time.Time) {
 	battle := run.battle
 	challenge := battle.bossBattle.challenge
 	if challenge.finish == nil {
-		if run.abort || battle.Isolated || owner.Conn != run.conn || !run.conn.Alive() ||
-			!battle.Ready && !now.Before(battle.AwaitUntil) && now.Before(run.grant.ExpiresAt) {
+		if run.abort || battle.Isolated {
 			w.interruptPersonalBoss(owner, now)
 			return
 		}
-		if battle.Ready && !now.Before(battle.LastTick) {
+		if run.shown && (owner.Conn != run.conn || !run.conn.Alive()) {
+			w.detachPersonalBoss(owner)
+		}
+		if run.shown && !battle.Ready && !now.Before(battle.AwaitUntil) && now.Before(run.grant.ExpiresAt) {
+			run.conn.Close("personal boss baseline acknowledgement timeout")
+			w.detachPersonalBoss(owner)
+		}
+		if run.started && !now.Before(battle.LastTick) {
 			until := minBossTime(now, run.grant.ExpiresAt.Add(-time.Nanosecond))
 			if !until.Before(battle.LastTick) {
 				battle.LastTick = until
@@ -144,8 +150,8 @@ func (w *worker) stepPersonalBoss(owner *room, now time.Time) {
 			}
 		}
 		challenge.expire(now)
-		if battle.Ready && challenge.finish == nil && !battle.Isolated && !now.Before(battle.LastTick) {
-			w.stepGridCombat(battle, battle.BossMap, now, false)
+		if run.started && challenge.finish == nil && !battle.Isolated && !now.Before(battle.LastTick) {
+			w.stepGridCombat(battle, battle.BossMap, now, !battle.Ready)
 		}
 	}
 	if challenge.finish != nil {
@@ -198,7 +204,7 @@ func (w *worker) finishPersonalBoss(owner *room) {
 	})
 }
 
-// restoreAfterPersonalBoss 仅在原永久终态得到确认后向原客户端恢复未复制的普通现场。
+// restoreAfterPersonalBoss 仅在原永久终态得到确认后向当前客户端恢复未复制的普通现场。
 func (w *worker) restoreAfterPersonalBoss(owner *room, run *personalBossRun) {
 	kind := run.battle.bossBattle.challenge.finish.kind
 	w.personalBossState(owner, run, 0, bossStateDefeated+uint32(kind-bossDefeated), 0)

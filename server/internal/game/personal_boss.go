@@ -31,10 +31,11 @@ type personalBossRun struct {
 	requestID string                            // 客户端首次入口请求身份，用于重复请求识别。
 	begin     persistence.PersonalBossBegin     // 已冻结的完整预约，未知结果用原参数重试。
 	grant     persistence.PersonalBossChallenge // 已确认的永久预约。
-	auth      persistence.Auth                  // 预约和结束都使用同一角色原会话代次。
-	conn      Connection                        // 发起挑战的原附着；新连接不会继承挑战输入。
+	auth      persistence.Auth                  // 当前拥有原预约提交权的角色会话。
+	conn      Connection                        // 正在观察挑战的附着。掉线时释放，原战斗保持。
 	battle    *room                             // 同一分片持有的独立场景，临时状态和普通挂机隔离。
 	shown     bool                              // 当前附着已收到挑战换图状态，需要恢复普通场景。
+	started   bool                              // 首次已确认战斗基线，离线及后续换票期间继续行动。
 	abort     bool                              // 持久预约未定时收到中断，确认后直接提交终态。
 }
 
@@ -47,7 +48,7 @@ type personalBossSnapshot struct {
 	autoSkills   *autoSkillSettings    // 只读偏好快照，独立于用于持久预约的战斗摘要。
 }
 
-// personalBossCommand 在原连接上分流入口、退出、ACK和战斗指令。
+// personalBossCommand 在当前连接上分流入口、退出、场景确认和战斗指令。
 func (w *worker) personalBossCommand(owner *room, c command) bool {
 	frame := c.frame
 	if frame.ID == p.MsgC2SPersonalBossQuery {
@@ -62,7 +63,7 @@ func (w *worker) personalBossCommand(owner *room, c command) bool {
 		var q pb.PersonalBossLeave
 		run := owner.personalBoss
 		if run == nil || proto.Unmarshal(frame.Payload, &q) != nil || q.ChallengeId != run.begin.ChallengeID ||
-			run.battle == nil && q.SceneEpoch != owner.Scene || run.battle != nil && q.SceneEpoch != run.battle.Scene {
+			run.battle == nil && q.SceneEpoch != owner.Scene || run.battle != nil && (!run.shown || q.SceneEpoch != run.battle.Scene) {
 			w.failure(owner, frame, p.CodeInvalidArgument)
 			return true
 		}
@@ -79,6 +80,9 @@ func (w *worker) personalBossCommand(owner *room, c command) bool {
 	}
 	battle := run.battle
 	if frame.ID == p.MsgC2SEnterWorldAck {
+		if !run.shown {
+			return false // 健康重连先确认普通场景，再授予新的挑战观察。
+		}
 		w.ackPersonalBoss(owner, run, frame, time.Now())
 		return true
 	}
@@ -97,7 +101,7 @@ func (w *worker) personalBossCommand(owner *room, c command) bool {
 	return true
 }
 
-// personalBossState 向原附着发送已经验证的挑战状态变化。
+// personalBossState 向当前附着发送已经验证的原挑战状态变化。
 func (w *worker) personalBossState(owner *room, run *personalBossRun, request, state, code uint32) {
 	if owner.Conn == nil || owner.Conn != run.conn || owner.Auth != run.auth || !run.conn.Alive() {
 		return
@@ -236,7 +240,7 @@ func (w *worker) installPersonalBoss(owner *room, run *personalBossRun, template
 	}
 	run.grant = grant
 	run.battle = newPersonalBossBattle(owner, template, snapshot, challenge, participant, baseline, now)
-	if run.abort || owner.Conn != run.conn || !run.conn.Alive() {
+	if run.abort {
 		w.interruptPersonalBoss(owner, now)
 		return
 	}
@@ -246,13 +250,10 @@ func (w *worker) installPersonalBoss(owner *room, run *personalBossRun, template
 	}
 	owner.Manual, owner.Destination, owner.PetBornReady = false, nil, nil
 	owner.Navigation = navigationState{}
-	run.shown = true
-	w.personalBossState(owner, run, 0, bossStateEntering, 0)
-	entry := w.enterLineResult(run.battle)
-	if entry != nil {
-		entry.ServerTransitionId = grant.ChallengeID
-		w.send(run.battle, p.MsgS2CEnterLine, 0, entry)
-		w.baseline(run.battle)
+	if owner.Conn != nil && owner.Conn == run.conn && owner.Conn.Alive() {
+		w.presentPersonalBoss(owner, run, now)
+	} else {
+		w.detachPersonalBoss(owner)
 	}
 }
 
@@ -265,10 +266,13 @@ func (w *worker) ackPersonalBoss(owner *room, run *personalBossRun, frame wire.F
 		ack.SceneEpoch != battle.Scene || ack.BaselineId != battle.Baseline {
 		return
 	}
-	if ack.ChallengeAutoBattleEnabled != nil {
-		battle.Auto = *ack.ChallengeAutoBattleEnabled
+	if !run.started {
+		if ack.ChallengeAutoBattleEnabled != nil {
+			battle.Auto = *ack.ChallengeAutoBattleEnabled
+		}
+		battle.LastTick = now
 	}
-	battle.Ready, battle.LastTick = true, now
+	battle.Ready, run.started = true, true
 	w.snapshot(battle)
 	w.modes(battle, now)
 	w.assets(owner)

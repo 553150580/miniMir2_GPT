@@ -13,7 +13,7 @@ type settlementDrainStatus struct {
 	isolated int  // 该分片已因无法安全提交而隔离的房间数。
 }
 
-// DrainSettlements 停止接收新操作，由原房间 worker 结清已计量整秒和已发生的收益。
+// DrainSettlements 停止接收新操作，由原房间 worker 结清已计量整秒、收益和已裁决的首领结果。
 // 调用方在等待期间继续维持节点租约。失去租约时立即取消等待，MongoDB 围栏继续约束在途写入。
 // e 是调用该方法的游戏引擎实例，ctx 限定调用方愿意等待停服结清的最晚时点。
 func (e *Engine) DrainSettlements(ctx context.Context) error {
@@ -36,6 +36,10 @@ func (e *Engine) DrainSettlements(ctx context.Context) error {
 		now := time.Now()
 		// r 接收遍历房间集合时当前的元素。
 		for _, r := range w.rooms {
+			// 首领战斗帧已暂停。此前裁决的终态可能仍在等待原入场或资产事务释放操作槽。
+			if r.personalBoss != nil && r.personalBoss.battle != nil {
+				w.finishPersonalBoss(r)
+			}
 			// pending 表示该单个房间仍有计量、收益或资产操作待确认。
 			pending := w.drainRoomSettlement(r, now)
 			if r.Isolated {

@@ -544,8 +544,8 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	if r.Isolated {
 		return
 	}
-	// 原截止和恢复照常推进；新地图必须先收到匹配ACK才允许新增移动/AI/攻击。
-	if r.Conn != nil && !r.Ready || r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
+	// 已确认过的挑战在健康换票加载期间可继续原自动规则。在线输入仍须匹配当前地图 ACK。
+	if r.Conn != nil && !r.Ready && !offline || r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
 		return
 	}
 	// skipPetAI 表示驻留宠物的跟随动作占用了本帧宠物自动行动机会。

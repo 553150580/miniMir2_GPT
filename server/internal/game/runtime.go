@@ -176,6 +176,7 @@ type room struct {
 	Pending               bool                      // 房间存在需要冻结推进的在途持久操作。
 	PendingRetry          *job                      // 结果未知或排队失败后需原样重投的数据库任务。
 	entryAttempt          string                    // 待确认的原入场尝试，期间冻结旧连接的游戏输入。
+	entryAck              *command                  // 接管未定期间保留的原连接合法基线确认，仅在旧绑定继续有效时重放。
 	PendingBinding        *safeZoneBindingFact      // 已作为当前在途操作提交的安全区绑定事实。
 	RetryAt               time.Time                 // 下一次允许重投在途任务的时刻。
 	Waiting               []command                 // 在途操作结束后准备重放的有限命令队列。
@@ -490,18 +491,6 @@ func (w *worker) command(c command) {
 		if r != nil && r.worldBossObservation != nil {
 			w.suspendWorldBossObservation(r)
 		}
-		if r != nil && r.personalBoss != nil {
-			w.interruptPersonalBoss(r, time.Now())
-			// 即使中断尚未拿到永久操作槽，也先等待同一场次收束，不能抢走原会话。
-			if r.personalBoss != nil && !r.Pending {
-				if len(r.Waiting) >= 2 {
-					rejectEntry(c.conn, c.frame.Request, p.CodeLineRecovering, "challenge is closing")
-				} else {
-					r.Waiting = append(r.Waiting, c)
-				}
-				return
-			}
-		}
 		if r != nil && w.queueEntryAfterSettlement(r, c) {
 			return
 		}
@@ -536,8 +525,9 @@ func (w *worker) command(c command) {
 	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			r.entryAck = nil
 			w.suspendWorldBossObservation(r)
-			w.interruptPersonalBoss(r, time.Now())
+			w.detachPersonalBoss(r)
 			w.leaveSharedTown(r)
 			w.cancelMapTravelOnDetach(r)
 			w.cancelTownNavigation(r)
@@ -571,6 +561,10 @@ func (w *worker) command(c command) {
 		return
 	}
 	if r.entryAttempt != "" {
+		if matchesAdmissionAck(r, c, time.Now()) {
+			r.entryAck = &c
+			return
+		}
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
@@ -586,12 +580,8 @@ func (w *worker) command(c command) {
 // roomCommand 接收已经按角色附着和场景白名单分流的指令，普通和首领场景复用格子行动核心。
 func (w *worker) roomCommand(r *room, c command) {
 	if c.frame.ID == p.MsgC2SEnterWorldAck {
-		if r.Ready {
-			return
-		}
-		// q 记录入场场景世界确认。
-		var q pb.EnterWorldAck
-		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.BaselineId != r.Baseline {
+		q := unconfirmedSceneAck(r, c.frame)
+		if q == nil {
 			return
 		}
 		if !w.finishMapTravelAck(r, time.Now()) {
@@ -613,6 +603,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			w.deathNotice(r)
 		}
 		w.sendSyncReady(r, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
+		w.resumePersonalBoss(r, time.Now())
 		w.resumeWorldBossObservation(r, time.Now())
 		return
 	}

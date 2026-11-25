@@ -1,4 +1,4 @@
-// 本文件验证受控停服使用真实隔离 MongoDB 结清已累计的托管整秒。
+// 本文件验证受控停服使用真实隔离 MongoDB 结清托管整秒和已裁决首领结果。
 package game
 
 import (
@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
+	"minimir/internal/persistence"
 )
 
 // TestHostingDrainDuringControlledShutdownMongo 使用真实 MongoDB 检查受控停服结清已经计量的整秒，重复执行收束不产生第二笔扣时。
@@ -72,5 +73,76 @@ func TestHostingDrainDuringControlledShutdownMongo(t *testing.T) {
 	count, err := fixture.owner.DB.Collection("audit_outbox").CountDocuments(fixture.ctx, filter)
 	if err != nil || count != 1 {
 		t.Fatalf("重复收束应仍只有一笔托管审计: count=%d err=%v", count, err)
+	}
+}
+
+// TestPersonalBossDrainRetainsResolvedOutcomeMongo 验证停服等待原操作槽空出，再提交已经裁决的首领胜利。
+func TestPersonalBossDrainRetainsResolvedOutcomeMongo(t *testing.T) {
+	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg.Fixture.PersonalBoss.KillRewardGold = 11 // 隔离奖励可核对真实到账和重放去重。
+	fixture := newHostingMongoFixture(t, cfg)
+	template := fixture.owner.Cfg.Fixture.PersonalBoss
+	begin := persistence.PersonalBossBegin{ChallengeID: domain.ID(), Execution: 4, TemplateID: template.TemplateID,
+		CombatSnapshot: persistence.Hash([]byte("停服前首领入场快照")), ExpectedRevision: fixture.role.Revision,
+		RuleVersion: cfg.Fixture.RuleVersion, ConfigHash: cfg.Fixture.Hash, StartedAt: time.Now().Add(-100 * time.Millisecond).UTC().Truncate(time.Millisecond),
+		Duration: template.Duration, SuccessCooldown: template.SuccessCooldown, RetryCooldown: template.RetryCooldown, BossHP: template.Monster.HP}
+	role, grant, err := fixture.owner.BeginPersonalBoss(fixture.ctx, fixture.roleAuth, begin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e := New(fixture.ctx, fixture.owner)
+	t.Cleanup(e.Stop)
+	e.stopped.Store(true)
+	w := e.worker(role.ID)
+	prepared := make(chan bool, 1)
+	w.commands <- command{done: func(w *worker) {
+		r := &room{Auth: fixture.roleAuth, worldState: &worldState{}}
+		w.initialize(r, role)
+		run := &personalBossRun{begin: begin, auth: r.Auth, started: true}
+		r.personalBoss, r.Pending = run, true
+		w.installPersonalBoss(r, run, template, w.freezePersonalBossSnapshot(r, template), grant, time.Now())
+		w.rooms[r.Role.ID] = r
+		if run.battle == nil {
+			prepared <- false
+			return
+		}
+		battle := run.battle.bossBattle
+		w.applyPersonalBossDamage(run.battle, &run.battle.Player, battle.boss, battle.boss.HP, time.Now(), nil)
+		prepared <- battle.challenge.finish != nil
+	}}
+	select {
+	case ready := <-prepared:
+		if !ready {
+			t.Fatal("停服前的测试战斗未由原首领裁决为胜利")
+		}
+	case <-fixture.ctx.Done():
+		t.Fatal(fixture.ctx.Err())
+	}
+	drained := make(chan error, 1)
+	go func() { drained <- e.DrainSettlements(fixture.ctx) }()
+	select {
+	case err := <-drained:
+		t.Fatalf("原操作槽仍被占用，停服提前结束：%v", err)
+	case <-time.After(100 * time.Millisecond):
+	}
+	w.commands <- command{done: func(w *worker) { w.rooms[role.ID].Pending = false }}
+	if err := <-drained; err != nil {
+		t.Fatal(err)
+	}
+	if err := e.DrainSettlements(fixture.ctx); err != nil {
+		t.Fatal(err)
+	}
+	confirmed, err := fixture.owner.Role(fixture.ctx, role.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	info, err := fixture.owner.QueryPersonalBoss(fixture.ctx, fixture.roleAuth)
+	if err != nil || len(info.History) != 1 || info.History[0].ChallengeID != grant.ChallengeID ||
+		info.History[0].Outcome != persistence.PersonalBossDefeated || info.History[0].RewardGold != 11 ||
+		confirmed.Wallet.BoundGold != role.Wallet.BoundGold+11 || confirmed.PersonalBoss.Successes != 1 || confirmed.PersonalBoss.ActiveChallengeID != "" {
+		t.Fatalf("已裁决的胜利与首领奖励应恰好确认一次：战报=%+v 钱包=%+v 错误=%v", info.History, confirmed.Wallet, err)
 	}
 }

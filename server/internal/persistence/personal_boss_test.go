@@ -58,6 +58,9 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	require(err)
+	if isolated := os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI"); isolated != "" {
+		cfg.MongoURI = isolated
+	}
 	cfg.Database = "minimir_dev_game_test_personal_boss_" + domain.ID()[:16]
 	grid := cfg.Fixture.Map
 	grid.ID, grid.SceneKind = 777, devconfig.SceneKindPersonalBoss
@@ -295,5 +298,43 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	require(err)
 	if unchanged.Revision != other.Revision {
 		t.Fatal("取消恢复重放再次写入角色")
+	}
+
+	// 同一执行器有原场时，新票和原预约围栏必须原子迁移。预约校验失败不能消费票。
+	resumableKey := create(3, "首领续战角色")
+	resumable, previous := enter(resumableKey)
+	resumable, original, err := game.BeginPersonalBoss(ctx, previous, makeBegin(resumable))
+	require(err)
+	issued, err := account.IssueTicket(ctx, accountAuth, resumableKey)
+	require(err)
+	ticket, err := game.TicketRole(ctx, issued.Ticket)
+	require(err)
+	foreign := original
+	foreign.Execution++
+	_, _, err = game.EnterTicketWithPersonalBoss(ctx, ticket, domain.ID(), true, previous, foreign)
+	requireCode(err, p.CodeOperationConflict, "原执行无法接回")
+	_, err = game.TicketRole(ctx, issued.Ticket)
+	require(err)
+	attempt := domain.ID()
+	attached, current, err := game.EnterTicketWithPersonalBoss(ctx, ticket, attempt, true, previous, original)
+	require(err)
+	checked, rechecked, err := game.EnterTicketWithPersonalBoss(ctx, ticket, attempt, false, previous, original)
+	require(err)
+	if current.SessionEpoch != previous.SessionEpoch+1 || rechecked != current || checked.Revision != attached.Revision ||
+		attached.PersonalBoss.ActiveChallengeID != original.ChallengeID {
+		t.Fatal("健康接管或查证改写了原预约、会话或修订")
+	}
+	finishAttached := makeFinish(original)
+	_, _, err = game.FinishPersonalBoss(ctx, previous, finishAttached)
+	requireCode(err, p.CodeStaleSession, "失效")
+	settled, expected, err := game.FinishPersonalBoss(ctx, current, finishAttached)
+	require(err)
+	repeated, sameResult, err := game.FinishPersonalBoss(ctx, current, finishAttached)
+	require(err)
+	wantWallet := resumable.Wallet
+	wantWallet.BoundGold += template.KillRewardGold
+	if settled.Wallet != wantWallet || repeated.Revision != settled.Revision || settled.PersonalBoss.Successes != 1 ||
+		expected.Execution != original.Execution || !reflect.DeepEqual(sameResult, expected) {
+		t.Fatal("新会话没有接续原执行，或原首领奖励未做到一次确认")
 	}
 }

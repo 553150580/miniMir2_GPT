@@ -96,10 +96,10 @@ async function main() {
             }, name, { timeout: 60000 });
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         };
-        const tap = async (suffix, label) => {
+        const tap = async (suffix, label, root = 'Canvas/Safe/') => {
             report.step = `触屏 ${suffix}${label === undefined ? '' : ' · ' + label}`;
-            const handle = await page.waitForFunction(({ suffix, label }) => {
-                const node = cc.find('Canvas/Safe/' + suffix);
+            const handle = await page.waitForFunction(({ suffix, label, root }) => {
+                const node = cc.find(root + suffix);
                 const target = label == null ? node : node?.children.find(child => {
                     const value = child.getChildByName('Text')?.getComponent(cc.Label)?.string;
                     return value?.replace(/^● /u, '') === label;
@@ -111,7 +111,7 @@ async function main() {
                 const visible = cc.view.getVisibleSize(), rect = document.querySelector('canvas').getBoundingClientRect();
                 return { x: rect.x + (box.x + box.width / 2) / visible.width * rect.width,
                     y: rect.y + (visible.height - box.y - box.height / 2) / visible.height * rect.height };
-            }, { suffix, label }, { timeout: 30000 });
+            }, { suffix, label, root }, { timeout: 30000 });
             const point = await handle.jsonValue();
             await handle.dispose();
             const tappedAt = performance.now();
@@ -257,6 +257,37 @@ async function main() {
             const personal = await sceneKind(3);
             assert.notEqual(personal.map, home.map);
             assert.equal(personal.version, home.version);
+            if (process.env.MINIMIR_VERIFY_PERSONAL_BOSS_RESUME === '1') {
+                const toggle = 'MapViewport/Actions/Auto';
+                const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+                const observe = async () => {
+                    const view = await page.waitForFunction(session => {
+                        const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
+                        const player = session.baseline?.entities?.find(entity => entity.entityHandle === session.entry.playerHandle);
+                        if (!session.ready || session.entry.sceneKind !== 3 || !app?.world?.isMapReady || !player || session.hosting?.autoBattleEnabled !== false) return null;
+                        return { map: session.entry.roomId.toString(), challenge: session.entryServerTransitionId,
+                            role: session.entryRole, binding: session.entryBinding, scene: session.entry.sceneEpoch.toString(),
+                            baseline: session.entry.baselineId.toString(), life: player.life.toString() };
+                    }, session, { timeout: 25000 });
+                    try { return await view.jsonValue(); } finally { await view.dispose(); }
+                };
+                try {
+                    await tap(toggle);
+                    const before = await observe();
+                    const ticketCount = ticketResponses.length, socketCount = connections.length;
+                    await page.evaluate(session => session.connection.socket.close(4001, '独立触屏断线验收'), session);
+                    await tap('ReconnectDialog/Panel/Reconnect', undefined, 'Canvas/');
+                    await page.waitForFunction(() => !cc.find('Canvas/ReconnectDialog')?.activeInHierarchy);
+                    const after = await observe();
+                    assert.match(before.challenge, /^[0-9a-f]{32}$/u);
+                    for (const key of ['map', 'challenge', 'role', 'life']) assert.equal(after[key], before[key], key);
+                    for (const key of ['binding', 'scene', 'baseline']) assert(BigInt(after[key]) > BigInt(before[key]), key);
+                    assert.equal(ticketResponses.length, ticketCount + 1);
+                    assert.deepEqual(await ticketResponses[ticketCount], await ticketResponses[ticketCount - 1]);
+                    assert.deepEqual(connections.slice(socketCount), [connections[socketCount - 1]]);
+                    report.personalBossResume = { arena: after.map, newBinding: true, newBaseline: true, sameLife: true, autoRemainedPaused: true };
+                } finally { await session.dispose(); }
+            }
             if (process.env.MINIMIR_QA_PERSONAL_BOSS_PROFILE) {
                 report.step = '核对个人首领的真实原版外观';
                 const appearance = await page.waitForFunction(profile => {
@@ -379,15 +410,15 @@ async function main() {
             await tap('Create');
             await page.waitForFunction(name => cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string.includes(name), role);
             assert.equal(createdOrigins[index], entry.origin);
-            const before = connections.length;
+            const before = connections.length, ticketsBefore = ticketResponses.length;
             await tap('Enter');
             await scene('Game');
             await page.waitForFunction(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.reconciliationStarted,
                 null, { timeout: 30000 });
             const opened = connections.slice(before);
             assert.deepEqual(opened, [{ endpoint: entry.endpoint, ready: true }]);
-            assert.equal(ticketResponses.length, index + 1);
-            const route = await ticketResponses[index];
+            assert.equal(ticketResponses.length, ticketsBefore + 1);
+            const route = await ticketResponses[ticketsBefore];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
             if (index === 0 && groundIntents) {
