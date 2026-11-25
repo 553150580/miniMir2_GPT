@@ -2,10 +2,10 @@ syntax = "proto3";
 package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 
-// 招募指令绑定当前已确认场景。永久入场扣次不通过招募消息触发。
+// 招募及原队伍开战指令绑定当前已确认场景。
 message DungeonPartyRequest {
   uint64 scene_epoch = 1;
-  // 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件。
+  // 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件、7 确认开战扣次。
   uint32 action = 2;
   bytes party_id = 3;
   uint64 expected_revision = 4;
@@ -24,6 +24,8 @@ message DungeonPartyState {
   repeated DungeonPartyView parties = 4;
   DungeonPartyView own_party = 5;
   bool more = 6;
+  bytes challenge_id = 7;
+  bool starting = 8;
 }
 
 message DungeonPartyTemplate {
@@ -51,4 +53,26 @@ message DungeonPartyMember {
   uint32 job = 3;
   uint32 level = 4;
   bool online = 5;
+}
+
+// 场次进度只观察同一份已确认的永久入场及原战斗。
+message DungeonBattleState {
+  bytes challenge_id = 1;
+  uint64 scene_epoch = 2;
+  uint32 stage = 3;
+  uint32 stage_count = 4;
+  int64 expires_at_unix_ms = 5;
+  // 1 载入、2 战斗、3 结算、4 通关、5 失败、6 系统中断。
+  uint32 state = 6;
+  uint32 error_code = 7;
+}
+
+// 允许当前连接安装一次原场次的精确目标基线。先于对应 EnterLineResult 投递。
+message DungeonSceneTransition {
+  bytes challenge_id = 1;
+  uint64 source_scene_epoch = 2;
+  uint64 target_scene_epoch = 3;
+  uint64 target_baseline_id = 4;
+  uint64 target_map_id = 5;
+  uint32 target_scene_kind = 6;
 }

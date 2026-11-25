@@ -32,7 +32,7 @@ export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | s
     }
     const ordinary = gameplay.map_catalog, challenges = gameplay.challenge_maps ?? [];
     if (!Array.isArray(ordinary) || !ordinary.length || ordinary[0]?.scene_kind !== 1 || !Array.isArray(challenges)) throw new Error('地图目录缺少首项个人地图');
-    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4].includes(entry?.scene_kind)))
+    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4, 5].includes(entry?.scene_kind)))
         throw new Error('地图目录场景分类不匹配');
     const catalog = [...ordinary, ...challenges];
     const ids = new Set<string>();
@@ -105,6 +105,7 @@ export class WorldAssets {
     readonly frames = new Map<string, SpriteFrame>();
     readonly audioClips = new Map<string, AudioClip>();
     private bossAtlas?: WorldBossFrameAtlas;
+    private fallbackAtlas?: WorldBossFrameAtlas;
     private owned = new Set<Asset>();
     private disposed = false;
     private disposing = false;
@@ -136,7 +137,7 @@ export class WorldAssets {
 
     // 缓存只保留一个小地图。流式城镇和已独立管理的世界首领由原生命周期回收。
     get canRetainAfterTravel(): boolean {
-        if (this.sourceMap || this.sceneKind === 4) return false;
+        if (this.sourceMap || this.sceneKind === 4 || this.sceneKind === 5) return false;
         const background = this.background?.texture;
         const floorBytes = background ? background.width * background.height * 4 : 0;
         let actorBytes = this.bossAtlas?.textureBytes;
@@ -158,10 +159,11 @@ export class WorldAssets {
                 .map(async path => result.own(await load<JsonAsset>(path, JsonAsset))));
             result.manifest = manifest.json; result.gameplay = gameplay.json;
             const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
+            const sharedChallenge = selected.scene_kind === 4 || selected.scene_kind === 5;
             // 开发神兽资源可独立导入。原开发清单和骷髅帧无需重新生成。
             const shinsuPath = 'development/pets/shinsu/profile';
             const needsShinsu = result.gameplay.pet_profiles?.some((row: any) => row.profile === 'pet_shinsu'
-                && (selected.scene_kind === 4 || row.job_id === job));
+                && (sharedChallenge || row.job_id === job));
             if (needsShinsu && !result.manifest.profiles.pet_shinsu && resources.getInfoWithPath(shinsuPath, JsonAsset)) {
                 const extra = result.own(await load<JsonAsset>(shinsuPath, JsonAsset)).json as any;
                 if (extra?.schema_version !== 1 || extra.profile?.id !== 'pet_shinsu' || !extra.frames
@@ -245,8 +247,8 @@ export class WorldAssets {
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
             if (!player) throw new Error('当前职业缺少外观资源');
             profileIds.add(player.profile);
-            // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
-            if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
+            // 共享城镇和多人挑战会出现其他职业，入场前先准备其外观。
+            if (result.sceneKind === 2 || sharedChallenge) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             const challengeMonsterIds = new Set<number>((result.gameplay.challenge_maps ?? [])
                 .flatMap((entry: WorldMapEntry) => entry.monster_definition_ids ?? []));
             const monstersForMap = () => selected.monster_definition_ids === undefined
@@ -271,9 +273,9 @@ export class WorldAssets {
                 }) };
             }
             for (const row of monstersForMap()) profileIds.add(row.profile);
-            // 共享首领场的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
+            // 多人战斗的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
             for (const row of result.gameplay.pet_profiles) {
-                if (result.sceneKind !== 4 && row.job_id !== job) continue;
+                if (!sharedChallenge && row.job_id !== job) continue;
                 if (result.manifest.development_only && row.appearance_optional && !result.manifest.profiles[row.profile]) continue;
                 profileIds.add(row.profile);
             }
@@ -301,7 +303,7 @@ export class WorldAssets {
                 }
             }
             for (const skill of result.gameplay.skills ?? []) {
-                if ((skill.job_id !== job && result.sceneKind !== 2 && result.sceneKind !== 4)
+                if ((skill.job_id !== job && result.sceneKind !== 2 && !sharedChallenge)
                     || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
                 const effect = result.manifest.effects?.[String(skill.id)];
                 const independentSummon = skill.kind !== 'summon_pet' || skill.id === 30;
@@ -314,12 +316,22 @@ export class WorldAssets {
             }
             const pending = Array.from(keys);
             progress(0, pending.length);
-            const atlasDirectory = result.sceneKind === 4 ? undefined : mapTravelAtlasDirectory;
-            const preparingAtlas = result.sceneKind === 4 || travelling && !result.sourceMap;
+            const dungeon = result.sceneKind === 5;
+            const atlasDirectory = sharedChallenge && (!dungeon || WorldBossFrameAtlas.available()) ? undefined : mapTravelAtlasDirectory;
+            const preparingAtlas = sharedChallenge || travelling && !result.sourceMap;
             if (preparingAtlas && WorldBossFrameAtlas.available(atlasDirectory)) {
                 result.bossAtlas = new WorldBossFrameAtlas(atlasDirectory);
-                await result.bossAtlas.populate(pending, result.manifest.frames, result.frames,
-                    completed => progress(completed, pending.length));
+                let unpacked = await result.bossAtlas.populate(pending, result.manifest.frames, result.frames,
+                    completed => progress(completed, pending.length), dungeon);
+                // 个人首领原帧通常已在旅行图集中，剩余挂载同一原始资源。
+                if (dungeon && unpacked.length && atlasDirectory !== mapTravelAtlasDirectory && WorldBossFrameAtlas.available(mapTravelAtlasDirectory)) {
+                    result.fallbackAtlas = new WorldBossFrameAtlas(mapTravelAtlasDirectory);
+                    const loaded = pending.length - unpacked.length;
+                    unpacked = await result.fallbackAtlas.populate(unpacked, result.manifest.frames, result.frames,
+                        completed => progress(loaded + completed, pending.length), true);
+                }
+                if (unpacked.length) await result.loadIndividualFrames(unpacked,
+                    completed => progress(pending.length - unpacked.length + completed, pending.length));
             } else {
                 await result.loadIndividualFrames(pending, progress);
             }
@@ -356,7 +368,7 @@ export class WorldAssets {
     profile(state: any, job: number): any {
         const row = state.entityKind === 1 ? this.gameplay.jobs.find((value: any) => value.job_id === job)
             : state.entityKind === 2 ? petAppearanceFor<{ definition_id: number; job_id: number; profile: string }>(
-                this.gameplay.pet_profiles, state.definitionId, this.sceneKind === 4 ? undefined : job)
+                this.gameplay.pet_profiles, state.definitionId, this.sceneKind === 4 || this.sceneKind === 5 ? undefined : job)
             : state.entityKind === 3 ? this.gameplay.monster_profiles.find((value: any) => value.definition_id === state.definitionId) : null;
         return row ? this.manifest.profiles[row.profile] ?? null : null;
     }
@@ -371,6 +383,7 @@ export class WorldAssets {
             this.releaseSourceInvalidation?.(); this.releaseSourceInvalidation = undefined;
             this.disposed = true; this.background = null;
             this.bossAtlas?.dispose(); this.bossAtlas = undefined;
+            this.fallbackAtlas?.dispose(); this.fallbackAtlas = undefined;
             for (const asset of Array.from(this.owned)) asset.decRef();
             this.owned.clear(); this.frames.clear(); this.audioClips.clear(); this.beforeInvalidation.clear();
         } finally { this.disposing = false; }

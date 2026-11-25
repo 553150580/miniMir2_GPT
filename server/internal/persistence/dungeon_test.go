@@ -246,6 +246,61 @@ func TestDungeonPartyDurableMongo(t *testing.T) {
 	_, _, err = game.FinishDungeon(ctx, finish)
 	code(err, p.CodeOperationConflict)
 
+	// 实际战斗终态属于运行服原执行，新票在场次结束前后接管不会让原结果无法结算。
+	e := register("讨伐队员戊")
+	owned, _, err := game.BeginDungeon(ctx, begin(e))
+	must(err)
+	attach(game, e) // 此时新票已生效，但新连接还没有确认原场席位。
+	settle := DungeonFinish{ChallengeID: owned.ChallengeID, ReservationID: owned.ReservationID,
+		Execution: owned.Execution, Outcome: DungeonSucceeded, FinishedAt: bossTime(time.Now())}
+	withSession := settle
+	withSession.Members = []Auth{e.auth}
+	_, _, err = game.FinishDungeon(ctx, withSession)
+	code(err, p.CodeStaleSession)
+	wrongExecution := settle
+	wrongExecution.Execution++
+	_, _, err = game.FinishOwnedDungeon(ctx, wrongExecution)
+	code(err, p.CodeOperationConflict)
+	settled, roles, err := game.FinishOwnedDungeon(ctx, settle)
+	must(err)
+	settledAgain, again, err := game.FinishOwnedDungeon(ctx, settle)
+	must(err)
+	if settled.Outcome != DungeonSucceeded || settled.Refunded || !reflect.DeepEqual(settled, settledAgain) || len(roles) != 1 ||
+		len(again) != 1 || roles[0].Revision != again[0].Revision || roles[0].SessionEpoch != e.auth.SessionEpoch ||
+		loaded(e).Dungeon.ActiveChallengeID != "" || loaded(e).Dungeon.Entries != 1 {
+		t.Fatal("原执行未在重连后一次确认成功终态", settled, roles)
+	}
+
+	// 未知扣次后原身份换代时，未安装战斗的协调者只能撤销原始扣次，并且原队员一起退款。
+	f := register("讨伐队员己")
+	unattached := begin(e, f)
+	empty, emptyRoles, err := game.AbortUnattachedDungeon(ctx, unattached)
+	must(err)
+	if empty.ChallengeID != "" || len(emptyRoles) != 0 {
+		t.Fatal("没有发生的原扣次不应生成退款记录", empty, emptyRoles)
+	}
+	beforeAbort, _, err := game.BeginDungeon(ctx, unattached)
+	must(err)
+	_, err = account.DB.Collection("accounts").UpdateOne(ctx, bson.M{"_id": f.customer.AccountID}, bson.M{"$inc": bson.M{"auth_version": 1}})
+	must(err)
+	_, _, err = game.BeginDungeon(ctx, unattached)
+	code(err, p.CodeUnauthenticated)
+	wrongBegin := unattached
+	wrongBegin.Execution++
+	_, _, err = game.AbortUnattachedDungeon(ctx, wrongBegin)
+	code(err, p.CodeOperationConflict)
+	unattached.Members = slices.Clone(unattached.Members)
+	slices.Reverse(unattached.Members)
+	aborted, abortRoles, err := game.AbortUnattachedDungeon(ctx, unattached)
+	must(err)
+	abortedAgain, abortRolesAgain, err := game.AbortUnattachedDungeon(ctx, unattached)
+	must(err)
+	if !aborted.Refunded || aborted.Recovered || aborted.Outcome != DungeonSystemInterrupted || aborted.ReservationID != beforeAbort.ReservationID ||
+		!reflect.DeepEqual(aborted, abortedAgain) || len(abortRoles) != 2 || !reflect.DeepEqual(abortRoles, abortRolesAgain) ||
+		loaded(e).Dungeon.Entries != 1 || loaded(f).Dungeon.Entries != 0 || loaded(f).Dungeon.ActiveChallengeID != "" {
+		t.Fatal("未安装原场未在账号换代后一次确认并退款", aborted, abortRoles)
+	}
+
 	// 另一个未完成原场使用一名仍在旧绑定的队员与一名新票回来的队员。
 	d := register("讨伐队员丁")
 	q = begin(a, d)
@@ -256,11 +311,13 @@ func TestDungeonPartyDurableMongo(t *testing.T) {
 	must(game.Release(ctx, "game"))
 	cold := open() // 规则目录现已关闭，也应能退款原已确认的扣次。
 	attach(cold, a)
+	must(cold.RecoverInterruptedDungeons(ctx))
+	must(cold.RecoverInterruptedDungeons(ctx))
 	rollback, roles, err := cold.RecoverDungeon(ctx, active.ChallengeID)
 	must(err)
 	rolledAgain, againRoles, err := cold.RecoverDungeon(ctx, active.ChallengeID)
 	must(err)
-	if !rollback.Refunded || !rollback.Recovered || rollback.Outcome != DungeonSystemInterrupted || len(roles) != 2 || len(againRoles) != 0 ||
+	if !rollback.Refunded || !rollback.Recovered || rollback.Outcome != DungeonSystemInterrupted || len(roles) != 0 || len(againRoles) != 0 ||
 		!reflect.DeepEqual(rollback, rolledAgain) || loaded(a).Dungeon.Entries != 1 || loaded(d).Dungeon.Entries != 0 || loaded(d).Dungeon.EntryDay != day {
 		t.Fatal("同运行服冷恢复未按原队、原日一次性退款", rollback, roles)
 	}
@@ -271,7 +328,7 @@ func TestDungeonPartyDurableMongo(t *testing.T) {
 	must(err)
 	audits, err := account.DB.Collection("audit_outbox").CountDocuments(ctx, bson.M{"kind": bson.M{"$in": []string{"dungeon_begin", "dungeon_finish"}}})
 	must(err)
-	if count != 2 || audits != 10 || loaded(a).EconomicSeq != a.role.EconomicSeq || loaded(d).SourceSeq != d.role.SourceSeq {
+	if count != 4 || audits != 16 || loaded(a).EconomicSeq != a.role.EconomicSeq || loaded(d).SourceSeq != d.role.SourceSeq {
 		t.Fatal("场次与审计未保持单次，或改变了普通资产序号", count, audits)
 	}
 }

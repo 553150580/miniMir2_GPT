@@ -85,6 +85,12 @@ func dungeonPartyIdentityFor(r *room) dungeonPartyIdentity {
 
 // dungeonPartyScene 返回当前附着可查询的场景和是否仍处于普通场景。
 func dungeonPartyScene(r *room) (uint64, bool) {
+	if battle := r.dungeonMatch; battle != nil {
+		if battle.shown && battle.sent.Load() && !battle.revoked.Load() {
+			return battle.scene, false
+		}
+		return r.Scene, false // 首帧尚未送出时仍可在原普通场景查询，但不能修改招募。
+	}
 	if battle := r.worldBossObservation; battle != nil {
 		if battle.shown && battle.started.Load() && !battle.revoked.Load() {
 			return battle.scene, false
@@ -138,6 +144,10 @@ func (w *worker) dungeonPartyCommand(r *room, frame wire.Frame, now time.Time) {
 			directory = newDungeonPartyDirectory()
 			actor.dungeonParties[run] = directory
 		}
+		if request.Action == dungeonPartyStart {
+			actor.startDungeonParty(directory, store, identity, conn, &request, frame.Request, time.Now())
+			return
+		}
 		state := directory.handle(identity, fixture, &request, time.Now())
 		if conn.Alive() && conn.Binding() == identity.binding {
 			conn.Deliver(wire.Message(p.MsgS2CDungeonPartyState, frame.Request, identity.binding, state))
@@ -147,14 +157,21 @@ func (w *worker) dungeonPartyCommand(r *room, frame wire.Frame, now time.Time) {
 	}
 }
 
-// tickDungeonParties 回收已到期招募。空目录不持有跨角色资源。
-func (w *worker) tickDungeonParties(now time.Time) {
+// tickDungeonParties 推进开战确认，回收已到期招募，并报告停止进程前是否仍应等待回填。
+func (w *worker) tickDungeonParties(now time.Time) (pending bool) {
 	for run, directory := range w.dungeonParties {
+		for _, party := range directory.parties {
+			if party.start != nil {
+				w.advanceDungeonStart(directory, party, now)
+				pending = pending || party.start != nil
+			}
+		}
 		directory.advance(now)
 		if len(directory.parties) == 0 {
 			delete(w.dungeonParties, run)
 		}
 	}
+	return pending
 }
 
 // dungeonPartyTemplateViews 发布当前已装载的模板，不从客户端选择其它运行服。

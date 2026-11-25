@@ -60,6 +60,31 @@ test('普通点怪只选择，详情由独立入口打开，死亡或替换的�
     instance.openTargetDetails();assert.equal(details.length,1);
     instance.castSkill(row(1));assert.equal(sent.at(-1).value.targetHandle,8);
 });
+test('真实AppRoot只在讨伐队伍里把单体治愈指向所选队友或其宠物', () => {
+    const { instance, session, sent, row, definitions, definition } = app();
+    definitions.push(definition(2, 'healing', 'friendly_entity'),
+        { ...definition(14, 'soul_shield', 'friendly_grid'), material_quantity: 1 });
+    session.inventory.learnedSkills.push({ skillId: 2, level: 0 }, { skillId: 14, level: 0 });
+    const peer = { entityHandle: 8, entityKind: 1, life: '11', hp: '80', position: { x: 3, y: 4 } };
+    const pet = { entityHandle: 103, entityKind: 2, life: '12', hp: '30', position: { x: 3, y: 5 } };
+    session.baseline.entities.push(peer, pet);
+    instance.selectWorldEntity(peer);
+    for (const scene of [1, 2, 3, 4]) {
+        session.entry.sceneKind = scene;
+        instance.castSkill(row(2));
+        assert.equal(sent.at(-1).value.targetHandle, session.entry.playerHandle);
+    }
+    session.entry.sceneKind = 5;
+    instance.castSkill(row(2));
+    assert.equal(sent.at(-1).value.targetHandle, peer.entityHandle);
+    assert.deepEqual(sent.at(-1).value.targetGrid, peer.position);
+    instance.selectWorldEntity(pet);
+    instance.castSkill(row(2));
+    assert.equal(sent.at(-1).value.targetHandle, pet.entityHandle);
+    pet.hp = '0';
+    assert.throws(() => instance.castSkill(row(2)), /倒下/);
+    assert.throws(() => instance.castSkill(row(14)), /讨伐链中不能使用消耗护符/);
+});
 test('野外自动时点活怪提交当前场景、输入序号及原生命代次，瞄准与手动点选不提交自动锁', () => {
     const { instance, session, sent } = app();
     const monster = { ...session.baseline.entities[1], hp: Long.ONE, life: Long.MAX_UNSIGNED_VALUE };

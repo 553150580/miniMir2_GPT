@@ -824,7 +824,7 @@ export class AppRoot extends Component {
                 if (!isCurrentEntry(identity) || session.entry !== entry || this.world !== view || !view.isMapReady
                     || session.baseline?.sceneEpoch.toString() !== identity.scene.toString() || session.baseline?.baselineId.toString() !== identity.baseline.toString()) throw new StaleMapAttachmentError('旧地图准备不得确认新场景');
                 if (identity.travelId && !session.travel.acknowledge(identity)) throw new StaleMapAttachmentError('旅行附着确认代次已经变化');
-                if (identity.serverTransitionId && !session.entryBossTransition && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
+                if (identity.serverTransitionId && !session.entryBossTransition && !session.entryDungeonTransition && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
                 const autoSkillSettings = savedAutoSkillSettings(sys?.localStorage, identity.role);
                 session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, ...(autoSkillSettings && { autoSkillSettings }) });
             },
@@ -1213,6 +1213,7 @@ export class AppRoot extends Component {
             bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice, warehouseNotice: session.warehouseNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
+            objectiveOverride: session.entry?.sceneKind === 5 ? session.dungeonTransition.objective : undefined,
             quickSkillLabel: quick ? skillQuickStateLabel(skills, quick) : undefined };
         this.hud?.refresh(presentation);
         this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !this.attaching;
@@ -1311,6 +1312,7 @@ export class AppRoot extends Component {
             const definition = gameplay.items.find((row: any) => row.item_id === item.itemId);
             const blockedReason = !session.ready || this.attaching || this.leaving ? '角色场景尚未就绪'
                 : session.entry.sceneKind === 4 ? '世界首领场景内暂不能操作背包'
+                : session.entry.sceneKind === 5 ? '讨伐场景内暂不能操作背包'
                 : this.economicBusy || this.unresolved || !!session.pending?.get(roleIdentity()) ? '上一笔操作正在核对' : '';
             const skill = definition?.kind === 'book' ? skillRows(this.skillSnapshot()).find(row => row.definition.book_item_id === item.itemId) : undefined;
             const selected = (act: () => Promise<void>) => (): Promise<void> => { this.selectedItem = item; return act(); };
@@ -1614,7 +1616,8 @@ export class AppRoot extends Component {
             const player = validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle, false);
             return this.submitCast(current, 0, player.position, player.direction);
         }
-        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedWorldEntity()?.entityHandle ?? null, session.entry.playerHandle, false);
+        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedWorldEntity()?.entityHandle ?? null,
+            session.entry.playerHandle, false, snapshot.sceneKind);
         return this.submitCast(current, target.entityHandle, target.position, 0);
     }
 

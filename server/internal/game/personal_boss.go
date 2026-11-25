@@ -285,17 +285,28 @@ func (w *worker) ackPersonalBoss(owner *room, run *personalBossRun, frame wire.F
 
 // freezePersonalBossSnapshot 按普通战斗同样的数值冻结玩家与可参战宠物，副本无任何资产写权限。
 func (w *worker) freezePersonalBossSnapshot(owner *room, cfg *devconfig.PersonalBossConfig) personalBossSnapshot {
-	snapshot := personalBossSnapshot{Fighter: w.basePlayerFighter(owner), Skills: slices.Clone(owner.Role.Skills),
-		SkillSlotIDs: slices.Clone(owner.Role.SkillSlotIDs), autoSkills: owner.AutoSkills}
-	pet := owner.worldPet(owner.currentWorld())
-	if pet == nil || pet.HP <= 0 || mapForbidsPets(&cfg.Map) {
+	snapshot := w.freezeBossCombatSnapshot(owner, &cfg.Map)
+	if snapshot.Pet == nil {
 		return snapshot
 	}
 	pos, ok := travelPetPoint(&cfg.Map, cfg.Map.PlayerSpawn, &cfg.Map.PetSpawn, []*entity{{Pos: cfg.Map.MonsterSpawns[0], HP: 1}}, 1)
 	if !ok {
+		snapshot.Pet = nil
 		return snapshot
 	}
-	snapshot.Pet = &entity{Handle: petHandle, Kind: pet.Kind, Def: pet.Def, Pos: pos, HP: pet.MaxHP, MaxHP: pet.MaxHP, MP: pet.MaxMP, MaxMP: pet.MaxMP, Life: 1}
+	snapshot.Pet.Pos = pos
+	return snapshot
+}
+
+// freezeBossCombatSnapshot 只冻结可参战的身体，由具体场次按真实出生和占位分配入场位置。
+func (w *worker) freezeBossCombatSnapshot(owner *room, target *devconfig.MapTemplate) personalBossSnapshot {
+	snapshot := personalBossSnapshot{Fighter: w.basePlayerFighter(owner), Skills: slices.Clone(owner.Role.Skills),
+		SkillSlotIDs: slices.Clone(owner.Role.SkillSlotIDs), autoSkills: owner.AutoSkills}
+	pet := owner.worldPet(owner.currentWorld())
+	if pet == nil || pet.HP <= 0 || mapForbidsPets(target) {
+		return snapshot
+	}
+	snapshot.Pet = &entity{Handle: petHandle, Kind: pet.Kind, Def: pet.Def, HP: pet.MaxHP, MaxHP: pet.MaxHP, MP: pet.MaxMP, MaxMP: pet.MaxMP, Life: 1}
 	if pet.PetRuntime != nil {
 		runtime := *pet.PetRuntime
 		runtime.FollowSuppressed = false

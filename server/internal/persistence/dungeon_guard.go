@@ -13,8 +13,13 @@ import (
 	p "minimir/internal/protocol"
 )
 
-// dungeonPartyTx 同事务核对原运行服和所有成员账号。没有在线成员授权时仅允许调用受控恢复事务。
+// dungeonPartyTx 同事务核对原运行服和所有成员账号。受控终态与冷恢复可以只使用运行服授权。
 func (s *Store) dungeonPartyTx(ctx context.Context, auths []Auth, fn func(context.Context) error) error {
+	return s.dungeonPartyRunTx(ctx, auths, true, fn)
+}
+
+// dungeonPartyRunTx 的内部撤销可以沿用原账号对应的运行服围栏组，同时跳过失效的账号授权。
+func (s *Store) dungeonPartyRunTx(ctx context.Context, auths []Auth, checkAccounts bool, fn func(context.Context) error) error {
 	if s.Cfg.RunID == 0 || s.Epoch <= 0 || s.runGuardSlots == nil {
 		return Fail(p.CodeRouteChanged, "没有讨伐链所属运行服的授权")
 	}
@@ -34,9 +39,12 @@ func (s *Store) dungeonPartyTx(ctx context.Context, auths []Auth, fn func(contex
 		groups = append(groups, runGuardGroup(auth.AccountID))
 	}
 	if len(groups) == 0 {
-		groups = append(groups, 0) // 无账号请求的旧场次恢复使用固定运行服组。
+		groups = append(groups, 0) // 不依赖在线账号的终态和冷恢复使用固定围栏组。
 	}
-	accountIDs := slices.Sorted(maps.Keys(accounts))
+	var accountIDs []string
+	if checkAccounts {
+		accountIDs = slices.Sorted(maps.Keys(accounts))
+	}
 	slices.Sort(groups)
 	groups = slices.Compact(groups)
 	ctx, cancel := context.WithTimeout(ctx, transactionTimeout)
@@ -50,7 +58,7 @@ func (s *Store) dungeonPartyTx(ctx context.Context, auths []Auth, fn func(contex
 		defer func() { <-slot }()
 	}
 	return s.tx(ctx, func(tc context.Context) error {
-		writes := make([]mongo.ClientBulkWrite, 0, len(groups)+len(accounts))
+		writes := make([]mongo.ClientBulkWrite, 0, len(groups)+len(accountIDs))
 		for _, group := range groups {
 			guard, err := s.runFenceWrite(tc, group)
 			if err != nil {

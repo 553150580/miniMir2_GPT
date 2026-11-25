@@ -61,6 +61,9 @@ func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
 	if arena := r.worldBossCombat; arena != nil {
 		return !arena.occupied(q, self)
 	}
+	if arena := r.dungeonCombat; arena != nil {
+		return !arena.occupied(q, self)
+	}
 	// all 初始化用作全部的实体列表。
 	all := []*entity{&r.Player}
 	// pet 保存由场景世界宠物取得的宠物。
@@ -301,6 +304,12 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 // target 记录目标，使用实体表示，damage 记录伤害，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 // context 记录上下文，使用可变数量的命中上下文表示。
 func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
+	if r.dungeonCombat != nil {
+		if damage > 0 && target.HP > 0 && world == r.currentWorld() {
+			w.applyDungeonDamage(r, from, target, damage, now, context)
+		}
+		return
+	}
 	if from != nil && len(from.Statuses) != 0 && target.HP > 0 && world == r.currentWorld() {
 		exposeHiddenAttacker(world, from, target)
 	}
@@ -532,7 +541,7 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	}
 	clearFinishedAction(&r.Player, now)
 	// monster 接收遍历怪物集合时当前的元素。
-	if r.worldBossCombat == nil {
+	if r.worldBossCombat == nil && r.dungeonCombat == nil {
 		for _, monster := range r.Monsters {
 			clearFinishedAction(monster, now)
 		}
@@ -594,12 +603,12 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	if r.Pending || r.Isolated {
 		return
 	}
-	if r.worldBossCombat != nil {
+	if r.worldBossCombat != nil || r.dungeonCombat != nil {
 		if now.Sub(r.LastBroadcast) >= 200*time.Millisecond {
 			r.LastBroadcast = now
 			w.snapshot(r)
 		}
-		return // 共享场次随后统一更新首领，只运行一次移动和攻击 AI。
+		return // 共享场次随后统一运行敌人的移动和攻击 AI。
 	}
 	// world 固定本帧怪物索敌和隐身暴露所使用的原执行地图。
 	world := r.currentWorld()

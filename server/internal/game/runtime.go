@@ -93,6 +93,7 @@ type worker struct {
 	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
 
 	dungeonParties map[uint64]*dungeonPartyDirectory // 本分片拥有的运行服讨伐链招募目录。
+	dungeonArenas  map[string]*dungeonArena          // 本分片拥有的讨伐队伍独立战斗场。
 }
 
 // entity 保存当前进程中的战斗身体、动作时钟和空间身份。
@@ -216,6 +217,9 @@ type room struct {
 
 	hostingQuote         *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
 	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
+	dungeonStart         *dungeonStartAttempt              // 本原角色正在等待的整队开战确认。
+	dungeonMatch         *dungeonAttachment                // 原角色观察或健康续接的同一讨伐场。
+	dungeonCombat        *dungeonArena                     // 临时战斗角色所属的讨伐共享场。
 }
 
 // New 为单运行服启动持有共享分片、数据库队列与逻辑时钟的引擎。
@@ -454,6 +458,7 @@ func (w *worker) loop() {
 			if !c.tick.IsZero() {
 				w.tickWorldBosses(c.tick)
 				w.tickDungeonParties(c.tick)
+				w.tickDungeonArenas(c.tick)
 				w.beginTownNavigationTick(c.tick)
 				// roleID 定位房间集合中正在处理的成员，r 接收遍历房间集合时当前的元素。
 				for roleID, r := range w.rooms {
@@ -463,6 +468,7 @@ func (w *worker) loop() {
 					}
 					w.stepPersonalBoss(r, c.tick)
 					w.step(r, c.tick)
+					w.resumeDungeonObservation(r, c.tick)
 					w.expireIdleRoom(roleID, r, c.tick)
 				}
 				w.endTownNavigationTick()
@@ -523,6 +529,7 @@ func (w *worker) command(c command) {
 		if c.disconnect {
 			if r.Conn == c.conn {
 				dungeonPartyDetached(r, c.conn, c.at)
+				w.suspendDungeonObservation(r)
 				r.Conn = nil
 				r.PetBornReady = nil
 			}
@@ -542,6 +549,7 @@ func (w *worker) command(c command) {
 			}
 			r.entryAck = nil
 			dungeonPartyDetached(r, c.conn, at)
+			w.suspendDungeonObservation(r)
 			w.suspendWorldBossObservation(r, at)
 			w.detachPersonalBoss(r)
 			w.leaveSharedTown(r)
@@ -584,6 +592,13 @@ func (w *worker) command(c command) {
 		w.dungeonPartyCommand(r, c.frame, time.Now())
 		return
 	}
+	if r.dungeonStart != nil {
+		w.failure(r, c.frame, p.CodeOperationPending)
+		return
+	}
+	if w.dungeonBattleCommand(r, c) {
+		return
+	}
 	if w.worldBossCommand(r, c) {
 		return
 	}
@@ -622,6 +637,7 @@ func (w *worker) roomCommand(r *room, c command) {
 		w.sendSyncReady(r, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
 		w.resumePersonalBoss(r, time.Now())
 		w.resumeWorldBossObservation(r, time.Now())
+		w.resumeDungeonObservation(r, time.Now())
 		return
 	}
 	if c.frame.ID == p.MsgC2SMapTravelPrepare {
@@ -903,7 +919,7 @@ func (w *worker) revivePlayer(r *room) {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，id 区分当前步骤指向的目标对象，request 关联客户端请求与服务端的对应响应。
 // msg 记录“msg”，使用消息表示。
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
-	if r.Isolated || suppressOrdinaryObservation(r, id) {
+	if r.Isolated || suppressOrdinaryObservation(r, id) || suppressDungeonObservation(r, id) {
 		return
 	}
 	if !r.Ready {
@@ -986,7 +1002,7 @@ func (w *worker) snapshot(r *room) {
 // 入场基线在ACK之前发送；周期同步仍经snapshot的Ready门槛。明确取消沿同一请求号确认后才关闭连接。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，request 记录请求，使用可变数量的数值表示。
 func (w *worker) baseline(r *room, request ...uint32) {
-	if r.Conn == nil || suppressOrdinaryObservation(r, p.MsgS2CSceneBaseline) {
+	if r.Conn == nil || suppressOrdinaryObservation(r, p.MsgS2CSceneBaseline) || suppressDungeonObservation(r, p.MsgS2CSceneBaseline) {
 		return
 	}
 	// requestID 标识当前业务使用的请求。
@@ -1057,6 +1073,7 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 	}
 	w.appendSharedTownViews(r, out)
 	w.appendWorldBossViews(r, out)
+	w.appendDungeonViews(r, out)
 	return splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
 }
 

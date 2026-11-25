@@ -179,6 +179,9 @@ type dueEvent struct {
 // 全部临时到期事件按统一时钟与受理次序结算，不以消息种类改变同帧命中顺序。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) advanceEvents(r *room, now time.Time) {
+	if r.dungeonCombat != nil {
+		return // 同一场由统一时钟处理，单席位输入不能抢先结算到期动作。
+	}
 	w.advanceEventsUsing(r, now, w.resolveDueEvent)
 }
 
@@ -279,6 +282,9 @@ func (w *worker) advanceEventsUsing(r *room, now time.Time, resolve func(*room, 
 // killBudgetAvailable 确认房间尚有空间记录后续击杀事实。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) killBudgetAvailable(r *room) bool {
+	if r.dungeonCombat != nil {
+		return true // 讨伐链死亡只更新临时战斗，场次终态单独收口。
+	}
 	// cap 是规则规定的击杀事实队列上限，非正值时关闭此限制。
 	cap := w.e.Store.Cfg.Fixture.CombatTiming.KillQueueCapacity
 	if cap <= 0 {
@@ -333,6 +339,12 @@ func facing(from, to devconfig.Point, fallback uint32) uint32 {
 // nextEvent 分配客户端可见的下一战斗事件流水。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) nextEvent(r *room) uint64 {
+	if arena := r.dungeonCombat; arena != nil {
+		if arena.eventID < math.MaxUint64 {
+			arena.eventID++
+		}
+		return arena.eventID
+	}
 	if arena := r.worldBossCombat; arena != nil {
 		if arena.eventID < math.MaxUint64 {
 			arena.eventID++

@@ -201,7 +201,8 @@ func (w *worker) worldMap(world *worldState) (*devconfig.MapTemplate, bool) {
 	}
 	if world.BossMap != nil {
 		kind := world.BossMap.SceneKindValue()
-		return world.BossMap, world.MapID == world.BossMap.ID && (kind == devconfig.SceneKindPersonalBoss || kind == devconfig.SceneKindWorldBoss)
+		return world.BossMap, world.MapID == world.BossMap.ID &&
+			(kind == devconfig.SceneKindPersonalBoss || kind == devconfig.SceneKindWorldBoss || kind == devconfig.SceneKindDungeon)
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
@@ -342,6 +343,10 @@ func (w *worker) activateWorldAt(r *room, target *worldState, point devconfig.Po
 // observesWorld 判断客户端是否仍能观察指定世界和场景代次。
 // r 是调用该方法的房间实例，world 记录场景世界，使用场景世界状态表示，scene 记录场景，使用数值表示。
 func (r *room) observesWorld(world *worldState, scene uint64) bool {
+	if arena := r.dungeonCombat; arena != nil {
+		seat := arena.seats[r.Role.ID]
+		return world == r.currentWorld() && seat != nil && seat.room == r && seat.started && !r.Isolated
+	}
 	return world == r.currentWorld() && r.Scene == scene && r.Ready && !r.Isolated
 }
 

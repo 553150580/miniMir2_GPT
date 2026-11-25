@@ -108,21 +108,32 @@ func dungeonEntryLimit(role domain.Role, at time.Time) uint32 {
 	return limit
 }
 
-// BeginDungeon 短事务确认所有已准备角色的会话、修订和资格，然后一次扣完原队伍的所有次数。
-func (s *Store) BeginDungeon(ctx context.Context, q DungeonBegin) (DungeonChallenge, []domain.Role, error) {
+// normalizeDungeonBegin 固定原开战的摘要格式，正常开战和未知结果查证采用同一规范。
+func normalizeDungeonBegin(q DungeonBegin) (DungeonBegin, error) {
 	if !lowerHex(q.ChallengeID, 16) || !lowerHex(q.ConfigHash, 32) || q.Execution == 0 || q.Execution > math.MaxInt64 ||
 		q.TemplateID == 0 || q.RuleVersion == 0 || q.RuleVersion > math.MaxInt64 || q.StartedAt.IsZero() || q.Duration <= 0 ||
 		len(q.Members) == 0 || len(q.Members) > devconfig.DungeonMaxPlayers {
-		return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "讨伐链原开始参数无效")
+		return DungeonBegin{}, Fail(p.CodeInvalidArgument, "讨伐链原开始参数无效")
 	}
 	q.StartedAt = bossTime(q.StartedAt)
 	q.Members = slices.Clone(q.Members)
 	slices.SortFunc(q.Members, func(left, right DungeonAdmissionMember) int { return cmp.Compare(left.Auth.RoleID, right.Auth.RoleID) })
-	auths := make([]Auth, len(q.Members))
 	for i, member := range q.Members {
 		if !lowerHex(member.CombatSnapshot, 32) || member.ExpectedRevision <= 0 || i > 0 && member.Auth.RoleID == q.Members[i-1].Auth.RoleID {
-			return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "讨伐链重复角色或入场快照无效")
+			return DungeonBegin{}, Fail(p.CodeInvalidArgument, "讨伐链重复角色或入场快照无效")
 		}
+	}
+	return q, nil
+}
+
+// BeginDungeon 短事务确认所有已准备角色的会话、修订和资格，然后一次扣完原队伍的所有次数。
+func (s *Store) BeginDungeon(ctx context.Context, q DungeonBegin) (DungeonChallenge, []domain.Role, error) {
+	q, err := normalizeDungeonBegin(q)
+	if err != nil {
+		return DungeonChallenge{}, nil, err
+	}
+	auths := make([]Auth, len(q.Members))
+	for i, member := range q.Members {
 		auths[i] = member.Auth
 	}
 	digest, err := bossDigest(q)

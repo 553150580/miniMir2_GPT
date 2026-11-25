@@ -14648,6 +14648,12 @@ export namespace minimir {
             /** DungeonPartyState more. */
             more: boolean;
 
+            /** DungeonPartyState challenge_id. */
+            challenge_id: Uint8Array;
+
+            /** DungeonPartyState starting. */
+            starting: boolean;
+
             /**
              * Creates a new DungeonPartyState instance using the specified properties.
              * @param [properties] Properties to set
@@ -14728,6 +14734,12 @@ export namespace minimir {
 
                 /** DungeonPartyState more */
                 more?: (boolean|null);
+
+                /** DungeonPartyState challenge_id */
+                challenge_id?: (Uint8Array|null);
+
+                /** DungeonPartyState starting */
+                starting?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -15113,6 +15125,264 @@ export namespace minimir {
 
             /** Shape of a DungeonPartyMember. */
             type $Shape = minimir.v1.DungeonPartyMember.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonBattleState.
+         * @deprecated Use minimir.v1.DungeonBattleState.$Properties instead.
+         */
+        interface IDungeonBattleState extends minimir.v1.DungeonBattleState.$Properties {
+        }
+
+        /** Represents a DungeonBattleState. */
+        class DungeonBattleState {
+
+            /**
+             * Constructs a new DungeonBattleState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonBattleState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonBattleState challenge_id. */
+            challenge_id: Uint8Array;
+
+            /** DungeonBattleState scene_epoch. */
+            scene_epoch: Long;
+
+            /** DungeonBattleState stage. */
+            stage: number;
+
+            /** DungeonBattleState stage_count. */
+            stage_count: number;
+
+            /** DungeonBattleState expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** DungeonBattleState state. */
+            state: number;
+
+            /** DungeonBattleState error_code. */
+            error_code: number;
+
+            /**
+             * Creates a new DungeonBattleState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonBattleState instance
+             */
+            static create(properties: minimir.v1.DungeonBattleState.$Shape): minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape;
+            static create(properties?: minimir.v1.DungeonBattleState.$Properties): minimir.v1.DungeonBattleState;
+
+            /**
+             * Encodes the specified DungeonBattleState message. Does not implicitly {@link minimir.v1.DungeonBattleState.verify|verify} messages.
+             * @param message DungeonBattleState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonBattleState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonBattleState message, length delimited. Does not implicitly {@link minimir.v1.DungeonBattleState.verify|verify} messages.
+             * @param message DungeonBattleState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonBattleState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonBattleState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape} DungeonBattleState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape;
+
+            /**
+             * Decodes a DungeonBattleState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape} DungeonBattleState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape;
+
+            /**
+             * Verifies a DungeonBattleState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonBattleState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonBattleState {
+
+            /** Properties of a DungeonBattleState. */
+            interface $Properties {
+
+                /** DungeonBattleState challenge_id */
+                challenge_id?: (Uint8Array|null);
+
+                /** DungeonBattleState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** DungeonBattleState stage */
+                stage?: (number|null);
+
+                /** DungeonBattleState stage_count */
+                stage_count?: (number|null);
+
+                /** DungeonBattleState expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** DungeonBattleState state */
+                state?: (number|null);
+
+                /** DungeonBattleState error_code */
+                error_code?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonBattleState. */
+            type $Shape = minimir.v1.DungeonBattleState.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonSceneTransition.
+         * @deprecated Use minimir.v1.DungeonSceneTransition.$Properties instead.
+         */
+        interface IDungeonSceneTransition extends minimir.v1.DungeonSceneTransition.$Properties {
+        }
+
+        /** Represents a DungeonSceneTransition. */
+        class DungeonSceneTransition {
+
+            /**
+             * Constructs a new DungeonSceneTransition.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonSceneTransition.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonSceneTransition challenge_id. */
+            challenge_id: Uint8Array;
+
+            /** DungeonSceneTransition source_scene_epoch. */
+            source_scene_epoch: Long;
+
+            /** DungeonSceneTransition target_scene_epoch. */
+            target_scene_epoch: Long;
+
+            /** DungeonSceneTransition target_baseline_id. */
+            target_baseline_id: Long;
+
+            /** DungeonSceneTransition target_map_id. */
+            target_map_id: Long;
+
+            /** DungeonSceneTransition target_scene_kind. */
+            target_scene_kind: number;
+
+            /**
+             * Creates a new DungeonSceneTransition instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonSceneTransition instance
+             */
+            static create(properties: minimir.v1.DungeonSceneTransition.$Shape): minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape;
+            static create(properties?: minimir.v1.DungeonSceneTransition.$Properties): minimir.v1.DungeonSceneTransition;
+
+            /**
+             * Encodes the specified DungeonSceneTransition message. Does not implicitly {@link minimir.v1.DungeonSceneTransition.verify|verify} messages.
+             * @param message DungeonSceneTransition message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonSceneTransition.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonSceneTransition message, length delimited. Does not implicitly {@link minimir.v1.DungeonSceneTransition.verify|verify} messages.
+             * @param message DungeonSceneTransition message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonSceneTransition.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonSceneTransition message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape} DungeonSceneTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape;
+
+            /**
+             * Decodes a DungeonSceneTransition message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape} DungeonSceneTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape;
+
+            /**
+             * Verifies a DungeonSceneTransition message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonSceneTransition
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonSceneTransition {
+
+            /** Properties of a DungeonSceneTransition. */
+            interface $Properties {
+
+                /** DungeonSceneTransition challenge_id */
+                challenge_id?: (Uint8Array|null);
+
+                /** DungeonSceneTransition source_scene_epoch */
+                source_scene_epoch?: (Long|null);
+
+                /** DungeonSceneTransition target_scene_epoch */
+                target_scene_epoch?: (Long|null);
+
+                /** DungeonSceneTransition target_baseline_id */
+                target_baseline_id?: (Long|null);
+
+                /** DungeonSceneTransition target_map_id */
+                target_map_id?: (Long|null);
+
+                /** DungeonSceneTransition target_scene_kind */
+                target_scene_kind?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonSceneTransition. */
+            type $Shape = minimir.v1.DungeonSceneTransition.$Properties;
         }
     }
 }

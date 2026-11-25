@@ -219,6 +219,20 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 	if !exists || target.IsPetCorpse || !definition.AllowDeadTargets && target.HP <= 0 {
 		return false
 	}
+	// 属性加成取受益者的原战斗属性，不能使用施法者的职业或等级。
+	owner := r
+	if r.dungeonCombat != nil && target != &r.Player && target != r.Pet && (target.Kind == 1 || target.Kind == 2) {
+		owner = nil
+		for _, ally := range r.dungeonAllies() {
+			if ally.body == target {
+				owner = ally.owner
+				break
+			}
+		}
+		if owner == nil {
+			return false
+		}
+	}
 	if definition.Kind == "revelation" {
 		// 启示在实际命中时判断截止，避免状态清理的离散时钟拦住已经到期的重施。
 		if old := target.Statuses[definition.ID]; old != nil && now.Sub(old.LastProcess).Milliseconds() >= old.RemainingMS {
@@ -261,9 +275,9 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 	case "magic_shield":
 		status.DamageReductionPercent = definition.ValueByLevel[c.SkillLevel]
 	case "max_physical_defence":
-		status.MaxPhysicalDefenceBonus = statusTargetBonus(w.fighter(r, target).Level, definition)
+		status.MaxPhysicalDefenceBonus = statusTargetBonus(w.fighter(owner, target).Level, definition)
 	case "max_magic_defence":
-		status.MaxMagicDefenceBonus = statusTargetBonus(w.fighter(r, target).Level, definition)
+		status.MaxMagicDefenceBonus = statusTargetBonus(w.fighter(owner, target).Level, definition)
 	case "teleport_mana_penalty":
 		status.TeleportManaPenaltyPercent = definition.ValueByLevel[c.SkillLevel]
 		status.NextProcess = now.Add(time.Duration(definition.TickMS) * time.Millisecond)
@@ -288,6 +302,9 @@ func (w *worker) buffTargets(r *room, c pendingCast) []*entity {
 			return nil
 		}
 		return []*entity{&r.Player}
+	}
+	if r.dungeonCombat != nil {
+		return w.dungeonAreaAllies(r, c.Skill, c.TargetPoint, b.AllowDeadTargets)
 	}
 	// out 记录输出，使用实体列表表示。
 	var out []*entity

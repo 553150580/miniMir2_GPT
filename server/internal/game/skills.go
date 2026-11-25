@@ -144,6 +144,20 @@ func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity 
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，s 记录技能，handle 记录实体句柄，使用数值表示。
 func (w *worker) skillTargetInWorld(r *room, world *worldState, s devconfig.Skill, handle uint32) *entity {
 	if s.Behavior == "healing" {
+		if r.dungeonCombat != nil {
+			if world != r.currentWorld() {
+				return nil
+			}
+			if handle == 0 {
+				handle = r.Player.Handle
+			}
+			for _, ally := range r.dungeonAllies() {
+				if ally.body.Handle == handle && ally.body.HP > 0 {
+					return ally.body
+				}
+			}
+			return nil
+		}
 		if handle == 0 || handle == r.Player.Handle {
 			if world == r.currentWorld() && r.Player.HP > 0 {
 				return &r.Player

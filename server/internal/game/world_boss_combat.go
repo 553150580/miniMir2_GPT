@@ -82,53 +82,17 @@ func (w *worker) worldBossBodyView(child *room, body *entity) *pb.EntityState {
 		MovementKind: body.MovementKind, IsPetCorpse: body.IsPetCorpse, Statuses: statusesPB(body, time.Now())}
 }
 
-// worldBossDue 把每个角色行动的原世界身份和到期时间合并进入同一场次顺序。
-type worldBossDue struct {
-	room  *room    // 原已受理动作的角色战斗上下文。
-	event dueEvent // 通用攻击、施法解析器接受的原事件。
-}
-
 // advanceWorldBossEvents 先汇总再排序，时钟相同时使用稳定席位和原动作顺序仲裁。
 func (w *worker) advanceWorldBossEvents(arena *worldBossArena, until time.Time) {
-	var all []worldBossDue
+	var all []sharedCombatDue
 	for _, seat := range arena.sortedSeats() {
 		child := seat.room
 		if !child.Ready || child.Isolated || seat.observation.revoked.Load() {
 			continue
 		}
-		world := child.currentWorld()
-		attacks := world.Attacks[:0]
-		for _, attack := range world.Attacks {
-			if attack.Due.After(until) {
-				attacks = append(attacks, attack)
-				continue
-			}
-			copy := attack
-			all = append(all, worldBossDue{room: child, event: dueEvent{World: world, At: copy.Due, Order: copy.Order, Attack: &copy}})
-			child.InflightEvents++
-		}
-		casts := world.Casts[:0]
-		for _, cast := range world.Casts {
-			if cast.Due.After(until) {
-				casts = append(casts, cast)
-				continue
-			}
-			copy := cast
-			all = append(all, worldBossDue{room: child, event: dueEvent{World: world, At: copy.Due, Order: copy.Order, Cast: &copy}})
-			child.InflightEvents++
-		}
-		world.Attacks, world.Casts = attacks, casts
+		all = collectSharedCombatEvents(all, child, until)
 	}
-	sort.SliceStable(all, func(i, j int) bool {
-		left, right := all[i], all[j]
-		if !left.event.At.Equal(right.event.At) {
-			return left.event.At.Before(right.event.At)
-		}
-		if left.room.Player.Handle != right.room.Player.Handle {
-			return left.room.Player.Handle < right.room.Player.Handle
-		}
-		return left.event.Order < right.event.Order
-	})
+	sortSharedCombatEvents(all)
 	for _, job := range all {
 		job.room.InflightEvents--
 		if arena.challenge.finish == nil && !job.room.Isolated && job.room.Player.HP > 0 {

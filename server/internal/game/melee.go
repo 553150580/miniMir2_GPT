@@ -283,6 +283,9 @@ func (w *worker) attackFacingTarget(r *room, direction, expected, input uint32, 
 
 // attackWithSkill 让传统攻击模式和技能槽共用同一个扣蓝、时钟、命中和耐久入口。
 func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time, s devconfig.Skill, rank uint32) uint32 {
+	if arena := r.dungeonCombat; arena != nil && !arena.acceptsActions(now) {
+		return p.CodeSkillStateBlocked
+	}
 	from := &r.Player
 	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
 	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
@@ -368,7 +371,12 @@ func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time
 	if front != nil {
 		handle = front.Handle
 	}
-	w.send(r, p.MsgS2CAttackAccepted, 0, &pb.AttackAccepted{SceneEpoch: r.Scene, EventId: w.nextEvent(r), CasterHandle: from.Handle, TargetHandle: handle, Origin: pointPB(from.Pos), TargetGrid: pointPB(stepPoint(from.Pos, direction, 1)), Direction: direction, DelayMs: uint32(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS), AttackSequence: from.AttackSequence, InputSequence: input, SkillId: s.ID, SkillLevel: rank, CasterLife: from.Life})
+	observation := &pb.AttackAccepted{SceneEpoch: r.Scene, EventId: w.nextEvent(r), CasterHandle: from.Handle, TargetHandle: handle, Origin: pointPB(from.Pos), TargetGrid: pointPB(stepPoint(from.Pos, direction, 1)), Direction: direction, DelayMs: uint32(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS), AttackSequence: from.AttackSequence, InputSequence: input, SkillId: s.ID, SkillLevel: rank, CasterLife: from.Life}
+	if r.dungeonCombat != nil {
+		w.sendDungeonObservation(r, p.MsgS2CAttackAccepted, observation)
+	} else {
+		w.send(r, p.MsgS2CAttackAccepted, 0, observation)
+	}
 	if changed {
 		r.Melee.Revision++
 		w.modes(r, now)

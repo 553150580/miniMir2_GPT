@@ -28,6 +28,15 @@ func (w *worker) castQueuedAttackSkill(r *room, skill devconfig.Skill, focus *en
 	}
 	direction := r.Player.Direction
 	pet := r.worldPet(r.currentWorld())
+	if r.dungeonCombat != nil && handler.Area && targetKind(skill) == "friendly_grid" {
+		// 保留原技能的触发人数，允许一个队员在自己的射程内以其它成员为中心支援。
+		needsEffect := needsHealing
+		if handler.Status {
+			needsEffect = func(body *entity) bool { return body.HP > 0 && body.Statuses[skill.BuffID] == nil }
+		}
+		center, ok := w.dungeonSupportCenter(r, skill, needsEffect)
+		return ok && w.castAutomatically(r, skill.ID, 0, direction, now, need, pointPB(center), input)
+	}
 	if handler.Status {
 		missing := func(e *entity) bool { return e != nil && e.HP > 0 && e.Statuses[skill.BuffID] == nil }
 		center := r.Player.Pos
@@ -67,7 +76,7 @@ func (w *worker) castQueuedAttackSkill(r *room, skill devconfig.Skill, focus *en
 		if handler.Area {
 			count := 0
 			for _, ally := range w.areaTargets(r, skill, target.Pos) {
-				if ally.HP < ally.MaxHP && ally.HealAmount == 0 {
+				if needsHealing(ally) {
 					count++
 				}
 			}

@@ -21,11 +21,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 招募指令绑定当前已确认场景。永久入场扣次不通过招募消息触发。
+// 招募及原队伍开战指令绑定当前已确认场景。
 type DungeonPartyRequest struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	SceneEpoch uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
-	// 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件。
+	// 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件、7 确认开战扣次。
 	Action           uint32 `protobuf:"varint,2,opt,name=action,proto3" json:"action,omitempty"`
 	PartyId          []byte `protobuf:"bytes,3,opt,name=party_id,json=partyId,proto3" json:"party_id,omitempty"`
 	ExpectedRevision uint64 `protobuf:"varint,4,opt,name=expected_revision,json=expectedRevision,proto3" json:"expected_revision,omitempty"`
@@ -140,6 +140,8 @@ type DungeonPartyState struct {
 	Parties       []*DungeonPartyView     `protobuf:"bytes,4,rep,name=parties,proto3" json:"parties,omitempty"`
 	OwnParty      *DungeonPartyView       `protobuf:"bytes,5,opt,name=own_party,json=ownParty,proto3" json:"own_party,omitempty"`
 	More          bool                    `protobuf:"varint,6,opt,name=more,proto3" json:"more,omitempty"`
+	ChallengeId   []byte                  `protobuf:"bytes,7,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
+	Starting      bool                    `protobuf:"varint,8,opt,name=starting,proto3" json:"starting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -212,6 +214,20 @@ func (x *DungeonPartyState) GetOwnParty() *DungeonPartyView {
 func (x *DungeonPartyState) GetMore() bool {
 	if x != nil {
 		return x.More
+	}
+	return false
+}
+
+func (x *DungeonPartyState) GetChallengeId() []byte {
+	if x != nil {
+		return x.ChallengeId
+	}
+	return nil
+}
+
+func (x *DungeonPartyState) GetStarting() bool {
+	if x != nil {
+		return x.Starting
 	}
 	return false
 }
@@ -468,6 +484,185 @@ func (x *DungeonPartyMember) GetOnline() bool {
 	return false
 }
 
+// 场次进度只观察同一份已确认的永久入场及原战斗。
+type DungeonBattleState struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ChallengeId     []byte                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
+	SceneEpoch      uint64                 `protobuf:"varint,2,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	Stage           uint32                 `protobuf:"varint,3,opt,name=stage,proto3" json:"stage,omitempty"`
+	StageCount      uint32                 `protobuf:"varint,4,opt,name=stage_count,json=stageCount,proto3" json:"stage_count,omitempty"`
+	ExpiresAtUnixMs int64                  `protobuf:"varint,5,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	// 1 载入、2 战斗、3 结算、4 通关、5 失败、6 系统中断。
+	State         uint32 `protobuf:"varint,6,opt,name=state,proto3" json:"state,omitempty"`
+	ErrorCode     uint32 `protobuf:"varint,7,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DungeonBattleState) Reset() {
+	*x = DungeonBattleState{}
+	mi := &file_dungeon_party_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DungeonBattleState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DungeonBattleState) ProtoMessage() {}
+
+func (x *DungeonBattleState) ProtoReflect() protoreflect.Message {
+	mi := &file_dungeon_party_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DungeonBattleState.ProtoReflect.Descriptor instead.
+func (*DungeonBattleState) Descriptor() ([]byte, []int) {
+	return file_dungeon_party_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *DungeonBattleState) GetChallengeId() []byte {
+	if x != nil {
+		return x.ChallengeId
+	}
+	return nil
+}
+
+func (x *DungeonBattleState) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *DungeonBattleState) GetStage() uint32 {
+	if x != nil {
+		return x.Stage
+	}
+	return 0
+}
+
+func (x *DungeonBattleState) GetStageCount() uint32 {
+	if x != nil {
+		return x.StageCount
+	}
+	return 0
+}
+
+func (x *DungeonBattleState) GetExpiresAtUnixMs() int64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *DungeonBattleState) GetState() uint32 {
+	if x != nil {
+		return x.State
+	}
+	return 0
+}
+
+func (x *DungeonBattleState) GetErrorCode() uint32 {
+	if x != nil {
+		return x.ErrorCode
+	}
+	return 0
+}
+
+// 允许当前连接安装一次原场次的精确目标基线。先于对应 EnterLineResult 投递。
+type DungeonSceneTransition struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	ChallengeId      []byte                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
+	SourceSceneEpoch uint64                 `protobuf:"varint,2,opt,name=source_scene_epoch,json=sourceSceneEpoch,proto3" json:"source_scene_epoch,omitempty"`
+	TargetSceneEpoch uint64                 `protobuf:"varint,3,opt,name=target_scene_epoch,json=targetSceneEpoch,proto3" json:"target_scene_epoch,omitempty"`
+	TargetBaselineId uint64                 `protobuf:"varint,4,opt,name=target_baseline_id,json=targetBaselineId,proto3" json:"target_baseline_id,omitempty"`
+	TargetMapId      uint64                 `protobuf:"varint,5,opt,name=target_map_id,json=targetMapId,proto3" json:"target_map_id,omitempty"`
+	TargetSceneKind  uint32                 `protobuf:"varint,6,opt,name=target_scene_kind,json=targetSceneKind,proto3" json:"target_scene_kind,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *DungeonSceneTransition) Reset() {
+	*x = DungeonSceneTransition{}
+	mi := &file_dungeon_party_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DungeonSceneTransition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DungeonSceneTransition) ProtoMessage() {}
+
+func (x *DungeonSceneTransition) ProtoReflect() protoreflect.Message {
+	mi := &file_dungeon_party_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DungeonSceneTransition.ProtoReflect.Descriptor instead.
+func (*DungeonSceneTransition) Descriptor() ([]byte, []int) {
+	return file_dungeon_party_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DungeonSceneTransition) GetChallengeId() []byte {
+	if x != nil {
+		return x.ChallengeId
+	}
+	return nil
+}
+
+func (x *DungeonSceneTransition) GetSourceSceneEpoch() uint64 {
+	if x != nil {
+		return x.SourceSceneEpoch
+	}
+	return 0
+}
+
+func (x *DungeonSceneTransition) GetTargetSceneEpoch() uint64 {
+	if x != nil {
+		return x.TargetSceneEpoch
+	}
+	return 0
+}
+
+func (x *DungeonSceneTransition) GetTargetBaselineId() uint64 {
+	if x != nil {
+		return x.TargetBaselineId
+	}
+	return 0
+}
+
+func (x *DungeonSceneTransition) GetTargetMapId() uint64 {
+	if x != nil {
+		return x.TargetMapId
+	}
+	return 0
+}
+
+func (x *DungeonSceneTransition) GetTargetSceneKind() uint32 {
+	if x != nil {
+		return x.TargetSceneKind
+	}
+	return 0
+}
+
 var File_dungeon_party_proto protoreflect.FileDescriptor
 
 const file_dungeon_party_proto_rawDesc = "" +
@@ -485,7 +680,7 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\rminimum_level\x18\x06 \x01(\rR\fminimumLevel\x12*\n" +
 	"\x11allowed_jobs_mask\x18\a \x01(\rR\x0fallowedJobsMask\x12$\n" +
 	"\x0eallow_same_job\x18\b \x01(\bR\fallowSameJob\x12$\n" +
-	"\x0etarget_role_id\x18\t \x01(\fR\ftargetRoleId\"\x9a\x02\n" +
+	"\x0etarget_role_id\x18\t \x01(\fR\ftargetRoleId\"\xd9\x02\n" +
 	"\x11DungeonPartyState\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1d\n" +
@@ -494,7 +689,9 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\ttemplates\x18\x03 \x03(\v2 .minimir.v1.DungeonPartyTemplateR\ttemplates\x126\n" +
 	"\aparties\x18\x04 \x03(\v2\x1c.minimir.v1.DungeonPartyViewR\aparties\x129\n" +
 	"\town_party\x18\x05 \x01(\v2\x1c.minimir.v1.DungeonPartyViewR\bownParty\x12\x12\n" +
-	"\x04more\x18\x06 \x01(\bR\x04more\"\xaa\x01\n" +
+	"\x04more\x18\x06 \x01(\bR\x04more\x12!\n" +
+	"\fchallenge_id\x18\a \x01(\fR\vchallengeId\x12\x1a\n" +
+	"\bstarting\x18\b \x01(\bR\bstarting\"\xaa\x01\n" +
 	"\x14DungeonPartyTemplate\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x01(\rR\n" +
 	"templateId\x12!\n" +
@@ -517,7 +714,25 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x10\n" +
 	"\x03job\x18\x03 \x01(\rR\x03job\x12\x14\n" +
 	"\x05level\x18\x04 \x01(\rR\x05level\x12\x16\n" +
-	"\x06online\x18\x05 \x01(\bR\x06onlineB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\x06online\x18\x05 \x01(\bR\x06online\"\xf1\x01\n" +
+	"\x12DungeonBattleState\x12!\n" +
+	"\fchallenge_id\x18\x01 \x01(\fR\vchallengeId\x12\x1f\n" +
+	"\vscene_epoch\x18\x02 \x01(\x04R\n" +
+	"sceneEpoch\x12\x14\n" +
+	"\x05stage\x18\x03 \x01(\rR\x05stage\x12\x1f\n" +
+	"\vstage_count\x18\x04 \x01(\rR\n" +
+	"stageCount\x12+\n" +
+	"\x12expires_at_unix_ms\x18\x05 \x01(\x03R\x0fexpiresAtUnixMs\x12\x14\n" +
+	"\x05state\x18\x06 \x01(\rR\x05state\x12\x1d\n" +
+	"\n" +
+	"error_code\x18\a \x01(\rR\terrorCode\"\x95\x02\n" +
+	"\x16DungeonSceneTransition\x12!\n" +
+	"\fchallenge_id\x18\x01 \x01(\fR\vchallengeId\x12,\n" +
+	"\x12source_scene_epoch\x18\x02 \x01(\x04R\x10sourceSceneEpoch\x12,\n" +
+	"\x12target_scene_epoch\x18\x03 \x01(\x04R\x10targetSceneEpoch\x12,\n" +
+	"\x12target_baseline_id\x18\x04 \x01(\x04R\x10targetBaselineId\x12\"\n" +
+	"\rtarget_map_id\x18\x05 \x01(\x04R\vtargetMapId\x12*\n" +
+	"\x11target_scene_kind\x18\x06 \x01(\rR\x0ftargetSceneKindB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_dungeon_party_proto_rawDescOnce sync.Once
@@ -531,13 +746,15 @@ func file_dungeon_party_proto_rawDescGZIP() []byte {
 	return file_dungeon_party_proto_rawDescData
 }
 
-var file_dungeon_party_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_dungeon_party_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_dungeon_party_proto_goTypes = []any{
-	(*DungeonPartyRequest)(nil),  // 0: minimir.v1.DungeonPartyRequest
-	(*DungeonPartyState)(nil),    // 1: minimir.v1.DungeonPartyState
-	(*DungeonPartyTemplate)(nil), // 2: minimir.v1.DungeonPartyTemplate
-	(*DungeonPartyView)(nil),     // 3: minimir.v1.DungeonPartyView
-	(*DungeonPartyMember)(nil),   // 4: minimir.v1.DungeonPartyMember
+	(*DungeonPartyRequest)(nil),    // 0: minimir.v1.DungeonPartyRequest
+	(*DungeonPartyState)(nil),      // 1: minimir.v1.DungeonPartyState
+	(*DungeonPartyTemplate)(nil),   // 2: minimir.v1.DungeonPartyTemplate
+	(*DungeonPartyView)(nil),       // 3: minimir.v1.DungeonPartyView
+	(*DungeonPartyMember)(nil),     // 4: minimir.v1.DungeonPartyMember
+	(*DungeonBattleState)(nil),     // 5: minimir.v1.DungeonBattleState
+	(*DungeonSceneTransition)(nil), // 6: minimir.v1.DungeonSceneTransition
 }
 var file_dungeon_party_proto_depIdxs = []int32{
 	2, // 0: minimir.v1.DungeonPartyState.templates:type_name -> minimir.v1.DungeonPartyTemplate
@@ -562,7 +779,7 @@ func file_dungeon_party_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dungeon_party_proto_rawDesc), len(file_dungeon_party_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

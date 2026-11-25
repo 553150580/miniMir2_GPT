@@ -50,6 +50,9 @@ func (e *Engine) DrainSettlements(ctx context.Context) error {
 		}
 		pendingBoss, failedBoss := w.drainWorldBossLedger(now)
 		status.pending, status.isolated = status.pending || pendingBoss, status.isolated+failedBoss
+		startingDungeon := w.tickDungeonParties(now)
+		pendingDungeon, failedDungeon := w.drainDungeonArenas(now)
+		status.pending, status.isolated = status.pending || startingDungeon || pendingDungeon, status.isolated+failedDungeon
 		results <- status
 	}}
 	for {

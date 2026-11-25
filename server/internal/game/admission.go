@@ -132,6 +132,8 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	if r.Scene == 0 {
 		w.initialize(r, role)
 	}
+	// 只有持久确认的新票才撤销正在使用的讨伐观察，旧票失败时原连接可继续打。
+	w.suspendDungeonObservation(r)
 	if r.Conn != nil && r.Conn != c.conn {
 		dungeonPartyDetached(r, r.Conn, now)
 		r.Conn.Close("role taken over")

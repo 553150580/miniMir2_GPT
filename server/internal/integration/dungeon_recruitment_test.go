@@ -193,7 +193,14 @@ func waitDungeonParty(t *testing.T, c *client, ready func(*pb.DungeonPartyView) 
 }
 
 // startDungeonRecruitmentServer 装配同一账号服和一进程双运行服，仅隔离服安装有四段的测试模板。
-func startDungeonRecruitmentServer(t *testing.T, enabled bool) (*persistence.Store, string, directoryTestEntry, directoryTestEntry) {
+func startDungeonRecruitmentServer(t *testing.T, enabled bool, arrange ...func(*devconfig.Config)) (*persistence.Store, string, directoryTestEntry, directoryTestEntry) {
+	t.Helper()
+	store, endpoint, east, west, _ := startDungeonServer(t, enabled, arrange...)
+	return store, endpoint, east, west
+}
+
+// startDungeonServer 额外提供同运行服的受控停止入口，用于验证原挑战停止与恢复。
+func startDungeonServer(t *testing.T, enabled bool, arrange ...func(*devconfig.Config)) (*persistence.Store, string, directoryTestEntry, directoryTestEntry, func()) {
 	t.Helper()
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" || os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI") == "" {
 		t.Skip("需要已核验的独立 MongoDB 副本集")
@@ -217,8 +224,11 @@ func startDungeonRecruitmentServer(t *testing.T, enabled bool) (*persistence.Sto
 				Enemies:      []devconfig.DungeonEnemyDefinition{{MonsterID: cfg.Fixture.ChallengeMonsters[0].ID, Spawn: devconfig.Point{X: x + 1, Y: 2}}}})
 		}
 		cfg.Fixture.DungeonReleases = []devconfig.DungeonDefinition{trial}
-		must(t, cfg.Fixture.Validate())
 	}
+	for _, configure := range arrange {
+		configure(&cfg)
+	}
+	must(t, cfg.Fixture.Validate())
 	store, err := persistence.Open(t.Context(), cfg)
 	must(t, err)
 	t.Cleanup(func() {
@@ -228,6 +238,6 @@ func startDungeonRecruitmentServer(t *testing.T, enabled bool) (*persistence.Sto
 		must(t, store.DB.Drop(cleanup))
 	})
 	startDurableWorldBossNode(t, cfg, "account", cfg.AccountAddress)
-	startDurableWorldBossNode(t, cfg, "game", cfg.GameAddress)
-	return store, "http://" + cfg.AccountAddress + "/rpc", east, west
+	stopGame := startDurableWorldBossNode(t, cfg, "game", cfg.GameAddress)
+	return store, "http://" + cfg.AccountAddress + "/rpc", east, west, stopGame
 }

@@ -34,8 +34,25 @@ type DungeonResume struct {
 
 // FinishDungeon 在全队原所有权下确认唯一终态。系统中断退原日次数，普通失败等保留扣次。
 func (s *Store) FinishDungeon(ctx context.Context, q DungeonFinish) (DungeonChallenge, []domain.Role, error) {
+	if len(q.Members) == 0 || len(q.Members) > devconfig.DungeonMaxPlayers {
+		return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "讨伐链原队员授权无效")
+	}
+	return s.finishDungeon(ctx, q)
+}
+
+// FinishOwnedDungeon 只接受服务器场次执行器的原终态。编号、预约和执行必须已获当前运行服授权。
+// 玩家重连或被封禁不会改变已经发生的全队终态。实际写入始终按原成员永久归属和当前角色版本核对。
+func (s *Store) FinishOwnedDungeon(ctx context.Context, q DungeonFinish) (DungeonChallenge, []domain.Role, error) {
+	if len(q.Members) != 0 {
+		return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "运行服结算只读取原场次成员")
+	}
+	return s.finishDungeon(ctx, q)
+}
+
+// finishDungeon 核对原扣次身份、已确定的结果和全员永久状态，任何成员写入失败均回滚整场。
+func (s *Store) finishDungeon(ctx context.Context, q DungeonFinish) (DungeonChallenge, []domain.Role, error) {
 	if !validDungeonProof(q.ChallengeID, q.ReservationID, q.Execution) || q.Outcome < DungeonSucceeded || q.Outcome > DungeonSystemInterrupted ||
-		q.FinishedAt.IsZero() || len(q.Members) == 0 || len(q.Members) > devconfig.DungeonMaxPlayers {
+		q.FinishedAt.IsZero() {
 		return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "讨伐链原终态提案无效")
 	}
 	auths := slices.Clone(q.Members)
@@ -52,18 +69,13 @@ func (s *Store) FinishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 		if err != nil {
 			return authorityReadError(err, p.CodeOperationConflict, "讨伐链原扣次回执不存在")
 		}
-		if !s.ownsDungeon(record) || record.ReservationID != q.ReservationID || record.Execution != q.Execution || len(record.Members) != len(auths) {
+		if !s.ownsDungeon(record) || record.ReservationID != q.ReservationID || record.Execution != q.Execution ||
+			len(record.Members) == 0 || len(record.Members) > devconfig.DungeonMaxPlayers {
 			return Fail(p.CodeOperationConflict, "讨伐链原执行、扣次回执或队员已变化")
 		}
-		roles, err = s.dungeonRoles(tc, auths)
+		roles, err = s.dungeonFinishRoles(tc, record, auths)
 		if err != nil {
 			return err
-		}
-		for i, role := range roles {
-			member := record.Members[i]
-			if role.ID != member.RoleID || role.AccountID != member.AccountID || role.Origin != member.Origin || auths[i].SessionEpoch != member.SessionEpoch {
-				return Fail(p.CodeStaleSession, "讨伐链原席位尚未在当前会话确认接回")
-			}
 		}
 		if record.Outcome != DungeonActive {
 			if record.FinishDigest != digest {
@@ -84,6 +96,39 @@ func (s *Store) FinishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 		return DungeonChallenge{}, nil, err
 	}
 	return result, roles, nil
+}
+
+// dungeonFinishRoles 从已持久名单读取对应拥有者。带账号授权的路径还要核对原席位会话。
+func (s *Store) dungeonFinishRoles(ctx context.Context, record dungeonRecord, auths []Auth) ([]domain.Role, error) {
+	if len(auths) == 0 {
+		roles := make([]domain.Role, 0, len(record.Members))
+		for _, member := range record.Members {
+			role, err := s.Role(ctx, member.RoleID)
+			if err != nil {
+				return nil, err
+			}
+			if role.RunServerID != record.RunID || role.RunEpoch != record.RunEpoch || role.Owner != record.OwnerInstance ||
+				role.AccountID != member.AccountID || role.Origin != member.Origin {
+				return nil, Fail(p.CodeRouteChanged, "讨伐链原角色的运行服或永久归属已变化")
+			}
+			roles = append(roles, role)
+		}
+		return roles, nil
+	}
+	if len(auths) != len(record.Members) {
+		return nil, Fail(p.CodeOperationConflict, "讨伐链原执行、扣次回执或队员已变化")
+	}
+	roles, err := s.dungeonRoles(ctx, auths)
+	if err != nil {
+		return nil, err
+	}
+	for i, role := range roles {
+		member := record.Members[i]
+		if role.ID != member.RoleID || role.AccountID != member.AccountID || role.Origin != member.Origin || auths[i].SessionEpoch != member.SessionEpoch {
+			return nil, Fail(p.CodeStaleSession, "讨伐链原席位尚未在当前会话确认接回")
+		}
+	}
+	return roles, nil
 }
 
 // ResumeDungeon 不改入场计数。新连接必须已通过游戏票且仍在原运行服持有该角色。

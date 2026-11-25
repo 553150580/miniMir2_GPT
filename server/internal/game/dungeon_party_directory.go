@@ -20,6 +20,7 @@ const (
 	dungeonPartyLeave                    // 主动退队；队长退出同时解散。
 	dungeonPartyKick                     // 队长从招募房间移除一名成员。
 	dungeonPartyUpdate                   // 队长调整招募条件，不主动移除原成员。
+	dungeonPartyStart                    // 队长按原修订发起整队开战。
 )
 
 const dungeonPartyJobMask uint32 = 0b111 // 职业位按战士、法师和道士的协议编号映射。
@@ -57,6 +58,7 @@ type dungeonParty struct {
 	requirements dungeonPartyRequirements // 新成员必须满足的条件。
 	members      []dungeonPartyMember     // 按入队次序排列，索引零为队长。
 	deadline     time.Time                // 队长离线后的解散时刻，在线时为空。
+	start        *dungeonStartAttempt     // 在原队伍上冻结、正在查证的唯一开战。
 }
 
 // dungeonPartyDirectory 由所属运行服的唯一分片写入。
@@ -81,7 +83,7 @@ func validDungeonPartyRequest(q *pb.DungeonPartyRequest) bool {
 		return partyID == 0 && targetID == 0 && q.ExpectedRevision == 0 && q.TemplateId == 0 && !filters
 	case dungeonPartyCreate:
 		return partyID == 16 && targetID == 0 && q.ExpectedRevision == 0 && q.TemplateId != 0
-	case dungeonPartyJoin, dungeonPartyLeave:
+	case dungeonPartyJoin, dungeonPartyLeave, dungeonPartyStart:
 		return partyID == 16 && targetID == 0 && q.ExpectedRevision != 0 && q.TemplateId == 0 && !filters
 	case dungeonPartyKick:
 		return partyID == 16 && targetID == 16 && q.ExpectedRevision != 0 && q.TemplateId == 0 && !filters
@@ -95,14 +97,20 @@ func (d *dungeonPartyDirectory) handle(identity dungeonPartyIdentity, f *devconf
 	d.observe(identity)
 	d.advance(now)
 	code := d.mutate(identity, f, q, now)
-	state := &pb.DungeonPartyState{SceneEpoch: q.SceneEpoch, ErrorCode: code, Templates: dungeonPartyTemplateViews(f)}
-	if party := d.byRole[identity.id]; party != nil {
+	return d.state(identity.id, f, q.SceneEpoch, code)
+}
+
+// state 在招募分片冻结原请求的公开名单和自己的席位。
+func (d *dungeonPartyDirectory) state(roleID string, f *devconfig.Fixture, scene uint64, code uint32) *pb.DungeonPartyState {
+	state := &pb.DungeonPartyState{SceneEpoch: scene, ErrorCode: code, Templates: dungeonPartyTemplateViews(f)}
+	if party := d.byRole[roleID]; party != nil {
 		state.OwnParty = party.view()
+		state.Starting = party.start != nil
 	}
 	// 所有动作返回最新自己的队伍。条件冲突后可直接用最新版本重新发起。
 	public := make([]*dungeonParty, 0, len(d.parties))
 	for _, party := range d.parties {
-		if party.members[0].online && len(party.members) < devconfig.DungeonMaxPlayers {
+		if party.start == nil && party.members[0].online && len(party.members) < devconfig.DungeonMaxPlayers {
 			public = append(public, party)
 		}
 	}
@@ -127,6 +135,12 @@ func (d *dungeonPartyDirectory) mutate(id dungeonPartyIdentity, f *devconfig.Fix
 	own := d.byRole[id.id]
 	partyID := domain.Hex(q.PartyId)
 	party := d.parties[partyID]
+	if own != nil && own.start != nil || party != nil && party.start != nil {
+		return p.CodeOperationPending
+	}
+	if q.Action == dungeonPartyStart {
+		return p.CodeInvalidArgument // 开战通过独立协作，不是名单变更。
+	}
 	if q.Action == dungeonPartyCreate {
 		if own != nil && own == party && party.members[0].id == id.id && party.template == q.TemplateId {
 			return 0 // 原创建响应丢失时返回现有房间，条件不会被旧包覆盖。
@@ -269,6 +283,9 @@ func (d *dungeonPartyDirectory) observe(id dungeonPartyIdentity) {
 // advance 不依赖断线通知进入普通队列；超期队长的新票不能恢复已过期招募。
 func (d *dungeonPartyDirectory) advance(now time.Time) {
 	for _, party := range d.parties {
+		if party.start != nil {
+			continue // 未知提交期间不得解散或换人。
+		}
 		changed := false
 		previousDeadline := party.deadline
 		for i := range party.members {

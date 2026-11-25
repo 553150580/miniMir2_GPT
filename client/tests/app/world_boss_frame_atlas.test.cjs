@@ -84,6 +84,23 @@ test('过期的原帧索引在请求纹理前失败并释放索引引用', async
     assert.equal(index.references, 0);
 });
 
+test('讨伐图集返回缺席帧供原资源补入，已登记的帧仍核对原尺寸和摘要', async () => {
+    const { atlas, index } = fixture({
+        schema_version: 1, pages: [page('page-00')], frames: { 'Magic:200': rectangles['Magic:200'] },
+    });
+    const target = new Map();
+    const progress = [];
+    await assert.rejects(atlas.populate(keys, originals, target, () => {}), /地图图集缺少原帧/);
+    const unpacked = await atlas.populate(keys, originals, target, count => progress.push(count), true);
+    assert.deepEqual(unpacked, ['Magic:201']);
+    assert.deepEqual(Array.from(target.keys()), ['Magic:200']);
+    assert.deepEqual(progress, [1]);
+    assert.equal(index.references, 0);
+    atlas.dispose();
+    const corrupt = fixture({ schema_version: 1, pages: [page('page-00')], frames: { 'Magic:200': [0, 1, 2, 3, 4, '旧摘要'] } });
+    await assert.rejects(corrupt.atlas.populate(keys, originals, new Map(), () => {}, true), /来源不符/);
+});
+
 test('旅行图集只加载当前地图的页面并计入实际纹理字节', async () => {
     const frames = { ...rectangles, 'Magic:201': [1, 6, 2, 3, 4, '原帧乙'] };
     const { atlas, requests } = fixture({ schema_version: 1, pages: [page('page-00'), page('page-01')], frames },

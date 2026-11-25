@@ -16,6 +16,7 @@ import { RoleBindingModel } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
 import { TeleportModel } from './TeleportModel';
 import { BossTransition } from './BossTransition';
+import { DungeonTransition } from './DungeonTransition';
 import { PetBornModel } from './PetBornModel';
 import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
 import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
@@ -45,6 +46,8 @@ export const session = {
     entryServerTransitionId: '',
     entryBossTransition: false,
     bossTransition: new BossTransition(),
+    entryDungeonTransition: false,
+    dungeonTransition: new DungeonTransition(),
     teleport: new TeleportModel(),
     petBorn: new PetBornModel(),
     // 表现只量接收后的单调时长，不拿客户端Date与服务器Unix做差。
@@ -86,6 +89,17 @@ session.connection.subscribe((packet: Packet) => {
     else switch (packet.id) {
         case 20002:
             acceptEntry(packet); break;
+        case 20023:
+        case 20024:
+            if (session.entry && session.entryBinding === packet.binding.toString() && session.entryConnection === session.connection.generation
+                && !session.travel.active && !session.teleport.blocksInput) {
+                try {
+                    if (packet.id === 20024) session.dungeonTransition.observe(packet.value, session.entry);
+                    else session.dungeonTransition.observeProgress(packet.value, session.entry);
+                }
+                catch (error) { session.lastError = error instanceof Error ? error.message : String(error); }
+            }
+            break;
         case 20014:
         case 20020:
             if (session.entryBinding === packet.binding.toString() && session.entryConnection === session.connection.generation) {
@@ -113,7 +127,7 @@ session.connection.subscribe((packet: Packet) => {
                 if (next.greaterThan(confirmedCommand)) confirmedCommand = next;
                 if (confirmedCommand.greaterThan(session.command)) session.command = confirmedCommand;
                 const identity = currentEntryIdentity(); if (identity && session.entryTravelId) session.travel.ready(identity);
-                if (identity && session.entryServerTransitionId && !session.entryBossTransition) session.teleport.ready(identity);
+                if (identity && session.entryServerTransitionId && !session.entryBossTransition && !session.entryDungeonTransition) session.teleport.ready(identity);
             }
             break;
         case 20010:
@@ -224,12 +238,12 @@ session.connection.subscribe((packet: Packet) => {
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.bossTransition.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; recycleModel.detach(); session.recycleNotice = null; experienceModel.detach(); session.experienceNotice = null; session.progressionCurve = null; quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.bossTransition.clear(); session.dungeonTransition.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; recycleModel.detach(); session.recycleNotice = null; experienceModel.detach(); session.experienceNotice = null; session.progressionCurve = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
     try {
-        if (!Number.isInteger(value.playerHandle) || value.playerHandle < 1 || value.playerHandle > 0xffffffff || ![1, 2, 3, 4].includes(value.sceneKind)) throw new Error('入场缺少有效玩家身份或地图类型');
+        if (!Number.isInteger(value.playerHandle) || value.playerHandle < 1 || value.playerHandle > 0xffffffff || ![1, 2, 3, 4, 5].includes(value.sceneKind)) throw new Error('入场缺少有效玩家身份或地图类型');
         travelInteger(value.sceneEpoch, true); travelInteger(value.baselineId, true); travelInteger(value.roomId, true); travelInteger(value.resourceVersion, true);
         const sameConnection = session.entry && session.entryBinding === packet.binding.toString() && session.entryConnection === session.connection.generation;
         if (sameConnection && BigInt(value.sceneEpoch.toString()) <= BigInt(session.entry.sceneEpoch.toString())) {
@@ -243,7 +257,9 @@ function acceptEntry(packet: Packet): void {
         const forced = !!transitionId && session.teleport.matchesEntry(identity, value.position);
         const boss = !!(sameConnection && transitionId && !forced && !session.teleport.blocksInput && !session.travel.active
             && session.bossTransition.accept(transitionId, value, session.entry));
-        if ((value.sceneKind >= 3 && !boss) || (transitionId && !forced && !boss)) throw new Error('新地图入场缺少匹配的服务端迁移结果');
+        const dungeon = !!(sameConnection && transitionId && !forced && !boss && !session.teleport.blocksInput && !session.travel.active
+            && session.dungeonTransition.accept(transitionId, value, session.entry));
+        if ((value.sceneKind >= 3 && !boss && !dungeon) || (transitionId && !forced && !boss && !dungeon)) throw new Error('新地图入场缺少匹配的服务端迁移结果');
         if (sameConnection && session.teleport.blocksInput && !forced) throw new Error('新地图入场不匹配服务端瞬移身份');
         const travelling = !forced && session.travel.acceptsEntry(identity);
         if (sameConnection && session.travel.active && !travelling && !forced) throw new Error('新地图入场不匹配旅行提交身份');
@@ -254,7 +270,8 @@ function acceptEntry(packet: Packet): void {
         session.entryBinding = packet.binding.toString(); session.entryConnection = session.connection.generation; session.entryRole = identity.role; session.entryTravelId = travelling ? identity.travelId : '';
         session.entryServerTransitionId = transitionId;
         session.entryBossTransition = boss;
-        if (!sameConnection) session.bossTransition.clear();
+        session.entryDungeonTransition = dungeon;
+        if (!sameConnection) { session.bossTransition.clear(); session.dungeonTransition.clear(); }
         if (!forced) session.teleport.bind(currentEntryIdentity()!);
         bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
         session.petBorn.bind(currentEntryIdentity()!);

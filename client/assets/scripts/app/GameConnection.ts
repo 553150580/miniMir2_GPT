@@ -26,7 +26,7 @@ const codecs: Record<number, MessageType> = {
     20012: pb.PersonalBossEnter, 20013: pb.PersonalBossLeave, 20014: pb.PersonalBossState,
     20015: pb.PersonalBossQuery, 20016: pb.PersonalBossInfo,
     20017: pb.WorldBossQuery, 20018: pb.WorldBossEnter, 20019: pb.WorldBossLeave, 20020: pb.WorldBossState,
-    20021: pb.DungeonPartyRequest, 20022: pb.DungeonPartyState,
+    20021: pb.DungeonPartyRequest, 20022: pb.DungeonPartyState, 20023: pb.DungeonBattleState, 20024: pb.DungeonSceneTransition,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
     30012: pb.CastStep, 30013: pb.EntityDisplacement, 30014: pb.TeleportResult, 30015: pb.PetBorn,

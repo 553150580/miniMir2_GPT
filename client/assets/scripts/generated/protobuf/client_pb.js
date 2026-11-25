@@ -38583,6 +38583,8 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.DungeonPartyView.$Properties>|null} [parties] DungeonPartyState parties
              * @property {minimir.v1.DungeonPartyView.$Properties|null} [own_party] DungeonPartyState own_party
              * @property {boolean|null} [more] DungeonPartyState more
+             * @property {Uint8Array|null} [challenge_id] DungeonPartyState challenge_id
+             * @property {boolean|null} [starting] DungeonPartyState starting
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -38665,6 +38667,22 @@ $root.minimir = (function() {
             DungeonPartyState.prototype.more = false;
 
             /**
+             * DungeonPartyState challenge_id.
+             * @member {Uint8Array} challenge_id
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.challenge_id = $util.newBuffer([]);
+
+            /**
+             * DungeonPartyState starting.
+             * @member {boolean} starting
+             * @memberof minimir.v1.DungeonPartyState
+             * @instance
+             */
+            DungeonPartyState.prototype.starting = false;
+
+            /**
              * Creates a new DungeonPartyState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.DungeonPartyState
@@ -38710,6 +38728,10 @@ $root.minimir = (function() {
                     $root.minimir.v1.DungeonPartyView.encode(message.own_party, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
                 if (message.more != null && $Object.hasOwnProperty.call(message, "more") && message.more !== false)
                     writer.uint32(/* id 6, wireType 0 =*/48).bool(message.more);
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id.length)
+                    writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.challenge_id);
+                if (message.starting != null && $Object.hasOwnProperty.call(message, "starting") && message.starting !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.starting);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -38816,6 +38838,24 @@ $root.minimir = (function() {
                                 delete message.more;
                             continue;
                         }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.starting = value;
+                            else
+                                delete message.starting;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -38896,6 +38936,12 @@ $root.minimir = (function() {
                 if (message.more != null && $Object.hasOwnProperty.call(message, "more"))
                     if (typeof message.more !== "boolean")
                         return "more: boolean expected";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!(message.challenge_id && typeof message.challenge_id.length === "number" || $util.isString(message.challenge_id)))
+                        return "challenge_id: buffer expected";
+                if (message.starting != null && $Object.hasOwnProperty.call(message, "starting"))
+                    if (typeof message.starting !== "boolean")
+                        return "starting: boolean expected";
                 return null;
             };
 
@@ -39914,6 +39960,691 @@ $root.minimir = (function() {
             };
 
             return DungeonPartyMember;
+        })();
+
+        v1.DungeonBattleState = (function() {
+
+            /**
+             * Properties of a DungeonBattleState.
+             * @typedef {Object} minimir.v1.DungeonBattleState.$Properties
+             * @property {Uint8Array|null} [challenge_id] DungeonBattleState challenge_id
+             * @property {Long|null} [scene_epoch] DungeonBattleState scene_epoch
+             * @property {number|null} [stage] DungeonBattleState stage
+             * @property {number|null} [stage_count] DungeonBattleState stage_count
+             * @property {Long|null} [expires_at_unix_ms] DungeonBattleState expires_at_unix_ms
+             * @property {number|null} [state] DungeonBattleState state
+             * @property {number|null} [error_code] DungeonBattleState error_code
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonBattleState.
+             * @memberof minimir.v1
+             * @interface IDungeonBattleState
+             * @augments minimir.v1.DungeonBattleState.$Properties
+             * @deprecated Use minimir.v1.DungeonBattleState.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonBattleState.
+             * @typedef {minimir.v1.DungeonBattleState.$Properties} minimir.v1.DungeonBattleState.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonBattleState.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonBattleState.
+             * @constructor
+             * @param {minimir.v1.DungeonBattleState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonBattleState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonBattleState challenge_id.
+             * @member {Uint8Array} challenge_id
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.challenge_id = $util.newBuffer([]);
+
+            /**
+             * DungeonBattleState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonBattleState stage.
+             * @member {number} stage
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.stage = 0;
+
+            /**
+             * DungeonBattleState stage_count.
+             * @member {number} stage_count
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.stage_count = 0;
+
+            /**
+             * DungeonBattleState expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * DungeonBattleState state.
+             * @member {number} state
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.state = 0;
+
+            /**
+             * DungeonBattleState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.DungeonBattleState
+             * @instance
+             */
+            DungeonBattleState.prototype.error_code = 0;
+
+            /**
+             * Creates a new DungeonBattleState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {minimir.v1.DungeonBattleState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonBattleState} DungeonBattleState instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonBattleState.$Shape): minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape;
+             *   (properties?: minimir.v1.DungeonBattleState.$Properties): minimir.v1.DungeonBattleState;
+             * }}
+             */
+            DungeonBattleState.create = function(properties) {
+                return new DungeonBattleState(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonBattleState message. Does not implicitly {@link minimir.v1.DungeonBattleState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {minimir.v1.DungeonBattleState.$Properties} message DungeonBattleState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonBattleState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.challenge_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.stage != null && $Object.hasOwnProperty.call(message, "stage") && message.stage !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.stage);
+                if (message.stage_count != null && $Object.hasOwnProperty.call(message, "stage_count") && message.stage_count !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.stage_count);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.expires_at_unix_ms);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.state);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.error_code);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonBattleState message, length delimited. Does not implicitly {@link minimir.v1.DungeonBattleState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {minimir.v1.DungeonBattleState.$Properties} message DungeonBattleState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonBattleState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonBattleState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape} DungeonBattleState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonBattleState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonBattleState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.stage = value;
+                            else
+                                delete message.stage;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.stage_count = value;
+                            else
+                                delete message.stage_count;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonBattleState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonBattleState & minimir.v1.DungeonBattleState.$Shape} DungeonBattleState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonBattleState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonBattleState message.
+             * @function verify
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonBattleState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!(message.challenge_id && typeof message.challenge_id.length === "number" || $util.isString(message.challenge_id)))
+                        return "challenge_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.stage != null && $Object.hasOwnProperty.call(message, "stage"))
+                    if (!$util.isInteger(message.stage))
+                        return "stage: integer expected";
+                if (message.stage_count != null && $Object.hasOwnProperty.call(message, "stage_count"))
+                    if (!$util.isInteger(message.stage_count))
+                        return "stage_count: integer expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonBattleState
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonBattleState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonBattleState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonBattleState";
+            };
+
+            return DungeonBattleState;
+        })();
+
+        v1.DungeonSceneTransition = (function() {
+
+            /**
+             * Properties of a DungeonSceneTransition.
+             * @typedef {Object} minimir.v1.DungeonSceneTransition.$Properties
+             * @property {Uint8Array|null} [challenge_id] DungeonSceneTransition challenge_id
+             * @property {Long|null} [source_scene_epoch] DungeonSceneTransition source_scene_epoch
+             * @property {Long|null} [target_scene_epoch] DungeonSceneTransition target_scene_epoch
+             * @property {Long|null} [target_baseline_id] DungeonSceneTransition target_baseline_id
+             * @property {Long|null} [target_map_id] DungeonSceneTransition target_map_id
+             * @property {number|null} [target_scene_kind] DungeonSceneTransition target_scene_kind
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a DungeonSceneTransition.
+             * @memberof minimir.v1
+             * @interface IDungeonSceneTransition
+             * @augments minimir.v1.DungeonSceneTransition.$Properties
+             * @deprecated Use minimir.v1.DungeonSceneTransition.$Properties instead.
+             */
+
+            /**
+             * Shape of a DungeonSceneTransition.
+             * @typedef {minimir.v1.DungeonSceneTransition.$Properties} minimir.v1.DungeonSceneTransition.$Shape
+             */
+
+            /**
+             * Constructs a new DungeonSceneTransition.
+             * @memberof minimir.v1
+             * @classdesc Represents a DungeonSceneTransition.
+             * @constructor
+             * @param {minimir.v1.DungeonSceneTransition.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var DungeonSceneTransition = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * DungeonSceneTransition challenge_id.
+             * @member {Uint8Array} challenge_id
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.challenge_id = $util.newBuffer([]);
+
+            /**
+             * DungeonSceneTransition source_scene_epoch.
+             * @member {Long} source_scene_epoch
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.source_scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonSceneTransition target_scene_epoch.
+             * @member {Long} target_scene_epoch
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.target_scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonSceneTransition target_baseline_id.
+             * @member {Long} target_baseline_id
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.target_baseline_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonSceneTransition target_map_id.
+             * @member {Long} target_map_id
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.target_map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * DungeonSceneTransition target_scene_kind.
+             * @member {number} target_scene_kind
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @instance
+             */
+            DungeonSceneTransition.prototype.target_scene_kind = 0;
+
+            /**
+             * Creates a new DungeonSceneTransition instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {minimir.v1.DungeonSceneTransition.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.DungeonSceneTransition} DungeonSceneTransition instance
+             * @type {{
+             *   (properties: minimir.v1.DungeonSceneTransition.$Shape): minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape;
+             *   (properties?: minimir.v1.DungeonSceneTransition.$Properties): minimir.v1.DungeonSceneTransition;
+             * }}
+             */
+            DungeonSceneTransition.create = function(properties) {
+                return new DungeonSceneTransition(properties);
+            };
+
+            /**
+             * Encodes the specified DungeonSceneTransition message. Does not implicitly {@link minimir.v1.DungeonSceneTransition.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {minimir.v1.DungeonSceneTransition.$Properties} message DungeonSceneTransition message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonSceneTransition.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.challenge_id);
+                if (message.source_scene_epoch != null && $Object.hasOwnProperty.call(message, "source_scene_epoch") && (typeof message.source_scene_epoch === "object" ? message.source_scene_epoch.low || message.source_scene_epoch.high : message.source_scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.source_scene_epoch);
+                if (message.target_scene_epoch != null && $Object.hasOwnProperty.call(message, "target_scene_epoch") && (typeof message.target_scene_epoch === "object" ? message.target_scene_epoch.low || message.target_scene_epoch.high : message.target_scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.target_scene_epoch);
+                if (message.target_baseline_id != null && $Object.hasOwnProperty.call(message, "target_baseline_id") && (typeof message.target_baseline_id === "object" ? message.target_baseline_id.low || message.target_baseline_id.high : message.target_baseline_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.target_baseline_id);
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id") && (typeof message.target_map_id === "object" ? message.target_map_id.low || message.target_map_id.high : message.target_map_id !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.target_map_id);
+                if (message.target_scene_kind != null && $Object.hasOwnProperty.call(message, "target_scene_kind") && message.target_scene_kind !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.target_scene_kind);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified DungeonSceneTransition message, length delimited. Does not implicitly {@link minimir.v1.DungeonSceneTransition.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {minimir.v1.DungeonSceneTransition.$Properties} message DungeonSceneTransition message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            DungeonSceneTransition.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a DungeonSceneTransition message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape} DungeonSceneTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonSceneTransition.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.DungeonSceneTransition();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.source_scene_epoch = value;
+                            else
+                                delete message.source_scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_scene_epoch = value;
+                            else
+                                delete message.target_scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_baseline_id = value;
+                            else
+                                delete message.target_baseline_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_map_id = value;
+                            else
+                                delete message.target_map_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_scene_kind = value;
+                            else
+                                delete message.target_scene_kind;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a DungeonSceneTransition message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonSceneTransition & minimir.v1.DungeonSceneTransition.$Shape} DungeonSceneTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            DungeonSceneTransition.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a DungeonSceneTransition message.
+             * @function verify
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            DungeonSceneTransition.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!(message.challenge_id && typeof message.challenge_id.length === "number" || $util.isString(message.challenge_id)))
+                        return "challenge_id: buffer expected";
+                if (message.source_scene_epoch != null && $Object.hasOwnProperty.call(message, "source_scene_epoch"))
+                    if (!$util.isInteger(message.source_scene_epoch) && !(message.source_scene_epoch && $util.isInteger(message.source_scene_epoch.low) && $util.isInteger(message.source_scene_epoch.high)))
+                        return "source_scene_epoch: integer|Long expected";
+                if (message.target_scene_epoch != null && $Object.hasOwnProperty.call(message, "target_scene_epoch"))
+                    if (!$util.isInteger(message.target_scene_epoch) && !(message.target_scene_epoch && $util.isInteger(message.target_scene_epoch.low) && $util.isInteger(message.target_scene_epoch.high)))
+                        return "target_scene_epoch: integer|Long expected";
+                if (message.target_baseline_id != null && $Object.hasOwnProperty.call(message, "target_baseline_id"))
+                    if (!$util.isInteger(message.target_baseline_id) && !(message.target_baseline_id && $util.isInteger(message.target_baseline_id.low) && $util.isInteger(message.target_baseline_id.high)))
+                        return "target_baseline_id: integer|Long expected";
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id"))
+                    if (!$util.isInteger(message.target_map_id) && !(message.target_map_id && $util.isInteger(message.target_map_id.low) && $util.isInteger(message.target_map_id.high)))
+                        return "target_map_id: integer|Long expected";
+                if (message.target_scene_kind != null && $Object.hasOwnProperty.call(message, "target_scene_kind"))
+                    if (!$util.isInteger(message.target_scene_kind))
+                        return "target_scene_kind: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for DungeonSceneTransition
+             * @function getTypeUrl
+             * @memberof minimir.v1.DungeonSceneTransition
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            DungeonSceneTransition.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.DungeonSceneTransition";
+            };
+
+            return DungeonSceneTransition;
         })();
 
         return v1;

@@ -148,6 +148,26 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 		// 主动停止先结清原流水；租约失败直接取消房间执行与结清等待。
 		leaseContext, cancelEngine = context.WithCancelCause(context.WithoutCancel(ctx))
 		defer cancelEngine(nil)
+	}
+	// 恢复期间照常续租，直到原代未完成的讨伐场核对结束才接收新连接。
+	leaseEvents := make(chan nodeLeaseEvent, 4)
+	go logNodeLeaseEvents(leaseContext, mode, leaseEvents)
+	go func() {
+		if err := watchNodeLease(leaseContext, confirmed, renew, leaseEvents); err != nil && leaseContext.Err() == nil {
+			cancelEngine(err)
+			cancel(err)
+			slog.Error("节点租约失败，隔离本进程", "mode", mode, "error", err)
+		}
+	}()
+	if mode == "game" {
+		for _, gameStore := range gameStores {
+			if err := gameStore.RecoverInterruptedDungeons(ctx); err != nil {
+				return fmt.Errorf("运行服 %d 讨伐链对账未完成：%w", gameStore.Cfg.RunID, err)
+			}
+		}
+		if err := context.Cause(ctx); err != nil {
+			return err
+		}
 		engine = game.NewRunEngine(leaseContext, gameStores)
 		server.Engine = engine
 		defer engine.Stop()
@@ -165,18 +185,6 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	// done 通知装配层 HTTP 监听已经停止或发生错误。
 	done := make(chan error, 1)
 	go func() { done <- httpServer.ListenAndServe() }()
-	// leaseEvents 创建用于维护租约事件集合的容器或通道。
-	leaseEvents := make(chan nodeLeaseEvent, 4)
-	go logNodeLeaseEvents(leaseContext, mode, leaseEvents)
-	// 游戏房间和 HTTP 接入都依赖续租结果，监视器失权时同时取消二者。
-	go func() {
-		// err 接收监视节点租约过程中可能产生的错误，供后续失败分支处理。
-		if err := watchNodeLease(leaseContext, confirmed, renew, leaseEvents); err != nil && leaseContext.Err() == nil {
-			cancelEngine(err)
-			cancel(err)
-			slog.Error("节点租约失败，隔离本进程", "mode", mode, "error", err)
-		}
-	}()
 	slog.Info("开发节点就绪", "mode", mode, "address", address, "database", cfg.Database, "instance", store.Instance, "runtime_ready", false)
 	select {
 	// err 保存当前操作的失败原因，供调用方检查或返回。

@@ -890,6 +890,30 @@
       "source_ref": "最终策划案4.18/7.2 三人讨伐链招募"
     },
     {
+      "value": 20023,
+      "name": "MsgS2CDungeonBattleState",
+      "proto_message": "DungeonBattleState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2 三人讨伐链实战"
+    },
+    {
+      "value": 20024,
+      "name": "MsgS2CDungeonSceneTransition",
+      "proto_message": "DungeonSceneTransition",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2 三人讨伐链场景附着"
+    },
+    {
       "value": 40020,
       "name": "MsgC2SWarehouseQuery",
       "proto_message": "WarehouseQuery",

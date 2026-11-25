@@ -175,12 +175,15 @@ export function skillUseBlock(snapshot: SkillSnapshot, row: SkillRow): { reason:
     let reason: string | undefined;
     if (kind === 'electric_shock' && (snapshot.mapNoPets || scene !== undefined && scene !== 1)) reason = '诱惑之光只能在允许捕获宠物的普通地图使用';
     else if (kind === 'trap_hexagon' && scene !== undefined && scene !== 1) reason = '困魔咒只能在普通野外地图使用';
-    else if (scene === 3 || scene === 4) {
-        if (kind === 'summon_pet') reason = '首领挑战中不能召唤或召回宠物';
-        else if (kind === 'teleport') reason = '首领挑战中不能使用瞬息移动';
-        else if (row.definition.material_quantity) reason = '首领挑战中不能使用消耗护符或毒粉的技能';
+    else if (scene === 3 || scene === 4 || scene === 5) {
+        const challenge = scene === 5 ? '讨伐链' : '首领挑战';
+        if (kind === 'summon_pet') reason = `${challenge}中不能召唤或召回宠物`;
+        else if (kind === 'teleport') reason = `${challenge}中不能使用瞬息移动`;
+        else if (row.definition.material_quantity) reason = `${challenge}中不能使用消耗护符或毒粉的技能`;
         else if (scene === 4 && kind === 'fire_wall') reason = '世界首领场中不能布置火墙';
         else if (scene === 4 && kind === 'revelation') reason = '世界首领场中不能使用心灵启示';
+        else if (scene === 5 && kind === 'fire_wall') reason = '讨伐链中不能布置火墙';
+        else if (scene === 5 && kind === 'revelation') reason = '讨伐链中不能使用心灵启示';
     }
     if (reason) return { reason, action: '本场禁用', quick: '禁用' };
     if (kind === 'summon_pet' && snapshot.mapNoPets) return { reason: '当前地图禁止召唤', action: '此图禁召', quick: '禁召' };
@@ -296,19 +299,22 @@ export function gridDirection(origin: { x: number; y: number }, target: { x: num
     if (!dx && !dy) return fallback;
     return (Math.round(Math.atan2(dx, -dy) * count / (2 * Math.PI)) + count) % count;
 }
-export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[], selectedHandle: number | null, playerHandle: number, checkCost = true): SkillEntity {
+export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[], selectedHandle: number | null, playerHandle: number, checkCost = true, sceneKind?: number): SkillEntity {
     const player = validateCaster(row, entities, playerHandle, checkCost), targetKind = skillTargetKind(row.definition);
     if (targetKind !== 'enemy_entity' && targetKind !== 'friendly_entity') throw new Error('该技能需要选择地面位置');
     const friendly = targetKind === 'friendly_entity';
     const distance = (target: SkillEntity): number => Math.max(Math.abs(target.position.x - player.position.x), Math.abs(target.position.y - player.position.y));
+    // 只有讨伐队伍的基线含同场可治疗的队友玩家，实际命中仍由场次分片裁决。
+    const friendlyBody = (target: SkillEntity): boolean =>
+        target.entityHandle === playerHandle || target.entityKind === 2 || (sceneKind === 5 && target.entityKind === 1);
     const legal = (target: SkillEntity): boolean => !target.isPetCorpse && integer(target.hp) > 0n
-        && (friendly ? target.entityHandle === playerHandle || target.entityKind === 2 : target.entityKind === 3);
+        && (friendly ? friendlyBody(target) : target.entityKind === 3);
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
     // 亡灵属性由服务端判定，圣言术直接提交玩家点选的怪物，避免无目标时自动换到其它怪物。
     if (row.definition.kind === 'turn_undead' && (!selected || !legal(selected))) throw new Error('请先点选一只存活的亡灵怪物');
     if ((row.definition.kind === 'electric_shock' || row.definition.kind === 'revelation') && (!selected || !legal(selected))) throw new Error('请先点选一只存活的怪物');
     if (friendly && selected && (selected.isPetCorpse || integer(selected.hp) === 0n)
-        && (selected.entityHandle === playerHandle || selected.entityKind === 2)) throw new Error('所选友方已倒下，请重新选择');
+        && friendlyBody(selected)) throw new Error('所选友方已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;
     if (!target && friendly) target = player;
     if (!target) target = entities.filter(legal).slice().sort((a, b) => distance(a) - distance(b) || a.entityHandle - b.entityHandle)[0];

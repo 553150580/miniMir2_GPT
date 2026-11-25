@@ -194,7 +194,11 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 			for _, point := range path {
 				event.Path = append(event.Path, pointPB(point))
 			}
-			w.send(r, p.MsgS2CEntityDisplacement, 0, event)
+			if r.dungeonCombat != nil {
+				w.sendDungeonObservation(r, p.MsgS2CEntityDisplacement, event)
+			} else {
+				w.send(r, p.MsgS2CEntityDisplacement, 0, event)
+			}
 		}
 		if out.Postamble {
 			// 原受推完成并广播后才检查最终格，途中经过的火墙不触发。

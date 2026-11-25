@@ -97,14 +97,20 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 // areaTargetsInWorld 在指定世界按实际地格和目标生命确定范围技能命中对象。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，s 记录技能，grid 记录网格，使用点位表示。
 func (w *worker) areaTargetsInWorld(r *room, world *worldState, s devconfig.Skill, grid devconfig.Point) []*entity {
+	// friendly 区分同场内友方与原怪物，敌方范围仍只接受怪物。
+	friendly := strings.HasPrefix(targetKind(s), "friendly")
+	if friendly && r.dungeonCombat != nil {
+		if world != r.currentWorld() {
+			return nil
+		}
+		return w.dungeonAreaAllies(r, s, grid, false)
+	}
 	// all 保存当前处理所用的全部。
 	all := world.Monsters[:world.MonsterCount]
 	if world == r.currentWorld() {
 		all = append([]*entity{&r.Player}, all...)
 	}
 	all = append(all[:len(all):len(all)], r.worldPet(world))
-	// friendly 保存由“has”前缀取得的“friendly”。
-	friendly := strings.HasPrefix(targetKind(s), "friendly")
 	// out 初始化用作输出的实体列表。
 	out := []*entity{}
 	// e 接收遍历全部时当前的元素。
@@ -209,6 +215,9 @@ func (w *worker) prepareCastRecordingMana(r *room, id, targetHandle, direction u
 // direction 记录朝向，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准，materialAllowed 标记是否处于材料允许状态。
 // recordMana 标记是否处于记录魔法值状态，ground 记录地面，使用可变数量的网格点位表示。
 func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed, recordMana bool, ground ...*pb.GridPoint) (*preparedCast, uint32) {
+	if arena := r.dungeonCombat; arena != nil && !arena.acceptsActions(now) {
+		return nil, p.CodeSkillStateBlocked
+	}
 	if w.mapCellBudget(r) == 0 {
 		return nil, p.CodeSkillStateBlocked
 	}
@@ -229,14 +238,14 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		return nil, p.CodeSkillStateBlocked
 	}
 	// 共享地格持续技能还需统一落格、冲突和拥有者归属，候选阶段只受理已具备场次语义的技能。
-	if r.worldBossCombat != nil && s.Behavior == "fire_wall" {
+	if (r.worldBossCombat != nil || r.dungeonCombat != nil) && s.Behavior == "fire_wall" {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if s.Behavior == devconfig.TrapHexagonBehavior && !w.trapHexagonScope(r, r.currentWorld()) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if s.Behavior == "electric_shock" && !w.electricShockAllowed(r, r.currentWorld()) ||
-		s.Behavior == "revelation" && (r.worldBossCombat != nil || r.worldBossObservation != nil) {
+		s.Behavior == "revelation" && (r.worldBossCombat != nil || r.worldBossObservation != nil || r.dungeonCombat != nil) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.castSequenceFull() || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
@@ -587,10 +596,12 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, c.Target, c.TargetLife, point, 0, outcome, handler.Healing, c.ID, 0)
 		return
 	}
+	// buffChanged 记录群体状态是否真正落地，整次施法完成后统一发布原身体状态。
+	buffChanged := false
 	// target 接收遍历目标集合时当前的元素。
 	for _, target := range targets {
 		if handler.Status {
-			w.applyBuff(r, c, target, now)
+			buffChanged = w.applyBuff(r, c, target, now) || buffChanged
 			continue
 		}
 		// amount 保存由整数“64”取得的数量。
@@ -624,5 +635,8 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 			}
 		}
 		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, amount, outcome, handler.Healing, c.ID, 0)
+	}
+	if buffChanged && r.dungeonCombat != nil {
+		w.snapshotDungeonSeats(r.dungeonCombat, now)
 	}
 }

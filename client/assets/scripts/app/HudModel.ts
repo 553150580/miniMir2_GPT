@@ -17,6 +17,7 @@ export interface HudInput {
     auto: boolean;
     count: number;
     quickSkillLabel?: string;
+    objectiveOverride?: string;
     gameplay: { rule_version?: number; progression?: { curve_version: string }; jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
     map: ({ name?: string; width: number; height: number; scene_kind?: number } & Partial<ProjectionGeometry>) | null;
 }
@@ -104,7 +105,8 @@ export function createHudState(input: HudInput) {
         experienceText: growth?.text ?? (next == null ? `经验 ${hudAmount(experience)}` : `${hudAmount(experience)} / ${hudAmount(next)}`),
         experience: growth?.ratio ?? hudRatio(experience, next),
         redPotionCount: hudItemCount(input, 35), bluePotionCount: hudItemCount(input, 36),
-        objective: !input.ready ? '场景同步中' : dead ? '角色已倒下 · 点击复活' : town ? `${inSafeZone ? '安全区 · ' : ''}城镇漫步` : `${input.auto ? '自动战斗' : '手动战斗'} · ${input.count}只怪物`,
+        objective: !input.ready ? '场景同步中' : input.objectiveOverride ??
+            (dead ? '角色已倒下 · 点击复活' : town ? `${inSafeZone ? '安全区 · ' : ''}城镇漫步` : `${input.auto ? '自动战斗' : '手动战斗'} · ${input.count}只怪物`),
         auto: input.auto ? '自动' : '手动', count: `${input.count}怪`, attack: dead ? '复活' : '攻击',
         playerPosition: player?.position ?? null,
     };

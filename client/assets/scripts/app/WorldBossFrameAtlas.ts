@@ -39,7 +39,7 @@ export class WorldBossFrameAtlas {
     }
 
     async populate(keys: readonly string[], originals: Readonly<Record<string, OriginalFrame>>,
-        target: Map<string, SpriteFrame>, progress: (loaded: number) => void): Promise<void> {
+        target: Map<string, SpriteFrame>, progress: (loaded: number) => void, allowMissingFrames = false): Promise<string[]> {
         const asset = await this.load<JsonAsset>(`${this.directory}/index`, JsonAsset);
         asset.addRef();
         try {
@@ -47,8 +47,11 @@ export class WorldBossFrameAtlas {
             if (catalog?.schema_version !== 1 || !Array.isArray(catalog.pages) || !catalog.frames)
                 throw new Error('世界首领图集索引格式错误');
             const pages = new Map<number, { key: string; source: AtlasRectangle }[]>();
+            const unpacked: string[] = [];
             for (const key of keys) {
                 const source = catalog.frames[key], original = originals[key];
+                // 讨伐可引用原本只在个人挑战中的怪物。图集未收录时仍加载其同源单帧。
+                if (source === undefined && allowMissingFrames) { unpacked.push(key); continue; }
                 if (!Array.isArray(source) || source.length !== 6) throw new Error(`地图图集缺少原帧：${key}`);
                 const [pageId, x, y, width, height, digest] = source;
                 const page = catalog.pages[pageId];
@@ -79,6 +82,7 @@ export class WorldBossFrameAtlas {
             });
             const failed = (await Promise.allSettled(jobs)).find(job => job.status === 'rejected');
             if (failed?.status === 'rejected') throw failed.reason;
+            return unpacked;
         } finally {
             asset.decRef();
         }

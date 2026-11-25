@@ -25,6 +25,9 @@ func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) boo
 	if arena := r.worldBossCombat; arena != nil && arena.occupied(point, e) {
 		return false
 	}
+	if arena := r.dungeonCombat; arena != nil && arena.occupied(point, e) {
+		return false
+	}
 	if r.CellEntrySequence == math.MaxUint64 {
 		w.isolateRoom(r)
 		return false
@@ -229,7 +232,11 @@ func (w *worker) shoulderDash(r *room, cast pendingCast, now time.Time) {
 	for _, point := range path {
 		event.Path = append(event.Path, pointPB(point))
 	}
-	w.send(r, p.MsgS2CEntityDisplacement, 0, event)
+	if r.dungeonCombat != nil {
+		w.sendDungeonObservation(r, p.MsgS2CEntityDisplacement, event)
+	} else {
+		w.send(r, p.MsgS2CEntityDisplacement, 0, event)
+	}
 	if len(path) > 0 && target != nil {
 		// before 保存生命值，用于当前步骤中的操作前的状态。
 		before := target.HP

@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 120,
+  "message_count": 122,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -125,10 +125,12 @@
     "DungeonPartyState",
     "DungeonPartyTemplate",
     "DungeonPartyView",
-    "DungeonPartyMember"
+    "DungeonPartyMember",
+    "DungeonBattleState",
+    "DungeonSceneTransition"
   ],
-  "int64_field_count": 275,
-  "int64_boundary_cases": 920,
+  "int64_field_count": 281,
+  "int64_boundary_cases": 939,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1779,9 +1781,45 @@
       "field": "leader_offline_until_unix_ms",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "DungeonBattleState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DungeonBattleState",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "DungeonSceneTransition",
+      "field": "source_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DungeonSceneTransition",
+      "field": "target_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DungeonSceneTransition",
+      "field": "target_baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DungeonSceneTransition",
+      "field": "target_map_id",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 36,
+  "bytes_field_count": 39,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1949,6 +1987,11 @@
       "repeated": false
     },
     {
+      "message": "DungeonPartyState",
+      "field": "challenge_id",
+      "repeated": false
+    },
+    {
       "message": "DungeonPartyView",
       "field": "party_id",
       "repeated": false
@@ -1961,6 +2004,16 @@
     {
       "message": "DungeonPartyMember",
       "field": "role_id",
+      "repeated": false
+    },
+    {
+      "message": "DungeonBattleState",
+      "field": "challenge_id",
+      "repeated": false
+    },
+    {
+      "message": "DungeonSceneTransition",
+      "field": "challenge_id",
       "repeated": false
     }
   ],
@@ -1998,19 +2051,19 @@
     },
     {
       "path": "shared/proto/dungeon_party.proto",
-      "sha256": "984fb3310c06fdb95e308ffe1836da036de512576fb92185647cd0385cf9bca4"
+      "sha256": "b6898eab78840b77efd6a1785b1de5ab28eaa52669cb5348b7968f3da021e128"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "ab8dad9137a3ee8b8c19c52f2c44840b32372cfdaea267499e4e90c86c5b3950",
-      "bytes": 2064440
+      "sha256": "a3815ab198ed4cdaf08ce3688d7198daa5d32c673d934b14038aed1a5653e79d",
+      "bytes": 2103780
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "2fccd864ab721985ac1c9484f9bfb866063237bb14b438a7df7f2fff1673682f",
-      "bytes": 651580
+      "sha256": "8d17fcd5b3713afe87bb564a4d1d58323e18713c96e47225cba26b8631e17a47",
+      "bytes": 663429
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

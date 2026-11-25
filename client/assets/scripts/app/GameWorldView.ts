@@ -339,7 +339,7 @@ export class GameWorldView {
                 let placeholder: Node | undefined;
                 if (!profile && this.manifest.development_only && state.entityKind === 2 && petAppearanceFor(
                     this.gameplay.pet_profiles as Array<{ definition_id: number; job_id: number; appearance_optional?: boolean }>,
-                    state.definitionId, this.assets.sceneKind === 4 ? undefined : this.job)?.appearance_optional) {
+                    state.definitionId, this.assets.sceneKind === 4 || this.assets.sceneKind === 5 ? undefined : this.job)?.appearance_optional) {
                     // 动态实体沿用当前模板的脚点和头顶组件，使用几何形体显示宠物所在格。
                     placeholder = new Node('PetPlaceholder');
                     placeholder.layer = body.layer;
@@ -413,7 +413,7 @@ export class GameWorldView {
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId,
                 state.entityHandle === this.playerHandle ? this.playerName : state.displayName ?? '',
-                this.assets.sceneKind === 4 ? undefined : this.job, this.gameplay);
+                this.assets.sceneKind === 4 || this.assets.sceneKind === 5 ? undefined : this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
             name.active = showHead && !!displayName;
             const revealed = revealedMonsterHealthPercent(state, now, now);

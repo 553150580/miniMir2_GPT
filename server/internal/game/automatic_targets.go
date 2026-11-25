@@ -61,12 +61,24 @@ func (w *worker) autoAttackMonster(r *room, target *entity, now time.Time) bool 
 // automaticHealingTarget 返回自动治疗目标供调用方使用。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，pet 记录宠物，使用实体表示，rangeCells 记录范围地图格集合，使用数值表示。
 func (w *worker) automaticHealingTarget(r *room, pet *entity, rangeCells int) *entity {
+	if r.dungeonCombat != nil {
+		for _, ally := range r.dungeonAllies() {
+			if needsHealing(ally.body) && distance(r.Player.Pos, ally.body.Pos) <= rangeCells {
+				return ally.body
+			}
+		}
+		return nil
+	}
 	// candidate 接收遍历实体列表时当前的元素。
 	for _, candidate := range []*entity{&r.Player, pet} {
-		if candidate != nil && candidate.HP > 0 && candidate.HP < candidate.MaxHP && candidate.HealAmount == 0 &&
-			distance(r.Player.Pos, candidate.Pos) <= rangeCells {
+		if needsHealing(candidate) && distance(r.Player.Pos, candidate.Pos) <= rangeCells {
 			return candidate
 		}
 	}
 	return nil
+}
+
+// needsHealing 排除死亡、满血及已有治疗队列的身体。
+func needsHealing(body *entity) bool {
+	return body != nil && body.HP > 0 && body.HP < body.MaxHP && body.HealAmount == 0
 }
