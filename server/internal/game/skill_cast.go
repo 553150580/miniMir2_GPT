@@ -54,9 +54,12 @@ var skillHandlers = map[string]skillHandler{
 	"teleport":       {Teleport: true},
 	"summon_pet":     {Summon: true},
 	"turn_undead":    {TurnUndead: true},
+	"electric_shock": {},
+	"revelation":     {Status: true},
 	"soul_fire_ball": {},
 	"poisoning":      {},
 	"hiding":         {Status: true},
+	"mass_hiding":    {Status: true, Area: true},
 }
 
 // targetKind 根据技能配置决定默认目标类别。
@@ -232,6 +235,10 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	if s.Behavior == devconfig.TrapHexagonBehavior && !w.trapHexagonScope(r, r.currentWorld()) {
 		return nil, p.CodeSkillStateBlocked
 	}
+	if s.Behavior == "electric_shock" && !w.electricShockAllowed(r, r.currentWorld()) ||
+		s.Behavior == "revelation" && (r.worldBossCombat != nil || r.worldBossObservation != nil) {
+		return nil, p.CodeSkillStateBlocked
+	}
 	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
 		return nil, p.CodeSkillStateBlocked
 	}
@@ -339,7 +346,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	amount := int64(0)
 	// duration 保存由整数“64”取得的持续时间。
 	duration := int64(0)
-	if handler.Teleport || handler.Summon || handler.TurnUndead || s.Behavior == devconfig.TrapHexagonBehavior {
+	if handler.Teleport || handler.Summon || handler.TurnUndead || s.Behavior == devconfig.TrapHexagonBehavior || s.Behavior == "electric_shock" {
 		// 这些行为使用各自的迁移、召唤、处决或围困规则。
 	} else if handler.Status {
 		switch definition.DurationKind {
@@ -349,8 +356,10 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 			// power 保存根据能力值基础值与“draw”计算的能力值。
 			power := s.PowerBase + w.draw(s.PowerBonus)
 			duration = buffDurationSeconds(s, definition, level, stat, power)
-		case "sc_rank_linear":
+		case "sc_rank_linear", "sc_half_rank_linear":
 			duration = buffDurationSeconds(s, definition, level, w.interval(stats.TaoMin, stats.TaoMax), 0)
+		case "sc_source_power":
+			duration = w.revelationDuration(s, level, stats)
 		}
 		if duration <= 0 || duration > math.MaxInt32/int64(time.Second/time.Millisecond) {
 			return nil, p.CodeSkillStateBlocked
@@ -507,6 +516,10 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 	}
 	if handler.TurnUndead {
 		w.resolveTurnUndead(r, world, caster, c, now)
+		return
+	}
+	if c.Skill.Behavior == "electric_shock" || c.Skill.Behavior == "revelation" {
+		w.resolveMonsterUtility(r, world, caster, c, now)
 		return
 	}
 	// targets 初始化用作目标集合的实体列表。

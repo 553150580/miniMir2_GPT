@@ -50,6 +50,9 @@ func LoadSummonCandidates(path string) (*SummonCandidateCatalog, error) {
 	}
 	// s 保存从技能集合取出的技能集合中的指定项，book 保存从技能书集合取出的技能书。
 	s, book := c.Skills[0], c.Books[0]
+	if s.ID != SummonSkeletonSkillID {
+		return nil, errors.New("独立rule17召唤候选固定为召唤骷髅")
+	}
 	// err 接收校验召唤技能过程中可能产生的错误，供后续失败分支处理。
 	if err := validateSummonSkill(s); err != nil {
 		return nil, err

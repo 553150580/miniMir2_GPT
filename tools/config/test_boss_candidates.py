@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 
 import export_configs as config
-from test_source_map_projection import module, ROOT
+from test_source_map_projection import module, ROOT, restore_rule28_skill_selection
 
 
 class BossCandidateProjectionTests(unittest.TestCase):
@@ -43,6 +43,7 @@ class BossCandidateProjectionTests(unittest.TestCase):
     def test_explicit_development_selection_is_required(self):
         tables = deepcopy(self.tables)
         profile = tables['dev_first_loop_profile'][0]['parameters']
+        restore_rule28_skill_selection(profile)
         profile['rule_version'] = 27
         with self.assertRaises(ValueError):
             module.fixture_from_rows(tables)

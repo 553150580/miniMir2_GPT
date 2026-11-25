@@ -43,6 +43,8 @@ func TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS(t *testing.T
 			// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 			cfg, err := loadIntegrationConfig()
 			must(t, err)
+			// 保留原骷髅测试伙伴，验证幽灵盾可同时改变角色与宠物的防御。
+			cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 			cfg.Database = "minimir_dev_game_test_" + domain.ID()
 			cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 			// 仅随机测试实例声明小正数数量单位，未启用或修改唯一运行Excel的护符价格/包数。

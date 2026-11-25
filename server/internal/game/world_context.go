@@ -229,7 +229,7 @@ func (w *worker) resolveInWorld(r *room, world *worldState, ref actorRef) *entit
 	all = append(all[:len(all):len(all)], r.petBodies(world)...)
 	// e 接收遍历全部时当前的元素。
 	for _, e := range all {
-		if e != nil && e.Handle == ref.Handle && e.Life == ref.Life {
+		if e != nil && !e.CapturedUntilRespawn && e.Handle == ref.Handle && e.Life == ref.Life {
 			return e
 		}
 	}
@@ -393,6 +393,7 @@ func (w *worker) worldDeadlines(r *room, world *worldState, now time.Time) {
 			monster.HP, monster.Life, monster.Statuses = monster.MaxHP, monster.Life+1, nil
 			monster.MovementRevision, monster.MovementKind = 0, movementInitial
 			monster.RespawnAt, monster.Action = time.Time{}, 0
+			monster.CapturedUntilRespawn, monster.ShockUntilMS = false, 0
 		}
 	}
 }

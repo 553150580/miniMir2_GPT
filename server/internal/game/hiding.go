@@ -1,13 +1,18 @@
 // 本文件处理隐身的当前生命、怪物冷眼、定向暴露及走动解除。
 package game
 
+// isHidingKind 判断状态是否使用统一的隐身索敌规则。
+func isHidingKind(kind string) bool {
+	return kind == "hiding" || kind == "mass_hiding"
+}
+
 // hidingStatus 返回当前生命仍有效的原隐身状态。
 func hidingStatus(actor *entity) *combatStatus {
 	if actor == nil {
 		return nil
 	}
 	for _, status := range actor.Statuses {
-		if status.Kind == "hiding" && status.TargetLife == actor.Life && status.RemainingMS > 0 {
+		if isHidingKind(status.Kind) && status.TargetLife == actor.Life && status.RemainingMS > 0 {
 			return status
 		}
 	}
@@ -23,10 +28,10 @@ func breakHidingOnWalk(actor *entity) {
 
 // exposeHiddenAttacker 允许原本已被隐身阻隔的怪物对直接攻击自己的隐身者重新建立目标。
 func exposeHiddenAttacker(world *worldState, attacker, target *entity) {
-	if target.Kind != 3 || attacker == nil || attacker.Kind != 1 {
+	if target.Kind != 3 || attacker == nil || attacker.Kind != 1 && attacker.Kind != 2 {
 		return
 	}
-	// hiding 状态只在角色仍是原施法生命时存在。
+	// 隐身状态只随施加时的实体生命存在。
 	hiding := hidingStatus(attacker)
 	if hiding == nil {
 		return
@@ -51,11 +56,15 @@ func canSeeFightTarget(world *worldState, monster, target *entity, targetLevel u
 
 // visibleMonsterTarget 保持原角色和原宠物之间的距离优先级，再排除当前不可见的候选。
 func visibleMonsterTarget(world *worldState, monster, player, pet *entity, playerLevel uint32) *entity {
-	// pVisible 表示当前怪物能看到该玩家，petLevel 保存宠物原生定义等级。
+	// pVisible 表示当前怪物能看到该玩家，petLevel 保存宠物当前战斗等级。
 	pVisible := canSeeFightTarget(world, monster, player, playerLevel)
 	petLevel := uint32(0)
-	if pet != nil && pet.Monster != nil {
-		petLevel = pet.Monster.Level
+	if pet != nil {
+		if pet.PetRuntime != nil {
+			petLevel = pet.PetRuntime.Fighter.Level
+		} else if pet.Monster != nil {
+			petLevel = pet.Monster.Level
+		}
 	}
 	if canSeeFightTarget(world, monster, pet, petLevel) && (!pVisible || distance(monster.Pos, pet.Pos) < distance(monster.Pos, player.Pos)) {
 		return pet

@@ -211,8 +211,8 @@ test('实际disabled护符门禁在Use/快捷共用施法入口和装卸入口�
     const {instance,session,row,definitions,definition,sent}=app();definitions.push({...definition(14,'soul_shield','friendly_grid'),material_item_id:187,material_quantity:1});session.inventory.learnedSkills.push({skillId:14,level:0});
     instance.world.gameplay.casting_supply={enabled:false,slot:100,item_ids:[187]};instance.nav.setGroundTarget({x:9,y:8});instance.economic=()=>{throw new Error('禁止创建经济请求');};
     assert.throws(()=>instance.castSkill(row(14)),/施法护符暂未开放/);assert.equal(instance.aim,null);assert.equal(sent.length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
-    assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(14)),'护符未开放');assert.equal(models.skillQuickStateLabel(instance.skillSnapshot(),row(14)),'未开放');
-    await assert.rejects(instance.setCastingSupply(false),/施法护符暂未开放/);await assert.rejects(instance.setCastingSupply(true),/施法护符暂未开放/);assert.equal(sent.length,0);
+    assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(14)),'耗材未开放');assert.equal(models.skillQuickStateLabel(instance.skillSnapshot(),row(14)),'未开放');
+    await assert.rejects(instance.setCastingSupply(false),/施法耗材暂未开放/);await assert.rejects(instance.setCastingSupply(true),/施法耗材暂未开放/);assert.equal(sent.length,0);
 });
 
 test('实际AppRoot抗拒不锁定宠物，野蛮只选方向，两者均不清理既有地面导航',()=>{
@@ -257,5 +257,5 @@ test('实际GameSkills保存Use按Owned模式刷新，禁材料不挡Recall，No
  const {instance,row,session}=summonApp();session.baseline.ownedPet=ownedSummon();const {GameSkills}=load(path.join(root,'client/assets/scripts/app/GameSkills.ts'),id=>id==='./SkillModel'?models:{}),nodes=new Map();
  const node=name=>{if(!nodes.has(name)){const component={string:'',interactable:false,setIsCheckedWithoutNotify(){}};nodes.set(name,{active:true,getComponent:()=>component,component});}return nodes.get(name);};
  const skills=Object.create(GameSkills.prototype);Object.assign(skills,{panel:{getChildByPath:node},list:{setItems(){}},rows:[],selectedId:17,key:'',quickSkillId:17});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,true);assert.equal(node('Use/Label').component.string,'召回');assert.match(node('Message').component.string,/不耗护符/);
- session.baseline.ownedPet=ownedSummon({recallSkillIds:[]});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'护符未开放');session.baseline.ownedPet=ownedSummon();instance.world.gameplay.map_catalog[0].no_pets=true;skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'此图禁召');const description=models.skillDescriptionLines(row(17),instance.skillSnapshot()).join('');assert.match(description,/新召唤消耗/);assert(!description.includes('每次消耗'));
+ session.baseline.ownedPet=ownedSummon({recallSkillIds:[]});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'耗材未开放');session.baseline.ownedPet=ownedSummon();instance.world.gameplay.map_catalog[0].no_pets=true;skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'此图禁召');const description=models.skillDescriptionLines(row(17),instance.skillSnapshot()).join('');assert.match(description,/新召唤消耗/);assert(!description.includes('每次消耗'));
 });

@@ -24,6 +24,8 @@ func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	}
 	f.Maps = []devconfig.MapTemplate{*legacy}
 	f.RuleVersion = 23
+	// 保留旧版免费宠物，确保旅行测试以原战斗路径准备首杀和地面掉落。
+	f.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	if f.Map.Width == 13 {
 		f.Map.Width, f.Map.Height = 17, 17
 	}

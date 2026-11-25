@@ -236,16 +236,26 @@ func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direct
 	}
 	// q 使用下一来源序号建立自动扣料请求，并在找到材料槽后填入原实例和版本。
 	q := persistence.AssetRequest{Kind: "cast_material", SkillID: skill.ID, SceneEpoch: r.Scene, CasterLife: r.Player.Life, SourceSeq: r.Role.SourceSeq + 1}
+	// materialID 识别专槽当前药粉的颜色。
+	var materialID uint32
 	// equipped 是当前遍历到的穿戴项，用于从中找到技能消耗材料槽。
 	for _, equipped := range r.Role.Equipped {
 		if equipped.Slot == devconfig.CastingSupplySlot {
 			q.ItemID = equipped.Item.ID
 			q.ItemVersion = uint64(equipped.Item.Version)
+			materialID = equipped.Item.ItemID
 			break
 		}
 	}
 	if persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture) != 0 {
 		return false
+	}
+	// 自动施毒等待当前颜色耗尽，避免同一生命反复消耗同色药粉。
+	if skill.Behavior == "poisoning" {
+		target := w.skillTarget(r, skill, handle)
+		if target == nil || hasPoison(target, skill.PoisonColorForMaterial(materialID)) {
+			return false
+		}
 	}
 	// plan 保存通过校验的自动施法方案，code 区分可释放、仅缺魔法值和其他门禁拒绝。
 	plan, code := w.prepareCastRecordingMana(r, skill.ID, handle, direction, now, true, grid)

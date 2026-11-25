@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { load, Long } = require('./helpers/session_harness.cjs');
+const { load, harness, entry, Long } = require('./helpers/session_harness.cjs');
 const errors = require('../../../.work/ui-tests/app/GameErrors.js');
 const ids = require('../../../.work/ui-tests/generated/protocol_ids.js');
 
@@ -91,7 +91,20 @@ test('旧短票拒绝晚于切换身份时既不重试也不关闭新的连接�
 
 function reconnectFixture(state, exitGame = async () => {}) {
     const account = { id: '07'.repeat(16), name: 'account_a' }, role = { key: roleKey };
-    const session = { account, role, originServer: { originServerId: roleKey.originServerId }, connection: state.socket, ready: true, update: new Set(), lastError: '' };
+    const game = harness(), { session } = game;
+    Object.assign(session, { account, role, originServer: { originServerId: roleKey.originServerId } });
+    const socket = Object.assign(session.connection, state.socket);
+    state.socket = socket;
+    const connectTransport = socket.connect.bind(socket);
+    socket.connect = async (...args) => {
+        socket.binding = Long.UZERO;
+        const connected = connectTransport(...args), generation = socket.generation;
+        await connected;
+        if (socket.generation !== generation) return;
+        // 新短票真正通过后才交付该连接的非零绑定和完整入场；旧关闭或拒绝不会伪造新地图。
+        socket.binding = Long.fromInt(generation, true);
+        socket.deliver(20002, entry(String(generation)));
+    };
     const status = { string: '' }, password = { string: '', node: { active: false } }, label = { string: '' };
     let click, attached = 0;
     const listeners = new Map();
@@ -103,10 +116,15 @@ function reconnectFixture(state, exitGame = async () => {}) {
         on(event, listener) { listeners.set(event, listener); }, off(event) { listeners.delete(event); } };
     const { GameReconnect } = load('client/assets/scripts/app/GameReconnect.ts', module => ({
         cc: { Button: { EventType: { CLICK: 'click' } }, Node: { EventType: { TOUCH_END: 'touch-end' } }, isValid: () => true }, './RoleEntry': roleEntry,
-        './GameSession': { session, roleIdentity: () => '角色', isCurrentEntry: value => value.connection === state.socket.generation,
-            currentEntryIdentity: () => ({ connection: state.socket.generation }) },
+        './GameSession': game,
     })[module]);
-    const dialog = new GameReconnect(root, () => true, () => {}, async () => { attached++; }, exitGame, () => {});
+    const dialog = new GameReconnect(root, () => true, () => {}, async () => {
+        const current = game.currentEntryIdentity();
+        assert(current && game.isCurrentEntry(current));
+        assert.equal(session.ready, false, '必须先匹配新连接绑定的入场，再确认该地图');
+        attached++;
+        socket.deliver(6, session.entry);
+    }, exitGame, () => {});
     return { dialog, root, status, password, button, click, get attached() { return attached; }, touch(target = root) {
         const event = { target, propagationStopped: false };
         listeners.get('touch-end')?.(event);

@@ -132,6 +132,8 @@ export class AppRoot extends Component {
     private preparedTravel?: { id: string; assets: WorldAssets; viewport: MapViewportPreparation };
     private bossEntry?: PreparedBossEntry;
     private bossReconnect?: { target: string; connection: number; role: string; assets: WorldAssets; timer: ReturnType<typeof setTimeout> };
+    // 世界首领期间保留一个原个人图资源所有者，用于返回和健康重连。
+    private bossReturn?: { role: string; assets: WorldAssets };
     private travelSource?: TravelContext;
     private travelDestination = 1;
     private travelDestinationMap?: Long;
@@ -189,7 +191,7 @@ export class AppRoot extends Component {
         this.disposed = true;
         for (const cancel of Array.from(this.mapWaiters)) cancel();
         this.enterAttempt++; this.attachment?.dispose(); this.world?.dispose(); this.releasePreparedTravel(); this.navigationUnsubscribe?.();
-        this.bossEntry?.release(); this.releaseBossReconnect();
+        this.bossEntry?.release(); this.releaseBossReconnect(); this.releaseBossReturn();
         for (const [node, eventType, handler] of this.buttons) if (isValid(node, true)) node.off(eventType, handler, this);
         for (const cleanup of this.cleanups) cleanup();
         game.off(Game.EVENT_HIDE, this.releaseInput, this);
@@ -665,6 +667,8 @@ export class AppRoot extends Component {
         if (this.disposed) return;
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
+        if (this.bossReturn && identity && isCurrentEntry(identity) &&
+            (identity.role !== this.bossReturn.role || (session.entry.sceneKind !== 1 && session.entry.sceneKind !== 4))) this.releaseBossReturn();
         if (this.bossEntry && !isCurrentEntry(this.bossEntry.source) && (!identity || !this.matchesBossEntry(identity))) this.bossEntry.release();
         if (this.bossReconnect && (!identity || !isCurrentEntry(identity) || identity.connection !== this.bossReconnect.connection)) this.releaseBossReconnect();
         if (!identity || !isCurrentEntry(identity)) {
@@ -699,7 +703,7 @@ export class AppRoot extends Component {
                 try {
                     if (this.preparedTravel?.id === identity.travelId && this.preparedTravel.assets.mapId === identity.map.toString()) {
                         assets = this.preparedTravel.assets; prime = this.preparedTravel.viewport; this.preparedTravel = undefined;
-                    } else if (!(assets = this.takeBossAssets(identity))) {
+                    } else if (!(assets = this.takeBossAssets(identity) ?? this.takeBossReturn(identity, entry.resourceVersion.toString()))) {
                         const warm = session.preparedWorld;
                         if (warm?.mapId === identity.map.toString()) { assets = warm; session.preparedWorld = null; }
                         else {
@@ -712,7 +716,10 @@ export class AppRoot extends Component {
                     if (this.disposed || session.entry !== entry || !isCurrentEntry(identity)) throw new StaleMapAttachmentError('旧地图资源准备已经失效');
                     if (assets.mapId !== identity.map.toString() || assets.sceneKind !== entry.sceneKind || String(assets.gameplay.rule_version) !== entry.resourceVersion.toString()) throw new Error('地图资源或规则版本与真实入场身份不一致');
                     await this.waitBaseline(identity);
-                    if (entry.sceneKind === 1 && isCurrentEntry(identity)) this.retainBossForReconnect(identity, entry.resourceVersion.toString());
+                    if (isCurrentEntry(identity)) {
+                        if (entry.sceneKind === 4 && session.entryBossTransition) this.retainBossReturn(identity, entry.resourceVersion.toString());
+                        if (entry.sceneKind === 1) this.retainBossForReconnect(identity, entry.resourceVersion.toString());
+                    }
                     return assets;
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
             },
@@ -1046,7 +1053,7 @@ export class AppRoot extends Component {
         const previous = this.attached;
         if (!previous?.serverTransitionId || previous.connection === identity.connection || previous.role !== identity.role
             || !this.world?.isMapReady || String(this.world.gameplay.rule_version) !== rule) return;
-        const assets = this.world.takeWorldBossAssets();
+        const assets = this.world.takeAssets(4);
         if (!assets) return;
         this.releaseBossReconnect();
         this.bossReconnect = { target: previous.serverTransitionId, connection: identity.connection, role: identity.role, assets,
@@ -1059,6 +1066,35 @@ export class AppRoot extends Component {
         this.bossReconnect = undefined;
         clearTimeout(warm.timer);
         warm.assets.dispose();
+    }
+
+    // 进入首领前转交原挂机图资源，重连的首个个人图基线无需重新冷载。
+    private retainBossReturn(identity: AttachmentIdentity, rule: string): void {
+        const previous = this.attached, view = this.world;
+        if (!previous || previous.role !== identity.role || previous.connection !== identity.connection ||
+            !view?.isMapReady || String(view.gameplay.rule_version) !== rule) return;
+        const assets = view.takeAssets(1);
+        if (!assets) return;
+        this.releaseBossReturn();
+        this.bossReturn = { role: previous.role, assets };
+    }
+
+    private takeBossReturn(identity: AttachmentIdentity, rule: string): WorldAssets | undefined {
+        const warm = this.bossReturn;
+        if (!warm || session.entry.sceneKind !== 1) return;
+        if (identity.role !== warm.role || identity.map.toString() !== warm.assets.mapId ||
+            String(warm.assets.gameplay.rule_version) !== rule) {
+            this.releaseBossReturn();
+            return;
+        }
+        this.bossReturn = undefined;
+        return warm.assets;
+    }
+
+    private releaseBossReturn(): void {
+        const warm = this.bossReturn;
+        this.bossReturn = undefined;
+        warm?.assets.dispose();
     }
 
     private refreshGame(): void {
@@ -1077,7 +1113,9 @@ export class AppRoot extends Component {
         }
         const identity = currentEntryIdentity();
         if ((session.ready || session.travel.phase === 'quiescing') && identity) {
-            const born = session.petBorn.take(identity, baseline, petAppearDuration(this.world.manifest), session.presentationNow());
+            const world = this.world;
+            const born = session.petBorn.take(identity, baseline,
+                event => petAppearDuration(world.manifest, event.definitionId, world.gameplay), session.presentationNow());
             if (born) this.world.presentPetBorn(born);
         }
         const skills = this.skillSnapshot(), boundQuick = this.boundQuickSkillId(skills.roleIdentity), quick = this.quickSkill();
@@ -1126,7 +1164,7 @@ export class AppRoot extends Component {
                     return;
                 }
                 const worn = session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId));
-                const part = worn ? `${definition?.kind === 'casting_supply' ? '护符' : equipmentSlotName(worn.slot)} · ` : '';
+                const part = worn ? `${definition?.kind === 'casting_supply' ? '耗材' : equipmentSlotName(worn.slot)} · ` : '';
                 label.string = `${part}${name} ×${item.quantity} ${ownership}${durability ? ` · ${durability}` : ''}`;
             }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
@@ -1183,7 +1221,7 @@ export class AppRoot extends Component {
         }
         const selectedDefinition = this.world.gameplay.items.find((item: any) => item.item_id === this.selectedItem?.itemId);
         const selectedSupply = selectedDefinition?.kind === 'casting_supply', supplyEnabled = this.world.gameplay.casting_supply?.enabled;
-        this.text('UIMgr/Panels/Inventory/Equip/Label', selectedSupply ? supplyEnabled ? '装入护符' : '护符未开放' : '装备');
+        this.text('UIMgr/Panels/Inventory/Equip/Label', selectedSupply ? supplyEnabled ? '装入耗材' : '耗材未开放' : '装备');
         const equipmentReason = equipmentActionReason(this.equipmentSnapshot(), this.selectedItem, false);
         this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && (selectedSupply ? supplyEnabled : !equipmentReason));
         this.find('UIMgr/Panels/Inventory/Recycle').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem
@@ -1197,7 +1235,7 @@ export class AppRoot extends Component {
         const wornSupply = wornDefinition?.kind === 'casting_supply';
         this.find('UIMgr/Panels/Role/Equip').active = true;
         this.find('UIMgr/Panels/Role/Recycle').active = true;
-        this.text('UIMgr/Panels/Role/Equip/Label', wornSupply ? supplyEnabled ? '卸下护符' : '护符未开放' : '卸下装备');
+        this.text('UIMgr/Panels/Role/Equip/Label', wornSupply ? supplyEnabled ? '卸下耗材' : '耗材未开放' : '卸下装备');
         this.text('UIMgr/Panels/Role/Recycle/Label', '战斗属性');
         this.find('UIMgr/Panels/Role/Equip').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && worn
             && (wornSupply ? supplyEnabled : !equipmentActionReason(this.equipmentSnapshot(), worn.item, true, worn.slot)));
@@ -1334,7 +1372,7 @@ export class AppRoot extends Component {
             ownedPet: session.baseline?.ownedPet, mapNoPets: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_pets,
             mapNoTeleport: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_teleport, modes, modesReceivedAt: session.skillModesReceivedAt,
             modePending: this.pendingSkillMode, autoSkillSettings: observeAutoSkillSettings(session.hosting?.autoSkillSettings),
-            castingSupply: supply ? { name: supplyName ?? '施法护符', quantity: supply.quantity.toString() } : null,
+            castingSupply: supply ? { name: supplyName ?? '施法耗材', quantity: supply.quantity.toString() } : null,
             castingSupplyEnabled: this.world?.gameplay.casting_supply?.enabled, statusDefinitions: this.world?.gameplay.statuses };
     }
 
@@ -1355,16 +1393,16 @@ export class AppRoot extends Component {
     }
     private async setCastingSupply(unequip: boolean): Promise<void> {
         const snapshot = this.supplySnapshot();
-        if (!snapshot.config?.enabled) throw new Error('施法护符暂未开放');
+        if (!snapshot.config?.enabled) throw new Error('施法耗材暂未开放');
         const selectedWorn = this.selectedEquipped;
         const item = unequip
             ? snapshot.inventory?.equipped.find(entry => entry.slot === selectedWorn?.slot && entry.slot === snapshot.config?.slot
                 && recycleItemKey(entry.item.instanceId) === recycleItemKey(selectedWorn!.item.instanceId))?.item
             : snapshot.inventory?.items.find(value => this.selectedItem?.instanceId?.length === 16 && value.instanceId.length === 16
                 && value.instanceId.every((byte, index) => byte === this.selectedItem.instanceId[index]));
-        if (!item) throw new Error(unequip ? '尚未装入护符' : '先在背包选择施法护符');
-        const selection = captureSupply(snapshot, item), name = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId)?.name ?? '施法护符';
-        if (!await this.popup!.confirm('Confirm', `${unequip ? '卸下' : '装入'}${name}？\n剩余 ${item.quantity}份 · ${item.bound ? '绑定' : '非绑定'}\n护符仅用于材料施法，不占强化装备槽`, unequip ? '卸下护符' : '装入护符')) return;
+        if (!item) throw new Error(unequip ? '尚未装入耗材' : '先在背包选择施法耗材');
+        const selection = captureSupply(snapshot, item), name = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId)?.name ?? '施法耗材';
+        if (!await this.popup!.confirm('Confirm', `${unequip ? '卸下' : '装入'}${name}？\n剩余 ${item.quantity}份 · ${item.bound ? '绑定' : '非绑定'}\n耗材用于施法，不占强化装备槽`, unequip ? '卸下耗材' : '装入耗材')) return;
         if (this.disposed) return;
         validateSupply(selection, this.supplySnapshot(), unequip);
         await this.economic(40015, { itemInstanceId: new Uint8Array(selection.instanceId), itemVersion: Long.fromString(selection.version, true), unequip });
@@ -1383,7 +1421,7 @@ export class AppRoot extends Component {
                 targetHandle, targetGrid: { x: targetGrid.x, y: targetGrid.y }, direction };
         if (isSummonRecall(snapshot, row) || !row.definition.material_quantity) { session.connection.send(30003, intent); return; }
         const supplySnapshot = this.supplySnapshot(), supply = originalSupply ?? selectedCastingSupply(supplySnapshot, row.definition);
-        // 地面瞄准不因无关掉落重选；护符实例/版本/数量仍固定，经济上下文使用提交时修订。
+        // 地面瞄准保留原耗材实例与版本，经济上下文采用提交时修订。
         validateSupply(supply, supplySnapshot, true, false);
         return this.economic(40014, { ...intent, materialInstanceId: new Uint8Array(supply.instanceId), materialVersion: Long.fromString(supply.version, true),
             casterLife: Long.fromString(supply.life, true) });

@@ -45,6 +45,18 @@ func (r *room) petReference() actorRef {
 	return actorRef{World: ref, Handle: r.Pet.Handle, Life: r.Pet.Life}
 }
 
+// matchesActivePet 按同一房间执行代与生命匹配活宠，允许该宠已随主人迁入另一个地图库。
+func (r *room) matchesActivePet(ref actorRef) bool {
+	return ref.Handle != 0 && ref.World.Epoch == r.ExecutionEpoch && r.Pet != nil && r.Pet.HP > 0 &&
+		!r.Pet.IsPetCorpse && r.Pet.Handle == ref.Handle && r.Pet.Life == ref.Life && r.petResidentWorld() != nil
+}
+
+// pendingPetBirthMatches 核对预约和当前宠物名额。预约后旧宠自然死亡仍允许新生，旧尸体独立保留。
+func (r *room) pendingPetBirthMatches(token petBirthToken) bool {
+	return r.PendingPetBirth != nil && r.PendingPetBirth.Token == token && token.ExecutionEpoch == r.ExecutionEpoch &&
+		token.PlayerLife == r.Player.Life && (r.Pet == nil || r.matchesActivePet(token.Replacing))
+}
+
 // petAway 判断宠物“away”是否满足要求。
 // r 是调用该方法的房间实例，e 记录实体。
 func (r *room) petAway(e *entity) bool {
@@ -78,9 +90,12 @@ func (w *worker) installReservedPet(r *room, world *worldState, pet *entity, tok
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，pet 记录宠物，使用实体表示。
 // token 记录令牌，使用宠物出生令牌表示。
 func (w *worker) installPetWithReservation(r *room, world *worldState, pet *entity, token *petBirthToken) bool {
-	if r == nil || world == nil || pet == nil || r.Pet != nil || r.Pending || r.Isolated || r.world(world.Ref) != world ||
+	if r == nil || world == nil || pet == nil || r.Pending || r.Isolated || r.world(world.Ref) != world ||
 		pet.Kind != 2 || pet.Life != 0 || pet.IsPetCorpse || pet.HP <= 0 || pet.MaxHP < pet.HP || pet.MP < 0 || pet.MaxMP < pet.MP ||
 		r.PetLifeSequence == math.MaxUint64 || r.CellEntrySequence == math.MaxUint64 {
+		return false
+	}
+	if r.Pet != nil && token == nil {
 		return false
 	}
 	// handle 保存当前处理所用的实体句柄。
@@ -88,7 +103,7 @@ func (w *worker) installPetWithReservation(r *room, world *worldState, pet *enti
 	if w.petRuntimeEnabled() {
 		// reserved 保存根据待确认宠物出生与“nil”计算的已保留。
 		reserved := r.PendingPetBirth != nil
-		if pet.Handle != 0 || pet.PetRuntime == nil || reserved && (token == nil || r.PendingPetBirth.Token != *token || token.ExecutionEpoch != r.ExecutionEpoch || token.PlayerLife != r.Player.Life) || !reserved && token != nil {
+		if pet.Handle != 0 || pet.PetRuntime == nil || reserved != (token != nil) || token != nil && !r.pendingPetBirthMatches(*token) {
 			return false
 		}
 		// additional 规定“additional”的初始取值。
@@ -113,6 +128,7 @@ func (w *worker) installPetWithReservation(r *room, world *worldState, pet *enti
 	if !known || !m.Contains(pet.Pos) {
 		return false
 	}
+	// 验证均已通过。直接接替名额，如果旧宠已自然死亡，其尸体仍由原地图持有。
 	w.cancelTownRequest(r.TownNavigation[1])
 	r.PetLifeSequence++
 	pet.Life, pet.Handle = r.PetLifeSequence, handle

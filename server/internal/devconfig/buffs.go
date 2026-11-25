@@ -199,13 +199,27 @@ func (f *Fixture) ValidateBuffs() error {
 			}
 		}
 		switch b.Kind {
-		case "hiding":
-			if b.DurationKind != "sc_rank_linear" || b.StatMultiplier != 1 || b.StatAdd != 0 || b.StackPolicy != "refresh_duration_keep_values" || !b.RemoveOnPlayerDeath || b.AllowDeadTargets || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.HitDurationLossMSPerHP != 0 {
+		case "revelation":
+			if b.DurationKind != "sc_source_power" || b.StatMultiplier != 0 || b.StatAdd != 0 || b.StackPolicy != "ignore_present_on_impact" || !b.RemoveOnPlayerDeath || b.AllowDeadTargets || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.HitDurationLossMSPerHP != 0 {
+				return errors.New("心灵启示须在原怪物生命上按道术计时，且重施不能刷新")
+			}
+			for rank, seconds := range b.DurationSecondsByLevel {
+				if seconds != 0 || rank >= len(b.ValueByLevel) || b.ValueByLevel[rank] != 0 {
+					return errors.New("心灵启示只显示怪物生命，不附加战斗属性")
+				}
+			}
+		case "hiding", "mass_hiding":
+			// 按技能区分单人隐身和集体隐身的道术换算与每阶固定秒数。
+			durationKind, secondsPerRank := "sc_rank_linear", int64(5)
+			if b.Kind == "mass_hiding" {
+				durationKind, secondsPerRank = "sc_half_rank_linear", 2
+			}
+			if b.DurationKind != durationKind || b.StatMultiplier != 1 || b.StatAdd != 0 || b.StackPolicy != "refresh_duration_keep_values" || !b.RemoveOnPlayerDeath || b.AllowDeadTargets || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.HitDurationLossMSPerHP != 0 {
 				return errors.New("隐身状态必须具备原道术时长、原生命和重施规则")
 			}
 			for rank, seconds := range b.DurationSecondsByLevel {
-				if seconds != int64(rank+1)*5 || rank >= len(b.ValueByLevel) || b.ValueByLevel[rank] != 0 {
-					return errors.New("隐身只允许逐阶五秒持续基数")
+				if seconds != int64(rank+1)*secondsPerRank || rank >= len(b.ValueByLevel) || b.ValueByLevel[rank] != 0 {
+					return errors.New("隐身须使用对应技能的每阶持续基数")
 				}
 			}
 		case "teleport_mana_penalty":
@@ -298,13 +312,13 @@ func (f *Fixture) ValidateBuffs() error {
 		}
 		used[b.ID] = true
 		// wanted 保存从按文本索引的文本映射取出的期望状态。
-		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence", "teleport": "teleport_mana_penalty", "hiding": "hiding"}[s.Behavior]
+		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence", "teleport": "teleport_mana_penalty", "hiding": "hiding", "mass_hiding": "mass_hiding", "revelation": "revelation"}[s.Behavior]
 		// withoutMaterial 保存根据类型与当前数据的计算结果与类型与当前数据的计算结果计算的“without”材料。
-		withoutMaterial := b.Kind == "magic_shield" || b.Kind == "teleport_mana_penalty"
+		withoutMaterial := b.Kind == "magic_shield" || b.Kind == "teleport_mana_penalty" || b.Kind == "revelation"
 		if b.Kind != wanted || withoutMaterial && (s.MaterialItemID != 0 || s.MaterialQuantity != 0) || !withoutMaterial && (!supplies[s.MaterialItemID] || s.MaterialQuantity <= 0) {
 			return errors.New("状态技能行为与永久耗材引用不一致")
 		}
-		if s.Behavior == "hiding" && s.MaterialQuantity != 1 {
+		if (s.Behavior == "hiding" || s.Behavior == "mass_hiding") && s.MaterialQuantity != 1 {
 			return errors.New("隐身术须消费原护符一个单位")
 		}
 	}

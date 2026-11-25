@@ -50,6 +50,11 @@ export function effectFrameKeys(value: any): string[] {
     return Object.values(value).flatMap(effectFrameKeys);
 }
 
+// 以下开发技能可从原施法动作、冲击反馈、现场状态和宠物变化完整观察，并可独立补充专用表现。
+const skillsWithActorFeedback = new Set([
+    'fire_wall', 'turn_undead', 'electric_shock', 'revelation', 'poisoning', 'soul_fire_ball', 'trap_hexagon', 'hiding', 'mass_hiding', 'summon_pet',
+]);
+
 function load<T extends Asset>(path: string, type: any): Promise<T> {
     return new Promise((resolve, reject) => resources.load(path, type, (error, value) => error ? reject(error) : resolve(value as T)));
 }
@@ -118,6 +123,20 @@ export class WorldAssets {
             result.manifest = result.own(await load<JsonAsset>('development/manifest', JsonAsset)).json;
             result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
             const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
+            // 开发神兽资源可独立导入。原开发清单和骷髅帧无需重新生成。
+            const shinsuPath = 'development/pets/shinsu/profile';
+            const needsShinsu = result.gameplay.pet_profiles?.some((row: any) => row.profile === 'pet_shinsu'
+                && (selected.scene_kind === 4 || row.job_id === job));
+            if (needsShinsu && !result.manifest.profiles.pet_shinsu && resources.getInfoWithPath(shinsuPath, JsonAsset)) {
+                const extra = result.own(await load<JsonAsset>(shinsuPath, JsonAsset)).json as any;
+                if (extra?.schema_version !== 1 || extra.profile?.id !== 'pet_shinsu' || !extra.frames
+                    || Object.entries(extra.frames).some(([key, frame]: [string, any]) => !/^Shinsu:\d+$/.test(key)
+                        || !/^pets\/shinsu\/frames\/frame_\d+\.png$/.test(frame?.png) || result.manifest.frames[key])) {
+                    throw new Error('神兽独立开发资源清单无效');
+                }
+                result.manifest = { ...result.manifest, profiles: { ...result.manifest.profiles, pet_shinsu: extra.profile },
+                    frames: { ...result.manifest.frames, ...extra.frames } };
+            }
             if (selected.scene_kind === 2 && !selected.compact_town) {
                 const streaming = result.gameplay.source_map_streaming;
                 if (!streaming || ![streaming.load_concurrency, streaming.cache_capacity].every(value => Number.isSafeInteger(value) && value > 0)) throw new Error('来源地图缺少显式流式并发/缓存预算');
@@ -170,7 +189,11 @@ export class WorldAssets {
             if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
             // 共享首领场的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
-            for (const row of result.gameplay.pet_profiles) if (result.sceneKind === 4 || row.job_id === job) profileIds.add(row.profile);
+            for (const row of result.gameplay.pet_profiles) {
+                if (result.sceneKind !== 4 && row.job_id !== job) continue;
+                if (result.manifest.development_only && row.appearance_optional && !result.manifest.profiles[row.profile]) continue;
+                profileIds.add(row.profile);
+            }
             const keys = new Set<string>();
             // 可接收的常驻状态与职业无关，入场前持有，不在受益时临时异步加载。
             for (const key of [...effectFrameKeys(result.manifest.statuses), ...effectFrameKeys(result.manifest.teleport)]) {
@@ -197,8 +220,8 @@ export class WorldAssets {
             for (const skill of result.gameplay.skills ?? []) {
                 if ((skill.job_id !== job && result.sceneKind !== 4) || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
                 const effect = result.manifest.effects?.[String(skill.id)];
-                // 火墙使用有效地格绘制；圣言术使用施法动作和实际命中反馈。
-                if (!effect && (skill.kind === 'fire_wall' || skill.kind === 'turn_undead')) continue;
+                const independentSummon = skill.kind !== 'summon_pet' || skill.id === 30;
+                if (!effect && independentSummon && skillsWithActorFeedback.has(skill.kind)) continue;
                 if (!effect) throw new Error(`缺少技能表现资源：${skill.id}`);
                 for (const key of effectFrameKeys(effect)) {
                     if (!result.manifest.frames[key]) throw new Error(`缺少技能帧定义：${key}`);
@@ -235,7 +258,7 @@ export class WorldAssets {
             : state.entityKind === 2 ? petAppearanceFor<{ definition_id: number; job_id: number; profile: string }>(
                 this.gameplay.pet_profiles, state.definitionId, this.sceneKind === 4 ? undefined : job)
             : state.entityKind === 3 ? this.gameplay.monster_profiles.find((value: any) => value.definition_id === state.definitionId) : null;
-        return row ? this.manifest.profiles[row.profile] : null;
+        return row ? this.manifest.profiles[row.profile] ?? null : null;
     }
 
     dispose(): void {

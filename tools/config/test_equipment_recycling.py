@@ -26,10 +26,6 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
         self.assertGreaterEqual(f['rule_version'],19)
         self.assertEqual(f['equipment_recycling'],{'mode':'development_gold_only','outputs':[]})
         self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400),(259,2,0,0)])
-        self.assertEqual(len(f['skills']),24)
-        self.assertNotIn(17,[r['id'] for r in f['skills']])
-        self.assertIs(f['casting_supply']['enabled'],False)
-        self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
         evidence=f['_source_evidence']['equipment_recycling']
         self.assertIs(evidence['formal_recipe_published'],False)
         self.assertIs(evidence['formal_recycle_values_consumed'],False)

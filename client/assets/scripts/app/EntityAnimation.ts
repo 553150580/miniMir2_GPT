@@ -38,7 +38,7 @@ export class EntityAnimation {
     appear(now: number, elapsedMs: number, direction: number): boolean {
         const definition = this.definitions.appear;
         if (this.dead || !definition || !Number.isFinite(now) || !Number.isFinite(elapsedMs) || elapsedMs < 0
-            || elapsedMs >= definition.count * definition.duration_ms || direction !== 5) return false;
+            || elapsedMs >= definition.count * definition.duration_ms || !Number.isInteger(direction) || direction < 0 || direction > 7) return false;
         this.begin('appear', now - elapsedMs, direction); return true;
     }
     cancelAppearance(): void { if (this.action === 'appear') this.action = 'standing'; }

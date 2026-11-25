@@ -2,6 +2,7 @@
 package game
 
 import (
+	"slices"
 	"testing"
 	"time"
 
@@ -14,14 +15,14 @@ import (
 // TestPoisoningPreparedPowderIsImmutable 验证灰粉及黄粉在事务闸门按原实例选择，后续换粉不改变本次施法。
 func TestPoisoningPreparedPowderIsImmutable(t *testing.T) {
 	w, r, target, q, request := soulFireBallFixture(t)
-	// f 是隔离候选，只加入源灰粉181和黄粉182，不开启主试玩供应。
+	// f 隔离本例的材料白名单和毒粉技能参数。
 	f := &w.e.Store.Cfg.Fixture
-	f.CastingSupply.ItemIDs = append(f.CastingSupply.ItemIDs, 181, 182)
+	f.CastingSupply.ItemIDs = []uint32{187, 181, 182}
 	// skill 定义受理时使用的原药粉和时序，颜色不来自客户端字段。
 	skill := devconfig.Skill{ID: 6, JobID: 2, Behavior: "poisoning", TargetKind: "enemy_entity", RangeCells: 9, MaxLevel: 3,
 		MPBaseCost: 2, MPLevelCost: 1, DelayBaseMS: 500, ActionMS: 600, GlobalSpellMS: 1800, MultiplierBasePPM: 1000000,
 		MaterialQuantity: 1, Poison: &devconfig.PoisonMaterials{GreenItemIDs: []uint32{181}, RedItemIDs: []uint32{182}}}
-	f.Skills = append(f.Skills, skill)
+	f.Skills = append(slices.DeleteFunc(f.Skills, func(entry devconfig.Skill) bool { return entry.ID == skill.ID }), skill)
 	r.Role.Skills = append(r.Role.Skills, domain.LearnedSkill{SkillID: 6})
 	q.SkillID, request.SkillId = 6, 6
 	// now 是隔离时间。装备着护符时不能冒充毒粉。

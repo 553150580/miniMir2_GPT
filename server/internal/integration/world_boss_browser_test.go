@@ -51,7 +51,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	entry := makeDirectoryEntry(cfg.OriginID, cfg.RunID, cfg, "world-browser", "首领验收区", "双客户端一服", 0, 0)
 	cfg.OriginRoutes = []devconfig.OriginRouteSeed{entry.origin}
 	cfg.RunServers = []devconfig.RunServerSeed{entry.assignment}
-	// 使用真实服务端时钟。两分钟窗口容纳双端依次冷加载和重连，线上十秒基线确认门槛保持不变。
+	// 使用真实服务端时钟。隔离场次给两端冷加载原帧预留时间，线上十秒基线确认门槛保持不变。
 	const shanghaiDay = 24 * time.Hour
 	openAt := time.Now().Add(55 * time.Second).Truncate(time.Millisecond)
 	local := openAt.In(time.FixedZone("Asia/Shanghai", 8*60*60))
@@ -61,7 +61,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 		t.Fatal("首领双端验收需要工作区规则启用世界首领")
 	}
 	world.DailyOpenOffsets = []time.Duration{local.Sub(midnight) % shanghaiDay}
-	world.Window = 2 * time.Minute
+	world.Window = 160 * time.Second
 	world.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 4}}
 	world.Monster.HP = 10_000
 	world.Monster.Accuracy = 100
@@ -71,6 +71,8 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	for i := range cfg.Fixture.PlayerGrowth {
 		cfg.Fixture.PlayerGrowth[i].HPBase = 500
 	}
+	// 本双端投影回归从一个已拥有骷髅的测试账号起步。
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	if !cfg.Fixture.ValidWorldBoss() || cfg.Fixture.Pet.JobID != 2 {
 		t.Fatal("首领双端隔离配置无效")
 	}
@@ -118,7 +120,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	must(t, err)
 	must(t, os.WriteFile(manifest, raw, 0600))
 	t.Logf("世界首领双端触屏证据目录 %s", evidence)
-	browserCtx, stop := context.WithTimeout(ctx, 4*time.Minute)
+	browserCtx, stop := context.WithTimeout(ctx, 270*time.Second)
 	defer stop()
 	command := exec.CommandContext(browserCtx, "node", filepath.Join(repo, "tools/client/verify_world_boss_browser.cjs"), manifest)
 	command.Dir = repo

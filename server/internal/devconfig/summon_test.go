@@ -46,31 +46,31 @@ func TestSummonCandidatesPreserveSourceAndClosedProfile(t *testing.T) {
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := cfg.Fixture
-	expectedSkills := 22
-	if f.RuleVersion >= 28 {
-		expectedSkills = 24
+	skeleton, hasSkeleton := f.PetRuntime.DefinitionByID(s.Summon.DefinitionID)
+	if !hasSkeleton || skeleton.RecallName != "BoneFamiliar" || skeleton.SourceDataRangeCells() != 16 {
+		t.Fatal("骷髅召回名与范围必须由唯一表显式导出")
 	}
-	if f.RuleVersion < 23 || len(f.Skills) != expectedSkills || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
-		t.Fatal("候选载入不能开启主profile或更换免费开发宠物模式")
-	}
-	// ok 表明查询、校验或类型转换是否成功。
-	if _, ok := f.Skill(17); ok {
-		t.Fatal("17尚未加入主profile")
-	}
-	// ok 表明查询、校验或类型转换是否成功。
-	if _, ok := f.Item(25); ok {
-		t.Fatal("候选书不能变成隐形运行物品")
-	}
-	// d 接收遍历定义集合时当前的元素。
-	for _, d := range f.PetRuntime.Definitions {
-		if d.RecallName != "BoneFamiliar" || d.SourceDataRangeCells() != 16 {
-			t.Fatal("召回名与共用DataRange必须由唯一表显式导出")
+	selected, active := f.Skill(s.ID)
+	if active {
+		shinsu, found := f.Skill(SummonShinsuSkillID)
+		if !found || shinsu.Summon == nil || !reflect.DeepEqual(selected.Summon, s.Summon) || !f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "none" {
+			t.Fatal("正式技能须同时选择骷髅和神兽、启用护符并关闭免费宠物")
 		}
+		definition, exists := f.PetRuntime.DefinitionByID(shinsu.Summon.DefinitionID)
+		if !exists || definition.ID == skeleton.ID || definition.Base.DefinitionID == skeleton.Base.DefinitionID || definition.RecallName == skeleton.RecallName ||
+			definition.SourceSkillID != SummonShinsuSkillID || shinsu.MaterialQuantity != 5 || shinsu.BookItemID != 33 ||
+			!reflect.DeepEqual(definition.Training.MaximumLevelByRank, []uint32{1, 3, 5, 7}) {
+			t.Fatal("神兽须使用独立身份、原书、五张护符和来源训练上限")
+		}
+	} else {
+		if _, exists := f.Item(s.BookItemID); exists || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+			t.Fatal("历史关闭的候选不能授予召唤书、材料或变更免费开发宠物模式")
+		}
+		// 历史独立目录的技能、原书和升级仍可显式合入隔离配置。
+		f.Skills = append(f.Skills, c.Skills...)
+		f.Items = append(f.Items, c.Books...)
+		f.SkillUpgrades = append(f.SkillUpgrades, c.Upgrades...)
 	}
-	// 独立目录的技能、原书和升级可以显式合入隔离配置，仍通过完整校验。
-	f.Skills = append(append([]Skill(nil), f.Skills...), c.Skills...)
-	f.Items = append(append([]Item(nil), f.Items...), c.Books...)
-	f.SkillUpgrades = append(append([]SkillUpgrade(nil), f.SkillUpgrades...), c.Upgrades...)
 	// err 接收校验过程中可能产生的错误，供后续失败分支处理。
 	if err := f.Validate(); err != nil {
 		t.Fatal(err)

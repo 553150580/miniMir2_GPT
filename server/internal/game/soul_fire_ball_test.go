@@ -2,6 +2,7 @@
 package game
 
 import (
+	"slices"
 	"testing"
 	"time"
 
@@ -30,9 +31,7 @@ func soulFireBallFixture(t *testing.T) (*worker, *room, *entity, persistence.Ass
 		MPBaseCost: 3, MPLevelCost: 1, MaxLevel: 3, DelayBaseMS: 500, ProjectileMSPerCell: 50, TargetMoveToleranceCells: 2,
 		RequireLineOfSight: true, ActionMS: 600, GlobalSpellMS: 1800, PowerBase: 3, MPowerBase: 8, MultiplierBasePPM: 1000000,
 		MaterialItemID: 187, MaterialQuantity: 1}
-	if _, found := f.Skill(skill.ID); !found {
-		f.Skills = append(f.Skills, skill)
-	}
+	f.Skills = append(slices.DeleteFunc(f.Skills, func(entry devconfig.Skill) bool { return entry.ID == skill.ID }), skill)
 	// item 是隔离测试下已装备且有版本的原护符实例。
 	item := domain.Item{ID: domain.ID(), ItemID: 187, Quantity: 2, Version: 4}
 	r.Role.Equipped = []domain.Equipped{{Slot: devconfig.CastingSupplySlot, Item: item}}

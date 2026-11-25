@@ -118,6 +118,8 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := loadIntegrationConfig()
 	must(t, err)
+	// 群疗对已受伤宠物的覆盖需要固定旧式出生，本用例继续以该隔离前态验证加血。
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 	// testRoleLevel 规定测试角色等级的初始取值。

@@ -102,7 +102,8 @@ type petBirthFact struct {
 // r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，pet 记录宠物，使用实体表示，cast 记录施法，使用待确认施法表示。
 // now 提供当前时点，作为状态有效期和计时判断的基准。
 func newPetBirthFact(r *room, world *worldState, pet *entity, cast pendingCast, now time.Time) *petBirthFact {
-	if world == nil || pet == nil || cast.Summon == nil || cast.Summon.Recall || cast.Skill.ID != 17 || pet.PetRuntime == nil || !pet.PetRuntime.Train || pet.PetRuntime.LegacyUntrained {
+	if world == nil || pet == nil || cast.Summon == nil || cast.Summon.Recall || pet.PetRuntime == nil || !pet.PetRuntime.Train || pet.PetRuntime.LegacyUntrained ||
+		cast.Skill.ID != pet.PetRuntime.Definition.SourceSkillID || cast.Summon.Definition.ID != pet.PetRuntime.Definition.ID {
 		return nil
 	}
 	return &petBirthFact{Attachment: r.PetBornReady, Actor: referenceIn(world, pet), Body: pet, Definition: pet.Def, Position: pet.Pos, Direction: pet.Direction,
@@ -136,7 +137,7 @@ func (w *worker) publishPetBorn(r *room, fact *petBirthFact) {
 		return
 	}
 	fact.Consumed = true
-	if w.e.Store.Cfg.Fixture.RuleVersion < 18 || fact.Skill != 17 || fact.Cast == 0 || r.DeferMovementSnapshot || !fact.current(r) {
+	if w.e.Store.Cfg.Fixture.RuleVersion < 18 || !w.isSummonSkill(fact.Skill) || fact.Cast == 0 || r.DeferMovementSnapshot || !fact.current(r) {
 		return
 	}
 	// roleID 标识当前业务使用的角色。

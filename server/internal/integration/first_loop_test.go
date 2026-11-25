@@ -33,6 +33,8 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := loadIntegrationConfig()
 	must(t, err)
+	// 旧首循环用例保留道士的历史测试伙伴，规则29的新生与耗材由独立联机用例验证。
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	// 独立测试库和回环端口承载完整节点装配，结束时先停节点再删除本轮数据。
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress = address(t)

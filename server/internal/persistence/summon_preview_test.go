@@ -23,7 +23,9 @@ func TestSummonUpgradePreviewDescribesNewBirthInsteadOfDamage(t *testing.T) {
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := cfg.Fixture
-	f.Skills, f.Items, f.SkillUpgrades = append(f.Skills, c.Skills...), append(f.Items, c.Books...), append(f.SkillUpgrades, c.Upgrades...)
+	if _, active := f.Skill(devconfig.SummonSkeletonSkillID); !active {
+		f.Skills, f.Items, f.SkillUpgrades = append(f.Skills, c.Skills...), append(f.Items, c.Books...), append(f.SkillUpgrades, c.Upgrades...)
+	}
 	// err 接收校验过程中可能产生的错误，供后续失败分支处理。
 	if err := f.Validate(); err != nil {
 		t.Fatal(err)

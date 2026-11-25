@@ -6,7 +6,7 @@ cc.Node.prototype.setScale=function(x,y,z){this.scale=new Vec3(x,y,z);};
 function ancestry(node){const nodes=[];while(node){nodes.push(node);node=node.parent;}return nodes;}
 UITransform.prototype.convertToWorldSpaceAR=function(point){const value=new Vec3(point.x,point.y,point.z??0);for(const node of ancestry(this.node)){value.x=value.x*node.scale.x+node.position.x;value.y=value.y*node.scale.y+node.position.y;}return value;};
 UITransform.prototype.convertToNodeSpaceAR=function(point){const value=new Vec3(point.x,point.y,point.z??0);for(const node of ancestry(this.node).reverse()){value.x=(value.x-node.position.x)/node.scale.x;value.y=(value.y-node.position.y)/node.scale.y;}return value;};
-class Graphics{clear(){}rect(){}fill(){}stroke(){}}
+class Graphics{clear(){}rect(){}ellipse(...args){this.ellipseArgs=args;}fill(){}stroke(){}}
 cc.Graphics=Graphics;cc.Color=class{constructor(r,g,b,a){Object.assign(this,{r,g,b,a});}};
 const materials=[];cc.Material=class{constructor(){materials.push(this);}copy(_base,options){this.states=options?.states;}overridePipelineStates(){this.illegalRuntimeOverride=true;}destroy(){this.destroyed=true;}};
 cc.gfx={BlendFactor:{SRC_ALPHA:2,ONE:1,ONE_MINUS_SRC_ALPHA:4}};Sprite.prototype.getSharedMaterial=function(){return this.customMaterial??{};};
@@ -20,7 +20,7 @@ function fakeResources(options={}){
   requested.push(key);const source=key.startsWith('source-maps/');if(source){sourceActive.now++;sourceActive.max=Math.max(sourceActive.max,sourceActive.now);}
   const finish=()=>{
    let asset=pool.get(key),error=null;
-   try{if(!asset){const json=key==='development/gameplay'?gameplay:fs.existsSync(path.join(resourceRoot,key+'.json'))?JSON.parse(fs.readFileSync(path.join(resourceRoot,key+'.json'),'utf8')):undefined;
+   try{if(!asset){const json=key==='development/gameplay'?gameplay:options.extraResources?.[key]??(fs.existsSync(path.join(resourceRoot,key+'.json'))?JSON.parse(fs.readFileSync(path.join(resourceRoot,key+'.json'),'utf8')):undefined);
     options.changeResource?.(key,json);
     asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status',DamageNumber:'damage-number'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};pool.set(key,asset);}
    }catch(failure){error=failure;}
@@ -28,7 +28,8 @@ function fakeResources(options={}){
   };
   if(options.delayChunks&&key.includes('/chunks/'))pending.push(finish);else queueMicrotask(finish);
  };
- cc.resources={load};return{pool,requested,pending,gameplay,sourceActive,flush(){for(const finish of pending.splice(0))finish();}};
+ const getInfoWithPath=key=>options.extraResources?.[key]||fs.existsSync(path.join(resourceRoot,key+'.json'))?{path:key}:null;
+ cc.resources={load,getInfoWithPath};return{pool,requested,pending,gameplay,sourceActive,flush(){for(const finish of pending.splice(0))finish();}};
 }
 function scene(assets){
  const viewport=new cc.Node('Viewport'),world=new cc.Node('World'),entities=new cc.Node('Entities');viewport.getComponent(UITransform).setContentSize(720,808);world.parent=viewport;
@@ -121,6 +122,40 @@ test('战士在世界首领场按模板预载道士宠物并显示无主尸体�
   assert.equal(ordinaryAssets.profile(pet, 0), null);
   assert.equal(ordinaryAssets.frames.has(standingKey), false);
  } finally { ordinaryAssets.dispose(); assertReleased(ordinary); }
+});
+test('开发神兽缺少外观包时仍可按独立名字、身体与尸体观察', async () => {
+ const resources=fakeResources(), assets=await WorldAssets.prepare(0,()=>{},'81'), {view,world,entities}=scene(assets);
+ const shinsu=assets.gameplay.pet_profiles.find(row=>row.profile==='pet_shinsu');
+ const warrior=state(1,1,4,4), body=state(8,2,5,6,{definitionId:shinsu.definition_id});
+ try {
+  assert.equal(assets.profile(body,0),null);
+  view.apply({entities:[warrior,body]});
+  const living=view.visuals.get(8);
+  assert.equal(living.node.parent,entities);
+  assert.equal(living.node.getChildByName('Name').getComponent(cc.Label).string,'神兽');
+  assert(living.node.getChildByName('PetPlaceholder').getComponent(Graphics).ellipseArgs);
+  view.apply({entities:[warrior,{...body,hp:Long.UZERO,isPetCorpse:true}]});
+  assert.equal(living.node.parent,world);
+  assert.equal(living.placeholder.scale.y,.35);
+ } finally { view.dispose(); assertReleased(resources); }
+});
+test('独立神兽帧按原资源租约预载，拼接引用越界会拒绝',async()=>{
+ const path='development/pets/shinsu/profile', key='Shinsu:0', png='pets/shinsu/frames/frame_00000.png';
+ const directions=Array.from({length:8},(_,direction)=>({direction,frames:[key]}));
+ const animation={count:1,duration_ms:80,directions};
+ const actions=Object.fromEntries(['standing','walking','attack','struck','die','appear'].map(name=>[name,animation]));
+ const profile={id:'pet_shinsu',layers:[{package:'Shinsu',actions}]};
+ const supplemental={schema_version:1,profile,frames:{[key]:{png,width:16,height:16,offset_x:-8,offset_y:-16}}};
+ const resources=fakeResources({extraResources:{[path]:supplemental}});
+ const assets=await WorldAssets.prepare(2,()=>{});
+ try {
+  assert.equal(assets.profile({entityKind:2,definitionId:80030},2),profile);
+  assert(assets.frames.has(key));
+  assert(resources.requested.includes('development/pets/shinsu/frames/frame_00000/spriteFrame'));
+ } finally { assets.dispose(); assertReleased(resources); }
+ const wrong=fakeResources({extraResources:{[path]:{...supplemental,frames:{[key]:{png:'../frame.png'}}}}});
+ await assert.rejects(WorldAssets.prepare(2,()=>{}),/神兽独立开发资源清单无效/);
+ assertReleased(wrong);
 });
 test('目录选择与来源资源身份完整保留最大uint64，拒绝数字资源ID冒充另一张图',async()=>{
  const id='18446744073709551615',resources=fakeResources({changeGameplay:g=>g.map_catalog[1].id=id,changeResource:(key,json)=>{if(key==='source-maps/map-2/manifest')json.id=id;}});

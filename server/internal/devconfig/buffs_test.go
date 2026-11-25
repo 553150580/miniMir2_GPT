@@ -5,10 +5,11 @@ package devconfig
 import (
 	"encoding/json"
 	"os"
+	"slices"
 	"testing"
 )
 
-// TestStatusFixtureExplicitContractAndUnknownSupplyClosed 核验当前阶段护符未定单位必须关闭且只选187，用诊断「护符未定单位被伪装为正式堆叠/强化装备」定位对应断言。
+// TestStatusFixtureExplicitContractAndUnknownSupplyClosed 核对当前材料专槽、逐字段显式配置与未知数量拒绝。
 // t 提供断言失败报告、子用例和清理注册。
 func TestStatusFixtureExplicitContractAndUnknownSupplyClosed(t *testing.T) {
 	// data 保存由读取文件取得的数据，err 接收读取文件过程中可能产生的错误，供后续失败分支处理。
@@ -21,13 +22,22 @@ func TestStatusFixtureExplicitContractAndUnknownSupplyClosed(t *testing.T) {
 	if err = json.Unmarshal(data, &fixture); err != nil {
 		t.Fatal(err)
 	}
-	if len(fixture.Buffs) != 4 || fixture.CastingSupply.Enabled || len(fixture.CastingSupply.ItemIDs) != 1 || fixture.CastingSupply.ItemIDs[0] != 187 {
-		t.Fatal("当前阶段护符未定单位必须关闭且只选187")
-	}
-	// item 接收道具供后续步骤使用。
-	item, _ := fixture.Item(187)
-	if item.MaxStack != 0 || item.IsEquipment || item.EquipmentSlot != 100 {
-		t.Fatal("护符未定单位被伪装为正式堆叠/强化装备")
+	if fixture.RuleVersion <= 28 {
+		item, _ := fixture.Item(187)
+		if len(fixture.Buffs) != 4 || fixture.CastingSupply.Enabled || !slices.Equal(fixture.CastingSupply.ItemIDs, []uint32{187}) ||
+			item.MaxStack != 0 || item.IsEquipment || item.EquipmentSlot != CastingSupplySlot {
+			t.Fatal("旧规则在材料单位未定时只保留关闭的护符入口")
+		}
+	} else {
+		if !fixture.CastingSupply.Enabled || len(fixture.CastingSupply.ItemIDs) != 3 {
+			t.Fatal("已启用的专槽必须登记护符和两色药粉")
+		}
+		for _, id := range []uint32{187, 181, 182} {
+			item, ok := fixture.Item(id)
+			if !ok || !fixture.IsCastingSupply(id) || item.MaxStack <= 0 || item.IsEquipment || item.EquipmentSlot != CastingSupplySlot {
+				t.Fatalf("材料 %d 缺少明确堆叠数量、专槽或白名单", id)
+			}
+		}
 	}
 	if err = fixture.ValidateBuffs(); err != nil {
 		t.Fatal(err)
@@ -74,6 +84,11 @@ func TestStatusFixtureExplicitContractAndUnknownSupplyClosed(t *testing.T) {
 		}
 	}
 	fixture.CastingSupply.Enabled = true
+	for i := range fixture.Items {
+		if fixture.Items[i].ID == 187 {
+			fixture.Items[i].MaxStack = 0
+		}
+	}
 	if fixture.ValidateBuffs() == nil {
 		t.Fatal("单位未定却可激活护符功能")
 	}

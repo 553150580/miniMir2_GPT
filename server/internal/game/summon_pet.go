@@ -13,14 +13,16 @@ import (
 type summonPetPlan struct {
 	// Recall 标记是否处于召回状态。
 	Recall bool
-	// Pet 记录宠物，使用行动实体引用表示。
+	// Pet 锁定本次召回或切换所涉及的旧宠物出生身份。
 	Pet actorRef
 	// Token 记录令牌，使用宠物出生令牌表示。
 	Token petBirthToken
 	// Definition 记录定义，使用宠物运行时定义表示。
 	Definition devconfig.PetRuntimeDefinition
-	// Front 记录前端，使用点位表示。
+	// Front 保存受理时玩家前方的出生格。
 	Front devconfig.Point
+	// Direction 保存受理时的施法朝向，供继承主人朝向的宠物出生使用。
+	Direction uint32
 }
 
 // Crystal BoneFamiliar构造使用DownLeft，属于固定八向枚举，不是玩法调参。
@@ -63,14 +65,24 @@ func (w *worker) prepareSummonPet(r *room, skill devconfig.Skill, direction uint
 		return nil, p.CodeSkillStateBlocked
 	}
 	// plan 保存当前处理所用的计划。
-	plan := &summonPetPlan{Definition: d, Front: stepPoint(r.Player.Pos, direction, 1)}
+	plan := &summonPetPlan{Definition: d, Front: stepPoint(r.Player.Pos, direction, 1), Direction: direction}
 	// pet 保存当前处理所用的宠物。
 	if pet := r.Pet; pet != nil {
-		if pet.HP <= 0 || pet.IsPetCorpse || r.petResidentWorld() == nil || pet.PetRuntime == nil || pet.PetRuntime.Definition.RecallName != d.RecallName {
+		if pet.HP <= 0 || pet.IsPetCorpse || r.petResidentWorld() == nil || pet.PetRuntime == nil {
 			return nil, p.CodeSkillStateBlocked
 		}
-		plan.Recall, plan.Pet = true, r.petReference()
-	} else if !w.canBeginPetBirth(r, now) {
+		plan.Pet = r.petReference()
+		if pet.PetRuntime.Definition.RecallName == d.RecallName {
+			plan.Recall = true
+			return plan, 0
+		}
+		// 只有同职业的另一种正式召唤宠可切换，来源不明或诱惑获得的活宠保留原名额。
+		old := pet.PetRuntime.Definition
+		if old.SourceSkillID == skill.ID || old.OwnerJobID != r.Role.Job || !w.isSummonSkill(old.SourceSkillID) {
+			return nil, p.CodeSkillStateBlocked
+		}
+	}
+	if !w.canBeginPetBirth(r, now, plan.Pet) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	return plan, 0
@@ -86,7 +98,7 @@ func (w *worker) reserveSummonPet(r *room, plan *preparedCast, operationID strin
 	if r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 {
 		return false
 	}
-	plan.Summon.Token = petBirthToken{ID: operationID, ExecutionEpoch: r.ExecutionEpoch, PlayerLife: plan.Caster.Life}
+	plan.Summon.Token = petBirthToken{ID: operationID, ExecutionEpoch: r.ExecutionEpoch, PlayerLife: plan.Caster.Life, Replacing: plan.Summon.Pet}
 	return w.reservePetBirth(r, plan.Summon.Token, now)
 }
 
@@ -105,10 +117,9 @@ func (w *worker) summonPlanCurrent(r *room, plan *preparedCast) bool {
 		return true
 	}
 	if plan.Summon.Recall {
-		return r.Pet != nil && r.Pet.HP > 0 && !r.Pet.IsPetCorpse && r.petResidentWorld() != nil &&
-			r.Pet.Handle == plan.Summon.Pet.Handle && r.Pet.Life == plan.Summon.Pet.Life && plan.Summon.Pet.World.Epoch == r.ExecutionEpoch
+		return r.matchesActivePet(plan.Summon.Pet)
 	}
-	return r.Pet == nil && r.PendingPetBirth != nil && r.PendingPetBirth.Token == plan.Summon.Token && plan.Summon.Token.ExecutionEpoch == r.ExecutionEpoch
+	return r.pendingPetBirthMatches(plan.Summon.Token)
 }
 
 // resolveSummonPet 确定“summon”宠物。
@@ -128,13 +139,13 @@ func (w *worker) resolveSummonPet(r *room, origin *worldState, cast pendingCast,
 		return
 	}
 	if plan.Recall {
-		if r.Pet == nil || r.Pet.HP <= 0 || r.Pet.IsPetCorpse || r.Pet.Handle != plan.Pet.Handle || r.Pet.Life != plan.Pet.Life || plan.Pet.World.Epoch != r.ExecutionEpoch {
+		if !r.matchesActivePet(plan.Pet) {
 			return
 		}
 		w.recallResidentPet(r)
 		return
 	}
-	if r.Pet != nil || r.PendingPetBirth == nil || r.PendingPetBirth.Token != plan.Token {
+	if !r.pendingPetBirthMatches(plan.Token) {
 		return
 	}
 	// spawnWorld 保存当前处理所用的生成或出生点场景世界，point 保存前端，用于当前步骤中的点位。
@@ -151,7 +162,13 @@ func (w *worker) resolveSummonPet(r *room, origin *worldState, cast pendingCast,
 	}
 	// pet 保存由创建宠物来源定义取得的宠物，ok 表明查询、校验或类型转换是否成功。
 	pet, ok := w.newPetFromDefinition(r, plan.Definition, cast.SkillLevel, point, now)
-	if !ok || !w.installReservedPet(r, spawnWorld, pet, plan.Token) {
+	if !ok {
+		return
+	}
+	if plan.Definition.SourceSkillID == devconfig.SummonShinsuSkillID {
+		pet.Direction = plan.Direction
+	}
+	if !w.installReservedPet(r, spawnWorld, pet, plan.Token) {
 		return
 	}
 	w.publishPetBorn(r, newPetBirthFact(r, spawnWorld, pet, cast, now))

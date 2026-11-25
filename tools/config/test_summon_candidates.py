@@ -4,7 +4,7 @@ import json
 import unittest
 
 import export_configs as config
-from test_source_map_projection import module, ROOT
+from test_source_map_projection import module, ROOT, restore_rule28_skill_selection
 import prepare_pet_runtime as pets
 import prepare_summon_candidates as summons
 
@@ -29,7 +29,7 @@ class SummonCandidateProjectionTests(unittest.TestCase):
 
     def compile(self,tables):return summons.compile_catalog(tables,{'source':'explicit_test_evidence'})
 
-    def test_candidate_is_complete_closed_and_not_selected_by_main(self):
+    def test_legacy_catalog_is_closed_and_current_books_use_normal_supply(self):
         c=self.compile(self.tables);f=self.fixture
         self.assertEqual(set(c),{'schema_version','development_only','runtime_enabled','required_rule_version','skills','books','upgrades','pet_definition_ids','source_evidence'})
         self.assertEqual((c['schema_version'],c['development_only'],c['runtime_enabled'],c['required_rule_version']),(1,True,False,17))
@@ -38,15 +38,13 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in c['books']],[25])
         self.assertEqual(len(c['upgrades']),3)
         self.assertGreaterEqual(f['rule_version'],17)
-        self.assertEqual(len(f['skills']),24)
-        self.assertTrue({22,32}.issubset(row['id'] for row in f['skills']))
-        self.assertFalse(any(row['id']==17 for row in f['skills']))
-        self.assertFalse(any(row['id']==25 for row in f['items']))
-        self.assertFalse(any(row['skill_id']==17 for row in f['skill_upgrades']))
-        self.assertFalse(any(row['item_id'] in [25,187] for row in f['skill_shop']))
+        self.assertEqual({row['id'] for row in f['skills']},set(range(1,34)))
+        self.assertEqual(c['skills'][0],next(row for row in f['skills'] if row['id']==17))
+        self.assertTrue({25,33}.issubset(row['item_id'] for row in f['skill_shop']))
+        self.assertTrue({181,182,187}.issubset(row['item_id'] for shop in f['npc_shops'] if shop['key']=='grocery' for row in shop['offers']))
         self.assertFalse(any(row['item_id']==25 for row in f['initial_skill_books']))
-        self.assertIs(f['casting_supply']['enabled'],False)
-        self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
+        self.assertIs(f['casting_supply']['enabled'],True)
+        self.assertEqual(f['pet_runtime']['bootstrap_mode'],'none')
 
     def test_source_costs_delay_and_birth_clock_have_no_duplicate_numbers(self):
         skill=self.compile(self.tables)['skills'][0]
@@ -82,6 +80,7 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         tables=self.changed();self.profile(tables)['rule_version']=16
         with self.assertRaises(ValueError):pets.compile_definitions(tables,[1])
         del self.pet(tables)['follow_and_return']['recall_name']
+        tables['game_pet_templates']=[self.pet(tables)]
         self.profile(tables).pop('progression')
         self.profile(tables).pop('equipment_recycling')
         old=pets.build_catalog(tables,{'unit':'legacy16'})
@@ -119,23 +118,23 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual(self.compile(self.tables)['skills'][0]['summon'],{'definition_id':1})
         for kind in ['selected','supply','bootstrap','old_version']:
             tables=self.changed();profile=self.profile(tables)
-            if kind=='selected':profile['skill_ids'].append(17)
-            elif kind=='supply':profile['casting_supply']['enabled']=True
-            elif kind=='bootstrap':profile['pet_runtime']['bootstrap_mode']='none'
+            if kind=='selected':profile['skill_ids'].remove(17)
+            elif kind=='supply':profile['casting_supply']['enabled']=False
+            elif kind=='bootstrap':profile['pet_runtime']['bootstrap_mode']='legacy_untrained_pet'
             else:profile['rule_version']=16
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
 
     def test_visual_protocol_version_preserves_minimum_summon_contract(self):
         for version in range(17,29):
             tables=self.changed();profile=self.profile(tables);profile['rule_version']=version
+            restore_rule28_skill_selection(profile)
             if version<28:
                 profile['skill_ids']=[ident for ident in profile['skill_ids'] if ident not in (22,32)]
                 profile.pop('boss_template_ids')
             if version<20:profile.pop('progression')
             if version<19:profile.pop('equipment_recycling')
             self.assertEqual(self.compile(tables)['required_rule_version'],17)
-        tables=self.changed();self.profile(tables)['rule_version']=29
-        with self.assertRaises(ValueError):self.compile(tables)
+        self.assertEqual(self.compile(self.tables)['required_rule_version'],17)
 
     def test_definition_link_and_material_cannot_be_guessed(self):
         for kind in ['missing_summon','unknown_key','boolean_id','wrong_id','extra_effect','quantity','unknown_material']:

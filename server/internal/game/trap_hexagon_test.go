@@ -2,21 +2,21 @@
 package game
 
 import (
+	"slices"
+	"testing"
+	"time"
+
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
-	"testing"
-	"time"
 )
 
-// trapHexagonTestRoom 在独占测试夹具中引入未开放的技能，不改变默认运行目录。
+// trapHexagonTestRoom 固定困魔咒的时序和技能阶位，隔离玩法表其它参数。
 func trapHexagonTestRoom(t *testing.T) (*worker, *room) {
 	t.Helper()
 	w, r, _ := stageAWorker(t, 2)
 	f := &w.e.Store.Cfg.Fixture
-	if _, enabled := f.Skill(16); enabled {
-		t.Fatal("困魔咒不应混入默认技能目录")
-	}
+	f.Skills = slices.DeleteFunc(f.Skills, func(skill devconfig.Skill) bool { return skill.ID == 16 })
 	f.Skills = append(f.Skills, devconfig.Skill{ID: 16, JobID: 2, Behavior: devconfig.TrapHexagonBehavior,
 		TargetKind: "enemy_grid", RangeCells: 9, AreaRadius: 1, MaterialItemID: 187, MaterialQuantity: 1,
 		MaxLevel: 3, MPBaseCost: 7, MPLevelCost: 3, DelayBaseMS: devconfig.TrapHexagonDelayMS, ActionMS: 600, GlobalSpellMS: 1800})

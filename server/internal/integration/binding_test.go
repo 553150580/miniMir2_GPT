@@ -161,10 +161,19 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 // 只改变本例随机库夹具；生产Validate及唯一Excel保持原样。
 // f 记录开发测试配置。
 func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
-	// teleport 保存由技能取得的瞬移。
-	teleport, _ := f.Skill(21)
-	// bookID 标识当前业务使用的技能书，buffID 标识当前业务使用的“buff”。
-	bookID, buffID := teleport.BookItemID, teleport.BuffID
+	// 按后来开放的技能身份同时移除其书、状态和经济条目，重建独立的规则12。
+	later := []uint32{6, 13, 16, 17, 18, 19, 20, 21, 28, 30}
+	books, buffs := map[uint32]bool{}, map[uint32]bool{}
+	for _, skill := range f.Skills {
+		if slices.Contains(later, skill.ID) {
+			books[skill.BookItemID] = true
+			if skill.BuffID != 0 {
+				buffs[skill.BuffID] = true
+			}
+		}
+	}
+	f.CastingSupply.Enabled = false
+	f.CastingSupply.ItemIDs = []uint32{187}
 	f.RuleVersion = 12
 	if f.Map.Width == 13 {
 		f.Map.Width, f.Map.Height = 17, 17
@@ -191,22 +200,27 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 		f.Maps[i].NoPets = nil
 	}
 	// s 记录技能。
-	f.Skills = slices.DeleteFunc(f.Skills, func(s devconfig.Skill) bool { return s.ID == 21 })
+	f.Skills = slices.DeleteFunc(f.Skills, func(s devconfig.Skill) bool { return slices.Contains(later, s.ID) })
 	// b 记录b，使用状态效果定义表示。
-	f.Buffs = slices.DeleteFunc(f.Buffs, func(b devconfig.BuffDefinition) bool { return b.ID == buffID || b.Kind == "teleport_mana_penalty" })
+	f.Buffs = slices.DeleteFunc(f.Buffs, func(b devconfig.BuffDefinition) bool { return buffs[b.ID] })
 	// item 记录道具。
-	f.Items = slices.DeleteFunc(f.Items, func(item devconfig.Item) bool { return item.ID == bookID || item.BookSkillID == 21 })
+	f.Items = slices.DeleteFunc(f.Items, func(item devconfig.Item) bool { return books[item.ID] || item.ID == 181 || item.ID == 182 })
+	for i := range f.Items {
+		if f.Items[i].ID == 187 {
+			f.Items[i].MaxStack = 0
+		}
+	}
 	// row 记录行记录，使用技能升级表示。
-	f.SkillUpgrades = slices.DeleteFunc(f.SkillUpgrades, func(row devconfig.SkillUpgrade) bool { return row.SkillID == 21 })
+	f.SkillUpgrades = slices.DeleteFunc(f.SkillUpgrades, func(row devconfig.SkillUpgrade) bool { return slices.Contains(later, row.SkillID) })
 	// row 记录行记录，使用技能商店表示。
-	f.SkillShop = slices.DeleteFunc(f.SkillShop, func(row devconfig.SkillShop) bool { return row.ItemID == bookID })
+	f.SkillShop = slices.DeleteFunc(f.SkillShop, func(row devconfig.SkillShop) bool { return books[row.ItemID] })
 	// row 记录行记录，使用技能技能书回收表示。
-	f.SkillBookRecycle = slices.DeleteFunc(f.SkillBookRecycle, func(row devconfig.SkillBookRecycle) bool { return row.ItemID == bookID })
+	f.SkillBookRecycle = slices.DeleteFunc(f.SkillBookRecycle, func(row devconfig.SkillBookRecycle) bool { return books[row.ItemID] })
 	// row 记录行记录，使用初始值技能技能书表示。
-	f.InitialSkillBooks = slices.DeleteFunc(f.InitialSkillBooks, func(row devconfig.InitialSkillBook) bool { return row.ItemID == bookID })
+	f.InitialSkillBooks = slices.DeleteFunc(f.InitialSkillBooks, func(row devconfig.InitialSkillBook) bool { return books[row.ItemID] })
 	// id 区分当前步骤指向的目标对象。
-	f.InitialInventory = slices.DeleteFunc(f.InitialInventory, func(id uint32) bool { return id == bookID })
+	f.InitialInventory = slices.DeleteFunc(f.InitialInventory, func(id uint32) bool { return books[id] })
 	// id 区分当前步骤指向的目标对象。
-	f.Drops.ItemIDs = slices.DeleteFunc(f.Drops.ItemIDs, func(id uint32) bool { return id == bookID })
+	f.Drops.ItemIDs = slices.DeleteFunc(f.Drops.ItemIDs, func(id uint32) bool { return books[id] })
 	return f
 }

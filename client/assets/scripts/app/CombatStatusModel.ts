@@ -18,14 +18,21 @@ export interface CombatEntity {
     statuses?: readonly EntityStatusState[]; combatAttributes?: CombatAttributes | null;
 }
 export interface StatusDefinition { id: number; name: string; short_name: string; }
-const NAMES: Record<number, string> = { 14: '幽灵盾', 15: '神圣战甲术', 31: '魔法盾' };
-const SHORT: Record<number, string> = { 14: '幽盾', 15: '战甲', 31: '魔盾' };
+const NAMES: Record<number, string> = { 14: '幽灵盾', 15: '神圣战甲术', 28: '心灵启示', 31: '魔法盾' };
+const SHORT: Record<number, string> = { 14: '幽盾', 15: '战甲', 28: '启示', 31: '魔盾' };
 export function statusName(id: number, definitions: readonly StatusDefinition[] = []): string { return definitions.find(row => row.id === id)?.name || NAMES[id] || `状态${id}`; }
 export function statusShortName(id: number, definitions: readonly StatusDefinition[] = []): string { return definitions.find(row => row.id === id)?.short_name || SHORT[id] || '状态'; }
 export function statusSeconds(status: EntityStatusState, receivedAt: number, now: number): number {
     if (!Number.isSafeInteger(status.remainingMs) || status.remainingMs < 0 || status.remainingMs > 0xffffffff
         || ![receivedAt, now].every(Number.isFinite)) throw new Error('状态剩余时间无效');
     return Math.max(0, Math.ceil((status.remainingMs - Math.max(0, now - receivedAt)) / 1000));
+}
+// 有效启示状态才显示活怪的数值生命，默认的图形血条不受影响。
+export function revealedMonsterHealthPercent(entity: CombatEntity, receivedAt: number, now: number): number | undefined {
+    if (entity.entityKind !== 3 || !entity.statuses?.some(status => status.statusId === 28 && status.sourceSkillId === 28 && statusSeconds(status, receivedAt, now) > 0)) return undefined;
+    const current = BigInt(entity.hp.toString()), max = BigInt((entity.hpMax ?? entity.hp).toString());
+    if (current <= 0n || max <= 0n) return undefined;
+    return Math.min(100, Number(100n * current / max));
 }
 export function statusLines(status: EntityStatusState, receivedAt: number, now: number, definitions: readonly StatusDefinition[] = []): string[] {
     const seconds = statusSeconds(status, receivedAt, now);

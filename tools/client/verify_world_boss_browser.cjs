@@ -57,24 +57,39 @@ async function scene(page, name) {
         const current = window.cc?.director?.getScene();
         return current?.name === name && current.getComponentsInChildren('AppRoot').length
             && cc.find('Canvas/Safe')?.activeInHierarchy && !cc.find('Canvas/Loading')?.activeInHierarchy;
-    }, name, { timeout: 30000 });
+    // 角色入场会先加载完整的本机原帧。此等待只覆盖触屏冷启动，网络 ACK 仍按服务端期限分别核对。
+    }, name, { timeout: name === 'Game' ? 75000 : 30000 });
+}
+
+// 协议头只有消息、序号及连接绑定；验收仅解码地图入场与 ACK 的必要身份字段。
+function bodyOffset(payload) {
+    let offset = 4;
+    for (let field = 0; field < 2; field++) while (offset < payload.length && payload[offset++] & 0x80) {}
+    return offset;
 }
 
 async function openedClient(browser, report, job, nickname) {
     const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1 });
     const page = await context.newPage();
-    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [] };
+    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [] };
     page.on('pageerror', error => report.errors.push(error.message));
     page.on('websocket', connection => {
         if (connection.url() !== expected.endpoint) {
             report.errors.push('客户端请求了其它游戏节点');
             return;
         }
-        frames.connections++;
+        const transport = { connection: ++frames.connections, openedAt: Date.now(), closedAt: null, transitions: [], acknowledgements: [] };
+        frames.sockets.push(transport);
+        connection.on('close', () => { transport.closedAt = Date.now(); });
         connection.on('framesent', ({ payload }) => {
             if (typeof payload === 'string' || payload.length < 6) return;
             const message = payload.readUInt16BE(2);
-            if (message === 4) frames.ackAt.push(Date.now());
+            if (message === 4) {
+                const ack = pb.EnterWorldAck.decode(payload.subarray(bodyOffset(payload)));
+                const sentAt = Date.now();
+                transport.acknowledgements.push({ scene: ack.scene_epoch.toString(), baseline: ack.baseline_id.toString(), sentAt });
+                frames.ackAt.push(sentAt);
+            }
             if (message === 20017) frames.queries++;
             if (message === 20018) frames.entries++;
         });
@@ -82,8 +97,7 @@ async function openedClient(browser, report, job, nickname) {
             if (typeof payload === 'string' || payload.length < 6) return;
             const message = payload.readUInt16BE(2);
             if (!(payload[1] & 1) && message !== 20002) return;
-            let offset = 4;
-            for (let field = 0; field < 2; field++) while (offset < payload.length && payload[offset++] & 0x80) {}
+            let offset = bodyOffset(payload);
             if (payload[1] & 1) {
                 let code = 0;
                 for (let shift = 0; shift <= 28 && offset < payload.length; shift += 7) {
@@ -91,11 +105,14 @@ async function openedClient(browser, report, job, nickname) {
                     code += (byte & 0x7f) * 2 ** shift;
                     if (!(byte & 0x80)) break;
                 }
-                if (frames.failures.length < 20) frames.failures.push({ message, code });
+                if (frames.failures.length < 20) frames.failures.push({ connection: transport.connection, at: Date.now(), message, code });
                 return;
             }
             const entry = pb.EnterLineResult.decode(payload.subarray(offset));
-            frames.transitions.push({ sceneKind: entry.scene_kind, map: entry.room_id.toString(), receivedAt: Date.now() });
+            const transition = { connection: transport.connection, sceneKind: entry.scene_kind, map: entry.room_id.toString(),
+                scene: entry.scene_epoch.toString(), baseline: entry.baseline_id.toString(), receivedAt: Date.now() };
+            transport.transitions.push(transition);
+            frames.transitions.push(transition);
         });
     });
     await page.goto(base.href);
@@ -119,13 +136,17 @@ async function openedClient(browser, report, job, nickname) {
     const progress = await page.evaluateHandle(session => {
         const steps = [];
         const timer = setInterval(() => {
-            if (session.entry?.sceneKind !== 4) return;
-            const loading = cc.find('Canvas/Loading/Status')?.getComponent(cc.Label)?.string;
+            const sceneKind = session.entry?.sceneKind;
+            if (sceneKind !== 1 && sceneKind !== 4) return;
+            const loadingRoot = cc.find('Canvas/Loading');
+            const loading = loadingRoot?.activeInHierarchy ? loadingRoot.getChildByName('Status')?.getComponent(cc.Label)?.string : '';
             const lastError = session.lastError;
+            const generation = session.connection.generation, ready = session.ready;
             const previous = steps.at(-1);
-            if (previous?.loading === loading && previous?.lastError === lastError) return;
+            if (previous?.sceneKind === sceneKind && previous.generation === generation && previous.ready === ready
+                && previous.loading === loading && previous.lastError === lastError) return;
             if (steps.length === 80) steps.shift();
-            steps.push({ at: Date.now(), loading, lastError });
+            steps.push({ at: Date.now(), sceneKind, generation, ready, loading, lastError });
         }, 200);
         return { steps, stop: () => clearInterval(timer) };
     }, session);
@@ -149,7 +170,7 @@ async function map(client, kind) {
         if (!session.ready || entry?.sceneKind !== kind || !app?.world?.isMapReady || app.attaching) return null;
         return { map: entry.roomId.toString(), version: entry.resourceVersion.toString(), occurrence: entry.serverTransitionId ?? '',
             generation: session.connection.generation, roleHandle: entry.playerHandle };
-    }, { kind, session }, { timeout: kind === 4 ? 50000 : 25000 });
+    }, { kind, session }, { timeout: kind === 4 ? 75000 : 25000 });
     try {
         const state = await handle.jsonValue();
         assert.equal(state.version, String(expected.version));
@@ -160,10 +181,15 @@ async function map(client, kind) {
 // 发起参战前允许准备资源，收到实际进场帧后仍须按服务端线上的十秒期限确认。
 function worldAckMs(client) {
     const entry = client.frames.transitions.findLast(row => row.sceneKind === 4);
-    const acceptedAt = client.frames.ackAt.find(at => at >= entry?.receivedAt);
-    assert(entry && acceptedAt !== undefined, '缺少共享首领进场或确认帧');
+    return entryAckMs(client.frames.sockets.find(row => row.connection === entry?.connection), entry, '共享首领');
+}
+
+// 必须由同一条连接确认同一场景和基线，旧普通图或其它连接的 ACK 不得充当重连验证。
+function entryAckMs(transport, entry, label) {
+    const acceptedAt = transport?.acknowledgements.find(row => row.scene === entry?.scene && row.baseline === entry?.baseline)?.sentAt;
+    assert(entry && acceptedAt !== undefined, `缺少${label}入场或对应确认帧`);
     const elapsed = acceptedAt - entry.receivedAt;
-    assert(elapsed < 10000, '共享首领首基线确认超过十秒');
+    assert(elapsed >= 0 && elapsed < 10000, `${label}首基线确认超过十秒`);
     return elapsed;
 }
 
@@ -175,6 +201,22 @@ async function bossPanel(client, status, enabled, timeout = 18000) {
             && panel.getChildByName('Status')?.getComponent(cc.Label)?.string === status
             && (enabled === undefined || panel.getChildByName('Action')?.getComponent(cc.Button)?.interactable === enabled);
     }, { status, enabled, session }, { timeout });
+}
+
+// Chrome 切换到另一端时首个触屏事件可能只恢复前台。核对真实页签选中后再继续。
+async function selectWorldTab(client) {
+    const { page } = client;
+    const selected = () => cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.boss?.section === 4;
+    for (let attempt = 0; attempt < 3; attempt++) {
+        if (await page.evaluate(selected)) return;
+        await touch(page, safe + bossRoot + '/World');
+        try {
+            await page.waitForFunction(selected, null, { timeout: 2000 });
+            return;
+        } catch (error) {
+            if (attempt === 2 || error.name !== 'TimeoutError') throw error;
+        }
+    }
 }
 
 async function pet(client, corpse, handle = 0, timeout = 15000) {
@@ -252,23 +294,24 @@ async function main() {
         const taoPending = openedClient(browser, report, 2, '验道');
         void taoPending.catch(() => {});
         await touch(warrior.page, safe + 'BottomHUD/QuickNav/Boss');
-        await touch(warrior.page, safe + bossRoot + '/World');
+        await selectWorldTab(warrior);
         await warrior.page.bringToFront();
         report.step = '开放前保持面板，等待服务端自动更新';
         await bossPanel(warrior, '等待开放', false);
         const initialQueries = warrior.frames.queries;
         report.closedStateBeforeOpen = { observedAt: Date.now(), queries: initialQueries };
+        assert(report.closedStateBeforeOpen.observedAt < expected.opensAt, '战士面板必须真实观测到开场前状态');
         tao = await taoPending;
         report.jobs = { warrior: 0, tao: 2 };
         await warrior.page.bringToFront();
-        assert(Date.now() < expected.opensAt, '开场前必须完成双端准备并保持战士面板');
+        // 战士已在开场前打开面板。道士完成冷加载的时刻与面板自动刷新没有依赖关系。
         await bossPanel(warrior, '开放中', true, 65000);
         assert(warrior.frames.queries > initialQueries && warrior.frames.entries === 0);
         report.autoOpened = true;
 
         report.step = '先由道士带着宠物入场，再让战士加入同一场次';
         await touch(tao.page, safe + 'BottomHUD/QuickNav/Boss');
-        await touch(tao.page, safe + bossRoot + '/World');
+        await selectWorldTab(tao);
         await bossPanel(tao, '开放中', true);
         const taoPressedAt = await touch(tao.page, safe + bossRoot + '/Action');
         report.step = '等待道士确认共享首领场景';
@@ -305,8 +348,17 @@ async function main() {
         assert.equal(restored.occurrence, warriorRoom.occurrence);
         assert.equal(restored.roleHandle, warriorRoom.roleHandle);
         assert(restored.generation > warriorRoom.generation && warrior.frames.connections === 2 && warrior.frames.entries === 1);
+        const [original, rejoined] = warrior.frames.sockets;
+        assert(original.closedAt !== null && rejoined.closedAt === null, '必须替换断开的原连接，并保持当前重连活动');
+        const [personalEntry, bossEntry] = rejoined.transitions;
+        assert.equal(rejoined.transitions.length, 2, '重连只需依次确认原个人地图和共享首领图');
+        assert.equal(personalEntry.sceneKind, 1);
+        assert.equal(personalEntry.map, '1');
+        assert.equal(bossEntry.sceneKind, 4);
+        assert.equal(bossEntry.map, String(expected.map));
         report.reconnected = true;
-        report.reconnectAckMs = worldAckMs(warrior);
+        report.reconnectPersonalAckMs = entryAckMs(rejoined, personalEntry, '重连普通地图');
+        report.reconnectAckMs = entryAckMs(rejoined, bossEntry, '重连共享首领');
 
         report.step = '首领真实击杀，道士原出生的宠物尸体在战士地板层可见';
         const corpse = await pet(warrior, true, alive.handle, 65000);
@@ -337,7 +389,7 @@ async function main() {
         await bossPanel(warrior, '开放中');
         assert(Date.now() < expected.expiresAt, '关闭前必须在普通地图保持战士面板');
         const beforeCloseQueries = warrior.frames.queries;
-        await bossPanel(warrior, '等待开放', false, 75000);
+        await bossPanel(warrior, '等待开放', false, Math.max(15000, expected.expiresAt - Date.now() + 15000));
         assert(warrior.frames.queries > beforeCloseQueries && warrior.frames.entries === 1);
         report.autoClosed = true;
         report.clientCounts = { warrior: warrior.frames, tao: tao.frames };

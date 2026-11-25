@@ -36,9 +36,17 @@ test('实际PB编码→完整Assembler→真实Session dispatcher：异图活宠
  session.connection.generation++;session.connection.binding=Long.fromInt(2,true);session.role={job:2,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(2)}};const next=entry('9007199254740994');session.connection.deliver(20002,next);assert.equal(session.baseline,null);session.connection.deliver(5,decode(c(0)));assert.equal(session.baseline,null,'旧角色原scope碎片不能挂回新角色');session.connection.deliver(5,decode(chunk(0,{chunkCount:1,sceneEpoch:next.sceneEpoch,baselineId:next.baselineId,ownedPet:null})));assert.equal(session.baseline.ownedPet,null);
 });
 
-test('实际public17与关闭召唤候选合同：NoPets逐图显式，主legacy不暗开技能/书/护符或采用候选Count',()=>{
+test('关闭的历史骷髅候选与实际规则29的两套单宠召唤目录分别校验',()=>{
  const publicData=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/development/gameplay.json'),'utf8')),fixture=JSON.parse(fs.readFileSync(path.join(root,'config/development/first-loop.json'),'utf8')),candidate=JSON.parse(fs.readFileSync(path.join(root,'config/development/summon-candidates.json'),'utf8'));
- assert(Number(publicData.rule_version)>=candidate.required_rule_version);assert.equal(candidate.required_rule_version,17);assert.equal(candidate.runtime_enabled,false);assert.equal(fixture.pet_runtime.bootstrap_mode,'legacy_untrained_pet');assert.equal(fixture.casting_supply.enabled,false);assert(!publicData.skills.some(s=>s.id===17));assert(!fixture.skills.some(s=>s.id===17));assert(!fixture.items.some(i=>i.id===25));assert(publicData.map_catalog.length>=2);for(const map of publicData.map_catalog){assert.equal(typeof map.no_pets,'boolean');assert.equal(typeof map.no_teleport,'boolean');}
+ assert(Number(publicData.rule_version)>=29);assert.equal(candidate.required_rule_version,17);assert.equal(candidate.runtime_enabled,false);
+ assert.equal(fixture.pet_runtime.bootstrap_mode,'none');assert.equal(fixture.casting_supply.enabled,true);
+ for(const [skillId,bookId,material] of [[17,25,1],[30,33,5]]){
+  const skill=publicData.skills.find(row=>row.id===skillId);assert(skill.active);assert.equal(skill.material_quantity,material);
+  const runtime=fixture.skills.find(row=>row.id===skillId);assert.equal(runtime.target_kind,'friendly_self');assert.equal(runtime.auto_enabled,false);
+  assert.equal(fixture.items.find(item=>item.id===bookId).book_skill_id,skillId);
+ }
+ assert.deepEqual(publicData.pet_profiles.filter(row=>row.job_id===2).map(row=>row.profile).sort(),['pet_shinsu','pet_skeleton']);
+ assert(publicData.map_catalog.length>=2);for(const map of publicData.map_catalog){assert.equal(typeof map.no_pets,'boolean');assert.equal(typeof map.no_teleport,'boolean');}
  const definition=candidate.skills.find(s=>s.id===17);assert.equal(definition.behavior,'summon_pet');assert.equal(definition.target_kind,'friendly_self');assert.equal(definition.material_item_id,187);assert.equal(definition.material_quantity,1);assert.equal(definition.auto_enabled,false);assert.equal(candidate.books.find(b=>b.id===25).book_skill_id,17);
  const {skillCost}=model('SkillModel');for(let level=0;level<=definition.max_level;level++)assert.equal(skillCost({kind:definition.behavior,base_cost:definition.mp_base_cost,level_cost:definition.mp_level_cost},level),definition.mp_base_cost+definition.mp_level_cost*level);
 });

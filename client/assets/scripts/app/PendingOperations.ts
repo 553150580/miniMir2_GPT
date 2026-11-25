@@ -141,8 +141,9 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['previewId', 'operation']);
         payload = { previewId: bytes16(item.previewId, stored), operation: operation(item.operation, stored) };
     } else if (id === 40014) {
-        // 17由服务器决定原宠与出生点，正式请求不含目标；旧14/15仍须保留原目标，不能补零坐标或放开任意字段。
-        const summon = input.value != null && typeof input.value === 'object' && (input.value as ObjectValue).skillId === 17;
+        // 骷髅和神兽的落点均由服务器决定。正式召唤请求保留无目标形状，其余技能保留各自的原目标。
+        const requestedSkill = input.value != null && typeof input.value === 'object' ? (input.value as ObjectValue).skillId : undefined;
+        const summon = requestedSkill === 17 || requestedSkill === 30;
         const fields = ['sceneEpoch', 'inputSequence', 'skillId', 'direction', 'materialInstanceId', 'materialVersion', 'casterLife', 'operation'];
         const item = record(input.value, summon ? fields : fields.concat('targetHandle', 'targetGrid'));
         const epoch = longValue(item.sceneEpoch, stored), version = longValue(item.materialVersion, stored), life = longValue(item.casterLife, stored);

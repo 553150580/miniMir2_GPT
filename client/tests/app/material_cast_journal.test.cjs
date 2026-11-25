@@ -20,8 +20,9 @@ async function fixture(skillId){
  const connecting=s.connection.connect('纯组件测试票', '/game/ws'),socket=sockets[0];socket.readyState=1;socket.onopen();await Promise.resolve();
  const deliver=(id,seq,value)=>{const bytes=connection.encodePacket(id,seq,Long.UONE,value);socket.onmessage({data:bytes.buffer});};
  const e=entry('9007199254740993','1');e.resourceVersion=Long.fromInt(18,true);deliver(20002,connection.decodePacket(socket.sent[0]).seq,e);await connecting;deliver(6,0,e);
- const definition={id:skillId,name:'材料技能',job_id:2,book_item_id:25,learn_level:19,initial_level:0,max_level:3,kind:skillId===17?'summon_pet':skillId===14?'soul_shield':'blessed_armour',target_kind:skillId===17?'friendly_self':'friendly_grid',active:true,activation_kind:'cast',range:9,base_cost:12,level_cost:4,cast_ms:600,material_item_id:187,material_quantity:1,area_radius:3};
- const supply={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.fromString('9007199254740995',true),quantity:Long.fromInt(2),bound:true};
+ const summon=skillId===17||skillId===30;
+ const definition={id:skillId,name:'材料技能',job_id:2,book_item_id:skillId===30?33:25,learn_level:19,initial_level:0,max_level:3,kind:summon?'summon_pet':skillId===14?'soul_shield':'blessed_armour',target_kind:summon?'friendly_self':'friendly_grid',active:true,activation_kind:'cast',range:9,base_cost:12,level_cost:4,cast_ms:600,material_item_id:187,material_quantity:skillId===30?5:1,area_radius:3};
+ const supply={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.fromString('9007199254740995',true),quantity:Long.fromInt(skillId===30?6:2),bound:true};
  s.inventory={revision:Long.fromString('9007199254740994',true),level:19,items:[],equipped:[{slot:100,item:supply}],learnedSkills:[{skillId,level:0}]};
  s.baseline={entities:[{entityHandle:e.playerHandle,entityKind:1,life:Long.MAX_UNSIGNED_VALUE,hp:Long.fromInt(100),mp:Long.fromInt(100),position:{x:8,y:8},direction:5}],ownedPet:null};
  const storage=new Storage(),key='qa.material.account';s.pending=new PendingOperations(storage,key);
@@ -30,14 +31,14 @@ async function fixture(skillId){
  app.find=()=>({active:false,getComponent:()=>({string:''})});app.ui={top:null};app.status=()=>{};app.error=error=>{throw error;};
  return {h,s,app,storage,key,socket,deliver,supply,row:()=>models.skillRows(app.skillSnapshot())[0],close(){s.connection.close();global.WebSocket=oldSocket;global.location=oldLocation;}};
 }
-test('真实Session→AppRoot新召17→持久未决→生产GameConnection发40014，不补客户端坐标（socket替身，非真实WS）',async()=>{
- const f=await fixture(17);
+for(const skillId of [17,30])test(`真实Session和AppRoot保存技能${skillId}的材料施法原操作后发送40014，不附加客户端坐标`,async()=>{
+ const f=await fixture(skillId);
  try{
   let stored;
   f.socket.onPacket=packet=>{if(packet.id!==40014)return;stored=new PendingOperations(f.storage,f.key).get(f.h.roleIdentity());assert(stored,'发送之前必须已经落盘');assert(!('targetHandle'in stored.value));assert(!('targetGrid'in stored.value));assert.equal(stored.value.sceneEpoch.toString(),'9007199254740993');assert.equal(stored.value.casterLife.toString(),Long.MAX_UNSIGNED_VALUE.toString());
-   assert.equal(packet.value.targetHandle,0);assert.equal(packet.value.targetGrid,null);assert.equal(packet.value.direction,5);assert.equal(packet.value.materialVersion.toString(),'9007199254740995');
+   assert.equal(packet.value.targetHandle,0);assert.equal(packet.value.targetGrid,null);assert.equal(packet.value.direction,5);assert.equal(packet.value.skillId,skillId);assert.equal(packet.value.materialVersion.toString(),'9007199254740995');
    f.deliver(40005,packet.seq,{opId:packet.value.operation.opId,pending:false,errorCode:0,commandSeq:packet.value.operation.commandSeq});};
-  await f.app.castSkill(f.row());assert(stored);assert.equal(f.socket.sent.map(connection.decodePacket).filter(p=>p.id===40014).length,1);assert.equal(f.s.pending.get(f.h.roleIdentity()),null);assert.equal(f.supply.quantity.toString(),'2');
+  await f.app.castSkill(f.row());assert(stored);assert.equal(f.socket.sent.map(connection.decodePacket).filter(p=>p.id===40014).length,1);assert.equal(f.s.pending.get(f.h.roleIdentity()),null);assert.equal(f.supply.quantity.toString(),skillId===30?'6':'2');
  }finally{f.close();}
 });
 test('17未知发送保留无坐标原请求；重建持久日志后只重发原op/Long/材料，不新分经济序号',async()=>{

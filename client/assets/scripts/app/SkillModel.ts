@@ -7,11 +7,11 @@ export interface SkillDefinition {
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
         | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport' | 'summon_pet'
-        | 'fire_wall' | 'turn_undead'; active: boolean; range: number;
+        | 'fire_wall' | 'turn_undead' | 'electric_shock' | 'revelation' | 'poisoning' | 'soul_fire_ball' | 'trap_hexagon' | 'hiding' | 'mass_hiding'; active: boolean; range: number;
     displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
-    buff_id?: number; material_item_id?: number; material_quantity?: number;
+    buff_id?: number; material_item_id?: number; material_item_ids?: readonly number[]; material_quantity?: number;
     auto_enabled?: boolean;
     area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[]; max_attack_bonus_by_level?: readonly number[];
     secondary_direction_offsets?: readonly number[]; secondary_distance_cells?: number; line_cells?: number; line_step_ms?: number; charge_window_ms?: number;
@@ -143,7 +143,7 @@ export function needsCastingSupply(snapshot: SkillSnapshot, row: SkillRow): bool
 export function skillActionLabel(snapshot: SkillSnapshot, row: SkillRow): string {
     if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '此图禁召';
     if (isSummonRecall(snapshot, row)) return '召回';
-    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '护符未开放';
+    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '耗材未开放';
     const activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     if (activation === 'toggle') return state?.enabled ? '关闭' : '开启';
     if (activation === 'charge') return state?.ready ? '已就绪' : '充能';
@@ -195,11 +195,21 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
     }
     if (definition.kind === 'fire_wall') lines.push('选择地格，在中心及相邻四格布下火墙', '怪物入格及停留时受到伤害');
     if (definition.kind === 'turn_undead') lines.push('先点选一只存活的亡灵怪物', '按双方等级和技能等级判定，成功后延迟消灭原目标', '对合法目标施放失败仍消耗魔法与冷却');
+    if (definition.kind === 'electric_shock') lines.push('点选普通怪物，可尝试震慑或捕获', '符合条件的怪物可转为临时宠物，每名角色最多拥有一只活宠');
+    if (definition.kind === 'revelation') lines.push('点选怪物，成功时显示其生命百分比和具体数值', '成功率随技能等级提升，重复施放不会延长已有启示');
+    if (definition.kind === 'poisoning') lines.push('按已装入药粉施毒，绿毒持续扣除生命，红毒削弱防御');
+    if (definition.kind === 'soul_fire_ball') lines.push('消耗护符，向点选目标发出受地形阻挡的火符');
+    if (definition.kind === 'trap_hexagon') lines.push('选择地格，暂时围困符合等级条件的普通怪物', '怪物受到直接伤害后解除围困');
+    if (definition.kind === 'hiding') lines.push('让自己隐身，普通怪物暂时无法发现你');
+    if (definition.kind === 'mass_hiding') lines.push('选择地格，让范围内存活的友方暂时隐身');
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
         lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);
-    if (definition.material_quantity) lines.push(`${definition.kind === 'summon_pet' ? '新召唤' : '每次'}消耗已装入护符 ${definition.material_quantity}份`, snapshot.castingSupplyEnabled === false ? '施法护符暂未开放' : snapshot.castingSupply
-        ? `当前护符：${snapshot.castingSupply.name} · 余${snapshot.castingSupply.quantity}` : '尚未装入施法护符，请在背包中选择装入');
+    if (definition.material_quantity) {
+        const material = definition.kind === 'poisoning' ? '毒粉' : '护符';
+        lines.push(`${definition.kind === 'summon_pet' ? '新召唤' : '每次'}消耗已装入${material} ${definition.material_quantity}份`, snapshot.castingSupplyEnabled === false ? `施法${material}暂未开放` : snapshot.castingSupply
+            ? `当前${material}：${snapshot.castingSupply.name} · 余${snapshot.castingSupply.quantity}` : `尚未装入施法${material}，请在背包中选择装入`);
+    }
     lines.push(`${definition.learn_level}级可使用对应技能书学习`, '升级需选择书本与书页，先查看报价');
     return lines;
 }
@@ -244,6 +254,7 @@ export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
     // 亡灵属性由服务端判定，圣言术直接提交玩家点选的怪物，避免无目标时自动换到其它怪物。
     if (row.definition.kind === 'turn_undead' && (!selected || !legal(selected))) throw new Error('请先点选一只存活的亡灵怪物');
+    if ((row.definition.kind === 'electric_shock' || row.definition.kind === 'revelation') && (!selected || !legal(selected))) throw new Error('请先点选一只存活的怪物');
     if (friendly && selected && (selected.isPetCorpse || integer(selected.hp) === 0n)
         && (selected.entityHandle === playerHandle || selected.entityKind === 2)) throw new Error('所选友方已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;

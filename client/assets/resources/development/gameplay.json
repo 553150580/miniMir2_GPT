@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 28,
+  "rule_version": 29,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -1163,6 +1163,413 @@
       "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
+    },
+    {
+      "id": 6,
+      "name": "施毒术",
+      "job_id": 2,
+      "book_item_id": 23,
+      "learn_level": 14,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "poisoning",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": true,
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 1,
+      "target_kind": "enemy_entity",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 2,
+      "level_cost": 1,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false,
+      "material_item_ids": [
+        181,
+        182
+      ]
+    },
+    {
+      "id": 13,
+      "name": "灵魂火符",
+      "job_id": 2,
+      "book_item_id": 24,
+      "learn_level": 18,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "soul_fire_ball",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": true,
+      "buff_id": 0,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "enemy_entity",
+      "area_radius": 0,
+      "require_line_of_sight": true,
+      "range": 9,
+      "base_cost": 3,
+      "level_cost": 1,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 50,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 16,
+      "name": "困魔咒",
+      "job_id": 2,
+      "book_item_id": 31,
+      "learn_level": 28,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "trap_hexagon",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "enemy_grid",
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 7,
+      "level_cost": 3,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 17,
+      "name": "召唤骷髅",
+      "job_id": 2,
+      "book_item_id": 25,
+      "learn_level": 19,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "summon_pet",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "friendly_self",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 12,
+      "level_cost": 4,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [],
+      "max_attack_bonus_by_level": [],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 18,
+      "name": "隐身术",
+      "job_id": 2,
+      "book_item_id": 26,
+      "learn_level": 20,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "hiding",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 18,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "friendly_self",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 1,
+      "level_cost": 1,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 19,
+      "name": "集体隐身术",
+      "job_id": 2,
+      "book_item_id": 27,
+      "learn_level": 21,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "mass_hiding",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 19,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "friendly_grid",
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 2,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 50,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 20,
+      "name": "诱惑之光",
+      "job_id": 1,
+      "book_item_id": 9,
+      "learn_level": 13,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "electric_shock",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "target_kind": "enemy_entity",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 3,
+      "level_cost": 1,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 28,
+      "name": "心灵启示",
+      "job_id": 2,
+      "book_item_id": 30,
+      "learn_level": 26,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "revelation",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 28,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "target_kind": "enemy_entity",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 4,
+      "level_cost": 4,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 30,
+      "name": "召唤神兽",
+      "job_id": 2,
+      "book_item_id": 33,
+      "learn_level": 35,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "summon_pet",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 187,
+      "material_quantity": 5,
+      "target_kind": "friendly_self",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 28,
+      "level_cost": 4,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [],
+      "max_attack_bonus_by_level": [],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
     }
   ],
   "statuses": [
@@ -1289,13 +1696,111 @@
         "target_level_add": 0,
         "hit_duration_loss_ms_per_hp": 0
       }
+    },
+    {
+      "id": 18,
+      "name": "隐身术",
+      "short_name": "隐身",
+      "kind": "hiding",
+      "stack_policy": "refresh_duration_keep_values",
+      "tick_ms": 1000,
+      "remove_on_player_death": true,
+      "duration_rule": {
+        "kind": "sc_rank_linear",
+        "stat_add": 0,
+        "stat_multiplier": 1,
+        "seconds_by_level": [
+          5,
+          10,
+          15,
+          20
+        ]
+      },
+      "attribute_effects": {
+        "kind": "hiding",
+        "value_by_level": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "target_level_divisor": 0,
+        "target_level_add": 0,
+        "hit_duration_loss_ms_per_hp": 0
+      }
+    },
+    {
+      "id": 19,
+      "name": "集体隐身术",
+      "short_name": "群隐",
+      "kind": "mass_hiding",
+      "stack_policy": "refresh_duration_keep_values",
+      "tick_ms": 1000,
+      "remove_on_player_death": true,
+      "duration_rule": {
+        "kind": "sc_half_rank_linear",
+        "stat_add": 0,
+        "stat_multiplier": 1,
+        "seconds_by_level": [
+          2,
+          4,
+          6,
+          8
+        ]
+      },
+      "attribute_effects": {
+        "kind": "mass_hiding",
+        "value_by_level": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "target_level_divisor": 0,
+        "target_level_add": 0,
+        "hit_duration_loss_ms_per_hp": 0
+      }
+    },
+    {
+      "id": 28,
+      "name": "心灵启示",
+      "short_name": "启示",
+      "kind": "revelation",
+      "stack_policy": "ignore_present_on_impact",
+      "tick_ms": 1000,
+      "remove_on_player_death": true,
+      "duration_rule": {
+        "kind": "sc_source_power",
+        "stat_add": 0,
+        "stat_multiplier": 0,
+        "seconds_by_level": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "attribute_effects": {
+        "kind": "revelation",
+        "value_by_level": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "target_level_divisor": 0,
+        "target_level_add": 0,
+        "hit_duration_loss_ms_per_hp": 0
+      }
     }
   ],
   "casting_supply": {
-    "enabled": false,
+    "enabled": true,
     "slot": 100,
     "item_ids": [
-      187
+      187,
+      181,
+      182
     ]
   },
   "equipment_recycling": {
@@ -1465,12 +1970,54 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 181,
+          "item_id": 181,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 8,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 182,
+          "item_id": 182,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 8,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 187,
+          "item_id": 187,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 5,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 594,
           "price_gold": 5
+        },
+        {
+          "item_id": 181,
+          "price_gold": 4
+        },
+        {
+          "item_id": 182,
+          "price_gold": 4
+        },
+        {
+          "item_id": 187,
+          "price_gold": 2
         }
       ],
       "can_repair": false
@@ -1740,6 +2287,96 @@
           "required_role_level": 1,
           "output_bound": true,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 30,
+          "item_id": 23,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1100,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 31,
+          "item_id": 24,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1800,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 32,
+          "item_id": 31,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 8000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 33,
+          "item_id": 25,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 2000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 34,
+          "item_id": 26,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 2500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 35,
+          "item_id": 27,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 36,
+          "item_id": 9,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 37,
+          "item_id": 30,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 5000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 38,
+          "item_id": 33,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 20000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
@@ -1838,6 +2475,42 @@
         {
           "item_id": 19,
           "price_gold": 9000
+        },
+        {
+          "item_id": 23,
+          "price_gold": 550
+        },
+        {
+          "item_id": 24,
+          "price_gold": 900
+        },
+        {
+          "item_id": 31,
+          "price_gold": 4000
+        },
+        {
+          "item_id": 25,
+          "price_gold": 1000
+        },
+        {
+          "item_id": 26,
+          "price_gold": 1250
+        },
+        {
+          "item_id": 27,
+          "price_gold": 1500
+        },
+        {
+          "item_id": 9,
+          "price_gold": 500
+        },
+        {
+          "item_id": 30,
+          "price_gold": 2500
+        },
+        {
+          "item_id": 33,
+          "price_gold": 10000
         }
       ],
       "can_repair": false
@@ -2718,6 +3391,45 @@
       "page_cost": 20
     },
     {
+      "skill_id": 17,
+      "level": 1,
+      "required_role_level": 19,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 17,
+      "level": 2,
+      "required_role_level": 22,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 17,
+      "level": 3,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
       "skill_id": 22,
       "level": 1,
       "required_role_level": 24,
@@ -2789,6 +3501,318 @@
       "book_costs": [
         {
           "item_id": 19,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 6,
+      "level": 1,
+      "required_role_level": 14,
+      "book_costs": [
+        {
+          "item_id": 23,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 6,
+      "level": 2,
+      "required_role_level": 17,
+      "book_costs": [
+        {
+          "item_id": 23,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 6,
+      "level": 3,
+      "required_role_level": 20,
+      "book_costs": [
+        {
+          "item_id": 23,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 13,
+      "level": 1,
+      "required_role_level": 18,
+      "book_costs": [
+        {
+          "item_id": 24,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 13,
+      "level": 2,
+      "required_role_level": 21,
+      "book_costs": [
+        {
+          "item_id": 24,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 13,
+      "level": 3,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 24,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 16,
+      "level": 1,
+      "required_role_level": 28,
+      "book_costs": [
+        {
+          "item_id": 31,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 16,
+      "level": 2,
+      "required_role_level": 30,
+      "book_costs": [
+        {
+          "item_id": 31,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 16,
+      "level": 3,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 31,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 18,
+      "level": 1,
+      "required_role_level": 20,
+      "book_costs": [
+        {
+          "item_id": 26,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 18,
+      "level": 2,
+      "required_role_level": 23,
+      "book_costs": [
+        {
+          "item_id": 26,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 18,
+      "level": 3,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 26,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 19,
+      "level": 1,
+      "required_role_level": 21,
+      "book_costs": [
+        {
+          "item_id": 27,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 19,
+      "level": 2,
+      "required_role_level": 25,
+      "book_costs": [
+        {
+          "item_id": 27,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 19,
+      "level": 3,
+      "required_role_level": 29,
+      "book_costs": [
+        {
+          "item_id": 27,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 20,
+      "level": 1,
+      "required_role_level": 13,
+      "book_costs": [
+        {
+          "item_id": 9,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 20,
+      "level": 2,
+      "required_role_level": 18,
+      "book_costs": [
+        {
+          "item_id": 9,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 20,
+      "level": 3,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 9,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 28,
+      "level": 1,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 30,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 28,
+      "level": 2,
+      "required_role_level": 30,
+      "book_costs": [
+        {
+          "item_id": 30,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 28,
+      "level": 3,
+      "required_role_level": 35,
+      "book_costs": [
+        {
+          "item_id": 30,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 30,
+      "level": 1,
+      "required_role_level": 35,
+      "book_costs": [
+        {
+          "item_id": 33,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 30,
+      "level": 2,
+      "required_role_level": 37,
+      "book_costs": [
+        {
+          "item_id": 33,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 30,
+      "level": 3,
+      "required_role_level": 40,
+      "book_costs": [
+        {
+          "item_id": 33,
           "quantity": 4
         }
       ],
@@ -3660,6 +4684,330 @@
       "allowed_source_kinds": [
         "monster_drop"
       ]
+    },
+    {
+      "item_id": 23,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 23,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 23,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 23,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 24,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 24,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 24,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 24,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 31,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 31,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 31,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 31,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 25,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 25,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 25,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 25,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 26,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 26,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 26,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 26,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 27,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 27,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 27,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 27,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 9,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 9,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 9,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 9,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 30,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 30,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 30,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 30,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 33,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 33,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 33,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 33,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
     }
   ],
   "shop_offers": [
@@ -3970,6 +5318,114 @@
       "quantity": 1,
       "currency_kind": "gold",
       "price_units": 18000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 30,
+      "item_id": 23,
+      "name": "《施毒术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 1100,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 31,
+      "item_id": 24,
+      "name": "《灵魂火符》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 1800,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 32,
+      "item_id": 31,
+      "name": "《困魔咒》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 8000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 33,
+      "item_id": 25,
+      "name": "《召唤骷髅》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 2000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 34,
+      "item_id": 26,
+      "name": "《隐身术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 2500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 35,
+      "item_id": 27,
+      "name": "《集体隐身术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 3000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 36,
+      "item_id": 9,
+      "name": "《诱惑之光》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 1000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 37,
+      "item_id": 30,
+      "name": "《心灵启示》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 5000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 38,
+      "item_id": 33,
+      "name": "《召唤神兽》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 20000,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32,
@@ -4373,6 +5829,96 @@
       "skill_id": 32
     },
     {
+      "item_id": 23,
+      "name": "《施毒术》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 6
+    },
+    {
+      "item_id": 24,
+      "name": "《灵魂火符》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 13
+    },
+    {
+      "item_id": 31,
+      "name": "《困魔咒》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 16
+    },
+    {
+      "item_id": 25,
+      "name": "《召唤骷髅》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 17
+    },
+    {
+      "item_id": 26,
+      "name": "《隐身术》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 18
+    },
+    {
+      "item_id": 27,
+      "name": "《集体隐身术》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 19
+    },
+    {
+      "item_id": 9,
+      "name": "《诱惑之光》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 20
+    },
+    {
+      "item_id": 30,
+      "name": "《心灵启示》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 28
+    },
+    {
+      "item_id": 33,
+      "name": "《召唤神兽》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 30
+    },
+    {
       "item_id": 900001,
       "name": "书页",
       "kind": "skill_page",
@@ -4386,6 +5932,30 @@
     {
       "item_id": 187,
       "name": "护身符",
+      "kind": "casting_supply",
+      "equip_slot": 100,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 181,
+      "name": "灰色药粉",
+      "kind": "casting_supply",
+      "equip_slot": 100,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 182,
+      "name": "黄色药粉",
       "kind": "casting_supply",
       "equip_slot": 100,
       "allowed_jobs": [
@@ -4701,6 +6271,21 @@
       "name": "变异骷髅",
       "profile": "pet_skeleton",
       "job_id": 2,
+      "can_push": true
+    },
+    {
+      "definition_id": 80030,
+      "name": "神兽",
+      "profile": "pet_shinsu",
+      "job_id": 2,
+      "can_push": true,
+      "appearance_optional": true
+    },
+    {
+      "definition_id": 1,
+      "name": "稻草人（宠物）",
+      "profile": "monster_scarecrow",
+      "job_id": 1,
       "can_push": true
     }
   ],

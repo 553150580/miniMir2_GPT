@@ -22,6 +22,8 @@ type petRuntimeState struct {
 	LegacyUntrained bool
 	// FollowSuppressed 标记是否处于“follow”“suppressed”状态。
 	FollowSuppressed bool
+	// TameUntil 是诱惑宠物失效的绝对时间；永久召唤体不设置该时间。
+	TameUntil time.Time
 	// Level 记录等级，使用数值表示。
 	// Maximum 记录最大值，使用数值表示。
 	Level, Maximum uint32
@@ -95,7 +97,7 @@ func (w *worker) newPetFromDefinition(r *room, definition devconfig.PetRuntimeDe
 	}
 	// direction 保存由无符号整数“32”取得的朝向。
 	direction := uint32(0)
-	if d.SourceSkillID == 17 {
+	if d.SourceSkillID == devconfig.SummonSkeletonSkillID {
 		direction = skeletonSpawnDirection
 	}
 	return &entity{Kind: 2, Def: d.Base.DefinitionID, Pos: point, Direction: direction, HP: f.HP, MaxHP: f.HP, MP: f.MP, MaxMP: f.MP,

@@ -141,7 +141,7 @@ func TestPetRuntimeCorpseReservationCapacityAndOriginalIdentity(t *testing.T) {
 		t.Fatal("新生复制/覆盖原尸体")
 	}
 	w.applyDamageInWorld(r, personal, personal.Monsters[0], pet, pet.HP, now)
-	if r.Pet != nil || len(personal.PetCorpses) != 2 || w.canBeginPetBirth(r, now) || r.Isolated {
+	if r.Pet != nil || len(personal.PetCorpses) != 2 || w.canBeginPetBirth(r, now, actorRef{}) || r.Isolated {
 		t.Fatal("满额删除尸体、拒绝合法死亡或允许额外出生")
 	}
 	r.Pending = true
@@ -149,7 +149,7 @@ func TestPetRuntimeCorpseReservationCapacityAndOriginalIdentity(t *testing.T) {
 		t.Fatal("Pending期间越过原冻结门禁")
 	}
 	r.Pending = false
-	if !w.expirePetCorpses(r, now.Add(time.Second)) || len(personal.PetCorpses) != 0 || !w.canBeginPetBirth(r, now.Add(time.Second)) || w.resolveInWorld(r, personal, oldRef) != nil {
+	if !w.expirePetCorpses(r, now.Add(time.Second)) || len(personal.PetCorpses) != 0 || !w.canBeginPetBirth(r, now.Add(time.Second), actorRef{}) || w.resolveInWorld(r, personal, oldRef) != nil {
 		t.Fatal("绝对TTL被延长，或原对象退役后旧引用仍可解析")
 	}
 }
@@ -176,7 +176,7 @@ func TestPetRuntimeHandleSkipsAllReservedSlotsAndRejectsOverflow(t *testing.T) {
 	}
 	w.applyDamageInWorld(r, personal, personal.Monsters[0], pet, pet.HP, now)
 	r.PetHandleSequence = math.MaxUint32
-	if w.canBeginPetBirth(r, now) || w.reservePetBirth(r, petBirthToken{ID: "overflow", ExecutionEpoch: r.ExecutionEpoch, PlayerLife: r.Player.Life}, now) {
+	if w.canBeginPetBirth(r, now, actorRef{}) || w.reservePetBirth(r, petBirthToken{ID: "overflow", ExecutionEpoch: r.ExecutionEpoch, PlayerLife: r.Player.Life}, now) {
 		t.Fatal("句柄耗尽时仍接受永久消耗前的新生预约")
 	}
 }

@@ -2,6 +2,7 @@
 package game
 
 import (
+	"slices"
 	"testing"
 	"time"
 
@@ -19,7 +20,8 @@ func TestHidingUsesMaterialAndClearsTrackingUntilRevealed(t *testing.T) {
 		MPBaseCost: 1, MPLevelCost: 1, ActionMS: 600, DelayBaseMS: 500, GlobalSpellMS: 1800, MaterialItemID: 187, MaterialQuantity: 1}
 	definition := devconfig.BuffDefinition{ID: 18, Kind: "hiding", DurationKind: "sc_rank_linear", StatMultiplier: 1, DurationSecondsByLevel: []int64{5, 10, 15, 20},
 		TickMS: 1000, StackPolicy: "refresh_duration_keep_values", RemoveOnPlayerDeath: true}
-	f.Skills, f.Buffs = append(f.Skills, skill), append(f.Buffs, definition)
+	f.Skills = append(slices.DeleteFunc(f.Skills, func(entry devconfig.Skill) bool { return entry.ID == skill.ID }), skill)
+	f.Buffs = append(slices.DeleteFunc(f.Buffs, func(entry devconfig.BuffDefinition) bool { return entry.ID == definition.ID }), definition)
 	r.Role.Skills = append(r.Role.Skills, domain.LearnedSkill{SkillID: 18})
 	q.SkillID, request.SkillId, request.TargetHandle = 18, 18, 0
 	// now 是技能受理时刻，plan 由原材料事务验证后保留25秒来源时长。

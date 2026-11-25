@@ -21,6 +21,15 @@ test('倒计时仅展示且时钟回退不增长，状态说明为真实防御�
     const definitions=[{id:31,name:'数据表魔法盾',short_name:'魔盾新'}];assert.equal(models.statusName(31,definitions),'数据表魔法盾');assert.equal(models.statusShortName(31,definitions),'魔盾新');
     assert(models.detailLines(['模式验收战士角色姓名测试与额外很长很长的中文状态说明']).every(line=>Array.from(line).length<=20));
 });
+test('心灵启示只在活怪的有效状态期间显示百分比，64位生命先整除再转普通数字', () => {
+    const monster = { entityKind: 3, hp: '9007199254740995', hpMax: '18014398509481989', statuses: [] };
+    const reveal = state(28, 1500);
+    assert.equal(models.revealedMonsterHealthPercent(monster, 100, 100), undefined);
+    assert.equal(models.revealedMonsterHealthPercent({ ...monster, statuses: [reveal] }, 100, 1599), 50);
+    assert.equal(models.revealedMonsterHealthPercent({ ...monster, statuses: [reveal] }, 100, 1600), undefined);
+    assert.equal(models.revealedMonsterHealthPercent({ ...monster, hp: '0', statuses: [reveal] }, 100, 100), undefined);
+    assert.equal(models.revealedMonsterHealthPercent({ ...monster, entityKind: 2, statuses: [reveal] }, 100, 100), undefined);
+});
 function supply(){const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:'9007199254740995',quantity:'10',bound:true};return {item,snapshot:{ready:true,roleIdentity:'role1',sceneEpoch:'9007199254740993',ruleVersion:'8',playerLife:'0',inventory:{revision:'19',items:[item],equipped:[{slot:100,item}]},config:{enabled:true,slot:100,item_ids:[187]}}};}
 test('材料施法固定已装原护符，不自动选背包替代；实例版本/数量/角色/scene/life变化均要求重选',()=>{
     const {item,snapshot}=supply(),skill={material_item_id:187,material_quantity:1},selection=selectedCastingSupply(snapshot,skill);
@@ -31,6 +40,19 @@ test('材料施法固定已装原护符，不自动选背包替代；实例版�
     }
     snapshot.inventory.equipped=[];assert.throws(()=>selectedCastingSupply(snapshot,skill),/先在背包中装入/);
     snapshot.config.enabled=false;assert.throws(()=>captureSupply(snapshot,item),/暂未开放/);
+});
+test('施毒接受实际装槽且公开允许的两种毒粉，护符和其它编号不能当作毒粉', () => {
+    const { item, snapshot } = supply();
+    snapshot.config.item_ids = [181, 182, 187, 999];
+    const poison = { kind: 'poisoning', material_item_ids: [181, 182, 999], material_quantity: 1 };
+    assert.throws(() => selectedCastingSupply(snapshot, poison), /对应施法毒粉/);
+    for (const id of [181, 182]) {
+        item.itemId = id;
+        assert.equal(selectedCastingSupply(snapshot, poison).itemId, id);
+        assert.throws(() => selectedCastingSupply(snapshot, { kind: 'soul_fire_ball', material_item_id: 187, material_quantity: 1 }), /对应施法护符/);
+    }
+    item.itemId = 999;
+    assert.throws(() => selectedCastingSupply(snapshot, poison), /对应施法毒粉/);
 });
 test('状态资产只追加布局：旧988对象/Entity21对象原样保持，滚动覆盖详情与普通层分离',()=>{
     const root=path.resolve(__dirname,'../../..'),read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8')),scene=read('client/assets/scenes/Game.scene');

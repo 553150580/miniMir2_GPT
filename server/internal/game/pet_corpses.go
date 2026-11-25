@@ -22,6 +22,8 @@ type petBirthToken struct {
 	ExecutionEpoch uint64
 	// PlayerLife 记录玩家生命代次，使用数值表示。
 	PlayerLife uint64
+	// Replacing 绑定允许切换的旧活宠；没有旧活宠时为空。
+	Replacing actorRef
 }
 
 // petBirthReservation 保存宠物出生“reservation”所需的状态。
@@ -106,10 +108,12 @@ func (r *room) availablePetHandle() (uint32, bool) {
 	return 0, false
 }
 
-// canBeginPetBirth 判断能否执行“begin”宠物出生。
-// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，now 提供当前时点，作为状态有效期和计时判断的基准。
-func (w *worker) canBeginPetBirth(r *room, now time.Time) bool {
-	if !w.petRuntimeEnabled() || r.Pending || r.Isolated || r.Pet != nil || r.PendingPetBirth != nil {
+// canBeginPetBirth 检查出生身份、名额及实体容量。切换时预留新生位置，旧活宠仍可活动或正常死亡。
+func (w *worker) canBeginPetBirth(r *room, now time.Time, replacing actorRef) bool {
+	if !w.petRuntimeEnabled() || r.Pending || r.Isolated || r.PendingPetBirth != nil {
+		return false
+	}
+	if replacing.Handle == 0 && r.Pet != nil || replacing.Handle != 0 && !r.matchesActivePet(replacing) {
 		return false
 	}
 	w.expirePetCorpses(r, now)
@@ -129,7 +133,7 @@ func (w *worker) reservePetBirth(r *room, token petBirthToken, now time.Time) bo
 	if pending := r.PendingPetBirth; pending != nil {
 		return pending.Token == token
 	}
-	if !w.canBeginPetBirth(r, now) {
+	if !w.canBeginPetBirth(r, now, token.Replacing) {
 		return false
 	}
 	r.PendingPetBirth = &petBirthReservation{Token: token}
@@ -176,7 +180,7 @@ func (w *worker) expirePetCorpses(r *room, now time.Time) bool {
 		return false
 	}
 	// changed 保存当前处理所用的已变化。
-	changed := false
+	changed := w.expireTamedPet(r, now)
 	// world 接收遍历场景世界集合时当前的元素。
 	for _, world := range r.worlds() {
 		// before 保存宠物尸体集合，用于当前步骤中的操作前的状态。

@@ -35,12 +35,12 @@ class NPCShopProjectionTests(unittest.TestCase):
         shops = {shop['key']: shop for shop in fixture['npc_shops']}
         self.assertEqual({shop['key'] for shop in shops.values() if shop['can_repair']}, {'weapon', 'clothing', 'jewelry'})
         self.assertEqual({price['item_id']: price['price_gold'] for shop in shops.values() if shop['key'] != 'books'
-                          for price in shop['sell_prices']}, {218: 25, 193: 200, 259: 250, 92: 100, 35: 5, 36: 5, 594: 5})
+                          for price in shop['sell_prices']}, {218: 25, 193: 200, 259: 250, 92: 100, 35: 5, 36: 5, 594: 5, 181: 4, 182: 4, 187: 2})
         books = shops['books']
         self.assertEqual(books['offers'], fixture['skill_shop'])
         expected = {offer['item_id']: offer['price_units'] // (2 * offer['quantity']) for offer in books['offers']
                     if offer['currency'] == 'gold' and offer['item_id'] != fixture['skill_economy']['page_item_id']}
-        self.assertEqual(len(expected), 24)
+        self.assertEqual(len(expected), 33)
         self.assertEqual({price['item_id']: price['price_gold'] for price in books['sell_prices']}, expected)
         sources = next(town for town in fixture['_source_evidence']['compact_towns'] if town['map_id'] == 5)
         self.assertEqual({row['id']: row['line'] for row in sources['npcs'] if row['id'] in (5008, 5009)}, {5008: 78, 5009: 79})

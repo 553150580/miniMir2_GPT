@@ -8,7 +8,8 @@ import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayba
 import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
 import { prepareMapSurface } from './MapSurface';
 import { FireWallView } from './FireWallView';
-import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
+import { entityDisplayName, entityHeadLabels, petAppearanceFor } from './EntityHeadAnchor';
+import { revealedMonsterHealthPercent } from './CombatStatusModel';
 import type { SpriteFrame } from 'cc';
 import { StatusEffects } from './StatusEffects';
 import { DisplacementEvent, EntityDisplacement } from './EntityDisplacement';
@@ -34,6 +35,8 @@ interface Visual {
     profile: any;
     motion: EntityMotion;
     animation: EntityAnimation | null;
+    // placeholder 是开发资源显式允许时的可见宠物占位。
+    placeholder?: Node;
     keys: string[];
     orderDirection: number;
     pose: AnimationSample | null;
@@ -333,6 +336,19 @@ export class GameWorldView {
                     name.setPosition(name.position.x, anchor.nameY, name.position.z); hp.setPosition(hp.position.x, anchor.hpY, hp.position.z);
                 }
                 const sprites = [body.getComponent(Sprite)!];
+                let placeholder: Node | undefined;
+                if (!profile && this.manifest.development_only && state.entityKind === 2 && petAppearanceFor(
+                    this.gameplay.pet_profiles as Array<{ definition_id: number; job_id: number; appearance_optional?: boolean }>,
+                    state.definitionId, this.assets.sceneKind === 4 ? undefined : this.job)?.appearance_optional) {
+                    // 动态实体沿用当前模板的脚点和头顶组件，使用几何形体显示宠物所在格。
+                    placeholder = new Node('PetPlaceholder');
+                    placeholder.layer = body.layer;
+                    placeholder.parent = node;
+                    placeholder.setSiblingIndex(body.getSiblingIndex());
+                    const drawing = placeholder.addComponent(Graphics);
+                    drawing.fillColor = new Color(203, 150, 82, 255);
+                    drawing.ellipse(0, 13, 14, 13); drawing.fill();
+                }
                 // 外观层是动态实体内容，沿用已保存的实体层模板。
                 for (let index = 1; index < (profile?.layers.length ?? 1); index++) {
                     const layer = instantiate(body); layer.name = `AppearanceLayer${index}`; layer.parent = node;
@@ -348,7 +364,8 @@ export class GameWorldView {
                 const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
                 visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
                     motion: sameLife ? replaced.motion : new EntityMotion(),
-                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null, additive: sprites.map(() => false),
+                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, placeholder,
+                    keys: [], orderDirection: -1, pose: null, additive: sprites.map(() => false),
                     movement: sameLife ? replaced.movement : new EntityDisplacement(this.sceneEpoch, state.entityHandle) };
                 if (sameLife) {
                     // 换装不降低位移水位、不重播旧攻击；后续新序号仍正常触发新外观动作。
@@ -393,7 +410,9 @@ export class GameWorldView {
                 this.assets.sceneKind === 4 ? undefined : this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
             name.active = showHead && !!displayName;
-            name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体` : displayName;
+            const revealed = revealedMonsterHealthPercent(state, now, now);
+            name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体`
+                : revealed === undefined || !displayName ? displayName : `${displayName} · ${revealed}%`;
             const hp = visual.node.getChildByName('HP')!;
             hp.active = showHead && state.entityKind !== 4;
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0
@@ -462,7 +481,11 @@ export class GameWorldView {
             if (visual.state.entityHandle === this.playerHandle) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
             visual.pose = pose ?? null;
-            if (!pose) { for (const sprite of visual.body) sprite.node.active = false; continue; }
+            if (!pose) {
+                for (const sprite of visual.body) sprite.node.active = false;
+                visual.placeholder?.setScale(1, visual.state.hp.isZero() ? .35 : 1, 1);
+                continue;
+            }
             if (pose.action === 'attack' || pose.action === 'struck' || pose.action === 'casting') visual.motion.holdUntil(visual.animation!.playbackUntil);
             const profile = visual.profile;
             const visualDirection = this.projection!.visualDirection(pose.direction);
@@ -606,10 +629,10 @@ export class GameWorldView {
         }
         this.fireWalls = undefined;
     }
-    // 健康重连可把世界首领资源交给下一次挂接。旧视图的节点与事件仍随视图正常销毁。
-    takeWorldBossAssets(): WorldAssets | undefined {
+    // 在个人图与世界首领间转移资源所有权，旧视图仍负责解除自身的节点与事件。
+    takeAssets(sceneKind: 1 | 4): WorldAssets | undefined {
         const assets = this.assets;
-        if (this.disposed || assets?.sceneKind !== 4) return;
+        if (this.disposed || !this.mapReady || assets?.sceneKind !== sceneKind) return;
         this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined;
         this.assets = undefined;
         return assets;

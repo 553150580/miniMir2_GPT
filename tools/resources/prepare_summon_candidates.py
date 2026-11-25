@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从两本唯一Excel编译关闭的召唤候选；不把候选技能加入当前主profile。"""
+"""从唯一工作簿生成供旧规则与隔离召唤测试使用的骷髅目录。"""
 from __future__ import annotations
 
 import argparse
@@ -19,18 +19,23 @@ DEST=ROOT/'config/development/summon-candidates.json'
 
 def compile_catalog(tables,evidence):
     profile=deepcopy(pets.one(tables,'dev_first_loop_profile',1)['parameters'])
-    if type(profile['rule_version']) is not int or not 17 <= profile['rule_version'] <= 28:
-        raise ValueError('关闭召唤候选须使用第17至28版开发规则，候选最低规则仍为17')
-    references=[(row['id'],row['summon_skill_id']) for row in tables['game_pet_templates'] if row['record_status']!='historical' and row['summon_skill_id'] is not None]
+    version=profile['rule_version']
+    if type(version) is not int or version < 17:
+        raise ValueError('召唤隔离目录的最低兼容规则为17')
+    # 旧目录仅承载首次召唤合同。新版神兽直接从主投影读取，保持旧目录的最小兼容版本。
+    references=[(row['id'],row['summon_skill_id']) for row in tables['game_pet_templates'] if row['record_status']!='historical' and row['summon_skill_id']==17]
     ids=[skill for _,skill in references]
     if not ids or len(set(ids))!=len(ids) or any(type(id) is not int or id<=0 for id in ids):
         raise ValueError('独立召唤候选必须由PetDefs唯一显式引用技能，不猜默认17')
-    expected_count=24 if profile['rule_version']>=28 else 22
     main_ids=profile['skill_ids']
-    if (len(main_ids)!=expected_count or (profile['rule_version']>=28 and not {22,32}.issubset(main_ids)) or
-            any(id in main_ids for id in ids) or profile['casting_supply']['enabled'] or profile['pet_runtime']['bootstrap_mode']!='legacy_untrained_pet'):
-        raise ValueError('主profile须采用对应规则的已选技能，召唤材料关闭，旧免费宠物保持未训')
-    profile['skill_ids']+=ids
+    if version<29:
+        expected_count=24 if version==28 else 22
+        if (len(main_ids)!=expected_count or (version==28 and not {22,32}.issubset(main_ids)) or
+                any(id in main_ids for id in ids) or profile['casting_supply']['enabled'] or profile['pet_runtime']['bootstrap_mode']!='legacy_untrained_pet'):
+            raise ValueError('历史主规则须关闭正常材料召唤并保留旧免费宠物')
+        profile['skill_ids']+=ids
+    elif not set(ids).issubset(main_ids) or not profile['casting_supply']['enabled'] or profile['pet_runtime']['bootstrap_mode']!='none':
+        raise ValueError('当前主规则须开放正常材料召唤')
     all_skills=loop.skill_definitions(tables,profile)
     loop.validate_skills(profile,all_skills)
     skills=[row for row in all_skills if row['id'] in ids]

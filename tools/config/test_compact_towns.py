@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 
 import export_configs as config
-from test_source_map_projection import ROOT, module
+from test_source_map_projection import ROOT, module, restore_rule28_skill_selection
 
 
 class CompactTownTests(unittest.TestCase):
@@ -35,6 +35,7 @@ class CompactTownTests(unittest.TestCase):
     def test_rule23_retains_original_legacy_town_and_travel_shape(self):
         tables = deepcopy(self.tables)
         profile = tables['dev_first_loop_profile'][0]['parameters']
+        restore_rule28_skill_selection(profile)
         profile['rule_version'] = 23
         del profile['boss_template_ids']
         del profile['compact_towns'], profile['map_regions']

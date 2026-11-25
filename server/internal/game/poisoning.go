@@ -34,6 +34,15 @@ func (state *monsterPoisons) poisonSlot(color devconfig.PoisonColor) **poisonEff
 	return &state.Red
 }
 
+// hasPoison 判断同一怪物的当前生命上是否已有指定颜色的毒。
+func hasPoison(target *entity, color devconfig.PoisonColor) bool {
+	if target.Poisons == nil || color != devconfig.PoisonGreen && color != devconfig.PoisonRed {
+		return false
+	}
+	effect := *target.Poisons.poisonSlot(color)
+	return effect != nil && effect.TargetLife == target.Life
+}
+
 // poisonArmour 缩放实际抽出的原防御，同时排除旧生命上的毒。
 func poisonArmour(target *entity, armour int64) int64 {
 	if target.Poisons != nil && target.Poisons.Red != nil && target.Poisons.Red.TargetLife == target.Life {

@@ -119,7 +119,7 @@ func (f *Fixture) EquipmentMagicArithmeticSafe(a Fighter) bool {
 		}
 		// base 保存魔法最大，用于当前步骤中的基础值。
 		base := a.MagicMax
-		if s.Behavior == "soul_fire_ball" || s.Behavior == "poisoning" {
+		if s.Behavior == "soul_fire_ball" || s.Behavior == "poisoning" || s.Behavior == "revelation" {
 			base = a.TaoMax
 		}
 		if s.Behavior == "healing" || s.Behavior == "mass_healing" {
@@ -146,9 +146,14 @@ func (f *Fixture) EquipmentMagicArithmeticSafe(a Fighter) bool {
 			if _, valid = sourcePowerBound(s.MaxLevel, stat, power); !valid {
 				return false
 			}
-		case "sc_rank_linear":
+		case "sc_rank_linear", "sc_half_rank_linear":
+			// 集体隐身先取半道术，再拼接每阶的固定时长。
+			tao := a.TaoMax
+			if b.DurationKind == "sc_half_rank_linear" {
+				tao /= 2
+			}
 			// seconds 保存由装备相乘取得的秒集合，valid 保存由装备相乘取得的有效。
-			seconds, valid := equipmentMultiply(a.TaoMax, b.StatMultiplier)
+			seconds, valid := equipmentMultiply(tao, b.StatMultiplier)
 			if !valid {
 				return false
 			}

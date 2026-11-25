@@ -2,7 +2,7 @@ import { Button, game, instantiate, isValid, Label, Node, Prefab, Sprite } from 
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
 import { UIMgr } from '../ui/UIMgr';
-import { combatAttributeLines, CombatEntity, detailLines, StatusDefinition, statusLines, statusName, statusSeconds, statusShortName } from './CombatStatusModel';
+import { combatAttributeLines, CombatEntity, detailLines, revealedMonsterHealthPercent, StatusDefinition, statusLines, statusName, statusSeconds, statusShortName } from './CombatStatusModel';
 import { isLivingPet, petTrainingLines } from './PetTrainingModel';
 import { OwnedPetState, ownedPetLines, parseOwnedPet } from './OwnedPetModel';
 
@@ -122,7 +122,9 @@ export class GameCombatStatus {
     private entityLines(entity: CombatEntity, now: number): string[] {
         const lines = [entity.isPetCorpse ? '宠物尸体' : ({ 1: '角色', 2: '宠物', 3: '怪物', 4: '掉落' } as Record<number, string>)[entity.entityKind] ?? '实体'];
         if (entity.position) lines.push(`位置 ${entity.position.x}, ${entity.position.y}`);
-        lines.push(`生命 ${entity.hp} / ${entity.hpMax ?? entity.hp}`, ...combatAttributeLines(entity.combatAttributes));
+        const revealed = revealedMonsterHealthPercent(entity, this.receivedAt, now);
+        if (entity.entityKind !== 3 || revealed !== undefined) lines.push(`生命 ${entity.hp} / ${entity.hpMax ?? entity.hp}${revealed === undefined ? '' : ` · ${revealed}%`}`);
+        lines.push(...combatAttributeLines(entity.combatAttributes));
         if (entity.entityKind === 2) {
             const training = petTrainingLines(entity);
             lines.push(...(training.length ? training : ['未提供训练数据']));

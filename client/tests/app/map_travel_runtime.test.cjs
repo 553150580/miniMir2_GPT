@@ -18,6 +18,10 @@ function appHarness(options={}){
     const nodes=new Map();const getNode=path=>{if(!nodes.has(path)){const component={interactable:true,setItems(){}};const node={active:false,on(){},getComponent:()=>component};component.node=node;nodes.set(path,node);}return nodes.get(path);};
     class View{constructor(_v,world,_e,_name,_job,scene){this.world=world;this.sceneEpoch=scene;this.isMapReady=false;this.disposed=0;views.push(this);log.push('mount:'+scene);}bindPresentation(identity,current,retire){this.presentationIdentity=identity;this.presentationCurrent=current;this.retirePresentation=retire;}observeEquipment(identity,playerHandle,inventory){this.equipmentObservation={identity,playerHandle,inventory};}prepare(assets){this.assets=assets;this.manifest=assets.manifest;this.gameplay=assets.gameplay;this.map=assets.map;}apply(b){this.baseline=b;}update(){}async prepareViewport(position){this.position=position;log.push('viewport:'+this.sceneEpoch);await gate?.promise;this.isMapReady=true;}dispose(){if(this.disposed++)return;log.push('view.dispose:'+this.sceneEpoch);this.assets?.dispose();}
         presentTeleportDeparture(value){this.teleportDeparture=value;}
+        takeAssets(kind){
+            if(!this.isMapReady || this.assets?.sceneKind!==kind)return;
+            const assets=this.assets;this.assets=undefined;return assets;
+        }
     }
     const asset=(map,source=false,sceneKind=source?2:1)=>({listeners:new Set(),onBeforeInvalidation(listener){this.listeners.add(listener);return ()=>this.listeners.delete(listener);},mapId:map,sceneKind,map:{width:source?700:17,height:source?700:17},gameplay:{rule_version:13,skills:[],items:[],town_travel:{enabled:true}},background:null,statusBadgePrefab:{},sourceMap:source?{model:{manifest:{pixel_width:33600,pixel_height:22400},project:(x,y)=>({x:x*48,y:y*32}),queryChunks:()=>[{id:'owner'}]},acquireChunk(){log.push('prime.acquire');return {ready:Promise.resolve({}),release(){log.push('prime.release');}};}}:undefined,disposed:0,dispose(){this.disposed++;for(const listener of Array.from(this.listeners))listener('dispose');this.listeners.clear();log.push('asset.dispose:'+map);}});
     const WorldAssets={prepare:async(_job,_progress,map)=>{loads.push(map?.toString());const pending=pendingLoads.shift();return pending?pending.promise:asset(map.toString(),map.toString()==='2');}};
@@ -26,6 +30,80 @@ function appHarness(options={}){
     const a=new AppRoot();a.node={getChildByName:()=>({})};a.find=path=>path==='MapViewport'?viewport:getNode(path);a.joystick=joystick;a.attachment=new MapAttachmentCoordinator();a.hud={setMapFrame(){log.push('hud');},refresh(){}};a.ui={};a.popup={};a.showMapLoading=()=>{};const realRefresh=a.refreshGame.bind(a);a.refreshGame=()=>{};const realError=a.error.bind(a);a.error=error=>log.push('error:'+error.message);a.status=()=>{};
     return {h,a,log,views,loads,pendingLoads,asset,getNode,realRefresh,realError,setGate(value){gate=value;},baseline(e){h.session.baseline={sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.UONE,entities:[{entityHandle:7,entityKind:1,hp:Long.fromInt(100),life:Long.UZERO,position:e.roomId.toString()==='2'?{x:633,y:613}:{x:8,y:8}}]};}};
 }
+
+// 使用权威首领进场和返回帧驱动真实附着逻辑，资源本体仍替换成可数引用的测试资源。
+async function enterBossWithPersonalAssets(t, occurrence) {
+    const {h,a}=t,s=h.session,personal=ready(h,entry('1'));
+    t.baseline(personal);
+    const home=t.asset('1'),boss=t.asset('81',false,4);
+    s.preparedWorld=home;
+    await a.attachCurrentEntry();
+    const target={...entry('2','81',4),serverTransitionId:occurrence};
+    t.pendingLoads.push({promise:Promise.resolve(boss)});
+    s.connection.deliver(20020,{occurrenceId:occurrence,state:2,sceneEpoch:target.sceneEpoch});
+    s.connection.deliver(20002,target);t.baseline(target);
+    await a.attachCurrentEntry();
+    s.connection.deliver(6,target);
+    return {home,boss};
+}
+
+test('首领掉线重接和主动返回交接个人图及首领图的同一资源，并各自只释放一次',async test=>{
+    const t=appHarness(),s=t.h.session,a=t.a,occurrence='13'.repeat(16);
+    test.after(()=>{a.releaseBossReconnect();a.releaseBossReturn();a.attachment.dispose();});
+    const {home,boss}=await enterBossWithPersonalAssets(t,occurrence);
+    assert.deepEqual(t.loads,['81']);
+    assert.equal(t.views[0].disposed,1);
+    assert.equal(home.disposed,0);
+    assert.equal(a.bossReturn.assets,home);
+
+    s.connection.status('掉线');
+    a.handleSessionUpdate();
+    s.connection.binding=Long.fromInt(2,true);s.connection.connected=true;
+    const ordinary=entry('3');
+    s.connection.deliver(20002,ordinary);t.baseline(ordinary);
+    await a.attachCurrentEntry();
+    s.connection.deliver(6,ordinary);
+    assert.equal(a.world.assets,home);
+    assert.equal(a.bossReconnect.assets,boss);
+    assert.equal(boss.disposed,0);
+
+    const resumed={...entry('4','81',4),serverTransitionId:occurrence};
+    s.connection.deliver(20020,{occurrenceId:occurrence,state:2,sceneEpoch:resumed.sceneEpoch});
+    s.connection.deliver(20002,resumed);t.baseline(resumed);
+    await a.attachCurrentEntry();
+    s.connection.deliver(6,resumed);
+    assert.equal(a.world.assets,boss);
+    assert.equal(a.bossReconnect,undefined);
+
+    const returned={...entry('5'),serverTransitionId:occurrence};
+    s.connection.deliver(20020,{occurrenceId:occurrence,state:4,sceneEpoch:resumed.sceneEpoch});
+    s.connection.deliver(20002,returned);t.baseline(returned);
+    await a.attachCurrentEntry();
+    assert.deepEqual(t.loads,['81'],'两次重连、返回均复用已经持有的地图资源');
+    assert.equal(a.world.assets,home);
+    assert.equal(a.bossReturn,undefined);
+    assert.equal(boss.disposed,1);
+    assert.equal(home.disposed,0);
+    a.attachment.dispose();
+    assert.equal(home.disposed,1);
+});
+
+test('首领返回缓存只交给原角色、原地图与原规则，不匹配时独立释放',async()=>{
+    for(const mismatch of ['角色','地图','规则']){
+        const t=appHarness(),s=t.h.session,a=t.a;
+        const {home}=await enterBossWithPersonalAssets(t,'17'.repeat(16));
+        const captured=a.attached;
+        const returnTo={...captured,map:mismatch==='地图'?Long.fromInt(7,true):Long.UONE,
+            role:mismatch==='角色'?'其它角色':captured.role};
+        s.entry=entry('3');
+        assert.equal(a.takeBossReturn(returnTo,mismatch==='规则'?'29':'13'),undefined);
+        assert.equal(a.bossReturn,undefined);
+        assert.equal(home.disposed,1);
+        a.releaseBossReturn();
+        a.attachment.dispose();
+        assert.equal(home.disposed,1);
+    }
+});
 
 test('规则24地图目录选中城镇或野外即带原Long目标进入真实旅行，不再弹旧确认', async () => {
     const t=appHarness(),s=t.h.session,rule=Long.fromInt(24,true);

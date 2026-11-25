@@ -63,6 +63,8 @@ func TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(t *testing.T) {
 			want = 4
 		} else if skill.Behavior == "turn_undead" {
 			want = 2
+		} else if skill.Summon != nil {
+			want = 5
 		}
 		if len(preview.Stats) != want {
 			t.Fatalf("技能%d无意义中性数组污染预览:%d/%d", skill.ID, len(preview.Stats), want)

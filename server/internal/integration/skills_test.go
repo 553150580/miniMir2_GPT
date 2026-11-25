@@ -60,6 +60,10 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 			// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 			cfg, err := loadIntegrationConfig()
 			must(t, err)
+			if job == 2 {
+				// 治疗回归保留旧式受伤宠物前态。规则29的新角色召唤由单独用例验证。
+				cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
+			}
 			cfg.Database = "minimir_dev_game_test_" + domain.ID()
 			cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 			// 仅隔离测试实例调整交战位置/耐久，以确定性观察延迟和宠物恢复；配置文件未修改。
@@ -261,7 +265,10 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				if job == 2 {
 					target = 2
 					// f 记录协议帧。
-					c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && c.entity(2).Hp < c.entity(2).HpMax })
+					c.until(func(f wire.Frame) bool {
+						pet := c.entity(target)
+						return f.ID == p.MsgS2CSceneBaseline && pet != nil && pet.Hp < pet.HpMax
+					})
 				}
 				// hpBefore 保存生命值，用于当前步骤中的生命值操作前的状态，mpBefore 保存魔法值，用于当前步骤中的魔法值操作前的状态。
 				hpBefore, mpBefore := c.entity(target).Hp, c.player().Mp

@@ -292,8 +292,8 @@ func TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap(t *testing
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &cfg.Fixture
-	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion < 24 || f.Map.NoPets == nil || *f.Map.NoPets || f.Binding == nil || f.Binding.Enabled || !f.SafeZoneBindingEnabled() || f.PetRuntime == nil || !f.PetRuntime.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
-		t.Fatal("生命周期合同改变了个人初始地图、旧开发宠物模式或随机绑定池")
+	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion < 24 || f.Map.NoPets == nil || *f.Map.NoPets || f.Binding == nil || f.Binding.Enabled || !f.SafeZoneBindingEnabled() || f.PetRuntime == nil || !f.PetRuntime.Enabled {
+		t.Fatal("生命周期合同改变了个人初始地图、宠物运行状态或随机绑定池")
 	}
 	// id 接收遍历数值列表时当前的元素。
 	for _, id := range []uint64{1, 2, 3, 4, 5} {

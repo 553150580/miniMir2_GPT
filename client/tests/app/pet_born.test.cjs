@@ -24,6 +24,19 @@ test('原动画期限到达即过期，不用服务器Unix与客户端墙钟相�
  assert.equal(petAppearDuration({profiles:{pet_skeleton:{layers:[{actions:{appear:{count:10,duration_ms:100}}}]}}}),1000);
  assert.equal(petAppearDuration({}),0);
 });
+test('神兽出生使用其自身八向外观时长及服务器确认的身体模板',()=>{
+ const m=model(), info={pet_profiles:[{definition_id:80030,profile:'pet_shinsu'}]};
+ const manifest={profiles:{pet_shinsu:{layers:[{actions:{appear:{count:8,duration_ms:80}}}]}}};
+ const duration=born=>petAppearDuration(manifest,born.definitionId,info);
+ const change={sourceSkillId:30,definitionId:80030,direction:2};
+ assert.equal(petAppearDuration(manifest,80030,info),640);
+ assert.equal(petAppearDuration({},80030,info),0);
+ assert.equal(m.accept(event({...change,direction:8}),identity(),'1',100),false);
+ assert(m.accept(event(change),identity(),'1',100));
+ const source=baseline({entities:[body({definitionId:80030,direction:2})]});
+ assert.equal(m.take(identity(),source,duration,200).event.direction,2);
+ assert.equal(m.take(identity(),source,duration,250),null);
+});
 test('connection/binding/role/scene/baseline/map隔离，旧票不改变当前水位',()=>{
  for(const [key,value]of Object.entries({connection:2,binding:'2',role:'other',scene:'3',baseline:'4',map:'3'})){const m=model();assert.equal(m.accept(event(),identity({[key]:value}),'1',100),false);assert(m.accept(event(),identity(),'1',100));}
  for(const change of [{role:{...role,roleId:new Uint8Array(16)}},{sceneEpoch:'1'},{baselineId:'1'},{mapId:'1'},{entityLife:1},{direction:4},{sourceSkillId:18},{elapsedMs:-1}])assert.equal(model().accept(event(change),identity(),'1',100),false);

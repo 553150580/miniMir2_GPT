@@ -6179,6 +6179,7 @@
           "target": "both",
           "enum_values": [
             "defensive_buff",
+            "utility_buff",
             "teleport_success_buff"
           ]
         },
@@ -9464,6 +9465,611 @@
     }
   ],
   "json_contracts": [
+    {
+      "table_id": "game_skills",
+      "id": 6,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 13,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 16,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 18,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 19,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 20,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 28,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 30,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          },
+          "summon": {
+            "type": "object",
+            "properties": {
+              "definition_id": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 6,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          },
+          "poison": {
+            "type": "object",
+            "properties": {
+              "green_item_ids": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "min_items": 1
+              },
+              "red_item_ids": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "min_items": 1
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 80030,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则29开发候选"
+    },
     {
       "table_id": "arch_storage_guards",
       "id": 1,
@@ -13268,6 +13874,9 @@
             "type": "boolean"
           },
           "can_push": {
+            "type": "boolean"
+          },
+          "can_tame": {
             "type": "boolean"
           }
         }

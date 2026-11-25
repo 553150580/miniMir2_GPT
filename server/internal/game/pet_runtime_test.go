@@ -54,9 +54,16 @@ func TestPetRuntimeActualRule16FixturePreservesLegacyStatsAndUsesProjectedLifeti
 	}
 	// catalog 保存由加载宠物运行时候选集合取得的目录。
 	catalog, err := devconfig.LoadPetRuntimeCandidates("../../../config/development/pet-runtime-candidates.json")
-	if err != nil || catalog.RuntimeEnabled || cfg.Fixture.RuleVersion < 16 || !reflect.DeepEqual(catalog.Definitions, cfg.Fixture.PetRuntime.Definitions) {
+	if err != nil || catalog.RuntimeEnabled || cfg.Fixture.RuleVersion < 16 {
 		t.Fatal("实际rule16与独立候选的定义投影不一致", err)
 	}
+	for _, expected := range catalog.Definitions {
+		got, exists := cfg.Fixture.PetRuntime.DefinitionByID(expected.ID)
+		if !exists || !reflect.DeepEqual(expected, got) {
+			t.Fatal("历史候选宠物定义未按原合同选用", expected.ID)
+		}
+	}
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	// c 保存当前处理所用的已捕获连接。
 	c := &capturedConnection{}
 	// r 保存当前处理所用的房间。

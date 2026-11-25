@@ -2,6 +2,7 @@ import { Button, EditBox, Label, Node, isValid } from 'cc';
 import type { EventTouch } from 'cc';
 import { connectRoleEntry, isEntryTicketError, isRoleAccountAuthenticationError } from './RoleEntry';
 import { currentEntryIdentity, isCurrentEntry, roleIdentity, session } from './GameSession';
+import type { AttachmentIdentity } from './MapTravelModel';
 
 export function accountIdentity(id: Uint8Array): string {
     return Array.from(id, value => value.toString(16).padStart(2, '0')).join('');
@@ -125,7 +126,7 @@ export class GameReconnect {
             const identity = currentEntryIdentity();
             if (!identity || identity.connection !== generation || !isCurrentEntry(identity)) throw new Error('未收到有效的角色入场回执');
             this.showStatus('正在同步当前地图…');
-            await this.waitForWorld(attempt.signal, () => isCurrentEntry(identity));
+            await this.waitForWorld(attempt.signal, identity);
             requireScope();
             session.lastError = '';
             this.root.active = false;
@@ -146,23 +147,52 @@ export class GameReconnect {
         } finally { clearTimeout(deadline); }
     }
 
-    private waitForWorld(signal: AbortSignal, entryCurrent: () => boolean): Promise<void> {
+    // 同一连接可先确认个人图，再收到服务端恢复的首领场基线。每次只等待当前场景。
+    private waitForWorld(signal: AbortSignal, initial: AttachmentIdentity): Promise<void> {
         return new Promise((resolve, reject) => {
+            let finished = false;
+            let loading: AttachmentIdentity | undefined;
+            let mounted: AttachmentIdentity | undefined;
             const finish = (error?: unknown): void => {
+                if (finished) return;
+                finished = true;
                 session.update.delete(check);
                 signal.removeEventListener('abort', abort);
                 if (error) reject(error); else resolve();
             };
             const abort = (): void => finish(new Error('重连同步超时'));
-            let attached = false;
             const check = (): void => {
-                if (!entryCurrent()) finish(new Error('地图同步期间连接中断'));
-                else if (attached && session.ready && this.worldReady()) finish();
+                if (finished) return;
+                const entry = currentEntryIdentity();
+                if (!session.role || !entry || entry.connection !== initial.connection || entry.role !== initial.role ||
+                    entry.binding.toString() !== initial.binding.toString() || !isCurrentEntry(entry)) {
+                    finish(new Error('地图同步期间连接中断'));
+                    return;
+                }
+                if (mounted && isCurrentEntry(mounted)) {
+                    if (session.ready && this.worldReady()) finish();
+                    return;
+                }
+                if (loading && isCurrentEntry(loading)) return;
+                loading = entry;
+                void Promise.resolve().then(() => {
+                    if (!finished && isCurrentEntry(entry)) return this.attach();
+                }).then(() => {
+                    if (finished || loading !== entry) return;
+                    loading = undefined;
+                    if (isCurrentEntry(entry)) mounted = entry;
+                    check();
+                }, error => {
+                    if (finished || loading !== entry) return;
+                    loading = undefined;
+                    if (isCurrentEntry(entry)) finish(error);
+                    else check();
+                });
             };
             if (signal.aborted) { abort(); return; }
             session.update.add(check);
             signal.addEventListener('abort', abort, { once: true });
-            void this.attach().then(() => { attached = true; check(); }, finish);
+            check();
         });
     }
 }

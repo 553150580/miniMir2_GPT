@@ -14,6 +14,21 @@ SPEC=importlib.util.spec_from_file_location('prepare_source_map_projection',ROOT
 module=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(module)
 
 
+def restore_rule28_skill_selection(profile):
+    """旧版投影测试隔离规则29的技能、商品和宠物选择。"""
+    new_skills={6,13,16,17,18,19,20,28,30}
+    new_books={9,23,24,25,26,27,30,31,33}
+    supply_items={181,182,187}
+    profile['skill_ids']=[id for id in profile['skill_ids'] if id not in new_skills]
+    profile['recyclable_book_ids']=[id for id in profile['recyclable_book_ids'] if id not in new_books]
+    profile['skill_shop_entries']=[row for row in profile['skill_shop_entries'] if row['item_id'] not in new_books]
+    profile['casting_supply'].update(enabled=False,item_ids=[187])
+    profile['pet_runtime'].update(bootstrap_mode='legacy_untrained_pet',definition_ids=[1])
+    profile['npc_shop_prices']['items']=[row for row in profile['npc_shop_prices']['items'] if row['item_id'] not in supply_items]
+    grocery=next(row for row in profile['npc_shops'] if row['key']=='grocery')
+    grocery['item_ids']=[id for id in grocery['item_ids'] if id not in supply_items]
+
+
 class SourceMapProjectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

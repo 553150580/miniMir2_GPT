@@ -26,9 +26,13 @@ export function captureSupply(snapshot: CastingSupplySnapshot, item: PotionItem)
 export function selectedCastingSupply(snapshot: CastingSupplySnapshot, definition: SkillDefinition): SupplySelection {
     if (!snapshot.config?.enabled) throw new Error('施法护符暂未开放');
     const equipped = snapshot.inventory?.equipped.find(entry => entry.slot === snapshot.config?.slot)?.item;
-    if (!equipped || equipped.itemId !== definition.material_item_id) throw new Error('请先在背包中装入对应施法护符');
+    const poison = definition.kind === 'poisoning', material = poison ? '毒粉' : '护符';
+    // 毒术支持工作簿公布的灰粉和黄粉。其它技能依旧只能消耗自身的单一护符编号。
+    const matches = equipped && (poison ? (equipped.itemId === 181 || equipped.itemId === 182) && definition.material_item_ids?.includes(equipped.itemId)
+        : equipped.itemId === definition.material_item_id);
+    if (!matches) throw new Error(`请先在背包中装入对应施法${material}`);
     const required = definition.material_quantity;
-    if (!Number.isSafeInteger(required) || required! < 1 || integer(equipped.quantity) < BigInt(required!)) throw new Error('已装护符数量不足，施法前请更换');
+    if (!Number.isSafeInteger(required) || required! < 1 || integer(equipped.quantity) < BigInt(required!)) throw new Error(`已装${material}数量不足，施法前请更换`);
     return captureSupply(snapshot, equipped);
 }
 export function validateSupply(selection: SupplySelection, snapshot: CastingSupplySnapshot, equipped: boolean, lockRevision = true): PotionItem {

@@ -9,6 +9,13 @@ import (
 	"strings"
 )
 
+const (
+	// SummonSkeletonSkillID 是骷髅召唤的稳定技能标识。
+	SummonSkeletonSkillID uint32 = 17
+	// SummonShinsuSkillID 是神兽召唤的稳定技能标识。
+	SummonShinsuSkillID uint32 = 30
+)
+
 // 召唤只保存模板引用；延迟、材料数量及新生动作时钟继续使用既有唯一字段。
 type SkillSummonRules struct {
 	// DefinitionID 标识当前业务使用的“definition”。
@@ -152,10 +159,12 @@ func (f *Fixture) ValidateSummoning() error {
 // validateSummonSkill 校验召唤技能。
 // s 记录技能。
 func validateSummonSkill(s Skill) error {
-	if s.ID != 17 || s.JobID != 2 || s.BookItemID != 25 || s.Behavior != "summon_pet" || s.Summon == nil || s.Summon.DefinitionID == 0 ||
+	// 技能与原书ID为稳定身份；材料数量及动作时钟由当前规则配置决定。
+	validBook := s.ID == SummonSkeletonSkillID && s.BookItemID == 25 || s.ID == SummonShinsuSkillID && s.BookItemID == 33
+	if !validBook || s.JobID != 2 || s.Behavior != "summon_pet" || s.Summon == nil || s.Summon.DefinitionID == 0 ||
 		s.LearnedLevel != 0 || s.MaxLevel != 3 || s.TargetKind != "friendly_self" || s.Activation() != "cast" || s.AutoEnabled ||
 		s.MaterialItemID == 0 || s.MaterialQuantity <= 0 || s.DelayBaseMS <= 0 || s.BuffID != 0 || s.Teleport != nil || s.Displacement != nil {
-		return errors.New("召唤骷髅须为独立0至3阶、单宠模板、自身材料延迟技能")
+		return errors.New("职业召唤须引用对应技能书与单一宠物模板，并使用自身目标、材料与延迟施法")
 	}
 	// field 接收遍历文本列表时当前的元素。
 	for _, field := range []string{"teleport", "displacement"} {

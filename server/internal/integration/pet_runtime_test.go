@@ -32,13 +32,11 @@ func TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS(t *testing.T) {
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := loadIntegrationConfig()
 	must(t, err)
-	if cfg.Fixture.RuleVersion < 16 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
-		t.Fatal("真实用例必须从当前生命周期及显式legacy_untrained_pet合同开始")
+	if cfg.Fixture.RuleVersion < 16 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled {
+		t.Fatal("真实用例需要当前宠物生命周期合同")
 	}
-	// enabled 保存由技能取得的已开启。
-	if _, enabled := cfg.Fixture.Skill(17); enabled || cfg.Fixture.CastingSupply.Enabled {
-		t.Fatal("本阶段不得开启17或护符")
-	}
+	// 此历史用例验证免费骷髅尸体，测试库显式设置该模式。
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	// corpseTTL 保存根据当前数据与秒计算的尸体有效期限。
 	const corpseTTL = 10 * time.Second
 	// 来源定义和legacy Fighter必须同步，不能靠绕过Validate制造两份基础属性。

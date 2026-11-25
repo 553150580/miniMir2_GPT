@@ -33,7 +33,7 @@ func sourcePetCandidates(t *testing.T) *PetRuntimeCandidateCatalog {
 func TestPetRuntimeCandidateSourceVectorsAndIndependentTemplateLevel(t *testing.T) {
 	// catalog 保存由来源宠物候选集合取得的目录。
 	catalog := sourcePetCandidates(t)
-	if catalog.RuntimeEnabled || catalog.Budgets.RetainedBodyCapacityPerOwner != 128 || len(catalog.Definitions) != 1 {
+	if catalog.RuntimeEnabled || catalog.Budgets.RetainedBodyCapacityPerOwner != 128 || len(catalog.Definitions) == 0 {
 		t.Fatal("候选范围或名额不符")
 	}
 	// d 保存从定义集合取出的定义集合中的指定项。
@@ -244,7 +244,7 @@ func TestPetRuntimeVersionGateAndNullAreExplicit(t *testing.T) {
 
 // TestPetRuntimeSelectedProfileUsesSameCandidateDefinitionsWithoutSummonActivation 核对「生命周期未选择，或免费bootstrap模式被暗改」与「候选与主profile不是同一编译定义」所标示的断言。
 // t 提供断言失败报告、子用例和清理注册。
-func TestPetRuntimeSelectedProfileUsesSameCandidateDefinitionsWithoutSummonActivation(t *testing.T) {
+func TestPetRuntimeSelectedProfilePreservesCandidateDefinitions(t *testing.T) {
 	// catalog 保存由来源宠物候选集合取得的目录。
 	catalog := sourcePetCandidates(t)
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
@@ -252,14 +252,14 @@ func TestPetRuntimeSelectedProfileUsesSameCandidateDefinitionsWithoutSummonActiv
 	if err != nil {
 		t.Fatal(err)
 	}
-	if cfg.Fixture.RuleVersion < 23 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
-		t.Fatal("生命周期未选择，或免费bootstrap模式被暗改")
+	runtime := cfg.Fixture.PetRuntime
+	if cfg.Fixture.RuleVersion < 23 || runtime == nil || !runtime.Enabled || !reflect.DeepEqual(runtime.Budgets, catalog.Budgets) {
+		t.Fatal("当前宠物生命周期须沿用统一候选预算")
 	}
-	// found 保存由技能取得的已找到标记。
-	if _, found := cfg.Fixture.Skill(17); found || cfg.Fixture.CastingSupply.Enabled {
-		t.Fatal("未获护符单位决定即启用召唤/耗材")
-	}
-	if !reflect.DeepEqual(cfg.Fixture.PetRuntime.Budgets, catalog.Budgets) || !reflect.DeepEqual(cfg.Fixture.PetRuntime.Definitions, catalog.Definitions) {
-		t.Fatal("候选与主profile不是同一编译定义")
+	for _, expected := range catalog.Definitions {
+		got, exists := runtime.DefinitionByID(expected.ID)
+		if !exists || !reflect.DeepEqual(expected, got) {
+			t.Fatal("宠物候选与当前主配置未使用同一编译定义", expected.ID)
+		}
 	}
 }

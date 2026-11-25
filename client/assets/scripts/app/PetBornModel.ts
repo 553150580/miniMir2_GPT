@@ -14,8 +14,12 @@ export interface PetBornObservation {
     readonly movementRevision: string; readonly direction: number; readonly role: string; readonly elapsedMs: number;
 }
 export interface PetBornPlayback { readonly event: PetBornObservation; readonly elapsedMs: number; }
-export function petAppearDuration(manifest: any): number {
-    const value = manifest?.profiles?.pet_skeleton?.layers?.[0]?.actions?.appear;
+// 每个新生事件按身体模板解析出场时长。旧资源包沿用骷髅默认值。
+export function petAppearDuration(manifest: any, definitionId?: number, gameplay?: any): number {
+    const profiles = gameplay?.pet_profiles;
+    const key = profiles && definitionId !== undefined
+        ? profiles.find((row: { definition_id: number }) => row.definition_id === definitionId)?.profile : 'pet_skeleton';
+    const value = key && manifest?.profiles?.[key]?.layers?.[0]?.actions?.appear;
     if (!value || !Number.isSafeInteger(value.count) || value.count <= 0 || !Number.isSafeInteger(value.duration_ms) || value.duration_ms <= 0
         || !Number.isSafeInteger(value.count * value.duration_ms)) return 0;
     return value.count * value.duration_ms;
@@ -41,15 +45,17 @@ export class PetBornModel {
                 bornAtUnixMs: travelInteger(value.bornAtUnixMs, true), movementRevision: travelInteger(value.movementRevision) });
             if (event.role !== identity.role || event.sceneEpoch !== identity.scene.toString() || event.baselineId !== identity.baseline.toString() || event.mapId !== identity.map.toString()
                 || ![event.entityHandle, event.definitionId].every(n => Number.isSafeInteger(n) && n > 0 && n <= 0xffffffff)
-                || event.sourceSkillId !== 17 || event.direction !== 5 || !Number.isSafeInteger(event.elapsedMs) || event.elapsedMs < 0 || event.elapsedMs > 0xffffffff
+                || ![17, 30].includes(event.sourceSkillId) || !Number.isInteger(event.direction) || event.direction < 0 || event.direction > 7
+                || event.sourceSkillId === 17 && event.direction !== 5 || !Number.isSafeInteger(event.elapsedMs) || event.elapsedMs < 0 || event.elapsedMs > 0xffffffff
                 || BigInt(event.entityLife) <= this.life) return false;
             this.life = BigInt(event.entityLife); this.pending = { event, received: now }; return true;
         } catch { return false; }
     }
-    take(identity: AttachmentIdentity, baseline: any, durationMs: number, now: number): PetBornPlayback | null {
+    take(identity: AttachmentIdentity, baseline: any, duration: number | ((event: PetBornObservation) => number), now: number): PetBornPlayback | null {
         const pending = this.pending;
         if (!pending) return null;
         try {
+            const durationMs = typeof duration === 'function' ? duration(pending.event) : duration;
             if (this.scope !== attachmentKey(identity) || !Number.isFinite(now) || now < pending.received || !Number.isSafeInteger(durationMs) || durationMs <= 0) {
                 this.pending = null; return null;
             }

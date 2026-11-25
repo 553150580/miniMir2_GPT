@@ -3,7 +3,7 @@ from copy import deepcopy
 import unittest
 
 import export_configs as config
-from test_source_map_projection import module, ROOT
+from test_source_map_projection import module, ROOT, restore_rule28_skill_selection
 
 
 class EquipmentFoundationTests(unittest.TestCase):
@@ -29,8 +29,6 @@ class EquipmentFoundationTests(unittest.TestCase):
                 if item['is_equipment']:self.assertIn(field,item)
                 self.assertEqual(item.get(field,0),0)
         self.assertEqual([(i['id'],i['equipment_stage'],i['recycle_gold']) for i in self.fixture['items'] if i['is_equipment']],[(218,0,50),(193,0,400),(259,0,0)])
-        self.assertFalse(self.fixture['casting_supply']['enabled'])
-        self.assertNotIn(17,[skill['id'] for skill in self.fixture['skills']])
 
     def test_mc_sc_projection_uses_unique_equipment_values_and_public_whitelist(self):
         tables=deepcopy(self.tables);row=self.equipment(tables)
@@ -116,6 +114,7 @@ class EquipmentFoundationTests(unittest.TestCase):
 
     def test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade(self):
         tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21;profile.pop('warehouses');profile.pop('boss_template_ids')
+        restore_rule28_skill_selection(profile)
         for key in module.npc_shops.PROFILE_KEYS:del profile[key]
         with self.assertRaisesRegex(ValueError,'rule22'):module.fixture_from_rows(tables)
         profile.pop('base_item_ids');fixture=module.fixture_from_rows(tables)

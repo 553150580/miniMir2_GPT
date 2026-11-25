@@ -22,7 +22,7 @@ func loadEquipmentCandidateBytes(t *testing.T, data []byte) (*SummonCandidateCat
 	return LoadSummonCandidates(path)
 }
 
-// TestEquipmentSummonRaw17AndMarshalRoundtripRemainNeutral 核验旧17原书JSON不应被本测试补造新字段，以及必须保持主rule23。
+// TestEquipmentSummonRaw17AndMarshalRoundtripRemainNeutral 核验历史原书与当前夹具往返时均不引入装备属性。
 // t 提供断言失败报告、子用例和清理注册。
 func TestEquipmentSummonRaw17AndMarshalRoundtripRemainNeutral(t *testing.T) {
 	// data 保存由读取文件取得的数据，err 接收读取文件过程中可能产生的错误，供后续失败分支处理。
@@ -76,17 +76,18 @@ func TestEquipmentSummonRaw17AndMarshalRoundtripRemainNeutral(t *testing.T) {
 		if cfg.Fixture.RuleVersion < 23 {
 			t.Fatal("必须保持主rule23")
 		}
-		// found 保存由技能取得的已找到标记。
-		if _, found := cfg.Fixture.Skill(17); found {
-			t.Fatal("主profile意外开放17")
+		if _, found := cfg.Fixture.Skill(SummonSkeletonSkillID); found {
+			// 当前夹具已开放召唤。显式置入同 ID 的候选书，检验旧 JSON 接入新版。
+			for i := range cfg.Fixture.Items {
+				if cfg.Fixture.Items[i].ID == catalog.Books[0].ID {
+					cfg.Fixture.Items[i] = catalog.Books[0]
+				}
+			}
+		} else {
+			cfg.Fixture.Skills = append(cfg.Fixture.Skills, catalog.Skills...)
+			cfg.Fixture.Items = append(cfg.Fixture.Items, catalog.Books...)
+			cfg.Fixture.SkillUpgrades = append(cfg.Fixture.SkillUpgrades, catalog.Upgrades...)
 		}
-		// found 保存由道具取得的已找到标记。
-		if _, found := cfg.Fixture.Item(25); found {
-			t.Fatal("候选书意外进入主目录")
-		}
-		cfg.Fixture.Skills = append(cfg.Fixture.Skills, catalog.Skills...)
-		cfg.Fixture.Items = append(cfg.Fixture.Items, catalog.Books...)
-		cfg.Fixture.SkillUpgrades = append(cfg.Fixture.SkillUpgrades, catalog.Upgrades...)
 		if e = cfg.Fixture.Validate(); e != nil {
 			t.Fatal(e)
 		}

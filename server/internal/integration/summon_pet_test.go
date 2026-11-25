@@ -35,22 +35,19 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	// catalog 保存由加载召唤候选集合取得的目录。
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion < 23 || cfg.Fixture.CastingSupply.Enabled {
-		t.Fatal("必须从主rule21关闭材料的真实配置创建隔离样本；独立召唤候选仍required17")
-	}
-	// enabled 保存由技能取得的已开启。
-	if _, enabled := cfg.Fixture.Skill(17); enabled {
-		t.Fatal("主配置不能因候选测试被开启17")
+	if cfg.Fixture.RuleVersion < 23 || catalog.RuntimeEnabled {
+		t.Fatal("独立召唤候选须明确关闭，隔离验证需要当前合同")
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &cfg.Fixture
-	f.Skills, f.Items = append(f.Skills, catalog.Skills...), append(f.Items, catalog.Books...)
-	f.SkillUpgrades = append(f.SkillUpgrades, catalog.Upgrades...)
+	if _, enabled := f.Skill(17); !enabled {
+		f.Skills, f.Items = append(f.Skills, catalog.Skills...), append(f.Items, catalog.Books...)
+		f.SkillUpgrades = append(f.SkillUpgrades, catalog.Upgrades...)
+	}
 	f.CastingSupply.Enabled, f.PetRuntime.BootstrapMode = true, "none"
-	// i 标记遍历道具集合时访问的下标。
 	for i := range f.Items {
-		if f.Items[i].ID == 187 {
-			f.Items[i].MaxStack = 2 // 明确的隔离Count容量，不是DuraMax、售价或购包单位。
+		if f.Items[i].ID == 187 && f.Items[i].MaxStack < 2 {
+			f.Items[i].MaxStack = 2
 		}
 	}
 	// i 标记遍历初始值技能技能书集合时访问的下标。
@@ -79,7 +76,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	}
 	must(t, f.Validate())
 	// skill 保存从技能集合取出的技能。
-	skill := catalog.Skills[0]
+	skill, _ := f.Skill(17)
 	cfg.Database = "minimir_dev_game_test_summon_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 	// ctx 保存由“background”取得的上下文。

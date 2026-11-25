@@ -315,6 +315,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 	}
 	if from != nil && (len(context) == 0 || !context[0].PeriodicPoison) {
 		world.clearTrapHexagon(target)
+		target.ShockUntilMS = 0
 	}
 	wearStatuses(target, damage)
 	target.HP -= damage
@@ -582,9 +583,7 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 		if (r.Auto || r.bossBattle != nil) && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
 			// target 保存由最近取得的目标。
 			if target := w.nearest(r, pet); target != nil {
-				if distance(pet.Pos, target.Pos) <= 1 {
-					w.attack(r, pet, target, now)
-				} else {
+				if !w.tryPetAttack(r, pet, target, now) {
 					w.move(r, pet, target.Pos, now, w.fighter(r, pet).MoveMS)
 				}
 			}
@@ -606,7 +605,7 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	world := r.currentWorld()
 	// m 接收遍历怪物集合中的范围时当前的元素。
 	for _, m := range r.Monsters[:r.MonsterCount] {
-		if m.HP <= 0 || world.trapHexagonHeld(m, now) {
+		if m.HP <= 0 || m.ShockUntilMS != 0 && now.UnixMilli() < m.ShockUntilMS || world.trapHexagonHeld(m, now) {
 			continue
 		}
 		// target 是本轮能被原怪物察觉的玩家或宠物；没有目标时留在当前格。

@@ -12,7 +12,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "fire_wall", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet", "turn_undead", "soul_fire_ball", "poisoning", "hiding", TrapHexagonBehavior:
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet", "turn_undead", "soul_fire_ball", "poisoning", "hiding", "mass_hiding", "electric_shock", "revelation", TrapHexagonBehavior:
 		return true
 	}
 	return false
@@ -162,7 +162,7 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "friendly_entity"
 		case "mass_healing":
 			wanted = "friendly_grid"
-		case "soul_shield", "blessed_armour":
+		case "soul_shield", "blessed_armour", "mass_hiding":
 			wanted = "friendly_grid"
 		case "magic_shield", "teleport", "hiding":
 			wanted = "friendly_self"
@@ -174,6 +174,9 @@ func (f *Fixture) ValidateCombat() error {
 				return err
 			}
 		}
+		if err := validateMonsterUtilitySkill(s); err != nil {
+			return err
+		}
 		if s.Behavior == "fire_wall" && (s.AreaRadius != 1 || s.AutoEnabled || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0) {
 			return errors.New("开发火墙必须手动指定中心，500毫秒后建立正交邻格")
 		}
@@ -184,7 +187,10 @@ func (f *Fixture) ValidateCombat() error {
 			return errors.New("施毒必须以道士单体非弹道技能延迟500毫秒施加")
 		}
 		if s.Behavior == "hiding" && (s.JobID != 2 || s.BuffID == 0 || s.AreaRadius != 0 || s.RangeCells != 0 || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0 || s.RequireLineOfSight || s.AutoEnabled) {
-			return errors.New("隐身术隔离候选必须手动对自身施放，并在500毫秒后应用状态")
+			return errors.New("隐身术须手动对自身施放，并在500毫秒后应用状态")
+		}
+		if s.Behavior == "mass_hiding" && (s.ID != 19 || s.JobID != 2 || s.BuffID == 0 || s.AreaRadius != 1 || s.RangeCells != 9 || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 50 || s.RequireLineOfSight || s.AutoEnabled) {
+			return errors.New("集体隐身术须手动选择九格内的中心，对周围九格按距离延迟应用状态")
 		}
 		if s.Behavior != "poisoning" && s.Poison != nil {
 			return errors.New("仅施毒可携带药粉色别配置")

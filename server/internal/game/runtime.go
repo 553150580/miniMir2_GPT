@@ -92,37 +92,39 @@ type worker struct {
 
 // entity 保存当前进程中的战斗身体、动作时钟和空间身份。
 type entity struct {
-	Handle           uint32                   // 在场景实体集内引用该身体的句柄。
-	Kind             uint32                   // 区分角色、宠物、怪物与场景对象的类别。
-	Def              uint32                   // 对应配置中的实体定义编号。
-	Pos              devconfig.Point          // 地图逻辑网格位置。
-	Direction        uint32                   // 当前朝向的八方向编号。
-	HP               int64                    // 当前生命值，归零表示死亡。
-	MP               int64                    // 当前魔法值，供施法和恢复逻辑使用。
-	MaxMP            int64                    // 魔法上限，恢复时用来裁剪。
-	MaxHP            int64                    // 生命上限，恢复或复活时用来裁剪。
-	Poisons          *monsterPoisons          // 只在原生命受到施毒时分配，记录当前红绿毒。
-	Action           uint32                   // 向客户端观察的当前动作类型。
-	AttackSequence   uint32                   // 观察端用来区别相邻攻击动作的单调序号。
-	AttackSkillID    uint32                   // 这次攻击动作使用的技能定义编号。
-	AttackSkillLevel uint32                   // 这次攻击动作的技能等级。
-	ActionUntil      time.Time                // 当前动作表现到期的时刻。
-	NextMove         time.Time                // 下一次允许行走的独立时刻。
-	NextAttack       time.Time                // 下一次允许发起攻击的独立时刻。
-	ActionReadyAt    time.Time                // 当前行动锁结束的时刻。
-	RespawnAt        time.Time                // 死亡怪物允许尝试复活的时刻。
-	Monster          *devconfig.Monster       // 怪物或宠物采用的配置数值。
-	CastSequence     uint32                   // 观察端用来区别施法动作的单调序号。
-	CastSkillID      uint32                   // 这次施法动作使用的技能编号。
-	Life             uint64                   // 当前出生代次，阻止旧事件误命中新生身体。
-	HealAmount       int64                    // 尚未按治疗时钟消化的技能恢复量。
-	NextHeal         time.Time                // 下一次技能治疗量生效的时刻。
-	Statuses         map[uint32]*combatStatus // 按效果编号保存尚生效的战斗状态。
-	MovementRevision uint64                   // 位置变化的单调修订号，区分强制位移和正常行走。
-	MovementKind     uint32                   // 上次位置变化的类型。
-	CellEntry        uint64                   // 此次进入逻辑格的唯一序号。
-	PetRuntime       *petRuntimeState         // 宠物出生后才有的运行配置与成长状态。
-	IsPetCorpse      bool                     // 表示实体仅作为已归档的宠物尸体显示。
+	Handle               uint32                   // 在场景实体集内引用该身体的句柄。
+	Kind                 uint32                   // 区分角色、宠物、怪物与场景对象的类别。
+	Def                  uint32                   // 对应配置中的实体定义编号。
+	Pos                  devconfig.Point          // 地图逻辑网格位置。
+	Direction            uint32                   // 当前朝向的八方向编号。
+	HP                   int64                    // 当前生命值，归零表示死亡。
+	MP                   int64                    // 当前魔法值，供施法和恢复逻辑使用。
+	MaxMP                int64                    // 魔法上限，恢复时用来裁剪。
+	MaxHP                int64                    // 生命上限，恢复或复活时用来裁剪。
+	Poisons              *monsterPoisons          // 只在原生命受到施毒时分配，记录当前红绿毒。
+	Action               uint32                   // 向客户端观察的当前动作类型。
+	AttackSequence       uint32                   // 观察端用来区别相邻攻击动作的单调序号。
+	AttackSkillID        uint32                   // 这次攻击动作使用的技能定义编号。
+	AttackSkillLevel     uint32                   // 这次攻击动作的技能等级。
+	ActionUntil          time.Time                // 当前动作表现到期的时刻。
+	NextMove             time.Time                // 下一次允许行走的独立时刻。
+	NextAttack           time.Time                // 下一次允许发起攻击的独立时刻。
+	ActionReadyAt        time.Time                // 当前行动锁结束的时刻。
+	RespawnAt            time.Time                // 死亡怪物允许尝试复活的时刻。
+	Monster              *devconfig.Monster       // 怪物或宠物采用的配置数值。
+	CastSequence         uint32                   // 观察端用来区别施法动作的单调序号。
+	CastSkillID          uint32                   // 这次施法动作使用的技能编号。
+	Life                 uint64                   // 当前出生代次，阻止旧事件误命中新生身体。
+	HealAmount           int64                    // 尚未按治疗时钟消化的技能恢复量。
+	NextHeal             time.Time                // 下一次技能治疗量生效的时刻。
+	Statuses             map[uint32]*combatStatus // 按效果编号保存尚生效的战斗状态。
+	MovementRevision     uint64                   // 位置变化的单调修订号，区分强制位移和正常行走。
+	MovementKind         uint32                   // 上次位置变化的类型。
+	CellEntry            uint64                   // 此次进入逻辑格的唯一序号。
+	PetRuntime           *petRuntimeState         // 宠物出生后才有的运行配置与成长状态。
+	IsPetCorpse          bool                     // 表示实体仅作为已归档的宠物尸体显示。
+	CapturedUntilRespawn bool                     // 原怪物已转为宠物，此占位只等待普通刷新，不展示尸体。
+	ShockUntilMS         int64                    // 怪物停止主动移动、攻击的 Unix 毫秒截止时间。
 }
 
 // room 汇总角色资产的已确认视图与活动场景，分片循环统一推进所有临时状态。
@@ -1004,6 +1006,9 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 	entities = append(entities, r.Loot...)
 	// e 接收遍历实体时当前的元素。
 	for _, e := range entities {
+		if e.CapturedUntilRespawn {
+			continue
+		}
 		// moveMS 保存由无符号整数“32”取得的移动毫秒。
 		moveMS := uint32(0)
 		// attackMS 保存由无符号整数“32”取得的攻击毫秒。

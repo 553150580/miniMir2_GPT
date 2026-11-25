@@ -40,7 +40,9 @@ func summonWorker(t *testing.T, withPet bool) (*worker, *room, *capturedConnecti
 	}
 	// skill 保存从技能集合取出的技能。
 	skill := catalog.Skills[0]
-	w.e.Store.Cfg.Fixture.Skills = append(w.e.Store.Cfg.Fixture.Skills, skill)
+	if _, selected := w.e.Store.Cfg.Fixture.Skill(skill.ID); !selected {
+		w.e.Store.Cfg.Fixture.Skills = append(w.e.Store.Cfg.Fixture.Skills, skill)
+	}
 	r.Player.MP, r.Player.MaxMP = 1000, 1000
 	r.Auto = false
 	w.roll = func(int64) int64 { t.Fatal("召唤/Recall不应抽伤害随机数"); return 0 }
@@ -251,7 +253,7 @@ func TestSummonPetQueuedBirthIsBoundedAndNoPathFailureReleasesOnlyOwnToken(t *te
 	w, r, _, _, town, now := summonWorker(t, false)
 	// plan 保存由已支付召唤计划取得的计划。
 	plan := paidSummonPlan(t, w, r, now)
-	if w.canBeginPetBirth(r, now) || w.reservePetBirth(r, petBirthToken{ID: "other", ExecutionEpoch: r.ExecutionEpoch, PlayerLife: r.Player.Life}, now) {
+	if w.canBeginPetBirth(r, now, actorRef{}) || w.reservePetBirth(r, petBirthToken{ID: "other", ExecutionEpoch: r.ExecutionEpoch, PlayerLife: r.Player.Life}, now) {
 		t.Fatal("pending reservation未占唯一slot")
 	}
 	w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{plan.Summon.Front}
@@ -345,9 +347,9 @@ func TestSummonPetRecallNoMaterialSameWorldAndSameNameDifferentDefinition(t *tes
 	}
 }
 
-// TestSummonPetActualCandidateValidatesCompleteSkillWithoutMainActivation 核对「真实完整候选未通过全部规则验证」与「真实legacy owner观察误开训练或漏Recall」所标示的断言。
+// TestSummonPetActualCandidateAndLegacyRecall 核对隔离候选校验和原免费骷髅的同名召回。
 // t 提供断言失败报告、子用例和清理注册。
-func TestSummonPetActualCandidateValidatesCompleteSkillWithoutMainActivation(t *testing.T) {
+func TestSummonPetActualCandidateAndLegacyRecall(t *testing.T) {
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	if err != nil {
@@ -358,13 +360,15 @@ func TestSummonPetActualCandidateValidatesCompleteSkillWithoutMainActivation(t *
 	if err != nil {
 		t.Fatal(err)
 	}
-	// selected 保存由技能取得的已选择。
-	if _, selected := cfg.Fixture.Skill(17); selected || catalog.RuntimeEnabled || cfg.Fixture.CastingSupply.Enabled {
-		t.Fatal("独立候选错误启主入口")
+	if catalog.RuntimeEnabled {
+		t.Fatal("历史独立候选必须关闭")
 	}
-	cfg.Fixture.Skills = append(cfg.Fixture.Skills, catalog.Skills...)
-	cfg.Fixture.Items = append(cfg.Fixture.Items, catalog.Books...)
-	cfg.Fixture.SkillUpgrades = append(cfg.Fixture.SkillUpgrades, catalog.Upgrades...)
+	if _, selected := cfg.Fixture.Skill(17); !selected {
+		cfg.Fixture.Skills = append(cfg.Fixture.Skills, catalog.Skills...)
+		cfg.Fixture.Items = append(cfg.Fixture.Items, catalog.Books...)
+		cfg.Fixture.SkillUpgrades = append(cfg.Fixture.SkillUpgrades, catalog.Upgrades...)
+	}
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	// err 接收校验过程中可能产生的错误，供后续失败分支处理。
 	if err := cfg.Fixture.Validate(); err != nil {
 		t.Fatal("真实完整候选未通过全部规则验证", err)
@@ -381,7 +385,8 @@ func TestSummonPetActualCandidateValidatesCompleteSkillWithoutMainActivation(t *
 	// mp 保存当前处理所用的魔法值。
 	mp := r.Player.MP
 	// code 保存由施法取得的结果码。
-	if code := w.cast(r, 17, 0, 1, time.Now()); code != 0 || r.PendingPetBirth != nil || r.Player.MP != mp-catalog.Skills[0].MPBaseCost {
+	skill, _ := cfg.Fixture.Skill(17)
+	if code := w.cast(r, skill.ID, 0, 1, time.Now()); code != 0 || r.PendingPetBirth != nil || r.Player.MP != mp-skill.MPBaseCost {
 		t.Fatal("真实完整定义的legacy同名无符Recall失败", code)
 	}
 	// pet 保存由“owned”宠物“pb”取得的宠物。
@@ -875,6 +880,7 @@ func TestSummonPetInitializeNoPetsFreezesLegacyOnce(t *testing.T) {
 	// yes 保存当前处理所用的“yes”。
 	yes := true
 	cfg.Fixture.Map.NoPets = &yes
+	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
 	// err 接收校验过程中可能产生的错误，供后续失败分支处理。
 	if err := cfg.Fixture.Validate(); err != nil {
 		t.Fatal("合法NoPets初图配置被拒绝", err)

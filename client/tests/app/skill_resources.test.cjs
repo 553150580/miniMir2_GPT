@@ -21,17 +21,24 @@ test('雷电巨大原始纵向帧保留997像素与WIL偏移，动作与旧资�
     for(const key of ['Magic:0','Magic:179','Magic:370'])assert(manifest.frames[key]);
     assert.equal(manifest.official_180_restoration_verified,false);
 });
-test('主动技能资源逐项匹配，火墙和圣言术沿各自反馈路径',()=>{
+test('首发33项技能资源逐项匹配，未配置独立特效的技能有对应目标和操作反馈',()=>{
     const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
-    assert.equal(gameplay.skills.length,24);
+    assert.deepEqual(gameplay.skills.map(skill=>skill.id).sort((a,b)=>a-b),Array.from({length:33},(_,i)=>i+1));
+    // 部分技能先通过服务器权威效果、原动作或宠物变化反馈，客户端可独立补充特效资源。
+    const fallsBack={
+        6:['poisoning','enemy_entity',true],13:['soul_fire_ball','enemy_entity',true],16:['trap_hexagon','enemy_grid',false],
+        18:['hiding','friendly_self',false],19:['mass_hiding','friendly_grid',false],20:['electric_shock','enemy_entity',false],
+        22:['fire_wall','enemy_grid',false],28:['revelation','enemy_entity',false],30:['summon_pet','friendly_self',false],
+        32:['turn_undead','enemy_entity',false],
+    };
     for(const skill of gameplay.skills){
-        if(skill.kind==='fire_wall'||skill.kind==='turn_undead'){
-            assert.equal(skill.auto_enabled,false);
-            assert.equal(skill.target_kind,skill.kind==='fire_wall'?'enemy_grid':'enemy_entity');
-            assert(gameplay.items.some(item=>item.item_id===skill.book_item_id&&item.skill_id===skill.id));
-            continue;
+        assert(gameplay.items.some(item=>item.item_id===skill.book_item_id&&item.skill_id===skill.id));
+        const effect=manifest.effects[String(skill.id)],fallback=fallsBack[skill.id];
+        if(fallback){
+            assert.deepEqual([skill.kind,skill.target_kind,skill.auto_enabled],fallback);
+            if(!effect)continue;
         }
-        if(skill.active){assert.equal(manifest.effects[String(skill.id)]?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(manifest.effects[String(skill.id)].hit_anchor,'grid');}
+        if(skill.active){assert.equal(effect?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(effect.hit_anchor,'grid');}
     }
     const spirit=gameplay.skills.find(skill=>skill.id===4);assert.equal(spirit.kind,'spirit_sword');assert.equal(spirit.active,false);assert.equal(spirit.target_kind,'passive');assert.deepEqual(spirit.accuracy_by_level,[0,3,5,8]);
     for(const [id,activation,target]of [[7,'passive_proc','passive'],[9,'cast','enemy_direction'],[12,'toggle','attack_mode'],[25,'toggle','attack_mode'],[26,'charge','attack_charge'],[10,'cast','enemy_direction'],[24,'cast','enemy_self'],[33,'cast','enemy_grid']]){
@@ -73,8 +80,9 @@ test('实际三防御技能19项投影与94原WIL帧对齐，常驻盾独立于�
         const skill=gameplay.skills.find(row=>row.id===id);assert.equal(skill.kind,kind);assert.equal(skill.target_kind,target);assert.equal(skill.activation_kind,'cast');assert.equal(skill.buff_id,id);
         if(id!==31){assert.equal(skill.area_radius,3);assert.equal(skill.material_item_id,187);assert.equal(skill.material_quantity,1);assert.equal(manifest.effects[id].hit_anchor,'grid');}else{assert.equal(skill.material_item_id,0);assert.equal(skill.material_quantity,0);}
     }
-    assert.equal(gameplay.statuses.length,4);for(const status of gameplay.statuses){assert(status.name&&status.short_name);assert(Array.from(status.short_name).length*24<=88);assert.equal(status.attribute_effects.value_by_level.length,4);if(status.duration_rule.kind==='fixed_ms'){assert.equal(status.id,21);assert.equal(status.duration_rule.duration_ms,30000);assert.deepEqual(status.duration_rule.seconds_by_level,[]);}else assert.equal(status.duration_rule.seconds_by_level.length,4);}
-    assert.equal(gameplay.casting_supply.slot,100);assert(gameplay.casting_supply.item_ids.includes(187));const item=gameplay.items.find(row=>row.item_id===187);assert.equal(item.kind,'casting_supply');assert.equal(item.equip_slot,100);assert.notEqual(item.is_equipment,true);
+    assert.deepEqual(gameplay.statuses.map(status=>status.id).sort((a,b)=>a-b),[14,15,18,19,21,28,31]);for(const status of gameplay.statuses){assert(status.name&&status.short_name);assert(Array.from(status.short_name).length*24<=88);assert.equal(status.attribute_effects.value_by_level.length,4);if(status.duration_rule.kind==='fixed_ms'){assert.equal(status.id,21);assert.equal(status.duration_rule.duration_ms,30000);assert.deepEqual(status.duration_rule.seconds_by_level,[]);}else assert.equal(status.duration_rule.seconds_by_level.length,4);}
+    assert.equal(gameplay.casting_supply.enabled,true);assert.equal(gameplay.casting_supply.slot,100);assert.deepEqual([...gameplay.casting_supply.item_ids].sort((a,b)=>a-b),[181,182,187]);
+    for(const itemId of [181,182,187]){const item=gameplay.items.find(row=>row.item_id===itemId);assert.equal(item.kind,'casting_supply');assert.equal(item.equip_slot,100);assert.notEqual(item.is_equipment,true);}
     assert.deepEqual(manifest.effects['31'].cast.frames,Array.from({length:10},(_,i)=>`Magic:${3880+i}`));assert.equal(manifest.effects['31'].cast.duration_ms,600);
     const persistent=manifest.statuses['31'];assert.deepEqual(persistent.idle.frames,['Magic:3890','Magic:3891','Magic:3892']);assert.deepEqual(persistent.struck.frames,['Magic:3900','Magic:3901','Magic:3902']);assert.equal(persistent.idle.duration_ms,600);assert.equal(persistent.struck.duration_ms,600);
     const keys=new Set([...manifest.effects['31'].cast.frames,...persistent.idle.frames,...persistent.struck.frames]);

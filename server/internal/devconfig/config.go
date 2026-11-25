@@ -97,6 +97,8 @@ type Monster struct {
 	Undead bool `json:"undead"`
 	// CoolEye 对应原怪物的冷眼能力，等级足够时可识破隐身。
 	CoolEye bool `json:"cool_eye,omitempty"`
+	// CanTame 标记可被诱惑之光转化为临时宠物的普通怪物。
+	CanTame bool `json:"can_tame,omitempty"`
 }
 
 // Item 定义商品和掉落引用的物品模板及其用途和属性。

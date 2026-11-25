@@ -27,16 +27,16 @@ class PetRuntimeProjectionTests(unittest.TestCase):
     def profile(tables):
         return tables['dev_first_loop_profile'][0]['parameters']
 
-    def test_rule16_selects_shared_definition_without_opening_summon_or_training_bootstrap(self):
+    def test_current_rule_selects_both_summons_without_free_bootstrap(self):
         f=self.fixture
         self.assertGreaterEqual(f['rule_version'],16)
-        self.assertEqual(self.profile(self.tables)['pet_runtime'],{'enabled':True,'bootstrap_mode':'legacy_untrained_pet','definition_ids':[1]})
-        self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
-        self.assertEqual(f['pet_runtime']['definitions'],pets.compile_definitions(self.tables,[1]))
+        self.assertEqual(self.profile(self.tables)['pet_runtime'],{'enabled':True,'bootstrap_mode':'none','definition_ids':[1,2]})
+        self.assertEqual(f['pet_runtime']['bootstrap_mode'],'none')
+        self.assertEqual(f['pet_runtime']['definitions'],pets.compile_definitions(self.tables,[1,2]))
         self.assertEqual(self.definition(self.tables)['summon_skill_id'],17)
-        self.assertEqual(len(f['skills']),24)
-        self.assertNotIn(17,[skill['id'] for skill in f['skills']])
-        self.assertIs(f['casting_supply']['enabled'],False)
+        self.assertEqual({skill['id'] for skill in f['skills']},set(range(1,34)))
+        self.assertEqual({skill['id'] for skill in f['skills'] if skill['behavior']=='summon_pet'},{17,30})
+        self.assertIs(f['casting_supply']['enabled'],True)
         body=f['pet_runtime']['definitions'][0]
         self.assertEqual(body['base'],{key:value for key,value in f['pet'].items() if key!='undead'})
         self.assertEqual(body['undead'],f['pet']['undead'])
@@ -149,18 +149,18 @@ class PetRuntimeProjectionTests(unittest.TestCase):
             self.assertEqual(row['required_experience'],None if level==7 else (level+1)*20000)
         for kind in ['missing','duplicate','gap','null_before_end','non_null_end','boolean','overflow','inverted']:
             tables=self.changed();rows=tables['game_pet_growth']
-            if kind=='missing':rows.pop()
+            if kind=='missing':rows.pop(7)
             elif kind=='duplicate':rows[1]['growth_level']=0
             elif kind=='gap':rows[1]['growth_level']=9
             elif kind=='null_before_end':rows[1]['required_conditions']['required_experience']=None
-            elif kind=='non_null_end':rows[-1]['required_conditions']['required_experience']=160000
+            elif kind=='non_null_end':rows[7]['required_conditions']['required_experience']=160000
             elif kind=='boolean':rows[0]['growth_level']=False
             elif kind=='overflow':rows[0]['attributes']['hp_bonus']=pets.I64
             else:rows[0]['attributes']['attack_min_bonus']=1000
             with self.subTest(kind=kind),self.assertRaises(ValueError):pets.compile_definitions(tables,[1])
 
     def test_selection_never_fills_missing_ids_or_defaults(self):
-        for ids in [None,[],[1,1],[True],[2],[0],[2**32]]:
+        for ids in [None,[],[1,1],[True],[3],[0],[2**32]]:
             with self.subTest(ids=ids),self.assertRaises(ValueError):pets.compile_definitions(self.tables,ids)
         for selected in [None,{}, {'enabled':False,'bootstrap_mode':'legacy_untrained_pet','definition_ids':[1]},
                          {'enabled':True,'bootstrap_mode':'legacy','definition_ids':[1]}]:
@@ -173,12 +173,14 @@ class PetRuntimeProjectionTests(unittest.TestCase):
 
     def test_legacy_bootstrap_cannot_diverge_from_inherited_fighter(self):
         tables=self.changed();self.definition(tables)['base_attributes']['owner_job_id']=1
+        self.profile(tables)['pet_runtime']['bootstrap_mode']='legacy_untrained_pet'
         with self.assertRaisesRegex(ValueError,'旧免费bootstrap'):module.fixture_from_rows(tables)
 
     def test_public_hides_training_body_budgets_and_source_metadata(self):
         public=module.public_gameplay(self.fixture)
         self.assertEqual(public['rule_version'],self.fixture['rule_version'])
-        self.assertEqual(len(public['pet_profiles']),1)
+        self.assertEqual({(row['definition_id'],row['job_id'],row['profile']) for row in public['pet_profiles']},
+                         {(2,2,'pet_skeleton'),(80030,2,'pet_shinsu'),(1,1,'monster_scarecrow')})
         serialized=json.dumps(public)
         for field in ['pet_runtime','retained_body_capacity_per_owner','experience_multiplier','source_evidence','corpse_ttl_ms']:
             self.assertNotIn(field,serialized)

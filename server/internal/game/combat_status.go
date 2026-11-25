@@ -54,6 +54,9 @@ func buffDurationSeconds(skill devconfig.Skill, definition devconfig.BuffDefinit
 	if definition.DurationKind == "mc_source_power" {
 		return skill.SourcePower(rank, stat+definition.StatAdd, power)
 	}
+	if definition.DurationKind == "sc_half_rank_linear" {
+		stat /= 2
+	}
 	return stat*definition.StatMultiplier + definition.DurationSecondsByLevel[rank]
 }
 
@@ -179,8 +182,8 @@ func tickEntityStatuses(all []*entity, now time.Time) bool {
 				changed = true
 				continue
 			}
-			// 固定传送状态在实际到期帧移除，不用数值tick节拍延长耗蓝惩罚。
-			if status.Kind == "teleport_mana_penalty" && now.Sub(status.LastProcess).Milliseconds() >= status.RemainingMS {
+			// 瞬移惩罚和生命启示在实际到期帧移除，不额外延长到下一状态结算节拍。
+			if (status.Kind == "teleport_mana_penalty" || status.Kind == "revelation") && now.Sub(status.LastProcess).Milliseconds() >= status.RemainingMS {
 				delete(e.Statuses, id)
 				changed = true
 				continue
@@ -216,6 +219,20 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 	if !exists || target.IsPetCorpse || !definition.AllowDeadTargets && target.HP <= 0 {
 		return false
 	}
+	if definition.Kind == "revelation" {
+		// 启示在实际命中时判断截止，避免状态清理的离散时钟拦住已经到期的重施。
+		if old := target.Statuses[definition.ID]; old != nil && now.Sub(old.LastProcess).Milliseconds() >= old.RemainingMS {
+			delete(target.Statuses, definition.ID)
+		}
+	}
+	// 隐身术和集体隐身术共享同一效果，后施放的技能接管时长和来源。
+	if isHidingKind(definition.Kind) {
+		for id, status := range target.Statuses {
+			if id != definition.ID && isHidingKind(status.Kind) {
+				delete(target.Statuses, id)
+			}
+		}
+	}
 	// old 保存从状态集合取出的原状态。
 	if old := target.Statuses[definition.ID]; old != nil && old.TargetLife == target.Life {
 		if definition.StackPolicy == "ignore_present_on_impact" {
@@ -223,7 +240,7 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 		}
 		// 来源刷新仅替换剩余时长；首次数值、来源施法者以及Last/Next时钟全部保留。
 		old.RemainingMS = c.BuffDurationMS
-		if definition.Kind == "hiding" {
+		if isHidingKind(definition.Kind) {
 			// 原重新隐身会使不能识破隐身的怪物再次丢失目标。
 			old.HiddenAware = nil
 		}
