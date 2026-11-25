@@ -204,12 +204,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				break
 			}
 			// 按上海运营日结算当日差额，卡权益变化时仅补足未领取部分。
-			// location 采用上海时区，用于确定运营日边界。
-			location, _ := time.LoadLocation("Asia/Shanghai")
 			// now 记录本次处理开始时的时间。
 			now := time.Now()
 			// day 是领取记录使用的上海日期键。
-			day := now.In(location).Format("2006-01-02")
+			day := shanghaiOperatingDay(now)
 			if r.ClaimDay != day {
 				r.ClaimDay = day
 				r.ClaimedSeconds = 0
