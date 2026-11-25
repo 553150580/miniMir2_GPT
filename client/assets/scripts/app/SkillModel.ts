@@ -49,12 +49,19 @@ export function attackSkillSlotIDs(value?: readonly number[]): number[] {
     return value.slice();
 }
 
-// 能力判断与权威持久槽一致，被动、召唤和主动位移继续由原入口处理。
+// 能力判断与权威技能槽一致。召唤需要显式选入，自动缺省目录沿用原配置。
 export function canQueueSkill(row?: SkillRow | null): boolean {
     if (!row?.learned) return false;
     const definition = row.definition;
     return ['half_moon', 'thrusting', 'flaming_sword'].includes(definition.kind) ||
-        !!(definition.auto_enabled && skillActivation(definition) === 'cast' && !definition.displacement && definition.kind !== 'teleport');
+        skillActivation(definition) === 'cast' && !definition.displacement && definition.kind !== 'teleport' &&
+        (definition.kind === 'summon_pet' || !!definition.auto_enabled);
+}
+
+// 召唤只在明确放入技能槽后开放独立自动开关。其它技能仍读取原自动配置。
+export function canSetAutomaticSkill(input: SkillSnapshot, row?: SkillRow | null): row is SkillRow {
+    return !!row?.learned && (!!row.definition.auto_enabled || row.definition.kind === 'summon_pet' && canQueueSkill(row) &&
+        attackSkillSlotIDs(input.inventory?.skillSlotIds).includes(row.definition.id));
 }
 export interface SkillModeEntry { skillId: number; enabled: boolean; ready: boolean; remainingMs: number; cooldownRemainingMs: number; }
 export interface SkillModeState { sceneEpoch: PotionInteger; revision: PotionInteger; playerLife: PotionInteger; serverTimeUnixMs: PotionInteger; states: readonly SkillModeEntry[]; }

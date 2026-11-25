@@ -65,7 +65,7 @@ func (w *worker) validateAutoSkillSettings(r *room, incoming *pb.AutoSkillSettin
 	for i, id := range ids {
 		// skill 接收技能供后续步骤使用，exists 保存由技能取得的存在。
 		skill, exists := f.Skill(id)
-		if !exists || !automaticSkillForJob(skill, r.Role.Job) || i > 0 && id == ids[i-1] {
+		if !exists || skill.JobID != r.Role.Job || !automaticSkillForJob(skill, r.Role.Job) && !skill.AttackSlotSummon() || i > 0 && id == ids[i-1] {
 			return nil, false
 		}
 	}

@@ -807,7 +807,19 @@ func (t *Task) less(a, b int) bool {
 	if ha != hb {
 		return ha < hb
 	}
+	// 步数和剩余距离相同，优先贴近原点击方向，避免按网格编号绕向屏幕一侧。
+	da, db := t.lineDeviation(t.grid.point(a)), t.lineDeviation(t.grid.point(b))
+	if da != db {
+		return da < db
+	}
 	return a < b
+}
+
+// lineDeviation 用二维叉积比较格点偏离起点到点击目标的程度，始终只用于等长候选的排序。
+func (t *Task) lineDeviation(point Point) int64 {
+	dx, dy := int64(t.goal.X-t.start.X), int64(t.goal.Y-t.start.Y)
+	deviation := int64(point.X-t.start.X)*dy - int64(point.Y-t.start.Y)*dx
+	return max(deviation, -deviation)
 }
 
 // swap 处理交换。

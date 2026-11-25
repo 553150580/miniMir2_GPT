@@ -15,10 +15,16 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 }
 
 // castQueuedAttackSkill 复用自动技能的治疗、状态及攻击形状，原法术入口仍使用同一套结算。
-func (w *worker) castQueuedAttackSkill(r *room, skill devconfig.Skill, focus *entity, input uint32, now time.Time, manual bool, need *automaticManaNeed) bool {
+func (w *worker) castQueuedAttackSkill(r *room, skill devconfig.Skill, focus *entity, attackDirection, input uint32, now time.Time, manual bool, need *automaticManaNeed) bool {
 	handler, registered := skillHandlers[skill.Behavior]
 	if !registered || handler.Passive || handler.Displacement || handler.Teleport || now.Before(r.NextSpell) {
 		return false
+	}
+	if handler.Summon {
+		// 队列只补空缺的活宠位置，召回和主动换宠仍由独立施法入口处理。
+		m, known := w.currentMap(r)
+		return skill.AttackSlotSummon() && r.Pet == nil && r.bossBattle == nil && r.worldBossObservation == nil && r.worldBossCombat == nil &&
+			known && m.SceneKindValue() == devconfig.SceneKindPersonal && w.autoMaterialCast(r, skill, 0, attackDirection, nil, now, need, input)
 	}
 	direction := r.Player.Direction
 	pet := r.worldPet(r.currentWorld())

@@ -75,6 +75,33 @@ func finish(t *testing.T, task *Task, budget int) {
 	}
 }
 
+// TestClearTownRoutesFollowEightDirections 检查无遮挡时每一步都沿点击方向，不能用同样步数绕向相邻方向。
+func TestClearTownRoutesFollowEightDirections(t *testing.T) {
+	grid := testGrid(t, 17, 17)
+	start := Point{X: 8, Y: 8}
+	dynamic := Dynamic{Revision: 1}
+	for index, direction := range directions {
+		goal := Point{X: start.X + direction.X*3, Y: start.Y + direction.Y*3}
+		task, _ := testTask(t, grid, start, goal, testLimits(grid.Cells()), dynamic)
+		finish(t, task, 4)
+		position := start
+		for range 3 {
+			step, ok, err := task.Next(testKey(), position, dynamic)
+			want := Point{X: position.X + direction.X, Y: position.Y + direction.Y}
+			if err != nil || !ok || step != want {
+				t.Fatalf("方向 %d 从 %v 点击 %v：下一格 %v，预期 %v，错误 %v", index, position, goal, step, want, err)
+			}
+			if err := task.CommitStep(testKey(), position, step); err != nil {
+				t.Fatal(err)
+			}
+			position = step
+		}
+		if task.State() != Arrived || position != goal {
+			t.Fatalf("方向 %d 未按原目标结束：%v %v", index, position, task.State())
+		}
+	}
+}
+
 // 独立的坐标邻接图BFS，不调用候选的Walkable/StepAllowed/heap或启发式。
 // width 记录宽度，使用数值表示，height 记录高度，使用数值表示，mask 记录掩码，使用数值表示，start 记录起点或开始时间，使用点位表示。
 // goal 记录目标格，使用点位表示。

@@ -33,7 +33,7 @@ function observeGroundIntents(page) {
     return { intents, positions };
 }
 
-async function verifyGroundDirections(page, { intents, positions }) {
+async function verifyGroundDirections(page, { intents, positions }, town = false) {
     const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
     const touches = await page.evaluateHandle(() => {
         const node = cc.find('Canvas');
@@ -65,10 +65,10 @@ async function verifyGroundDirections(page, { intents, positions }) {
         // 使用实际保存的视口、世界坐标及 Canvas 尺寸触摸格中心，服务端收到的坐标另行观察。
         const click = await page.evaluate(destination => {
             const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
-            const boxes = Array.from(world.visuals.values()).flatMap(value =>
-                [value.body[0]?.node, value.placeholder]
-                    .filter(node => node?.activeInHierarchy)
-                    .map(node => node._uiProps.uiTransformComp.getBoundingBoxToWorld()));
+            const bodies = Array.from(world.visuals.values()).flatMap(value => [value.body[0]?.node, value.placeholder]);
+            const npcParts = world.townNpcs.flatMap(view => view.layers.map(layer => layer.sprite.node));
+            const boxes = [...bodies, ...npcParts].filter(node => node?.activeInHierarchy)
+                .map(node => node._uiProps.uiTransformComp.getBoundingBoxToWorld());
             // 允许在同一地格内避开实际画在前面的身体。
             const candidates = [[0, 0], [.3, .3], [-.3, -.3], [.3, -.3], [-.3, .3]].map(([x, y]) => {
                 const local = world.projection.project(destination.x + x, destination.y + y);
@@ -133,6 +133,14 @@ async function verifyGroundDirections(page, { intents, positions }) {
     try {
         const start = await observePosition();
         const origin = { x: start.x, y: start.y };
+        if (town) {
+            // 三座紧凑城镇的出生格周围两步皆为空地，可以精确比较来回的每一步。
+            for (const [dx, dy] of [[0, -2], [2, -2], [2, 0], [2, 2], [0, 2], [-2, 2], [-2, 0], [-2, -2]]) {
+                await travel({ x: origin.x + dx, y: origin.y + dy }, 2, true);
+                await travel(origin, 2, true);
+            }
+            return samples;
+        }
         // 首个近点正是旧透明矩形吞掉的地格，随后继续向下以便从更远处点击原点。
         await travel({ x: origin.x + 2, y: origin.y + 2 }, 2, true);
         await travel({ x: origin.x + 4, y: origin.y + 4 }, 2);

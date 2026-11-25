@@ -308,6 +308,22 @@ function summonApp(){
  const h=app();h.session.role.job=2;h.definitions.push({...h.definition(17,'summon_pet','friendly_self'),job_id:2,material_item_id:187,material_quantity:1});h.session.inventory.learnedSkills.push({skillId:17,level:0});h.session.baseline.entities[0].life=Long.UZERO;
  h.instance.world.gameplay.casting_supply={enabled:false,slot:100,item_ids:[187]};h.instance.world.gameplay.map_catalog=[{id:'1',no_pets:false}];h.instance.nav.setGroundTarget({x:9,y:8});return h;
 }
+test('骷髅和神兽通过保存槽进入攻击队列，未入槽时不打开新自动设置',async()=>{
+ const {instance,session,definitions,definition,row}=summonApp(),calls=[];
+ session.entry.sceneKind=1;session.inventory.skillSlotIds=[0,0,0,0];
+ definitions.push({...definition(30,'summon_pet','friendly_self'),job_id:2,material_item_id:187,material_quantity:5});
+ session.inventory.learnedSkills.push({skillId:30,level:0});
+ assert.equal(models.canQueueSkill(row(17)),true);assert.equal(models.canQueueSkill(row(30)),true);
+ assert.equal(models.canSetAutomaticSkill(instance.skillSnapshot(),row(17)),false);
+ instance.economic=(id,value)=>{calls.push({id,value});return Promise.resolve();};
+ instance.skills={selected:row(17)};await instance.configureAttackSlot(0);
+ assert.deepEqual(calls[0],{id:40031,value:{skillSlotIds:[17,0,0,0]}});
+ session.inventory.skillSlotIds=calls[0].value.skillSlotIds;
+ assert.equal(models.canSetAutomaticSkill(instance.skillSnapshot(),row(17)),true);
+ instance.skills={selected:row(30)};await instance.configureAttackSlot(1);
+ assert.deepEqual(calls[1],{id:40031,value:{skillSlotIds:[17,30,0,0]}});
+ assert.equal(models.canQueueSkill({...row(17),learned:false}),false);
+});
 const ownedSummon=(changes={})=>({entityHandle:20,definitionId:1,life:Long.UZERO,mapId:Long.fromString('9007199254740993',true),hp:Long.fromInt(60),hpMax:Long.fromInt(60),petTraining:null,recallSkillIds:[17],followSuppressed:false,...changes});
 test('实际AppRoot按异图Owned召回ID免符发普通CastIntent，无body/护符也不误挡，不上传出生坐标',()=>{
  const {instance,session,row,sent}=summonApp();session.baseline.ownedPet=ownedSummon();instance.economic=()=>{throw Error('Recall不得造经济成功');};instance.castSkill(row(17));

@@ -28,7 +28,7 @@ import { GameSkills } from './GameSkills';
 import { GameTasksCodex } from './GameTasksCodex';
 import { GameBoss } from './GameBoss';
 import type { WorldBossEntryPreparation, WorldBossEntryTarget } from './GameBoss';
-import { attackSkillSlotCount, attackSkillSlotIDs, canQueueSkill, createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, skillUseBlock, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
+import { attackSkillSlotCount, attackSkillSlotIDs, canQueueSkill, canSetAutomaticSkill, createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, skillUseBlock, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
@@ -628,7 +628,7 @@ export class AppRoot extends Component {
         this.optionalButton('UIMgr/Panels/Skills/AutoCast', () => this.changeAutoSkillSettings());
         this.optionalButton('UIMgr/Panels/Skills/SkillAuto', () => {
             const skill = this.skills?.selected;
-            if (!skill?.learned || !skill.definition.auto_enabled) throw new Error('此技能当前仅可手动使用');
+            if (!canSetAutomaticSkill(this.skillSnapshot(), skill)) throw new Error('请先选中已启用自动、或已放入技能槽的召唤技能');
             return this.changeAutoSkillSettings(skill.definition.id);
         });
         this.button('UIMgr/Panels/Skills/Use', () => {

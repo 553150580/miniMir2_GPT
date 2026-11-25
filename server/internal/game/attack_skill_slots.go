@@ -117,7 +117,7 @@ func (w *worker) tryAttackSkillSlots(r *room, focus *entity, direction, input ui
 	slices.SortStableFunc(candidates[:count], func(a, b readyAttackSlot) int { return a.at.Compare(b.at) })
 	for _, candidate := range candidates[:count] {
 		if candidate.skill.Activation() == "cast" {
-			if w.castQueuedAttackSkill(r, candidate.skill, focus, input, now, manual, &need) {
+			if w.castQueuedAttackSkill(r, candidate.skill, focus, direction, input, now, manual, &need) {
 				return true, need
 			}
 		} else if w.tryQueuedMelee(r, candidate, focus, direction, input, now, manual) {

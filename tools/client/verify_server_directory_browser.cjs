@@ -56,7 +56,9 @@ async function main() {
             await network.send('Network.setCacheDisabled', { cacheDisabled: true });
         }
         const travelBenchmark = process.env.MINIMIR_BENCHMARK_MAP_TRAVEL === '1' ? observeTravel(page) : undefined;
-        const groundIntents = process.env.MINIMIR_VERIFY_GROUND_NAVIGATION === '1' ? observeGroundIntents(page) : undefined;
+        const checkTownGround = process.env.MINIMIR_VERIFY_TOWN_GROUND_NAVIGATION === '1';
+        const checkPersonalGround = process.env.MINIMIR_VERIFY_GROUND_NAVIGATION === '1';
+        const groundIntents = checkPersonalGround || checkTownGround ? observeGroundIntents(page) : undefined;
         page.on('pageerror', error => report.errors.push(error.message));
         const connections = [];
         const createdOrigins = [];
@@ -344,6 +346,27 @@ async function main() {
                 assert.equal(report.ordinaryMap.columns, 13);
             } finally { await session.dispose(); }
         };
+        const verifyTownGround = async () => {
+            const list = 'UIMgr/Panels/TownDirectory';
+            const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+            const results = [];
+            try {
+                for (const [map, name] of [['3', '银杏山谷'], ['4', '边界村'], ['5', '比奇城']]) {
+                    await tap('BottomHUD/Footer/Map');
+                    await tap(list + '/RegionList/View/Content', '比奇省');
+                    await tap(list + '/MapList/View/Content', name + ' · 城镇');
+                    report.step = `核对${name}八方向地面导航`;
+                    const ready = await page.waitForFunction(({ session, map }) => {
+                        const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+                        return session.ready && session.entry.sceneKind === 2 && session.entry.roomId.toString() === map
+                            && world?.isMapReady && world.map.width === 17 && world.map.height === 17;
+                    }, { session, map }, { timeout: 35000 });
+                    await ready.dispose();
+                    results.push({ map, name, samples: await verifyGroundDirections(page, groundIntents, true) });
+                }
+                return results;
+            } finally { await session.dispose(); }
+        };
         await page.goto(base.href);
         await scene('Login');
         if (await page.evaluate(() => Boolean(cc.find('Canvas/Safe/CredentialFrame')))) {
@@ -421,7 +444,7 @@ async function main() {
             const route = await ticketResponses[ticketsBefore];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
-            if (index === 0 && groundIntents) {
+            if (index === 0 && checkPersonalGround) {
                 report.step = '核对八向触屏地格及权威导航';
                 report.groundNavigation = await verifyGroundDirections(page, groundIntents);
             }
@@ -430,9 +453,11 @@ async function main() {
                 report.travelBenchmark = await measureTravel(page, tap, travelBenchmark, path.dirname(manifestPath),
                     process.env.MINIMIR_EXPECT_REGIONAL_MAP_STYLES === '1');
             }
-            if (bossChallenges && index === 0) await verifyBossChallenges();
+            // 城镇专项专注地图点击。个人首领另有双场及旧票专用矩阵。
+            if (bossChallenges && index === 0 && !checkTownGround) await verifyBossChallenges();
             if (tasksCodex && index === 0) await verifyTasks();
             if (index === 0) await verifyOrdinaryMap();
+            if (index === 0 && checkTownGround) report.townGroundNavigation = await verifyTownGround();
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');
                 await scene('RoleSelect');
@@ -444,15 +469,19 @@ async function main() {
         delete report.step;
         report.passed = true;
     } catch (error) {
-        if (page) report.observed = await page.evaluate(() => {
+        if (page) report.observed = await page.evaluate(async () => {
             const scene = window.cc?.director?.getScene()?.name;
             const rows = name => cc.find('Canvas/Safe/' + name + '/View/Content')?.children.map(
                 node => node.getChildByName('Text')?.getComponent(cc.Label)?.string).filter(Boolean);
             const tasks = cc.find('Canvas/Safe/UIMgr/Panels/TasksCodex');
+            const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];
+            const { session } = await System.import('chunks:///_virtual/GameSession.ts');
             return { scene, status: cc.find('Canvas/Safe/Status')?.getComponent(cc.Label)?.string,
                 title: cc.find('Canvas/Safe/Title')?.getComponent(cc.Label)?.string,
                 firstSlot: cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string,
                 tasksVisible: tasks?.activeInHierarchy, taskDetail: tasks?.getChildByName('Detail')?.getComponent(cc.Label)?.string,
+                attachment: { ready: session.ready, sceneKind: session.entry?.sceneKind, map: session.entry?.roomId.toString(),
+                    worldReady: app?.world?.isMapReady, attaching: app?.attaching, error: session.lastError },
                 regions: rows('RegionList'), servers: rows('ServerList') };
         }).catch(() => null);
         throw new Error(`${report.step}: ${error.message}${report.observed ? ' ' + JSON.stringify(report.observed) : ''}`);

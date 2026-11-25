@@ -1,7 +1,7 @@
 import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { attackSkillSlotIDs, canQueueSkill, isDirectionalSkill, isGroundSkill, isSummonRecall, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows, skillUseBlock } from './SkillModel';
+import { attackSkillSlotIDs, canQueueSkill, canSetAutomaticSkill, isDirectionalSkill, isGroundSkill, isSummonRecall, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows, skillUseBlock } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -47,7 +47,7 @@ export class GameSkills {
         toggle.setIsCheckedWithoutNotify(!!mode?.enabled);
         toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode && !input.modePending && !skillUseBlock(input, current));
         this.text('ModeToggle/Label', pending ? pending.enabled ? '正在开启' : '正在关闭' : mode ? mode.enabled ? '已开启' : '未开启' : '同步中');
-        const key = JSON.stringify({ ready: input.ready, scene: input.sceneKind, castingSupplyEnabled: input.castingSupplyEnabled, mapNoPets: input.mapNoPets, auto: input.autoSkillSettings, pending: input.modePending, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillActionLabel(input, row), skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId, boundQuick: boundQuickSkillId });
+        const key = JSON.stringify({ ready: input.ready, scene: input.sceneKind, castingSupplyEnabled: input.castingSupplyEnabled, mapNoPets: input.mapNoPets, auto: input.autoSkillSettings, slots: input.inventory?.skillSlotIds, pending: input.modePending, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillActionLabel(input, row), skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId, boundQuick: boundQuickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
@@ -75,7 +75,7 @@ export class GameSkills {
         this.setButton('Details', !!selected);
         this.setButton('AutoCast', input.ready && !!input.autoSkillSettings,
             input.autoSkillSettings ? input.autoSkillSettings.enabled ? '自动施法开' : '自动施法关' : '自动施法');
-        this.setButton('SkillAuto', !!(input.ready && input.autoSkillSettings && selected?.learned && selected.definition.auto_enabled),
+        this.setButton('SkillAuto', !!(input.ready && input.autoSkillSettings && canSetAutomaticSkill(input, selected)),
             this.automaticLabel(input, selected));
     }
 
@@ -108,6 +108,9 @@ export class GameSkills {
         const activation = skillActivation(row.definition);
         if (activation === 'toggle' || activation === 'charge') return '随普攻';
         if (!row.definition.active) return '被动生效';
+        if (row.definition.kind === 'summon_pet' && canSetAutomaticSkill(input, row)) {
+            return input.autoSkillSettings?.disabledSkillIds.includes(row.definition.id) ? '槽位自动关' : '槽位自动开';
+        }
         return row.definition.auto_enabled && !input.autoSkillSettings?.disabledSkillIds.includes(row.definition.id) ? '自动使用' : '仅手动';
     }
     private description(row: SkillRow, input: SkillSnapshot): string {

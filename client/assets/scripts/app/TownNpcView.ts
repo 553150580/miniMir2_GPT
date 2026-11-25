@@ -25,6 +25,7 @@ export class TownNpcView {
         node.getChildByName('HP')!.active = false;
         label.getComponent(Label)!.string = npc.name;
         label.setPosition(label.position.x, profileHeadTop(appearance.profile, assets.manifest.frames) + 14, label.position.z);
+        const selectBody = (event: { propagationStopped: boolean }) => { event.propagationStopped = true; select(npc); };
         for (const [index, sequence] of appearance.parts.entries()) {
             const part = index === 0 ? body : instantiate(body);
             if (index > 0) { part.parent = node; part.setSiblingIndex(index); }
@@ -32,10 +33,11 @@ export class TownNpcView {
             sprite.trim = false; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
             this.layers.push({ ...sequence, sprite });
             this.paint(this.layers[index], sequence.frames[0]);
+            // 只让可见站立图层响应点击，脚点根节点的透明区域交还地图寻路。
+            part.on(Node.EventType.TOUCH_END, selectBody);
         }
         const foot = projection.project(npc.position.x, npc.position.y);
         node.setPosition(foot.x, foot.y); node.parent = entities;
-        node.on(Node.EventType.TOUCH_END, (event: { propagationStopped: boolean }) => { event.propagationStopped = true; select(npc); });
     }
 
     // 仅更新原站立序列的表现，脚点、遮挡格和交互节点保持固定。

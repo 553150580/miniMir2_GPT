@@ -244,7 +244,7 @@ func hardAuthorityFailure(code uint32) bool {
 // autoMaterialCast 为自动施法冻结原材料、目标及施法计划，再提交同一扣料事务。
 // w 持有房间 r，skill 是本次技能，handle、direction 和 grid 分别表示实体、方向和地格，now 与 need 提供时钟和魔法值门槛。
 func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direction uint32, grid *pb.GridPoint, now time.Time, need *automaticManaNeed, input uint32) bool {
-	if !w.e.Store.Cfg.Fixture.CastingSupply.Enabled {
+	if !w.e.Store.Cfg.Fixture.CastingSupply.Enabled || r.Role.SourceSeq == math.MaxInt64 {
 		return false
 	}
 	// q 使用下一来源序号建立自动扣料请求，并在找到材料槽后填入原实例和版本。
