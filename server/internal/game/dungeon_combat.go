@@ -15,7 +15,8 @@ type dungeonArena struct {
 	grant          persistence.DungeonChallenge        // 原扣次事务固定的场次、成员和截止时刻。
 	template       *devconfig.DungeonConfig            // 原版本的四段配置快照。
 	store          *persistence.Store                  // 本场运行服的持久化入口。
-	seats          map[string]*dungeonCombatSeat       // 按真实角色编号查找批准的席位。
+	seats          map[string]*dungeonCombatSeat       // 真人使用原角色编号，佣兵使用仅在本场存在的席位键。
+	hireSeats      []*dungeonCombatSeat                // 佣兵按开战事务确认的选项顺序排列。
 	geometry       devconfig.MapTemplate               // 已开放小区构成的共享可通行地形。
 	monsters       []*entity                           // 仅含当前段的共享敌人身体。
 	stage          int                                 // 当前段的零基索引。
@@ -38,7 +39,8 @@ type dungeonArena struct {
 // dungeonCombatSeat 保存原角色的临时战斗身体和首次确认状态。
 type dungeonCombatSeat struct {
 	room    *room // 本席位的输入、动作队列和只读角色战斗快照。
-	started bool  // 通过首次地图确认后保持为真，健康断线不销毁身体。
+	started bool  // 真人首次地图确认后为真，佣兵的身体在开战首帧已装配。
+	hired   bool  // 佣兵没有角色分片或当前附着，仅在共享场内处理战斗事实。
 }
 
 // newDungeonArena 根据已确认的持久场次装配第一段，不创建普通收益或刷新任务。
@@ -48,7 +50,7 @@ func newDungeonArena(grant persistence.DungeonChallenge, template *devconfig.Dun
 		return nil
 	}
 	a := &dungeonArena{grant: grant, template: template, openedAt: grant.StartedAt, lastTick: now,
-		seats:        make(map[string]*dungeonCombatSeat, len(grant.Members)),
+		seats:        make(map[string]*dungeonCombatSeat, len(grant.Members)+len(grant.HireOptionIDs)),
 		observations: make(map[string]*dungeonAttachment, len(grant.Members)), nextHandle: 1000}
 	a.openStage()
 	return a
@@ -109,12 +111,15 @@ func (a *dungeonArena) placePet(child *room, frozen *entity, handle uint32, spaw
 	}
 }
 
-// eachSeat 按原名单顺序仲裁并列动作和怪物目标。
+// eachSeat 按原真人名单与已批准的佣兵顺序仲裁并列动作和怪物目标。
 func (a *dungeonArena) eachSeat(visit func(*dungeonCombatSeat)) {
 	for _, member := range a.grant.Members {
 		if seat := a.seats[member.RoleID]; seat != nil {
 			visit(seat)
 		}
+	}
+	for _, seat := range a.hireSeats {
+		visit(seat)
 	}
 }
 

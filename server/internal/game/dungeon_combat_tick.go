@@ -8,9 +8,9 @@ import (
 	"minimir/internal/persistence"
 )
 
-// stepDungeonArena 先收束同场到期动作，再推进真人、宠物和每头敌人的一轮行动。
+// stepDungeonArena 先收束同场到期动作，再推进真人、佣兵、宠物与敌人。
 func (w *worker) stepDungeonArena(a *dungeonArena, now time.Time) {
-	if a.outcome != persistence.DungeonActive || now.Before(a.lastTick) {
+	if a.outcome != persistence.DungeonActive || now.Before(a.lastTick) || (len(a.grant.HireOptionIDs) != 0 && !a.readyToFight()) {
 		return
 	}
 	until := minBossTime(now, a.grant.ExpiresAt.Add(-time.Nanosecond))
@@ -48,6 +48,9 @@ func (w *worker) stepDungeonArena(a *dungeonArena, now time.Time) {
 			w.snapshot(child)
 		}
 		w.stepGridCombat(child, &a.geometry, until, child.Conn == nil || !child.Ready)
+		if seat.hired {
+			w.advanceDungeonHire(child, until)
+		}
 	})
 	for _, monster := range a.monsters {
 		w.stepDungeonMonster(a, monster, until)
@@ -161,11 +164,13 @@ func (w *worker) applyDungeonDamage(r *room, from, target *entity, damage int64,
 		}
 	} else if target == &r.Player {
 		r.AutoTarget = actorRef{}
-		if w.sourcePetLifecycle() {
-			w.killOwnedPet(r, now)
-		} else if r.Pet != nil {
-			r.Pet.HP, r.Pet.Action = 0, 4
-			removeDeathStatuses(r.Pet)
+		if r.Pet != nil {
+			if w.sourcePetLifecycle() {
+				w.killOwnedPet(r, now)
+			} else {
+				r.Pet.HP, r.Pet.Action = 0, 4
+				removeDeathStatuses(r.Pet)
+			}
 		}
 		if a.everyPlayerDefeated() {
 			a.end(persistence.DungeonFailed, at)
@@ -178,7 +183,10 @@ func (w *worker) applyDungeonDamage(r *room, from, target *entity, damage int64,
 
 // everyPlayerDefeated 只在原批准的所有真人都确实失去生命后宣告战败。
 func (a *dungeonArena) everyPlayerDefeated() bool {
-	return len(a.seats) == len(a.grant.Members) && !slices.ContainsFunc(a.grant.Members, func(member persistence.DungeonMember) bool {
-		return a.seats[member.RoleID].room.Player.HP > 0
-	})
+	for _, member := range a.grant.Members {
+		if seat := a.seats[member.RoleID]; seat == nil || seat.room.Player.HP > 0 {
+			return false
+		}
+	}
+	return len(a.grant.Members) != 0
 }

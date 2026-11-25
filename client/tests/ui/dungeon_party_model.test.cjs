@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const Long = require('../../node_modules/long');
 const { load } = require('../app/helpers/session_harness.cjs');
-const { prepareDungeonPartyAction, validateDungeonPartyAction, observeDungeonPartyState } = require('../../../.work/ui-tests/app/DungeonPartyModel.js');
+const { dungeonPartyHireCost, dungeonPartySeatCount, prepareDungeonPartyAction, validateDungeonPartyAction, observeDungeonPartyState } = require('../../../.work/ui-tests/app/DungeonPartyModel.js');
 
 const binary = octet => new Uint8Array(16).fill(octet);
 const id = octet => Buffer.from(binary(octet)).toString('hex');
@@ -124,4 +124,54 @@ test('生成协议的默认字段与完整 64 位组队消息可直接往返', (
     const decoded = decodePacket(encodePacket(20021, 2, binding, start.request)).value;
     assert.equal(decoded.sceneEpoch.toString(), '9999999999999999000');
     assert.equal(decoded.expectedRevision.toString(), revision.toString());
+});
+
+test('佣兵只按原队修订加减席位，金额完整保留且所有成员参与招募条件', () => {
+    const option = { optionId: 21, displayName: '道士佣兵', job: 2, level: 42, feeGold: Long.fromString('9007199254740997', true) };
+    const templates = [{ ...template, hireOptions: [option] }];
+    const open = snapshot(context, { templates, ownParty: party });
+    const hire = prepareDungeonPartyAction(context, { kind: 'hire', partyId, optionId: 21 }, open);
+    assert.equal(hire.request.action, 8);
+    assert.equal(hire.request.hireOptionId, 21);
+    assert.equal(hire.request.hireSlot, undefined);
+    assert.equal(hire.request.expectedRevision.toString(), revision.toString());
+    assert.throws(() => prepareDungeonPartyAction(context, { kind: 'hire', partyId, optionId: 51 }, open), /招募条件/);
+    const body = { ...party, revision: revision.add(1), hires: [option] };
+    const full = observeDungeonPartyState(wire(context, { templates, ownParty: body }), hire, context);
+    assert.equal(dungeonPartySeatCount(full.ownParty), 3);
+    assert.equal(dungeonPartyHireCost(full.ownParty), 9007199254740997n);
+    assert.equal(validateDungeonPartyAction(hire, context, full), false);
+    assert.equal(observeDungeonPartyState(wire(context, { templates, ownParty: { ...body, revision } }), hire, context), null);
+    assert.throws(() => prepareDungeonPartyAction(context, hire.action, full), /队伍已满/);
+
+    const release = prepareDungeonPartyAction(context, { kind: 'releaseHire', partyId, slot: 1 }, full);
+    assert.equal(release.request.action, 9);
+    assert.equal(release.request.hireSlot, 1);
+    assert.equal(release.request.hireOptionId, undefined);
+    assert.equal(validateDungeonPartyAction(release, context, snapshot(context, { templates, ownParty: { ...body, revision: revision.add(2) } })), false);
+    assert.throws(() => prepareDungeonPartyAction(context, { kind: 'releaseHire', partyId, slot: 2 }, full), /数值无效/);
+    assert.throws(() => prepareDungeonPartyAction(applicant, release.action, snapshot(applicant, { templates, ownParty: body })), /只有队长/);
+
+    const query = prepareDungeonPartyAction(context, { kind: 'query' });
+    assert.equal(observeDungeonPartyState(wire(context, { templates, parties: [body] }), query, context), null);
+    assert.equal(observeDungeonPartyState(wire(context, { templates, ownParty: { ...body, hires: [{ ...option, feeGold: Long.UZERO }] } }),
+        query, context), null);
+    const outsider = { ...applicant, job: 2 };
+    const publicParty = snapshot(outsider, { templates, parties: [{ ...body, members: [leader] }] });
+    assert.throws(() => prepareDungeonPartyAction(outsider, { kind: 'join', partyId }, publicParty), /等级或职业/);
+});
+
+test('生成的佣兵协议保留免费缺省和超过安全整数的原金币', () => {
+    const { encodePacket, decodePacket } = load('client/assets/scripts/app/GameConnection.ts', id =>
+        id === 'long' ? Long : id === '../generated/protobuf/client_pb.js' ? require('../../assets/scripts/generated/protobuf/client_pb.js') : {});
+    const feeGold = Long.fromString('9007199254740997', true);
+    const binding = Long.fromString(context.attachment.binding, true);
+    const state = decodePacket(encodePacket(20022, 1, binding, { templates: [{ ...template, hireOptions: [
+        { optionId: 12, displayName: '免费佣兵', level: 1 }, { optionId: 13, displayName: '金币佣兵', level: 2, feeGold },
+    ] }] })).value;
+    assert.equal(state.templates[0].hireOptions[0].feeGold.toString(), '0');
+    assert.equal(state.templates[0].hireOptions[1].feeGold.toString(), feeGold.toString());
+    const action = decodePacket(encodePacket(20021, 2, binding, { action: 9, hireSlot: 2, expectedRevision: revision })).value;
+    assert.equal(action.hireSlot, 2);
+    assert.equal(action.expectedRevision.toString(), revision.toString());
 });

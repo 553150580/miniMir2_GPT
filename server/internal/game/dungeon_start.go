@@ -59,6 +59,7 @@ type dungeonStartAttempt struct {
 	slots        []*dungeonStartSlot          // 固定成员次序，与原队伍一致。
 	prepared     []dungeonPreparedMember      // 只在全部成员取得有效锁后组装。
 	grant        persistence.DungeonChallenge // 已获 MongoDB 确认的真实场次。
+	hireFee      int64                        // 原招募修订显示并由队长确认的费用合计。
 	confirmed    map[string]domain.Role       // 原扣次后回填原 owner 的已确认角色。
 	attachments  []*dungeonAttachment         // 只在扣次已确认后分配，由索引匹配准备名单。
 	code         uint32                       // 写入前已拒绝、或同事务已确认的失败结果。
@@ -113,6 +114,12 @@ func (w *worker) startDungeonParty(directory *dungeonPartyDirectory, store *pers
 		request: requestID, prepareUntil: now.Add(dungeonStartPrepareWindow),
 		begin: persistence.DungeonBegin{ChallengeID: domain.ID(), Execution: execution, TemplateID: template.TemplateID,
 			RuleVersion: store.Cfg.Fixture.RuleVersion, ConfigHash: store.Cfg.Fixture.Hash, Duration: template.Duration}}
+	fee, quotesMatch := party.freezeDungeonHires(template, &start.begin)
+	if !quotesMatch {
+		reject(p.CodeOperationConflict)
+		return
+	}
+	start.hireFee = fee
 	for _, member := range party.members {
 		start.slots = append(start.slots, &dungeonStartSlot{identity: member.dungeonPartyIdentity, owner: w.e.worker(member.id)})
 	}
@@ -260,7 +267,8 @@ func (w *worker) confirmDungeonStart(start *dungeonStartAttempt, grant persisten
 		grant.RunEpoch == start.store.Epoch && grant.OwnerInstance == start.store.Instance && grant.Outcome == persistence.DungeonActive &&
 		grant.StartedAt.Equal(begin.StartedAt) && grant.ExpiresAt.Equal(begin.StartedAt.Add(begin.Duration).Truncate(time.Millisecond)) &&
 		validTravelID(grant.ReservationID) && len(admitted) == len(start.prepared) && len(grant.Members) == len(start.prepared) &&
-		len(confirmed) == len(start.prepared) && len(roles) == len(start.prepared)
+		len(confirmed) == len(start.prepared) && len(roles) == len(start.prepared) &&
+		validDungeonHireReceipt(begin, grant, start.hireFee)
 	for i := range start.prepared {
 		member := &start.prepared[i]
 		role := confirmed[member.auth.RoleID]

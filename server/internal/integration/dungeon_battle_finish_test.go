@@ -64,13 +64,13 @@ func TestDungeonBattleTimeoutMongoWS(t *testing.T) {
 
 // TestDungeonBattleMaintenanceBeforeAckMongoWS 保留未确认副本首帧的连接，施加真实停服并验证原日退款。
 func TestDungeonBattleMaintenanceBeforeAckMongoWS(t *testing.T) {
-	store, endpoint, route, _, stopGame := startDungeonServer(t, true)
+	store, endpoint, route, _, stopGame := startDungeonServer(t, true, configureDungeonTrialHire)
 	recruit := newDungeonRecruit(t, endpoint, route, 0)
 	roleID := domain.Hex(recruit.summary.Key.RoleId)
 	// 前置正常使用两次的角色原日计数；实际第三次扣减及退款均经 WebSocket 与正式事务发生。
 	day := time.Now().In(time.FixedZone("Asia/Shanghai", 8*60*60)).Format("2006-01-02")
 	_, err := store.DB.Collection("roles").UpdateByID(t.Context(), roleID,
-		bson.M{"$set": bson.M{"dungeon": domain.DungeonProgress{EntryDay: day, Entries: 2}}})
+		bson.M{"$set": bson.M{"dungeon": domain.DungeonProgress{EntryDay: day, Entries: 2}, "wallet.gold": int64(50), "wallet.bound_gold": int64(9)}})
 	must(t, err)
 	c := recruit.attach(t)
 	original := proto.Clone(c.entry).(*pb.EnterLineResult)
@@ -78,18 +78,20 @@ func TestDungeonBattleMaintenanceBeforeAckMongoWS(t *testing.T) {
 	before, err := store.Role(t.Context(), roleID)
 	must(t, err)
 
-	challenge := startSingleDungeonForFinish(t, c)
+	challenge := startSingleDungeonForFinish(t, c, dungeonTrialMageID)
 	waitDungeonSceneBaseline(c, challenge, devconfig.SceneKindDungeon)
 	waitDungeonBattleState(c, challenge, 1, 1)
 	active := dungeonFinishRecord(t, store, challenge)
 	if active.Outcome != persistence.DungeonActive || len(active.Members) != 1 || active.Members[0].RoleID != roleID ||
-		active.Members[0].EntriesAfter != 3 || active.Members[0].EntryDay != day || !time.Now().Before(active.ExpiresAt) {
+		active.Members[0].EntriesAfter != 3 || active.Members[0].EntryDay != day || !time.Now().Before(active.ExpiresAt) ||
+		active.HireCharge == nil || active.HireCharge.Gold != 20 || active.HireCharge.BoundGold != 9 {
 		t.Fatal("未确认首帧的原场需要在时限内保留已提交的第三次日扣次", active)
 	}
 	charged, err := store.Role(t.Context(), roleID)
 	must(t, err)
-	if charged.Dungeon == nil || charged.Dungeon.Entries != 3 || charged.Dungeon.ActiveChallengeID != challenge {
-		t.Fatal("原场次在停服前尚未实扣三次或没有原占用", charged.Dungeon)
+	if charged.Dungeon == nil || charged.Dungeon.Entries != 3 || charged.Dungeon.ActiveChallengeID != challenge ||
+		charged.Wallet.Gold != 30 || charged.Wallet.BoundGold != 0 {
+		t.Fatal("停服前原场次应已占用第三次与原双钱包费用", charged.Dungeon, charged.Wallet)
 	}
 
 	stopGame()
@@ -122,7 +124,7 @@ func TestDungeonBattleMaintenanceBeforeAckMongoWS(t *testing.T) {
 		t.Fatal("维护退次被下一代启动或新票重复提交", closed, replayed, after.Dungeon, reloaded.Dungeon)
 	}
 	assertDungeonFinishAudits(t, store, replayed, roleID)
-	t.Logf("未确认首帧的原日 %s 扣次 2→3→2；运行服换代与新票未重复退款", day)
+	t.Logf("未确认首帧的原日 %s 扣次 2→3→2，29 金回原双钱包；运行服换代与新票未重复退款", day)
 }
 
 // TestDungeonBattleOrdinaryHostingMongoWS 让普通托管与同一玩家的特殊挑战并行，核对扣时交易和原截止。
@@ -202,10 +204,14 @@ func TestDungeonBattleOrdinaryHostingMongoWS(t *testing.T) {
 }
 
 // startSingleDungeonForFinish 真实创建队伍并锁定相同招募修订，不构造战斗或写预约。
-func startSingleDungeonForFinish(t *testing.T, c *client) string {
+func startSingleDungeonForFinish(t *testing.T, c *client, hireOptions ...uint32) string {
 	t.Helper()
 	partyID := domain.Bytes(domain.ID())
 	party := requireDungeonParty(t, dungeonPartyRPC(c, &pb.DungeonPartyRequest{Action: 2, PartyId: partyID, TemplateId: 3001}), partyID, 1)
+	for _, id := range hireOptions {
+		party = requireDungeonParty(t, dungeonPartyRPC(c, &pb.DungeonPartyRequest{Action: 8, PartyId: partyID,
+			ExpectedRevision: party.Revision, HireOptionId: id}), partyID, 1)
+	}
 	started := dungeonPartyRPC(c, &pb.DungeonPartyRequest{Action: 7, PartyId: partyID, ExpectedRevision: party.Revision})
 	if started.ErrorCode != 0 || len(started.ChallengeId) != 16 || started.Starting {
 		t.Fatal("真实开战请求没有返回已提交的原场编号", started)

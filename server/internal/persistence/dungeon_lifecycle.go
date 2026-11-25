@@ -246,12 +246,15 @@ func validDungeonFinishTime(challenge DungeonChallenge, outcome DungeonOutcome, 
 		outcome == DungeonSucceeded && finished.Before(challenge.ExpiresAt)
 }
 
-// closeDungeon 将原终态和全员原日的占用删除或退款一并确认。
+// closeDungeon 将原终态、全员占用及应退的次数和佣兵费用在一个事务内确认。
 func (s *Store) closeDungeon(ctx context.Context, record dungeonRecord, roles []domain.Role) error {
 	for i := range roles {
 		if err := closeDungeonMember(&roles[i], record.DungeonChallenge, record.Members[i]); err != nil {
 			return err
 		}
+	}
+	if err := settleDungeonHires(record.DungeonChallenge, roles); err != nil {
+		return err
 	}
 	if err := s.replaceActiveDungeon(ctx, record); err != nil {
 		return err

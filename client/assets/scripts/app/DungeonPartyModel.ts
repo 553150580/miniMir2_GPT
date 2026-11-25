@@ -22,6 +22,15 @@ export interface DungeonPartyTemplate {
     readonly displayName: string;
     readonly minimumLevel: number;
     readonly durationSeconds: number;
+    readonly hireOptions: readonly DungeonPartyHireOption[]; // 该副本可供队长选择的佣兵档位。
+}
+
+export interface DungeonPartyHireOption {
+    readonly optionId: number; // 副本内的档位编号，可按同职业规则选择多席。
+    readonly displayName: string; // 招募和战斗使用的佣兵名。
+    readonly job: number; // 原战士、法师或道士职业号。
+    readonly level: number; // 档位的原战斗等级。
+    readonly feeGold: Long; // 在开战事务中收取的金币，界面始终使用完整64位。
 }
 
 export interface DungeonPartyMember {
@@ -38,6 +47,7 @@ export interface DungeonPartyView extends DungeonPartyConditions {
     readonly templateId: number;
     readonly leaderRoleId: string;
     readonly members: readonly DungeonPartyMember[];
+    readonly hires: readonly DungeonPartyHireOption[]; // 按开战附加顺序保存的佣兵席位。
     readonly leaderOfflineUntilUnixMs: Long;
 }
 
@@ -57,6 +67,8 @@ export type DungeonPartyAction = { readonly kind: 'query' }
     | { readonly kind: 'join'; readonly partyId: string }
     | { readonly kind: 'leave'; readonly partyId: string }
     | { readonly kind: 'start'; readonly partyId: string }
+    | { readonly kind: 'hire'; readonly partyId: string; readonly optionId: number }
+    | { readonly kind: 'releaseHire'; readonly partyId: string; readonly slot: number }
     | { readonly kind: 'kick'; readonly partyId: string; readonly targetRoleId: string }
     | { readonly kind: 'update'; readonly partyId: string; readonly conditions: DungeonPartyConditions };
 
@@ -70,6 +82,8 @@ interface DungeonPartyRequest {
     readonly allowedJobsMask?: number;
     readonly allowSameJob?: boolean;
     readonly targetRoleId?: Uint8Array;
+    readonly hireOptionId?: number;
+    readonly hireSlot?: number;
 }
 
 export interface PreparedDungeonPartyAction {
@@ -78,8 +92,8 @@ export interface PreparedDungeonPartyAction {
     readonly action: DungeonPartyAction;
 }
 
-const actions = { query: 1, create: 2, join: 3, leave: 4, kick: 5, update: 6, start: 7 } as const;
-const maxPartyMembers = 3; // 招募协议支持的真人席位数。
+const actions = { query: 1, create: 2, join: 3, leave: 4, kick: 5, update: 6, start: 7, hire: 8, releaseHire: 9 } as const;
+const maxPartySeats = 3; // 真人与预选佣兵合计占用三席。
 const publicPartyLimit = 20; // 服务端每次返回的公开招募上限。
 const identifierPattern = /^[a-f0-9]{32}$/;
 type WireRecord = Record<string, unknown>;
@@ -144,6 +158,23 @@ function checkedAttachment(context: DungeonPartyContext): AttachmentIdentity {
         baseline: travelInteger(value.baseline, true), map: travelInteger(value.map, true) });
 }
 
+// 招募资格同时比较真人和已选佣兵，防止界面继续提交已满的队伍。
+export function dungeonPartySeatCount(party: DungeonPartyView): number {
+    return party.members.length + party.hires.length;
+}
+
+// 当前招募条件只检查新候选，已选席位可以在更改条件后继续保留。
+export function dungeonPartyCanAdd(party: DungeonPartyView, job: number, level: number): boolean {
+    return dungeonPartySeatCount(party) < maxPartySeats && level >= party.minimumLevel &&
+        !!(party.allowedJobsMask & (1 << job)) && (party.allowSameJob ||
+        !party.members.some(member => member.job === job) && !party.hires.some(hire => hire.job === job));
+}
+
+// 费用可能大于 Number 可精确表达的范围，按整数汇总后才转成显示文字。
+export function dungeonPartyHireCost(party: DungeonPartyView): bigint {
+    return party.hires.reduce((total, hire) => total + BigInt(hire.feeGold.toString()), 0n);
+}
+
 // 构造协议允许的最小字段。确认操作沿用这里冻结的条件、角色与队伍修订。
 export function prepareDungeonPartyAction(context: DungeonPartyContext, action: DungeonPartyAction,
     snapshot?: DungeonPartySnapshot | null): PreparedDungeonPartyAction {
@@ -172,8 +203,7 @@ export function prepareDungeonPartyAction(context: DungeonPartyContext, action: 
     if (action.kind === 'join') {
         if (own && own !== party) throw new Error('请先离开当前队伍');
         const job = uint32(context.job, 0, 2);
-        if (!own && (context.level < party.minimumLevel || !(party.allowedJobsMask & (1 << job)) ||
-            !party.allowSameJob && party.members.some(member => member.job === job))) throw new Error('未满足所选队伍的等级或职业条件');
+        if (!own && !dungeonPartyCanAdd(party, job, context.level)) throw new Error('未满足所选队伍的等级或职业条件，或队伍已满');
         return { request: selected, attachment, action: { ...action } };
     }
     if (action.kind === 'leave') return { request: selected, attachment, action: { ...action } };
@@ -185,6 +215,15 @@ export function prepareDungeonPartyAction(context: DungeonPartyContext, action: 
     if (action.kind === 'kick') {
         if (action.targetRoleId === current || !party.members.some(member => member.roleId === action.targetRoleId)) throw new Error('请选择队内其他角色');
         return { request: { ...selected, targetRoleId: bytes(action.targetRoleId) }, attachment, action: { ...action } };
+    }
+    if (action.kind === 'hire') {
+        const option = snapshot.templates.find(row => row.templateId === party.templateId)?.hireOptions.find(row => row.optionId === action.optionId);
+        if (!option || !dungeonPartyCanAdd(party, option.job, option.level)) throw new Error('当前佣兵未满足招募条件，或队伍已满');
+        return { request: { ...selected, hireOptionId: option.optionId }, attachment, action: { ...action } };
+    }
+    if (action.kind === 'releaseHire') {
+        const slot = uint32(action.slot, 1, party.hires.length);
+        return { request: { ...selected, hireSlot: slot }, attachment, action: { ...action } };
     }
     const filters = conditions(action.conditions);
     return { request: { ...selected, ...filters }, attachment, action: { ...action, conditions: filters } };
@@ -201,14 +240,23 @@ export function validateDungeonPartyAction(prepared: PreparedDungeonPartyAction,
             original.expectedRevision?.toString() === actual.expectedRevision?.toString() &&
             hex(original.partyId, true) === hex(actual.partyId, true) && hex(original.targetRoleId, true) === hex(actual.targetRoleId, true) &&
             original.templateId === actual.templateId && original.minimumLevel === actual.minimumLevel &&
-            original.allowedJobsMask === actual.allowedJobsMask && original.allowSameJob === actual.allowSameJob;
+            original.allowedJobsMask === actual.allowedJobsMask && original.allowSameJob === actual.allowSameJob &&
+            original.hireOptionId === actual.hireOptionId && original.hireSlot === actual.hireSlot;
     } catch { return false; }
 }
 
 function readTemplate(value: unknown): DungeonPartyTemplate {
     const row = record(value);
+    const hireOptions = list(row.hireOptions ?? []).map(readHireOption);
+    if (new Set(hireOptions.map(option => option.optionId)).size !== hireOptions.length) throw new Error('佣兵档位重复');
     return { templateId: uint32(row.templateId, 1), displayName: name(row.displayName), minimumLevel: uint32(row.minimumLevel, 1),
-        durationSeconds: uint32(row.durationSeconds, 1) };
+        durationSeconds: uint32(row.durationSeconds, 1), hireOptions };
+}
+
+function readHireOption(value: unknown): DungeonPartyHireOption {
+    const row = record(value);
+    return { optionId: uint32(row.optionId, 1), displayName: name(row.displayName), job: uint32(row.job ?? 0, 0, 2),
+        level: uint32(row.level, 1), feeGold: uint64(row.feeGold ?? Long.UZERO) };
 }
 
 function readMember(value: unknown): DungeonPartyMember {
@@ -222,12 +270,19 @@ function readParty(value: unknown, templates: ReadonlyMap<number, DungeonPartyTe
     const templateId = uint32(row.templateId, 1), template = templates.get(templateId);
     const minimumLevel = uint32(row.minimumLevel, template?.minimumLevel ?? 1);
     const members = list(row.members).map(readMember), leaderRoleId = hex(row.leaderRoleId);
+    const hires = list(row.hires ?? []).map(value => {
+        const selected = readHireOption(value);
+        const option = template?.hireOptions.find(hire => hire.optionId === selected.optionId);
+        if (!option || option.displayName !== selected.displayName || option.job !== selected.job || option.level !== selected.level ||
+            !option.feeGold.equals(selected.feeGold)) throw new Error('佣兵席位与原档位不符');
+        return option;
+    });
     const deadline = travelInteger((row.leaderOfflineUntilUnixMs ?? Long.ZERO) as TravelInteger);
-    if (!template || members.length < 1 || members.length > maxPartyMembers || members[0].roleId !== leaderRoleId ||
+    if (!template || members.length < 1 || members.length + hires.length > maxPartySeats || members[0].roleId !== leaderRoleId ||
         new Set(members.map(member => member.roleId)).size !== members.length || BigInt(deadline) > 9223372036854775807n) throw new Error('组队名单无效');
     return { partyId: hex(row.partyId), revision: uint64(row.revision, true), templateId, minimumLevel,
         allowedJobsMask: uint32(row.allowedJobsMask, 1, 7), allowSameJob: flag(row.allowSameJob ?? false), leaderRoleId,
-        members, leaderOfflineUntilUnixMs: Long.fromString(deadline, false) };
+        members, hires, leaderOfflineUntilUnixMs: Long.fromString(deadline, false) };
 }
 
 // WebSocket 已按原请求号和绑定配对。再检查此响应是否仍属于界面持有的场景、角色与开战动作。
@@ -242,7 +297,7 @@ export function observeDungeonPartyState(raw: unknown, prepared: PreparedDungeon
         if (templateMap.size !== templates.length) return null;
         const parties = list(row.parties ?? []).map(value => readParty(value, templateMap));
         if (parties.length > publicPartyLimit || new Set(parties.map(party => party.partyId)).size !== parties.length ||
-            parties.some(party => party.members.length >= maxPartyMembers || !party.members[0].online)) return null;
+            parties.some(party => dungeonPartySeatCount(party) >= maxPartySeats || !party.members[0].online)) return null;
         const ownParty = row.ownParty == null ? null : readParty(row.ownParty, templateMap);
         const member = roleId(current);
         if (ownParty && !ownParty.members.some(value => value.roleId === member)) return null;
@@ -257,6 +312,9 @@ export function observeDungeonPartyState(raw: unknown, prepared: PreparedDungeon
             if (kind === 'create' && (ownParty?.leaderRoleId !== member || ownParty.templateId !== prepared.request.templateId)) return null;
             if (ownParty && prepared.request.expectedRevision && ownParty.revision.lessThan(prepared.request.expectedRevision)) return null;
             if (kind === 'kick' && ownParty?.members.some(value => value.roleId === hex(prepared.request.targetRoleId))) return null;
+            if ((kind === 'hire' || kind === 'releaseHire') && (!ownParty || ownParty.leaderRoleId !== member ||
+                !prepared.request.expectedRevision || !ownParty.revision.greaterThan(prepared.request.expectedRevision))) return null;
+            if (kind === 'hire' && !ownParty?.hires.some(value => value.optionId === prepared.request.hireOptionId)) return null;
         }
         return { attachmentKey: key, templates, parties, ownParty, more, starting, challengeId, errorCode };
     } catch { return null; }

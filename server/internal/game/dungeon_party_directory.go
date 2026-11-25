@@ -14,13 +14,15 @@ import (
 )
 
 const (
-	dungeonPartyList   uint32 = iota + 1 // 查询本服可招募房间和自己的队伍。
-	dungeonPartyCreate                   // 以原申请身份建立一个公开招募房间。
-	dungeonPartyJoin                     // 加入满足约束且仍有空位的队伍。
-	dungeonPartyLeave                    // 主动退队；队长退出同时解散。
-	dungeonPartyKick                     // 队长从招募房间移除一名成员。
-	dungeonPartyUpdate                   // 队长调整招募条件，不主动移除原成员。
-	dungeonPartyStart                    // 队长按原修订发起整队开战。
+	dungeonPartyList       uint32 = iota + 1 // 查询本服可招募房间和自己的队伍。
+	dungeonPartyCreate                       // 以原申请身份建立一个公开招募房间。
+	dungeonPartyJoin                         // 加入满足约束且仍有空位的队伍。
+	dungeonPartyLeave                        // 主动退队；队长退出同时解散。
+	dungeonPartyKick                         // 队长从招募房间移除一名成员。
+	dungeonPartyUpdate                       // 队长调整招募条件，不主动移除原成员。
+	dungeonPartyStart                        // 队长按原修订发起整队开战。
+	dungeonPartyHire                         // 队长将原报价档加入一个空席。
+	dungeonPartyRemoveHire                   // 队长移除原队伍修订里的一个 AI 席位。
 )
 
 const dungeonPartyJobMask uint32 = 0b111 // 职业位按战士、法师和道士的协议编号映射。
@@ -51,14 +53,15 @@ type dungeonPartyMember struct {
 }
 
 type dungeonParty struct {
-	id           string                   // 招募的唯一申请身份。
-	revision     uint64                   // 队伍条件、人数或在线状态变化后递增。
-	template     uint32                   // 该队招募的已装载副本模板。
-	createdAt    time.Time                // 稳定排序公开队伍的创建时刻。
-	requirements dungeonPartyRequirements // 新成员必须满足的条件。
-	members      []dungeonPartyMember     // 按入队次序排列，索引零为队长。
-	deadline     time.Time                // 队长离线后的解散时刻，在线时为空。
-	start        *dungeonStartAttempt     // 在原队伍上冻结、正在查证的唯一开战。
+	id           string                        // 招募的唯一申请身份。
+	revision     uint64                        // 队伍条件、人数或在线状态变化后递增。
+	template     uint32                        // 该队招募的已装载副本模板。
+	createdAt    time.Time                     // 稳定排序公开队伍的创建时刻。
+	requirements dungeonPartyRequirements      // 新成员必须满足的条件。
+	members      []dungeonPartyMember          // 按入队次序排列，索引零为队长。
+	hires        []devconfig.DungeonHireOption // 按选择次序保留原模板的 AI 档位与招募报价。
+	deadline     time.Time                     // 队长离线后的解散时刻，在线时为空。
+	start        *dungeonStartAttempt          // 在原队伍上冻结、正在查证的唯一开战。
 }
 
 // dungeonPartyDirectory 由所属运行服的唯一分片写入。
@@ -78,6 +81,9 @@ func validDungeonPartyRequest(q *pb.DungeonPartyRequest) bool {
 	if q.SceneEpoch == 0 || q.AllowedJobsMask&^dungeonPartyJobMask != 0 {
 		return false
 	}
+	if q.HireOptionId != 0 && q.Action != dungeonPartyHire || q.HireSlot != 0 && q.Action != dungeonPartyRemoveHire {
+		return false
+	}
 	switch q.Action {
 	case dungeonPartyList:
 		return partyID == 0 && targetID == 0 && q.ExpectedRevision == 0 && q.TemplateId == 0 && !filters
@@ -89,6 +95,11 @@ func validDungeonPartyRequest(q *pb.DungeonPartyRequest) bool {
 		return partyID == 16 && targetID == 16 && q.ExpectedRevision != 0 && q.TemplateId == 0 && !filters
 	case dungeonPartyUpdate:
 		return partyID == 16 && targetID == 0 && q.ExpectedRevision != 0 && q.TemplateId == 0
+	case dungeonPartyHire:
+		return partyID == 16 && targetID == 0 && q.ExpectedRevision != 0 && q.TemplateId == 0 && !filters && q.HireOptionId != 0
+	case dungeonPartyRemoveHire:
+		return partyID == 16 && targetID == 0 && q.ExpectedRevision != 0 && q.TemplateId == 0 && !filters &&
+			q.HireSlot > 0 && q.HireSlot < devconfig.DungeonMaxPlayers
 	}
 	return false
 }
@@ -110,7 +121,7 @@ func (d *dungeonPartyDirectory) state(roleID string, f *devconfig.Fixture, scene
 	// 所有动作返回最新自己的队伍。条件冲突后可直接用最新版本重新发起。
 	public := make([]*dungeonParty, 0, len(d.parties))
 	for _, party := range d.parties {
-		if party.start == nil && party.members[0].online && len(party.members) < devconfig.DungeonMaxPlayers {
+		if party.start == nil && party.members[0].online && party.seatsUsed() < devconfig.DungeonMaxPlayers {
 			public = append(public, party)
 		}
 	}
@@ -172,6 +183,12 @@ func (d *dungeonPartyDirectory) mutate(id dungeonPartyIdentity, f *devconfig.Fix
 	if party.members[0].id != id.id {
 		return p.CodeLineForbidden
 	}
+	if q.Action == dungeonPartyHire || q.Action == dungeonPartyRemoveHire {
+		if !party.members[0].online {
+			return p.CodeLineRecovering
+		}
+		return party.changeHire(f, q)
+	}
 	if q.Action == dungeonPartyKick {
 		target := domain.Hex(q.TargetRoleId)
 		if target == id.id || d.byRole[target] != party {
@@ -206,10 +223,11 @@ func dungeonPartyRules(template *devconfig.DungeonConfig, q *pb.DungeonPartyRequ
 }
 
 func (d *dungeonPartyDirectory) join(id dungeonPartyIdentity, party *dungeonParty) uint32 {
-	if !party.members[0].online || !party.requirements.accepts(id, party.members) {
+	if !party.members[0].online || !party.requirements.accepts(id, party.members) ||
+		!party.requirements.sameJob && dungeonHasHireJob(party.hires, id.job) {
 		return p.CodeLineForbidden
 	}
-	if len(party.members) >= devconfig.DungeonMaxPlayers {
+	if party.seatsUsed() >= devconfig.DungeonMaxPlayers {
 		return p.CodeLineFull
 	}
 	party.members = append(party.members, dungeonPartyMember{dungeonPartyIdentity: id, online: true})
@@ -219,10 +237,7 @@ func (d *dungeonPartyDirectory) join(id dungeonPartyIdentity, party *dungeonPart
 }
 
 func (rule dungeonPartyRequirements) accepts(id dungeonPartyIdentity, earlier []dungeonPartyMember) bool {
-	if id.job >= 3 || id.level < rule.minimumLevel || rule.jobsMask&(1<<id.job) == 0 {
-		return false
-	}
-	return rule.sameJob || !slices.ContainsFunc(earlier, func(member dungeonPartyMember) bool { return member.job == id.job })
+	return rule.acceptsProfile(id.job, id.level) && (rule.sameJob || !dungeonHasMemberJob(earlier, id.job))
 }
 
 // update 不隐式踢掉已加入的成员，全部满足新条件后才更新同一队伍。
@@ -234,6 +249,11 @@ func (party *dungeonParty) update(f *devconfig.Fixture, q *pb.DungeonPartyReques
 	rule := dungeonPartyRules(template, q)
 	for i := 1; i < len(party.members); i++ {
 		if !rule.accepts(party.members[i].dungeonPartyIdentity, party.members[:i]) {
+			return p.CodeLineForbidden
+		}
+	}
+	for i, hire := range party.hires {
+		if !rule.acceptsHire(hire, party.members, party.hires[:i]) {
 			return p.CodeLineForbidden
 		}
 	}
@@ -337,5 +357,6 @@ func (party *dungeonParty) view() *pb.DungeonPartyView {
 		view.Members = append(view.Members, &pb.DungeonPartyMember{RoleId: domain.Bytes(member.id), DisplayName: member.name,
 			Job: member.job, Level: member.level, Online: member.online})
 	}
+	view.Hires = dungeonHireViews(party.hires)
 	return view
 }

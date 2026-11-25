@@ -528,6 +528,9 @@ func (s *Store) acceptsLegacyRoleScope() bool {
 // replace 使用原版本和所有权条件替换角色聚合，防止覆盖更新过的角色。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，r 记录角色，oldRevision 记录原状态修订号，使用数值表示。
 func (s *Store) replace(ctx context.Context, r domain.Role, oldRevision int64) error {
+	if err := validateDungeonHireWallet(r); err != nil {
+		return err
+	}
 	// res 的匹配数用于确认角色及原版本仍符合替换条件，e 保存数据库写入错误。
 	res, e := s.DB.Collection("roles").ReplaceOne(ctx, roleReplaceFilter(r, oldRevision), r)
 	if e != nil {

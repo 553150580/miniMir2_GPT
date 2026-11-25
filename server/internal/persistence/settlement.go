@@ -160,6 +160,9 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 // next 是要写入的资产聚合，oldRevision 是角色条件替换的原版本，receipt 是与本次来源合批的永久回执。
 // audit 是与永久回执共享来源键的审计文档。
 func (s *Store) writeSettlement(ctx context.Context, fence []mongo.ClientBulkWrite, next domain.Role, oldRevision int64, receipt Operation, audit bson.M) error {
+	if err := validateDungeonHireWallet(next); err != nil {
+		return err
+	}
 	// database 指定批量命令涉及的全部集合所在的业务库名。
 	database := s.DB.Name()
 	// writes 按顺序保存两道围栏、角色条件替换及回执和审计插入。

@@ -72,6 +72,9 @@ func (w *worker) installDungeonBattle(store *persistence.Store, template *devcon
 			arena.outcome, arena.finishedAt = persistence.DungeonSystemInterrupted, now
 		}
 	}
+	if arena.outcome == persistence.DungeonActive && !w.addDungeonHires(arena) {
+		arena.end(persistence.DungeonSystemInterrupted, now)
+	}
 	w.observeDungeonRewards(arena)
 	return result
 }

@@ -75,13 +75,13 @@ func (w *worker) tickDungeonArenas(now time.Time) {
 	}
 }
 
-// readyToFight 确认整队首次加载。已确认身体的健康断线不撤销开战资格。
+// readyToFight 等待所有原真人首次加载与佣兵完整装配。健康断线保留已确认的身体。
 func (a *dungeonArena) readyToFight() bool {
-	if len(a.seats) != len(a.grant.Members) || len(a.seats) == 0 {
+	if len(a.grant.Members) == 0 || len(a.hireSeats) != len(a.grant.HireOptionIDs) {
 		return false
 	}
-	for _, seat := range a.seats {
-		if !seat.started {
+	for _, member := range a.grant.Members {
+		if seat := a.seats[member.RoleID]; seat == nil || !seat.started {
 			return false
 		}
 	}

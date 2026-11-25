@@ -91,6 +91,7 @@ func validDungeonReturn(grant persistence.DungeonChallenge, proposal persistence
 	if result.ChallengeID != grant.ChallengeID || result.ReservationID != grant.ReservationID || result.Execution != grant.Execution ||
 		result.RunID != grant.RunID || result.RunEpoch != grant.RunEpoch || result.OwnerInstance != grant.OwnerInstance ||
 		result.Outcome != proposal.Outcome || result.Recovered || result.Refunded != (proposal.Outcome == persistence.DungeonSystemInterrupted) ||
+		!sameDungeonHireReceipt(grant, result) ||
 		result.FinishedAt.UnixMilli() != proposal.FinishedAt.UnixMilli() || optionalBossUnixMillis(result.RewardAt) != optionalBossUnixMillis(proposal.RewardAt) ||
 		len(result.Members) != len(grant.Members) || len(roles) != len(grant.Members) {
 		return false

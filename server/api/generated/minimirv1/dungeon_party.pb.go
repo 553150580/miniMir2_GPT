@@ -25,7 +25,7 @@ const (
 type DungeonPartyRequest struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	SceneEpoch uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
-	// 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件、7 确认开战扣次。
+	// 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新、7 确认开战、8 添加AI、9 移除AI。
 	Action           uint32 `protobuf:"varint,2,opt,name=action,proto3" json:"action,omitempty"`
 	PartyId          []byte `protobuf:"bytes,3,opt,name=party_id,json=partyId,proto3" json:"party_id,omitempty"`
 	ExpectedRevision uint64 `protobuf:"varint,4,opt,name=expected_revision,json=expectedRevision,proto3" json:"expected_revision,omitempty"`
@@ -35,8 +35,11 @@ type DungeonPartyRequest struct {
 	AllowedJobsMask uint32 `protobuf:"varint,7,opt,name=allowed_jobs_mask,json=allowedJobsMask,proto3" json:"allowed_jobs_mask,omitempty"`
 	AllowSameJob    bool   `protobuf:"varint,8,opt,name=allow_same_job,json=allowSameJob,proto3" json:"allow_same_job,omitempty"`
 	TargetRoleId    []byte `protobuf:"bytes,9,opt,name=target_role_id,json=targetRoleId,proto3" json:"target_role_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	HireOptionId    uint32 `protobuf:"varint,10,opt,name=hire_option_id,json=hireOptionId,proto3" json:"hire_option_id,omitempty"`
+	// 移除使用当前队伍修订中从 1 开始的 AI 席位顺序。
+	HireSlot      uint32 `protobuf:"varint,11,opt,name=hire_slot,json=hireSlot,proto3" json:"hire_slot,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DungeonPartyRequest) Reset() {
@@ -130,6 +133,20 @@ func (x *DungeonPartyRequest) GetTargetRoleId() []byte {
 		return x.TargetRoleId
 	}
 	return nil
+}
+
+func (x *DungeonPartyRequest) GetHireOptionId() uint32 {
+	if x != nil {
+		return x.HireOptionId
+	}
+	return 0
+}
+
+func (x *DungeonPartyRequest) GetHireSlot() uint32 {
+	if x != nil {
+		return x.HireSlot
+	}
+	return 0
 }
 
 type DungeonPartyState struct {
@@ -233,11 +250,12 @@ func (x *DungeonPartyState) GetStarting() bool {
 }
 
 type DungeonPartyTemplate struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	TemplateId      uint32                 `protobuf:"varint,1,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	DisplayName     string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	MinimumLevel    uint32                 `protobuf:"varint,3,opt,name=minimum_level,json=minimumLevel,proto3" json:"minimum_level,omitempty"`
-	DurationSeconds uint32                 `protobuf:"varint,4,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
+	state           protoimpl.MessageState    `protogen:"open.v1"`
+	TemplateId      uint32                    `protobuf:"varint,1,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	DisplayName     string                    `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	MinimumLevel    uint32                    `protobuf:"varint,3,opt,name=minimum_level,json=minimumLevel,proto3" json:"minimum_level,omitempty"`
+	DurationSeconds uint32                    `protobuf:"varint,4,opt,name=duration_seconds,json=durationSeconds,proto3" json:"duration_seconds,omitempty"`
+	HireOptions     []*DungeonPartyHireOption `protobuf:"bytes,5,rep,name=hire_options,json=hireOptions,proto3" json:"hire_options,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -300,24 +318,109 @@ func (x *DungeonPartyTemplate) GetDurationSeconds() uint32 {
 	return 0
 }
 
+func (x *DungeonPartyTemplate) GetHireOptions() []*DungeonPartyHireOption {
+	if x != nil {
+		return x.HireOptions
+	}
+	return nil
+}
+
+// 招募可用的职业与能力档。价格来自当前运行服的原模板。
+type DungeonPartyHireOption struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OptionId      uint32                 `protobuf:"varint,1,opt,name=option_id,json=optionId,proto3" json:"option_id,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	Job           uint32                 `protobuf:"varint,3,opt,name=job,proto3" json:"job,omitempty"`
+	Level         uint32                 `protobuf:"varint,4,opt,name=level,proto3" json:"level,omitempty"`
+	FeeGold       uint64                 `protobuf:"varint,5,opt,name=fee_gold,json=feeGold,proto3" json:"fee_gold,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DungeonPartyHireOption) Reset() {
+	*x = DungeonPartyHireOption{}
+	mi := &file_dungeon_party_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DungeonPartyHireOption) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DungeonPartyHireOption) ProtoMessage() {}
+
+func (x *DungeonPartyHireOption) ProtoReflect() protoreflect.Message {
+	mi := &file_dungeon_party_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DungeonPartyHireOption.ProtoReflect.Descriptor instead.
+func (*DungeonPartyHireOption) Descriptor() ([]byte, []int) {
+	return file_dungeon_party_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DungeonPartyHireOption) GetOptionId() uint32 {
+	if x != nil {
+		return x.OptionId
+	}
+	return 0
+}
+
+func (x *DungeonPartyHireOption) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *DungeonPartyHireOption) GetJob() uint32 {
+	if x != nil {
+		return x.Job
+	}
+	return 0
+}
+
+func (x *DungeonPartyHireOption) GetLevel() uint32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *DungeonPartyHireOption) GetFeeGold() uint64 {
+	if x != nil {
+		return x.FeeGold
+	}
+	return 0
+}
+
 type DungeonPartyView struct {
-	state                    protoimpl.MessageState `protogen:"open.v1"`
-	PartyId                  []byte                 `protobuf:"bytes,1,opt,name=party_id,json=partyId,proto3" json:"party_id,omitempty"`
-	Revision                 uint64                 `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
-	TemplateId               uint32                 `protobuf:"varint,3,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	MinimumLevel             uint32                 `protobuf:"varint,4,opt,name=minimum_level,json=minimumLevel,proto3" json:"minimum_level,omitempty"`
-	AllowedJobsMask          uint32                 `protobuf:"varint,5,opt,name=allowed_jobs_mask,json=allowedJobsMask,proto3" json:"allowed_jobs_mask,omitempty"`
-	AllowSameJob             bool                   `protobuf:"varint,6,opt,name=allow_same_job,json=allowSameJob,proto3" json:"allow_same_job,omitempty"`
-	LeaderRoleId             []byte                 `protobuf:"bytes,7,opt,name=leader_role_id,json=leaderRoleId,proto3" json:"leader_role_id,omitempty"`
-	Members                  []*DungeonPartyMember  `protobuf:"bytes,8,rep,name=members,proto3" json:"members,omitempty"`
-	LeaderOfflineUntilUnixMs int64                  `protobuf:"varint,9,opt,name=leader_offline_until_unix_ms,json=leaderOfflineUntilUnixMs,proto3" json:"leader_offline_until_unix_ms,omitempty"`
+	state                    protoimpl.MessageState    `protogen:"open.v1"`
+	PartyId                  []byte                    `protobuf:"bytes,1,opt,name=party_id,json=partyId,proto3" json:"party_id,omitempty"`
+	Revision                 uint64                    `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	TemplateId               uint32                    `protobuf:"varint,3,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	MinimumLevel             uint32                    `protobuf:"varint,4,opt,name=minimum_level,json=minimumLevel,proto3" json:"minimum_level,omitempty"`
+	AllowedJobsMask          uint32                    `protobuf:"varint,5,opt,name=allowed_jobs_mask,json=allowedJobsMask,proto3" json:"allowed_jobs_mask,omitempty"`
+	AllowSameJob             bool                      `protobuf:"varint,6,opt,name=allow_same_job,json=allowSameJob,proto3" json:"allow_same_job,omitempty"`
+	LeaderRoleId             []byte                    `protobuf:"bytes,7,opt,name=leader_role_id,json=leaderRoleId,proto3" json:"leader_role_id,omitempty"`
+	Members                  []*DungeonPartyMember     `protobuf:"bytes,8,rep,name=members,proto3" json:"members,omitempty"`
+	LeaderOfflineUntilUnixMs int64                     `protobuf:"varint,9,opt,name=leader_offline_until_unix_ms,json=leaderOfflineUntilUnixMs,proto3" json:"leader_offline_until_unix_ms,omitempty"`
+	Hires                    []*DungeonPartyHireOption `protobuf:"bytes,10,rep,name=hires,proto3" json:"hires,omitempty"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
 
 func (x *DungeonPartyView) Reset() {
 	*x = DungeonPartyView{}
-	mi := &file_dungeon_party_proto_msgTypes[3]
+	mi := &file_dungeon_party_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -329,7 +432,7 @@ func (x *DungeonPartyView) String() string {
 func (*DungeonPartyView) ProtoMessage() {}
 
 func (x *DungeonPartyView) ProtoReflect() protoreflect.Message {
-	mi := &file_dungeon_party_proto_msgTypes[3]
+	mi := &file_dungeon_party_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -342,7 +445,7 @@ func (x *DungeonPartyView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DungeonPartyView.ProtoReflect.Descriptor instead.
 func (*DungeonPartyView) Descriptor() ([]byte, []int) {
-	return file_dungeon_party_proto_rawDescGZIP(), []int{3}
+	return file_dungeon_party_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DungeonPartyView) GetPartyId() []byte {
@@ -408,6 +511,13 @@ func (x *DungeonPartyView) GetLeaderOfflineUntilUnixMs() int64 {
 	return 0
 }
 
+func (x *DungeonPartyView) GetHires() []*DungeonPartyHireOption {
+	if x != nil {
+		return x.Hires
+	}
+	return nil
+}
+
 type DungeonPartyMember struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RoleId        []byte                 `protobuf:"bytes,1,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
@@ -421,7 +531,7 @@ type DungeonPartyMember struct {
 
 func (x *DungeonPartyMember) Reset() {
 	*x = DungeonPartyMember{}
-	mi := &file_dungeon_party_proto_msgTypes[4]
+	mi := &file_dungeon_party_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -433,7 +543,7 @@ func (x *DungeonPartyMember) String() string {
 func (*DungeonPartyMember) ProtoMessage() {}
 
 func (x *DungeonPartyMember) ProtoReflect() protoreflect.Message {
-	mi := &file_dungeon_party_proto_msgTypes[4]
+	mi := &file_dungeon_party_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -446,7 +556,7 @@ func (x *DungeonPartyMember) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DungeonPartyMember.ProtoReflect.Descriptor instead.
 func (*DungeonPartyMember) Descriptor() ([]byte, []int) {
-	return file_dungeon_party_proto_rawDescGZIP(), []int{4}
+	return file_dungeon_party_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DungeonPartyMember) GetRoleId() []byte {
@@ -501,7 +611,7 @@ type DungeonBattleState struct {
 
 func (x *DungeonBattleState) Reset() {
 	*x = DungeonBattleState{}
-	mi := &file_dungeon_party_proto_msgTypes[5]
+	mi := &file_dungeon_party_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -513,7 +623,7 @@ func (x *DungeonBattleState) String() string {
 func (*DungeonBattleState) ProtoMessage() {}
 
 func (x *DungeonBattleState) ProtoReflect() protoreflect.Message {
-	mi := &file_dungeon_party_proto_msgTypes[5]
+	mi := &file_dungeon_party_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -526,7 +636,7 @@ func (x *DungeonBattleState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DungeonBattleState.ProtoReflect.Descriptor instead.
 func (*DungeonBattleState) Descriptor() ([]byte, []int) {
-	return file_dungeon_party_proto_rawDescGZIP(), []int{5}
+	return file_dungeon_party_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DungeonBattleState) GetChallengeId() []byte {
@@ -593,7 +703,7 @@ type DungeonSceneTransition struct {
 
 func (x *DungeonSceneTransition) Reset() {
 	*x = DungeonSceneTransition{}
-	mi := &file_dungeon_party_proto_msgTypes[6]
+	mi := &file_dungeon_party_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -605,7 +715,7 @@ func (x *DungeonSceneTransition) String() string {
 func (*DungeonSceneTransition) ProtoMessage() {}
 
 func (x *DungeonSceneTransition) ProtoReflect() protoreflect.Message {
-	mi := &file_dungeon_party_proto_msgTypes[6]
+	mi := &file_dungeon_party_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -618,7 +728,7 @@ func (x *DungeonSceneTransition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DungeonSceneTransition.ProtoReflect.Descriptor instead.
 func (*DungeonSceneTransition) Descriptor() ([]byte, []int) {
-	return file_dungeon_party_proto_rawDescGZIP(), []int{6}
+	return file_dungeon_party_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DungeonSceneTransition) GetChallengeId() []byte {
@@ -668,7 +778,7 @@ var File_dungeon_party_proto protoreflect.FileDescriptor
 const file_dungeon_party_proto_rawDesc = "" +
 	"\n" +
 	"\x13dungeon_party.proto\x12\n" +
-	"minimir.v1\"\xd4\x02\n" +
+	"minimir.v1\"\x97\x03\n" +
 	"\x13DungeonPartyRequest\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x16\n" +
@@ -680,7 +790,10 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\rminimum_level\x18\x06 \x01(\rR\fminimumLevel\x12*\n" +
 	"\x11allowed_jobs_mask\x18\a \x01(\rR\x0fallowedJobsMask\x12$\n" +
 	"\x0eallow_same_job\x18\b \x01(\bR\fallowSameJob\x12$\n" +
-	"\x0etarget_role_id\x18\t \x01(\fR\ftargetRoleId\"\xd9\x02\n" +
+	"\x0etarget_role_id\x18\t \x01(\fR\ftargetRoleId\x12$\n" +
+	"\x0ehire_option_id\x18\n" +
+	" \x01(\rR\fhireOptionId\x12\x1b\n" +
+	"\thire_slot\x18\v \x01(\rR\bhireSlot\"\xd9\x02\n" +
 	"\x11DungeonPartyState\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1d\n" +
@@ -691,13 +804,20 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\town_party\x18\x05 \x01(\v2\x1c.minimir.v1.DungeonPartyViewR\bownParty\x12\x12\n" +
 	"\x04more\x18\x06 \x01(\bR\x04more\x12!\n" +
 	"\fchallenge_id\x18\a \x01(\fR\vchallengeId\x12\x1a\n" +
-	"\bstarting\x18\b \x01(\bR\bstarting\"\xaa\x01\n" +
+	"\bstarting\x18\b \x01(\bR\bstarting\"\xf1\x01\n" +
 	"\x14DungeonPartyTemplate\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x01(\rR\n" +
 	"templateId\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12#\n" +
 	"\rminimum_level\x18\x03 \x01(\rR\fminimumLevel\x12)\n" +
-	"\x10duration_seconds\x18\x04 \x01(\rR\x0fdurationSeconds\"\x81\x03\n" +
+	"\x10duration_seconds\x18\x04 \x01(\rR\x0fdurationSeconds\x12E\n" +
+	"\fhire_options\x18\x05 \x03(\v2\".minimir.v1.DungeonPartyHireOptionR\vhireOptions\"\x9b\x01\n" +
+	"\x16DungeonPartyHireOption\x12\x1b\n" +
+	"\toption_id\x18\x01 \x01(\rR\boptionId\x12!\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x10\n" +
+	"\x03job\x18\x03 \x01(\rR\x03job\x12\x14\n" +
+	"\x05level\x18\x04 \x01(\rR\x05level\x12\x19\n" +
+	"\bfee_gold\x18\x05 \x01(\x04R\afeeGold\"\xbb\x03\n" +
 	"\x10DungeonPartyView\x12\x19\n" +
 	"\bparty_id\x18\x01 \x01(\fR\apartyId\x12\x1a\n" +
 	"\brevision\x18\x02 \x01(\x04R\brevision\x12\x1f\n" +
@@ -708,7 +828,9 @@ const file_dungeon_party_proto_rawDesc = "" +
 	"\x0eallow_same_job\x18\x06 \x01(\bR\fallowSameJob\x12$\n" +
 	"\x0eleader_role_id\x18\a \x01(\fR\fleaderRoleId\x128\n" +
 	"\amembers\x18\b \x03(\v2\x1e.minimir.v1.DungeonPartyMemberR\amembers\x12>\n" +
-	"\x1cleader_offline_until_unix_ms\x18\t \x01(\x03R\x18leaderOfflineUntilUnixMs\"\x90\x01\n" +
+	"\x1cleader_offline_until_unix_ms\x18\t \x01(\x03R\x18leaderOfflineUntilUnixMs\x128\n" +
+	"\x05hires\x18\n" +
+	" \x03(\v2\".minimir.v1.DungeonPartyHireOptionR\x05hires\"\x90\x01\n" +
 	"\x12DungeonPartyMember\x12\x17\n" +
 	"\arole_id\x18\x01 \x01(\fR\x06roleId\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x10\n" +
@@ -746,26 +868,29 @@ func file_dungeon_party_proto_rawDescGZIP() []byte {
 	return file_dungeon_party_proto_rawDescData
 }
 
-var file_dungeon_party_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_dungeon_party_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_dungeon_party_proto_goTypes = []any{
 	(*DungeonPartyRequest)(nil),    // 0: minimir.v1.DungeonPartyRequest
 	(*DungeonPartyState)(nil),      // 1: minimir.v1.DungeonPartyState
 	(*DungeonPartyTemplate)(nil),   // 2: minimir.v1.DungeonPartyTemplate
-	(*DungeonPartyView)(nil),       // 3: minimir.v1.DungeonPartyView
-	(*DungeonPartyMember)(nil),     // 4: minimir.v1.DungeonPartyMember
-	(*DungeonBattleState)(nil),     // 5: minimir.v1.DungeonBattleState
-	(*DungeonSceneTransition)(nil), // 6: minimir.v1.DungeonSceneTransition
+	(*DungeonPartyHireOption)(nil), // 3: minimir.v1.DungeonPartyHireOption
+	(*DungeonPartyView)(nil),       // 4: minimir.v1.DungeonPartyView
+	(*DungeonPartyMember)(nil),     // 5: minimir.v1.DungeonPartyMember
+	(*DungeonBattleState)(nil),     // 6: minimir.v1.DungeonBattleState
+	(*DungeonSceneTransition)(nil), // 7: minimir.v1.DungeonSceneTransition
 }
 var file_dungeon_party_proto_depIdxs = []int32{
 	2, // 0: minimir.v1.DungeonPartyState.templates:type_name -> minimir.v1.DungeonPartyTemplate
-	3, // 1: minimir.v1.DungeonPartyState.parties:type_name -> minimir.v1.DungeonPartyView
-	3, // 2: minimir.v1.DungeonPartyState.own_party:type_name -> minimir.v1.DungeonPartyView
-	4, // 3: minimir.v1.DungeonPartyView.members:type_name -> minimir.v1.DungeonPartyMember
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	4, // 1: minimir.v1.DungeonPartyState.parties:type_name -> minimir.v1.DungeonPartyView
+	4, // 2: minimir.v1.DungeonPartyState.own_party:type_name -> minimir.v1.DungeonPartyView
+	3, // 3: minimir.v1.DungeonPartyTemplate.hire_options:type_name -> minimir.v1.DungeonPartyHireOption
+	5, // 4: minimir.v1.DungeonPartyView.members:type_name -> minimir.v1.DungeonPartyMember
+	3, // 5: minimir.v1.DungeonPartyView.hires:type_name -> minimir.v1.DungeonPartyHireOption
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_dungeon_party_proto_init() }
@@ -779,7 +904,7 @@ func file_dungeon_party_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dungeon_party_proto_rawDesc), len(file_dungeon_party_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

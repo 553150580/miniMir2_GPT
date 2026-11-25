@@ -1,20 +1,24 @@
 import { Button, Game, game, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import type { PopupView } from '../ui/PopupView';
-import { CodeLineForbidden, CodeLineFull, CodeLineRecovering, CodeOperationConflict, CodeOperationPending } from '../generated/protocol_ids';
+import { CodeLineForbidden, CodeLineFull, CodeLineRecovering, CodeOperationConflict, CodeOperationPending, CodeVendorFunds } from '../generated/protocol_ids';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
 import { protocolErrorMessage } from './GameErrors';
 import { attachmentKey } from './MapTravelModel';
-import { observeDungeonPartyState, prepareDungeonPartyAction, validateDungeonPartyAction } from './DungeonPartyModel';
-import type { DungeonPartyAction, DungeonPartyConditions, DungeonPartyContext, DungeonPartyMember, DungeonPartySnapshot, DungeonPartyTemplate, DungeonPartyView } from './DungeonPartyModel';
+import { dungeonPartyCanAdd, dungeonPartyHireCost, dungeonPartySeatCount, observeDungeonPartyState, prepareDungeonPartyAction, validateDungeonPartyAction } from './DungeonPartyModel';
+import type { DungeonPartyAction, DungeonPartyConditions, DungeonPartyContext, DungeonPartyHireOption, DungeonPartyMember, DungeonPartySnapshot, DungeonPartyTemplate, DungeonPartyView } from './DungeonPartyModel';
 
 const jobs = ['战士', '法师', '道士'] as const;
 const jobToggles = ['JobWarrior', 'JobMage', 'JobTaoist'] as const;
-const tabs = [['TemplatesTab', 'TemplateList', '副本'], ['RoomsTab', 'RoomList', '招募'], ['MembersTab', 'MemberList', '队伍']] as const;
+const tabs = [['TemplatesTab', 'TemplateList', '副本'], ['RoomsTab', 'RoomList', '招募'], ['MembersTab', 'MemberList', '队伍'],
+    ['HiresTab', 'HireList', '佣兵']] as const;
+const hireTab = 3; // 佣兵选项与原招募筛选共用下方操作区，按页分别显示。
 const refreshIntervalMs = 3000; // 仅在面板前台时重新核对已有招募。
-const actions = ['Create', 'Join', 'Leave', 'Kick', 'Update', 'Start'] as const;
+const actions = ['Create', 'Join', 'Leave', 'Kick', 'Update', 'Start', 'HireAdd'] as const;
 type ActionButton = typeof actions[number];
 type Request = ReturnType<typeof prepareDungeonPartyAction>['request'];
+type HireSeatRow = { readonly slot: number; readonly option: DungeonPartyHireOption };
+type RosterRow = DungeonPartyMember | HireSeatRow;
 
 interface PartyPanelActions {
     context: () => DungeonPartyContext | null;
@@ -32,6 +36,8 @@ export class GameDungeonParty {
     private selectedTemplate = 0;
     private selectedRoom = '';
     private selectedMember = '';
+    private selectedHireOption = 0; // 佣兵页选中的副本档位，每次切换副本时重新选。
+    private selectedHireSeat?: { readonly party: DungeonPartyView; readonly slot: number }; // 当时看见的队伍修订与佣兵下标。
     private draft: DungeonPartyConditions | null = null;
     private draftSource = '';
     private creation?: { key: string; id: Uint8Array };
@@ -48,18 +54,32 @@ export class GameDungeonParty {
             if (!list) throw new Error(`讨伐列表缺少保存组件 ${path}`);
             return list;
         });
-        for (const [index, [tab]] of tabs.entries()) this.button(tab, () => { this.tab = index; this.render(); });
+        for (const [index, [tab]] of tabs.entries()) this.button(tab, () => {
+            if (index !== hireTab || this.template()?.hireOptions.length) { this.tab = index; this.render(); }
+        });
         this.on(this.lists[0].node, List.EVENT_ITEM_CLICK, (_index, value: DungeonPartyTemplate) => {
             if (!this.canInteract() || !this.snapshot?.templates.includes(value)) return;
-            this.selectedTemplate = value.templateId; this.updateDraft(); this.render();
+            this.selectedTemplate = value.templateId; this.selectedHireOption = 0; this.updateDraft(); this.render();
         });
         this.on(this.lists[1].node, List.EVENT_ITEM_CLICK, (_index, value: DungeonPartyView) => {
             if (!this.canInteract() || !this.snapshot?.parties.includes(value)) return;
-            this.selectedRoom = value.partyId; this.selectedMember = ''; this.render();
+            this.selectedRoom = value.partyId; this.selectedMember = ''; this.selectedHireSeat = undefined; this.render();
         });
-        this.on(this.lists[2].node, List.EVENT_ITEM_CLICK, (_index, value: DungeonPartyMember) => {
-            if (!this.canInteract() || !this.viewedParty()?.members.includes(value)) return;
-            this.selectedMember = value.roleId; this.render();
+        this.on(this.lists[2].node, List.EVENT_ITEM_CLICK, (_index, value: RosterRow) => {
+            const party = this.viewedParty();
+            if (!this.canInteract() || !party) return;
+            if ('slot' in value) {
+                if (party.hires[value.slot - 1] !== value.option) return;
+                this.selectedMember = ''; this.selectedHireSeat = { party, slot: value.slot };
+            } else {
+                if (!party.members.includes(value)) return;
+                this.selectedMember = value.roleId; this.selectedHireSeat = undefined;
+            }
+            this.render();
+        });
+        this.on(this.lists[hireTab].node, List.EVENT_ITEM_CLICK, (_index, value: DungeonPartyHireOption) => {
+            if (!this.canInteract() || !this.template()?.hireOptions.includes(value)) return;
+            this.selectedHireOption = value.optionId; this.notice = ''; this.render();
         });
         for (const name of actions) this.button(name, () => this.chooseAction(name));
         this.button('Refresh', () => { this.notice = ''; void this.execute({ kind: 'query' }); });
@@ -111,6 +131,7 @@ export class GameDungeonParty {
         if (key !== this.scope) {
             this.scope = key; this.snapshot = null; this.unavailable = false; this.notice = '';
             this.selectedRoom = this.selectedMember = this.draftSource = ''; this.selectedTemplate = this.tab = 0;
+            this.selectedHireOption = 0; this.selectedHireSeat = undefined;
             this.draft = null; this.creation = undefined; this.pending = undefined;
             this.stopTimer(); this.render();
         }
@@ -135,9 +156,13 @@ export class GameDungeonParty {
             action = { kind: 'create', partyId: this.creation.id, templateId: template.templateId, conditions: draft };
         } else if (button === 'Join' && this.tab === 1 && !own && this.selectedRoom) action = { kind: 'join', partyId: this.selectedRoom };
         else if (own) {
+            const hireSlot = this.hireSlot(own);
             if (button === 'Leave') action = { kind: 'leave', partyId: own.partyId };
             if (button === 'Start') action = { kind: 'start', partyId: own.partyId };
             if (button === 'Kick' && this.selectedMember) action = { kind: 'kick', partyId: own.partyId, targetRoleId: this.selectedMember };
+            if (button === 'Kick' && hireSlot) action = { kind: 'releaseHire', partyId: own.partyId, slot: hireSlot };
+            if (button === 'HireAdd' && this.tab === hireTab && this.selectedHireOption)
+                action = { kind: 'hire', partyId: own.partyId, optionId: this.selectedHireOption };
             if (button === 'Update' && draft) action = { kind: 'update', partyId: own.partyId, conditions: draft };
         }
         if (action) { this.notice = ''; void this.execute(action); }
@@ -169,6 +194,8 @@ export class GameDungeonParty {
                 if (!hadParty && observed.ownParty) this.tab = 2;
                 if (action.kind === 'leave') this.tab = 1;
                 if (action.kind === 'update') this.notice = '招募条件已更新';
+                if (action.kind === 'hire') this.notice = '佣兵已加入，开战时扣费';
+                if (action.kind === 'releaseHire') this.notice = '佣兵已移出队伍';
             }
             if (observed.ownParty) this.creation = undefined;
             this.updateDraft();
@@ -188,12 +215,19 @@ export class GameDungeonParty {
 
     private async confirmAction(action: DungeonPartyAction, context: DungeonPartyContext): Promise<boolean> {
         const own = this.snapshot?.ownParty;
-        if (action.kind === 'start' && own) return this.popup.confirm('Confirm',
-            `${this.template()?.displayName ?? '讨伐链'} · ${own.members.length} 名队员\n入场时每人扣 1 次。正常失败或超时不退还次数。\n全队确认地图后开始战斗。`, '确认开战');
+        if (action.kind === 'start' && own) {
+            const heading = `${this.template()?.displayName ?? '讨伐链'} · ${own.members.length} 名队员`;
+            const message = own.hires.length ? `${heading} · ${own.hires.length} 名佣兵\n每位真人扣 1 次，全体确认后开战。\n`
+                + `队长支付 ${dungeonPartyHireCost(own)} 金币，绑定金币优先。\n正常失败或超时保留扣次和费用。\n系统中断，金币原路退回。`
+                : `${heading}\n入场时每人扣 1 次。正常失败或超时不退还次数。\n全队确认地图后开始战斗。`;
+            return this.popup.confirm('Confirm', message, '确认开战');
+        }
         if (action.kind === 'kick' && own) {
             const member = own.members.find(value => value.roleId === action.targetRoleId);
             return this.popup.confirm('Confirm', `移除队员 ${member?.displayName ?? ''}？`, '移除队员');
         }
+        if (action.kind === 'releaseHire' && own)
+            return this.popup.confirm('Confirm', `移除佣兵 ${own.hires[action.slot - 1]?.displayName ?? ''}？`, '移除佣兵');
         if (action.kind === 'leave' && own && this.isLeader(context))
             return this.popup.confirm('Confirm', '队长退出会解散本次招募。', '解散队伍');
         return true;
@@ -204,8 +238,12 @@ export class GameDungeonParty {
         if (own) this.selectedTemplate = own.templateId;
         else if (!this.template()) this.selectedTemplate = this.snapshot?.templates[0]?.templateId ?? 0;
         if (!this.selectedRecruitment()) this.selectedRoom = '';
-        if (!this.viewedParty()?.members.some(member => member.roleId === this.selectedMember)) this.selectedMember = '';
+        const viewed = this.viewedParty();
+        if (!viewed?.members.some(member => member.roleId === this.selectedMember)) this.selectedMember = '';
+        if (!this.hireSlot(viewed)) this.selectedHireSeat = undefined;
         const template = this.template();
+        if (!template?.hireOptions.some(option => option.optionId === this.selectedHireOption)) this.selectedHireOption = 0;
+        if (this.tab === hireTab && !template?.hireOptions.length) this.tab = own ? 2 : 0;
         if (!template) { this.draftSource = ''; this.draft = null; return; }
         const baseline = own ?? { minimumLevel: template.minimumLevel, allowedJobsMask: 7, allowSameJob: false };
         const source = JSON.stringify([own?.partyId ?? '', template.templateId, baseline.minimumLevel, baseline.allowedJobsMask, baseline.allowSameJob]);
@@ -221,6 +259,12 @@ export class GameDungeonParty {
         const template = this.template(), room = this.selectedRecruitment(), party = own ?? (this.tab === 0 ? undefined : room);
         const draft = this.draft, shownConditions = own || this.tab === 0 ? draft : room;
         const canAct = this.canInteract(), leader = this.isLeader(context), editable = this.canEdit();
+        const hiring = this.tab === hireTab, hireSlot = this.hireSlot(party);
+        const selectedOption = template?.hireOptions.find(option => option.optionId === this.selectedHireOption);
+        this.saved('HiresTab').active = !!template?.hireOptions.length;
+        this.saved('HireAdd').active = hiring;
+        for (const name of ['MinimumLevel', 'LevelDown', 'LevelUp', ...jobToggles, 'AllowSameJob', 'Conditions'])
+            this.saved(name).active = !hiring;
         for (const [index, [tab, list, title]] of tabs.entries()) {
             this.saved(list).active = this.tab === index;
             this.label(`${tab}/Label`, this.tab === index ? `● ${title}` : title);
@@ -231,26 +275,37 @@ export class GameDungeonParty {
         });
         this.lists[1].setItems(snapshot?.parties ?? [], (node, row) => {
             const value = row as DungeonPartyView;
-            this.row(node, `${value.partyId === this.selectedRoom ? '● ' : ''}${value.members[0].displayName} · ${value.members.length}/3\n${this.templateName(value.templateId)} · ${value.minimumLevel} 级起`, !own && canAct);
+            this.row(node, `${value.partyId === this.selectedRoom ? '● ' : ''}${value.members[0].displayName} · ${dungeonPartySeatCount(value)}/3\n${this.templateName(value.templateId)} · ${value.minimumLevel} 级起`, !own && canAct);
         });
-        this.lists[2].setItems(party?.members ?? [], (node, row) => {
-            const value = row as DungeonPartyMember;
-            this.row(node, `${value.roleId === this.selectedMember ? '● ' : ''}${value.displayName}${value.roleId === party?.leaderRoleId ? ' · 队长' : ''}\n${jobs[value.job]} ${value.level} 级 · ${value.online ? '在线' : '离线'}`, canAct);
+        const roster: RosterRow[] = [...(party?.members ?? []), ...(party?.hires.map((option, index) => ({ slot: index + 1, option })) ?? [])];
+        this.lists[2].setItems(roster, (node, row) => {
+            const value = row as RosterRow;
+            if ('slot' in value)
+                this.row(node, `${value.slot === hireSlot ? '● ' : ''}${value.option.displayName} · 佣兵\n${this.hireDetail(value.option)}`, canAct);
+            else this.row(node, `${value.roleId === this.selectedMember ? '● ' : ''}${value.displayName}${value.roleId === party?.leaderRoleId ? ' · 队长' : ''}\n${jobs[value.job]} ${value.level} 级 · ${value.online ? '在线' : '离线'}`, canAct);
+        });
+        this.lists[hireTab].setItems(template?.hireOptions ?? [], (node, row) => {
+            const option = row as DungeonPartyHireOption;
+            this.row(node, `${option.optionId === this.selectedHireOption ? '● ' : ''}${option.displayName}\n${this.hireDetail(option)}`, canAct);
         });
         this.label('Status', !this.scope ? '等待角色与场景同步' : this.unavailable ? '本服暂未开放讨伐链'
             : snapshot?.challengeId ? '场次已确认，正在入场' : snapshot?.starting ? '正在确认整队开战'
-            : own ? `原队伍 · ${own.members.length}/3 人` : snapshot ? `公开招募 ${snapshot.parties.length}${snapshot.more ? '+' : ''} 支` : '正在查询本服招募');
-        this.label('Selection', party ? `${this.templateName(party.templateId)} · ${party.members[0].displayName}`
+            : own ? `队伍 ${dungeonPartySeatCount(own)}/3 席 · 真人 ${own.members.length} · 佣兵 ${own.hires.length}`
+            : snapshot ? `公开招募 ${snapshot.parties.length}${snapshot.more ? '+' : ''} 支` : '正在查询本服招募');
+        this.label('Selection', hiring ? selectedOption?.displayName ?? '请选择佣兵档位'
+            : party ? `${this.templateName(party.templateId)} · ${party.members[0].displayName}`
             : template?.displayName ?? '请选择副本或招募');
         this.label('MinimumLevel', `等级 ${shownConditions?.minimumLevel ?? '—'}`);
         this.label('Conditions', this.tab === 1 && room && !own ? `招募要求 ${room.minimumLevel} 级 · ${this.jobText(room)}`
             : editable ? '招募条件' : own ? this.jobText(own) : '招募条件');
-        this.label('Message', this.notice || (own ? '开战前请全队回到普通野外' : snapshot && this.tab === 1 && !snapshot.parties.length ? '当前没有可加入的招募' : ''));
+        this.label('Message', this.notice || (hiring ? own ? '开战时扣费。可在队伍页移除佣兵。' : '建队后可由队长添加佣兵'
+            : own ? '开战前请全队回到普通野外' : snapshot && this.tab === 1 && !snapshot.parties.length ? '当前没有可加入的招募' : ''));
         this.enable('Create', canAct && this.tab === 0 && !own && !!template && (context?.level ?? 0) >= template.minimumLevel);
-        this.enable('Join', canAct && this.tab === 1 && !own && !!room && !!context && context.level >= room.minimumLevel &&
-            !!(room.allowedJobsMask & (1 << context.job)) && (room.allowSameJob || !room.members.some(member => member.job === context.job)));
+        this.enable('Join', canAct && this.tab === 1 && !own && !!room && !!context && dungeonPartyCanAdd(room, context.job, context.level));
         this.enable('Leave', canAct && !!own);
-        this.enable('Kick', canAct && leader && !!own?.members.some(member => member.roleId === this.selectedMember && member.roleId !== own.leaderRoleId));
+        this.label('Kick/Label', hireSlot ? '移除佣兵' : '移出队员');
+        this.enable('Kick', canAct && leader && (!!hireSlot || !!own?.members.some(member => member.roleId === this.selectedMember && member.roleId !== own.leaderRoleId)));
+        this.enable('HireAdd', canAct && hiring && leader && !!own && !!selectedOption && dungeonPartyCanAdd(own, selectedOption.job, selectedOption.level));
         this.enable('Update', canAct && leader && !!draft && !!own && (draft.minimumLevel !== own.minimumLevel ||
             draft.allowedJobsMask !== own.allowedJobsMask || draft.allowSameJob !== own.allowSameJob));
         this.enable('Start', canAct && leader && context?.sceneKind === 1 && !!own?.members.every(member => member.online));
@@ -271,7 +326,15 @@ export class GameDungeonParty {
     }
     private canInteract(): boolean { return !!this.snapshot && !this.pending && !this.snapshot.starting && !this.snapshot.challengeId && !this.hidden; }
     private canEdit(): boolean {
-        return this.canInteract() && !!this.draft && (this.snapshot?.ownParty ? this.isLeader() : this.tab === 0);
+        return this.canInteract() && this.tab !== hireTab && !!this.draft && (this.snapshot?.ownParty ? this.isLeader() : this.tab === 0);
+    }
+    // 佣兵下标只在选中它的原队伍修订中有效，询问期间名单变化时恢复未选状态。
+    private hireSlot(party: DungeonPartyView | undefined): number {
+        const selected = this.selectedHireSeat;
+        return selected && party?.partyId === selected.party.partyId && party.revision.equals(selected.party.revision) ? selected.slot : 0;
+    }
+    private hireDetail(option: DungeonPartyHireOption): string {
+        return `${jobs[option.job]} ${option.level} 级 · ${option.feeGold.toString()} 金币`;
     }
     private jobText(value: DungeonPartyConditions): string {
         return `${jobs.filter((_job, index) => value.allowedJobsMask & (1 << index)).join('／')}${value.allowSameJob ? ' · 同职业可加入' : ''}`;
@@ -282,6 +345,7 @@ export class GameDungeonParty {
         if (code === CodeLineFull) return '所选队伍已满，请刷新招募';
         if (code === CodeLineRecovering) return '请全队返回普通野外并确认连接后重试';
         if (code === CodeLineForbidden) return '队伍条件或剩余入场次数不满足';
+        if (code === CodeVendorFunds) return '队长金币不足，未扣次数或费用';
         return protocolErrorMessage(20021, code);
     }
 

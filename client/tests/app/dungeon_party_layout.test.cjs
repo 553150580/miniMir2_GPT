@@ -60,8 +60,8 @@ test('只追加原首领的入口与独立普通面板，保留所有先前保�
     }
 });
 
-test('三个可滚动列表各用保存的遮罩与点击模板，默认只从模板页开始', () => {
-    const listNames = ['TemplateList', 'RoomList', 'MemberList'];
+test('四个可滚动列表各用保存的遮罩与点击模板，默认只从副本页开始', () => {
+    const listNames = ['TemplateList', 'RoomList', 'MemberList', 'HireList'];
     for (const [offset, name] of listNames.entries()) {
         const prefix = party + '/' + name, list = node(prefix), view = node(prefix + '/View');
         const scroll = component(list, 'cc.ScrollView');
@@ -89,10 +89,11 @@ test('三个可滚动列表各用保存的遮罩与点击模板，默认只从�
     }
     assert.deepEqual(bounds(node(party + '/TemplateList')), bounds(node(party + '/RoomList')));
     assert.deepEqual(bounds(node(party + '/RoomList')), bounds(node(party + '/MemberList')));
+    assert.deepEqual(bounds(node(party + '/MemberList')), bounds(node(party + '/HireList')));
 });
 
 test('原生操作与招募条件各有独立触屏空间，列表与固定按钮命中区互不遮挡', () => {
-    const buttons = ['TemplatesTab', 'RoomsTab', 'MembersTab', 'LevelDown', 'LevelUp', 'Create', 'Join', 'Leave', 'Refresh', 'Kick', 'Update', 'Start'];
+    const buttons = ['TemplatesTab', 'RoomsTab', 'MembersTab', 'HiresTab', 'LevelDown', 'LevelUp', 'Create', 'Join', 'Leave', 'Refresh', 'Kick', 'Update', 'Start'];
     const toggles = ['JobWarrior', 'JobMage', 'JobTaoist', 'AllowSameJob'];
     const labels = ['Headline', 'Status', 'Selection', 'MinimumLevel', 'Conditions', 'Message'];
     const footprint = bounds(node(party)), names = [...buttons, ...toggles, ...labels, 'TemplateList'];
@@ -115,4 +116,30 @@ test('原生操作与招募条件各有独立触屏空间，列表与固定按�
             }
         }
     }
+});
+
+test('佣兵页只改变原面板的页签排列，新增按钮复用当前页的条件区域', () => {
+    const originalCount = 2227;
+    const restored = structuredClone(scene.slice(0, originalCount));
+    const panel = restored[index(party)];
+    assert.deepEqual(panel._children.filter(ref => ref.__id__ >= originalCount).map(ref => scene[ref.__id__]._name),
+        ['HiresTab', 'HireList', 'HireAdd']);
+    panel._children = panel._children.filter(ref => ref.__id__ < originalCount);
+    for (const [offset, tab] of ['TemplatesTab', 'RoomsTab', 'MembersTab'].entries()) {
+        const button = restored[index(party + '/' + tab)];
+        const label = restored[index(party + '/' + tab + '/Label')];
+        button._lpos.x = (offset - 1) * 206;
+        restored[button._components[0].__id__]._contentSize.width = 186;
+        restored[label._components[0].__id__]._contentSize.width = 178;
+    }
+    assert.equal(crypto.createHash('sha256').update(JSON.stringify(restored)).digest('hex'),
+        'c4f637ed852c49f6125b2071c58bdc8b1c5517e58ccdd2ddcd294eee810a5dd4');
+    assert.equal(node(party + '/HiresTab')._active, false);
+    const add = node(party + '/HireAdd');
+    component(add, 'cc.Button');
+    assert.equal(add._active, false);
+    const replaced = node(party + '/MinimumLevel');
+    assert.deepEqual(add._lpos, replaced._lpos);
+    assert.equal(size(add).width, size(replaced).width);
+    assert.equal(component(node(party + '/HireAdd/Label'), 'cc.Label')._string, '加入佣兵');
 });

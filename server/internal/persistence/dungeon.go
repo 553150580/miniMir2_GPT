@@ -37,14 +37,16 @@ type DungeonAdmissionMember struct {
 
 // DungeonBegin 固定队伍名单和挑战身份，未知结果重试使用同一份请求。
 type DungeonBegin struct {
-	ChallengeID string                   // 游戏角色所有者协调分配的唯一场次编号。
-	Execution   uint64                   // 原挑战执行代次。
-	TemplateID  uint32                   // 原讨伐链配置模板。
-	RuleVersion uint64                   // 原配置规则版本。
-	ConfigHash  string                   // 原版本的不可变配置摘要。
-	StartedAt   time.Time                // 由原执行者冻结的正式扣次时刻。
-	Duration    time.Duration            // 原配置允许的挑战时长。
-	Members     []DungeonAdmissionMember // 各真实参战者的原授权及入场快照。
+	ChallengeID   string                   // 游戏角色所有者协调分配的唯一场次编号。
+	Execution     uint64                   // 原挑战执行代次。
+	TemplateID    uint32                   // 原讨伐链配置模板。
+	RuleVersion   uint64                   // 原配置规则版本。
+	ConfigHash    string                   // 原版本的不可变配置摘要。
+	StartedAt     time.Time                // 由原执行者冻结的正式扣次时刻。
+	Duration      time.Duration            // 原配置允许的挑战时长。
+	Members       []DungeonAdmissionMember // 各真实参战者的原授权及入场快照。
+	HireOptionIDs []uint32                 `json:"HireOptionIDs,omitempty"` // 开战修订固定的 AI 选项，按附加席位顺序保存。
+	LeaderRoleID  string                   `json:"LeaderRoleID,omitempty"`  // 仅有 AI 补位时提供的原真实付款队长。
 }
 
 // DungeonMember 记录原角色、永久入口、入场运营日，以及可由同场健康重连推进的会话围栏。
@@ -63,23 +65,25 @@ type DungeonMember struct {
 
 // DungeonChallenge 只保存永久业务事实。临时战斗场、血量和客户端连接不存入该记录。
 type DungeonChallenge struct {
-	ChallengeID   string          `bson:"_id"`                   // 一支原队伍的唯一业务键。
-	ReservationID string          `bson:"reservation_id"`        // 首次确认入场时生成的场次回执。
-	RunID         uint64          `bson:"run_server_id"`         // 当前获准承载场次的运行服。
-	RunEpoch      int64           `bson:"run_epoch"`             // 原运行服的授权代次。
-	OwnerInstance string          `bson:"owner_instance"`        // 原游戏进程实例。
-	Execution     uint64          `bson:"execution"`             // 场次执行代次。
-	TemplateID    uint32          `bson:"template_id"`           // 原讨伐链模板编号。
-	RuleVersion   uint64          `bson:"rule_version"`          // 原规则版本。
-	ConfigHash    string          `bson:"config_hash"`           // 规则配置摘要。
-	StartedAt     time.Time       `bson:"started_at"`            // 原权威入场时刻。
-	ExpiresAt     time.Time       `bson:"expires_at"`            // 原战斗截止时刻。
-	Members       []DungeonMember `bson:"members"`               // 仅包含实际扣次的真实队员。
-	Outcome       DungeonOutcome  `bson:"outcome"`               // 首次确认的终态。
-	FinishedAt    time.Time       `bson:"finished_at,omitempty"` // 原执行确认结果或合法回收的时刻。
-	RewardAt      time.Time       `bson:"reward_at,omitempty"`   // 通关有奖时最终首领实际死亡的时刻，可能早于清场。
-	Refunded      bool            `bson:"refunded,omitempty"`    // 原系统中断退款已和终态同事务确认。
-	Recovered     bool            `bson:"recovered,omitempty"`   // 中断由新运行服代次确认。
+	ChallengeID   string             `bson:"_id"`                       // 一支原队伍的唯一业务键。
+	ReservationID string             `bson:"reservation_id"`            // 首次确认入场时生成的场次回执。
+	RunID         uint64             `bson:"run_server_id"`             // 当前获准承载场次的运行服。
+	RunEpoch      int64              `bson:"run_epoch"`                 // 原运行服的授权代次。
+	OwnerInstance string             `bson:"owner_instance"`            // 原游戏进程实例。
+	Execution     uint64             `bson:"execution"`                 // 场次执行代次。
+	TemplateID    uint32             `bson:"template_id"`               // 原讨伐链模板编号。
+	RuleVersion   uint64             `bson:"rule_version"`              // 原规则版本。
+	ConfigHash    string             `bson:"config_hash"`               // 规则配置摘要。
+	StartedAt     time.Time          `bson:"started_at"`                // 原权威入场时刻。
+	ExpiresAt     time.Time          `bson:"expires_at"`                // 原战斗截止时刻。
+	Members       []DungeonMember    `bson:"members"`                   // 仅包含实际扣次的真实队员。
+	HireOptionIDs []uint32           `bson:"hire_option_ids,omitempty"` // 按原次序装配战斗体的 AI 选项编号。
+	HireCharge    *DungeonHireCharge `bson:"hire_charge,omitempty"`     // 装场前原队长已确认的双钱包费用。
+	Outcome       DungeonOutcome     `bson:"outcome"`                   // 首次确认的终态。
+	FinishedAt    time.Time          `bson:"finished_at,omitempty"`     // 原执行确认结果或合法回收的时刻。
+	RewardAt      time.Time          `bson:"reward_at,omitempty"`       // 通关有奖时最终首领实际死亡的时刻，可能早于清场。
+	Refunded      bool               `bson:"refunded,omitempty"`        // 原系统中断退款已和终态同事务确认。
+	Recovered     bool               `bson:"recovered,omitempty"`       // 中断由新运行服代次确认。
 }
 
 type dungeonRecord struct {
@@ -120,11 +124,19 @@ func normalizeDungeonBegin(q DungeonBegin) (DungeonBegin, error) {
 	}
 	q.StartedAt = bossTime(q.StartedAt)
 	q.Members = slices.Clone(q.Members)
+	if len(q.HireOptionIDs) == 0 {
+		q.HireOptionIDs = nil // 旧无 AI 开战首次回应和读取持久回执的空名单一致。
+	} else {
+		q.HireOptionIDs = slices.Clone(q.HireOptionIDs)
+	}
 	slices.SortFunc(q.Members, func(left, right DungeonAdmissionMember) int { return cmp.Compare(left.Auth.RoleID, right.Auth.RoleID) })
 	for i, member := range q.Members {
 		if !lowerHex(member.CombatSnapshot, 32) || member.ExpectedRevision <= 0 || i > 0 && member.Auth.RoleID == q.Members[i-1].Auth.RoleID {
 			return DungeonBegin{}, Fail(p.CodeInvalidArgument, "讨伐链重复角色或入场快照无效")
 		}
+	}
+	if err := validateDungeonHireRequest(q); err != nil {
+		return DungeonBegin{}, err
 	}
 	return q, nil
 }
@@ -180,6 +192,11 @@ func (s *Store) BeginDungeon(ctx context.Context, q DungeonBegin) (DungeonChalle
 				return err
 			}
 			result.Members = append(result.Members, member)
+		}
+		result.HireOptionIDs = q.HireOptionIDs
+		result.HireCharge, err = chargeDungeonHires(q, template, roles)
+		if err != nil {
+			return err
 		}
 		record = dungeonRecord{DungeonChallenge: result, BeginDigest: digest}
 		if template.Rewards != nil {
@@ -258,11 +275,18 @@ func (s *Store) writeDungeonRoles(ctx context.Context, challenge DungeonChalleng
 		if err := s.replace(ctx, role, role.Revision-1); err != nil {
 			return err
 		}
-		_, err := s.DB.Collection("audit_outbox").InsertOne(ctx, bson.M{
+		audit := bson.M{
 			"_id": "dungeon:" + challenge.ChallengeID + ":" + phase + ":" + role.ID, "kind": "dungeon_" + phase,
 			"role_id": role.ID, "revision": role.Revision, "challenge_id": challenge.ChallengeID, "reservation_id": challenge.ReservationID,
 			"run_server_id": challenge.RunID, "outcome": challenge.Outcome, "refunded": challenge.Refunded, "entry": challenge.Members[i], "at": time.Now(),
-		})
+		}
+		if len(challenge.HireOptionIDs) != 0 {
+			audit["hire_option_ids"] = challenge.HireOptionIDs
+			if charge := challenge.HireCharge; charge != nil && charge.RoleID == role.ID {
+				audit["hire_charge"], audit["hire_refunded"] = charge, challenge.Refunded
+			}
+		}
+		_, err := s.DB.Collection("audit_outbox").InsertOne(ctx, audit)
 		if err != nil {
 			return err
 		}

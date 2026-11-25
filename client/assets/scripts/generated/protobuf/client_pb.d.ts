@@ -14525,6 +14525,12 @@ export namespace minimir {
             /** DungeonPartyRequest target_role_id. */
             target_role_id: Uint8Array;
 
+            /** DungeonPartyRequest hire_option_id. */
+            hire_option_id: number;
+
+            /** DungeonPartyRequest hire_slot. */
+            hire_slot: number;
+
             /**
              * Creates a new DungeonPartyRequest instance using the specified properties.
              * @param [properties] Properties to set
@@ -14614,6 +14620,12 @@ export namespace minimir {
 
                 /** DungeonPartyRequest target_role_id */
                 target_role_id?: (Uint8Array|null);
+
+                /** DungeonPartyRequest hire_option_id */
+                hire_option_id?: (number|null);
+
+                /** DungeonPartyRequest hire_slot */
+                hire_slot?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -14792,6 +14804,9 @@ export namespace minimir {
             /** DungeonPartyTemplate duration_seconds. */
             duration_seconds: number;
 
+            /** DungeonPartyTemplate hire_options. */
+            hire_options: minimir.v1.DungeonPartyHireOption.$Properties[];
+
             /**
              * Creates a new DungeonPartyTemplate instance using the specified properties.
              * @param [properties] Properties to set
@@ -14867,12 +14882,135 @@ export namespace minimir {
                 /** DungeonPartyTemplate duration_seconds */
                 duration_seconds?: (number|null);
 
+                /** DungeonPartyTemplate hire_options */
+                hire_options?: (minimir.v1.DungeonPartyHireOption.$Properties[]|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of a DungeonPartyTemplate. */
             type $Shape = minimir.v1.DungeonPartyTemplate.$Properties;
+        }
+
+        /**
+         * Properties of a DungeonPartyHireOption.
+         * @deprecated Use minimir.v1.DungeonPartyHireOption.$Properties instead.
+         */
+        interface IDungeonPartyHireOption extends minimir.v1.DungeonPartyHireOption.$Properties {
+        }
+
+        /** Represents a DungeonPartyHireOption. */
+        class DungeonPartyHireOption {
+
+            /**
+             * Constructs a new DungeonPartyHireOption.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.DungeonPartyHireOption.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** DungeonPartyHireOption option_id. */
+            option_id: number;
+
+            /** DungeonPartyHireOption display_name. */
+            display_name: string;
+
+            /** DungeonPartyHireOption job. */
+            job: number;
+
+            /** DungeonPartyHireOption level. */
+            level: number;
+
+            /** DungeonPartyHireOption fee_gold. */
+            fee_gold: Long;
+
+            /**
+             * Creates a new DungeonPartyHireOption instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DungeonPartyHireOption instance
+             */
+            static create(properties: minimir.v1.DungeonPartyHireOption.$Shape): minimir.v1.DungeonPartyHireOption & minimir.v1.DungeonPartyHireOption.$Shape;
+            static create(properties?: minimir.v1.DungeonPartyHireOption.$Properties): minimir.v1.DungeonPartyHireOption;
+
+            /**
+             * Encodes the specified DungeonPartyHireOption message. Does not implicitly {@link minimir.v1.DungeonPartyHireOption.verify|verify} messages.
+             * @param message DungeonPartyHireOption message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.DungeonPartyHireOption.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DungeonPartyHireOption message, length delimited. Does not implicitly {@link minimir.v1.DungeonPartyHireOption.verify|verify} messages.
+             * @param message DungeonPartyHireOption message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.DungeonPartyHireOption.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DungeonPartyHireOption message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.DungeonPartyHireOption & minimir.v1.DungeonPartyHireOption.$Shape} DungeonPartyHireOption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.DungeonPartyHireOption & minimir.v1.DungeonPartyHireOption.$Shape;
+
+            /**
+             * Decodes a DungeonPartyHireOption message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.DungeonPartyHireOption & minimir.v1.DungeonPartyHireOption.$Shape} DungeonPartyHireOption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.DungeonPartyHireOption & minimir.v1.DungeonPartyHireOption.$Shape;
+
+            /**
+             * Verifies a DungeonPartyHireOption message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for DungeonPartyHireOption
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace DungeonPartyHireOption {
+
+            /** Properties of a DungeonPartyHireOption. */
+            interface $Properties {
+
+                /** DungeonPartyHireOption option_id */
+                option_id?: (number|null);
+
+                /** DungeonPartyHireOption display_name */
+                display_name?: (string|null);
+
+                /** DungeonPartyHireOption job */
+                job?: (number|null);
+
+                /** DungeonPartyHireOption level */
+                level?: (number|null);
+
+                /** DungeonPartyHireOption fee_gold */
+                fee_gold?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a DungeonPartyHireOption. */
+            type $Shape = minimir.v1.DungeonPartyHireOption.$Properties;
         }
 
         /**
@@ -14920,6 +15058,9 @@ export namespace minimir {
 
             /** DungeonPartyView leader_offline_until_unix_ms. */
             leader_offline_until_unix_ms: Long;
+
+            /** DungeonPartyView hires. */
+            hires: minimir.v1.DungeonPartyHireOption.$Properties[];
 
             /**
              * Creates a new DungeonPartyView instance using the specified properties.
@@ -15010,6 +15151,9 @@ export namespace minimir {
 
                 /** DungeonPartyView leader_offline_until_unix_ms */
                 leader_offline_until_unix_ms?: (Long|null);
+
+                /** DungeonPartyView hires */
+                hires?: (minimir.v1.DungeonPartyHireOption.$Properties[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

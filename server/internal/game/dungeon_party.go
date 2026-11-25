@@ -179,7 +179,7 @@ func dungeonPartyTemplateViews(fixture *devconfig.Fixture) []*pb.DungeonPartyTem
 	result := make([]*pb.DungeonPartyTemplate, 0, len(fixture.Dungeons))
 	for _, template := range fixture.Dungeons {
 		result = append(result, &pb.DungeonPartyTemplate{TemplateId: template.TemplateID, DisplayName: template.DisplayName,
-			MinimumLevel: template.MinimumLevel, DurationSeconds: uint32(template.Duration / time.Second)})
+			MinimumLevel: template.MinimumLevel, DurationSeconds: uint32(template.Duration / time.Second), HireOptions: dungeonHireViews(template.Hires)})
 	}
 	return result
 }

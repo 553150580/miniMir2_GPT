@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 122,
+  "message_count": 123,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -124,13 +124,14 @@
     "DungeonPartyRequest",
     "DungeonPartyState",
     "DungeonPartyTemplate",
+    "DungeonPartyHireOption",
     "DungeonPartyView",
     "DungeonPartyMember",
     "DungeonBattleState",
     "DungeonSceneTransition"
   ],
-  "int64_field_count": 281,
-  "int64_boundary_cases": 939,
+  "int64_field_count": 282,
+  "int64_boundary_cases": 942,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1771,6 +1772,12 @@
       "cases": 3
     },
     {
+      "message": "DungeonPartyHireOption",
+      "field": "fee_gold",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "DungeonPartyView",
       "field": "revision",
       "type": "uint64",
@@ -2051,19 +2058,19 @@
     },
     {
       "path": "shared/proto/dungeon_party.proto",
-      "sha256": "b6898eab78840b77efd6a1785b1de5ab28eaa52669cb5348b7968f3da021e128"
+      "sha256": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "44c97f61af175b813ab17782c25699756e770ef715870c4ae47afd0dab866682",
-      "bytes": 2107323
+      "sha256": "899418375598484e7a7f48486c4296d553165b8ccb9ff3b61619274476d01a4c",
+      "bytes": 2128819
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "e0d4da40c9bb76a9ddd746f1e054b849d6fa84d79e83f373bdb5dfbac2262ace",
-      "bytes": 663991
+      "sha256": "c86848db77afcc10608ffe7efceb6ccfe4de527fddbe91d4b68ddebaed05105e",
+      "bytes": 670322
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

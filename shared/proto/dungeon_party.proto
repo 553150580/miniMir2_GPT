@@ -5,7 +5,7 @@ option go_package = "minimir/api/generated/minimirv1";
 // 招募及原队伍开战指令绑定当前已确认场景。
 message DungeonPartyRequest {
   uint64 scene_epoch = 1;
-  // 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新招募条件、7 确认开战扣次。
+  // 1 查询、2 创建、3 加入、4 离开、5 踢出、6 更新、7 确认开战、8 添加AI、9 移除AI。
   uint32 action = 2;
   bytes party_id = 3;
   uint64 expected_revision = 4;
@@ -15,6 +15,9 @@ message DungeonPartyRequest {
   uint32 allowed_jobs_mask = 7;
   bool allow_same_job = 8;
   bytes target_role_id = 9;
+  uint32 hire_option_id = 10;
+  // 移除使用当前队伍修订中从 1 开始的 AI 席位顺序。
+  uint32 hire_slot = 11;
 }
 
 message DungeonPartyState {
@@ -33,6 +36,16 @@ message DungeonPartyTemplate {
   string display_name = 2;
   uint32 minimum_level = 3;
   uint32 duration_seconds = 4;
+  repeated DungeonPartyHireOption hire_options = 5;
+}
+
+// 招募可用的职业与能力档。价格来自当前运行服的原模板。
+message DungeonPartyHireOption {
+  uint32 option_id = 1;
+  string display_name = 2;
+  uint32 job = 3;
+  uint32 level = 4;
+  uint64 fee_gold = 5;
 }
 
 message DungeonPartyView {
@@ -45,6 +58,7 @@ message DungeonPartyView {
   bytes leader_role_id = 7;
   repeated DungeonPartyMember members = 8;
   int64 leader_offline_until_unix_ms = 9;
+  repeated DungeonPartyHireOption hires = 10;
 }
 
 message DungeonPartyMember {
