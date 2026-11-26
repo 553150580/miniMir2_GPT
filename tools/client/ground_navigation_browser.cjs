@@ -291,8 +291,14 @@ async function verifyGroundDirections(page, { intents, positions }, town = false
                 assert.deepEqual(route, expectedRoute);
             }
             if (options.exactSteps) assert.equal(steps, minimumSteps);
+            const lineDeviation = route.reduce((total, point) => total + Math.abs(
+                (destination.x - from.x) * (point.y - from.y) - (destination.y - from.y) * (point.x - from.x)), 0);
+            if (options.lineDeviation !== undefined) {
+                assert.equal(lineDeviation, options.lineDeviation, JSON.stringify({ from, destination, route, lineDeviation }));
+            }
             samples.push({ from: { x: from.x, y: from.y }, destination, authoritativeSteps: steps, route,
-                viewport: { x: Math.round(click.x), y: Math.round(click.y) }, ...(options.name ? { case: options.name } : {}) });
+                viewport: { x: Math.round(click.x), y: Math.round(click.y) }, ...(options.name ? { case: options.name } : {}),
+                ...(options.lineDeviation !== undefined ? { lineDeviation } : {}) });
         } finally { await ready.dispose(); }
         return click;
     };
@@ -318,6 +324,13 @@ async function verifyGroundDirections(page, { intents, positions }, town = false
                 const { map } = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
                 return { id: map.id, blocked: map.blocked };
             });
+            // 旧服从出生格点仓库左上侧地面时会先走过目标列，再折返一格。
+            // 同为六步的较直绕行保留原碰撞并降低全程离点击直线的偏差。
+            assert.deepEqual(origin, { x: 8, y: 13 });
+            const aroundWarehouse = { exactSteps: true, blocked: map.blocked, lineDeviation: 12, name: '仓库绕行不中途折返' };
+            await travel({ x: 6, y: 8 }, 6, aroundWarehouse);
+            await travel(origin, 6, aroundWarehouse);
+
             const mixed = { balanced: true, blocked: map.blocked, name: '无遮挡混合斜率' };
             await travel({ x: origin.x + 3, y: origin.y - 2 }, 3, mixed);
             await travel(origin, 3, mixed);

@@ -302,6 +302,8 @@ type Task struct {
 	start, goal, expected Point
 	// goalRadius 记录目标格“radius”，使用数值表示。
 	goalRadius int
+	// stepWeight 将精确点地的步数排在累计直线偏差之前，邻格及大地图仍按单位步数。
+	stepWeight int32
 	// dynamic 保存当前动态占位快照。
 	dynamic Dynamic
 	// suspended 标记是否处于“suspended”状态。
@@ -424,6 +426,14 @@ func (t *Task) begin(workspace *Workspace, d Dynamic) error {
 	t.cursor = -1
 	t.expected = t.start
 	t.reason = ""
+	t.stepWeight = 1
+	const compactTownSide = 17
+	if t.goalRadius == 0 && t.grid.width <= compactTownSide && t.grid.height <= compactTownSide {
+		// 最短路线没有重复格。一个格的叉积不超过横纵范围乘积的两倍。
+		// 步权比整条路线的偏差上界大，保证先少走格，再比较整条路线偏差。
+		// 最大 289 格时累计代价低于 4300 万，沿用原 int32 代价工作区。
+		t.stepWeight = int32(1 + (t.grid.Cells()-1)*2*(t.grid.width-1)*(t.grid.height-1))
+	}
 	if distance(t.start, t.goal) <= t.goalRadius {
 		t.state = Arrived
 		return nil
@@ -661,9 +671,12 @@ func (t *Task) Advance(key Key, budget int) (Progress, error) {
 			}
 			// next 保存由下标取得的下一状态。
 			next := t.grid.index(to)
-			// cost 保存沿当前顶点走到相邻点的累计步数。
-			cost := w.g[cur] + 1
-			// 使用轮次标记识别可复用数组中属于这次搜索的条目。已在堆中的点只在找到更短路径时更新。
+			// 累计代价先比较实际步数，再比较各格到点击线的偏差。
+			cost := w.g[cur] + t.stepWeight
+			if t.stepWeight > 1 {
+				cost += int32(t.lineDeviation(to))
+			}
+			// 使用轮次标记复用旧数组。已在堆中的点只在找到更小累计代价时更新。
 			if w.stamp[next] == w.epoch {
 				if w.pos[next] < 0 || cost >= w.g[next] {
 					continue
@@ -804,8 +817,8 @@ func (t *Task) less(a, b int) bool {
 	w := t.workspace
 	// ha 保存由最大取得的“ha”，hb 保存由最大取得的“hb”。
 	ha, hb := max(0, distance(t.grid.point(a), t.goal)-t.goalRadius), max(0, distance(t.grid.point(b), t.goal)-t.goalRadius)
-	// fa 保存根据整数“64”与整数“64”计算的“fa”，fb 保存根据整数“64”与整数“64”计算的“fb”。
-	fa, fb := int64(w.g[a])+int64(ha), int64(w.g[b])+int64(hb)
+	// 剩余切比雪夫距离只包含最少步数，保守估计未来路线的代价。
+	fa, fb := int64(w.g[a])+int64(ha)*int64(t.stepWeight), int64(w.g[b])+int64(hb)*int64(t.stepWeight)
 	if fa != fb {
 		return fa < fb
 	}
@@ -820,7 +833,7 @@ func (t *Task) less(a, b int) bool {
 	return a < b
 }
 
-// lineDeviation 用二维叉积比较格点偏离起点到点击目标的程度，始终只用于等长候选的排序。
+// lineDeviation 用二维叉积比较格点偏离起点到点击目标的程度，只影响等长候选的排序。
 func (t *Task) lineDeviation(point Point) int64 {
 	dx, dy := int64(t.goal.X-t.start.X), int64(t.goal.Y-t.start.Y)
 	deviation := int64(point.X-t.start.X)*dy - int64(point.Y-t.start.Y)*dx

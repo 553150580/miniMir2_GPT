@@ -130,16 +130,20 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 	}
 	wantSlots := []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 2}
 	wantCommands := int64(4)
+	wantEdits := int64(2)
 	if slotFirst {
 		wantSlots = []uint32{0, 0, devconfig.SummonSkeletonSkillID, 2}
 		wantCommands = 2
+		if os.Getenv("MINIMIR_SLOTS_BROWSER_PRIORITY") == "1" {
+			wantEdits, wantCommands = 4, 4 // 放入、移槽、从同槽移除、再按旧顺序放回。
+		}
 	}
 	if !slices.Equal(stored.SkillSlotIDs, wantSlots) {
 		t.Fatal("触屏两次配置未持久化四槽", stored.SkillSlotIDs)
 	}
 	count, err := store.DB.Collection("operations").CountDocuments(ctx, bson.M{"role_id": roleID, "kind": persistence.AssetSetSkillSlots, "code": 0})
 	must(t, err)
-	if count != 2 || stored.EconomicSeq != wantCommands {
+	if count != wantEdits || stored.EconomicSeq != wantCommands {
 		t.Fatalf("学书、槽位点击或健康重连产生非预期永久操作次数：技能槽%d、角色流水%d", count, stored.EconomicSeq)
 	}
 }

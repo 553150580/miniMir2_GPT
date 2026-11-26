@@ -51,8 +51,11 @@ export function attackSkillSlotIDs(value?: readonly number[]): number[] {
 
 // 能力判断与权威技能槽一致。召唤需要显式选入，自动缺省目录沿用原配置。
 export function canQueueSkill(row?: SkillRow | null): boolean {
-    if (!row?.learned) return false;
-    const definition = row.definition;
+    return !!row?.learned && usesAttackSlot(row.definition);
+}
+
+// 独立于学习及当前施法资源，供待选列表说明此类技能的槽位资格。
+export function usesAttackSlot(definition: SkillDefinition): boolean {
     return ['half_moon', 'thrusting', 'flaming_sword'].includes(definition.kind) ||
         skillActivation(definition) === 'cast' && !definition.displacement && definition.kind !== 'teleport' &&
         (definition.kind === 'summon_pet' || !!definition.auto_enabled);

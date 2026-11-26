@@ -34,7 +34,9 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     class List{}List.EVENT_ITEM_CLICK='item';class Label{}class Button{}class Toggle{}
     const UIMgr={EVENT_CHANGED:'ui-stack-changed'};
     const module={exports:{}};new Function('require','module','exports',compiled.outputText)(id=>id==='cc'?{Label,Button,Toggle,isValid:()=>true}:id==='../ui/List'?{List}:id==='../ui/UIMgr'?{UIMgr}:id==='./SkillModel'?model:{},module,module.exports);
-    const labels=new Map(),buttons=new Map(),nodes=new Map(),toggle={isChecked:false,setIsCheckedWithoutNotify(value){this.isChecked=value;}},texts=[],list={node:{on(){},off(){}},setItems(rows,render){
+    let offset=175;
+    const labels=new Map(),buttons=new Map(),nodes=new Map(),toggle={isChecked:false,setIsCheckedWithoutNotify(value){this.isChecked=value;}},texts=[],list={node:{on(){},off(){}},
+        scrollView:{getScrollOffset(){return{y:offset};}},restoreScrollOffset(value){offset=value;},setItems(rows,render){
         texts.length=0;for(const row of rows){const label={string:''};render({getChildByName:name=>name==='Text'?{getComponent:()=>label}:{active:false}},row);texts.push(label.string);}
     }};
     const panel={getChildByName(name){return name==='List'?{getComponent:()=>list}:this.getChildByPath(name);},getChildByPath(name){
@@ -51,7 +53,10 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     assert.equal(labels.get('SkillAuto/Label').string,'被动生效');assert.match(labels.get('Hint').string,/轻触槽位/);
     controller.chooseAttackSlot(0);assert.match(labels.get('Hint').string,/第 1 槽待选/);
     assert.equal(labels.get('AttackSlot1/Label').string,'1 · 待选');assert.deepEqual(saves,[]);
+    assert.equal(offset,0); assert.match(texts[0],/^刺杀剑术.*\n.*\n点选放入第 1 槽$/u);
+    assert.match(texts.at(-1),/此技能不能入攻击槽/);
     uiEvents.get(UIMgr.EVENT_CHANGED)(null);assert.equal(labels.get('AttackSlot1/Label').string,'1 · 空位');
+    assert.equal(offset,175); assert.match(texts[0],/^攻杀剑术/);
     controller.onSelected(0,model.skillRows(input)[0]);assert.match(labels.get('Hint').string,/不能放入/);
     controller.onSelected(1,model.skillRows(input)[1]);assert.equal(opened.length,0);
     assert.equal(labels.get('SkillAuto/Label').string,'随普攻');

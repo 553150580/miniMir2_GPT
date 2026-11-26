@@ -515,7 +515,12 @@ func verifyDirectoryBrowser(t *testing.T, account string, webRoot string, entrie
 	must(t, err)
 	must(t, os.WriteFile(manifest, raw, 0600))
 	t.Logf("浏览器验收证据目录 %s", resultDir)
-	ctx, stop := context.WithTimeout(context.Background(), 3*time.Minute)
+	browserTimeout := 3 * time.Minute
+	if os.Getenv("MINIMIR_VERIFY_TOWN_GROUND_NAVIGATION") == "1" {
+		// 三座城镇逐步播放后再点击下一格，完整八向回归有独立时间预算。
+		browserTimeout = 4 * time.Minute
+	}
+	ctx, stop := context.WithTimeout(context.Background(), browserTimeout)
 	defer stop()
 	command := exec.CommandContext(ctx, "node", filepath.Join(repo, "tools/client/verify_server_directory_browser.cjs"), manifest)
 	command.Dir = repo

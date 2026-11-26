@@ -16,6 +16,10 @@ const safe = 'Canvas/Safe/', panel = `${safe}UIMgr/Panels/Skills`, reconnect = '
 const confirm = `${safe}PopupView/Panels/Confirm/ConfirmButton`;
 const testRevisionGap = process.env.MINIMIR_SLOTS_BROWSER_REVISION_GAP === '1';
 const testSlotFirst = process.env.MINIMIR_SLOTS_BROWSER_SLOT_FIRST === '1';
+const testTownTabs = process.env.MINIMIR_SLOTS_BROWSER_TOWN_TABS === '1';
+const testPriority = process.env.MINIMIR_SLOTS_BROWSER_PRIORITY === '1';
+const viewport = process.env.MINIMIR_SLOTS_BROWSER_WIDE === '1' ? { width: 720, height: 1280 } : { width: 390, height: 844 };
+assert(!testPriority || testSlotFirst, '首屏优先专项需要原已学道士前态');
 
 async function scene(page, name) {
     await page.waitForFunction(name => {
@@ -117,20 +121,22 @@ function header(payload) {
     return { request, binding, offset };
 }
 
-async function observe(page, session, slots, fromBinding = '') {
-    const seen = await page.waitForFunction(({ session, slots, fromBinding }) => {
+async function observe(page, session, slots, fromBinding = '', map = '1') {
+    const seen = await page.waitForFunction(({ session, slots, fromBinding, map }) => {
         const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];
-        if (!session.ready || session.entry?.sceneKind !== 1 || !app?.world?.isMapReady || !session.inventory) return null;
+        if (!session.ready || session.entry?.roomId.toString() !== map || !app?.world?.isMapReady || !session.inventory) return null;
         const binding = session.connection.binding.toString(), observed = Array.from(session.inventory.skillSlotIds ?? []);
         if (fromBinding && BigInt(binding) <= BigInt(fromBinding) || observed.length !== slots.length || observed.some((id, index) => id !== slots[index])) return null;
-        return { binding, slots: observed, ruleVersion: session.entry.resourceVersion.toString(), role: session.entryRole };
-    }, { session, slots, fromBinding }, { timeout: 18000 });
+        return { binding, slots: observed, ruleVersion: session.entry.resourceVersion.toString(), role: session.entryRole,
+            map, sceneKind: session.entry.sceneKind };
+    }, { session, slots, fromBinding, map }, { timeout: 25000 });
     try { return await seen.jsonValue(); } finally { await seen.dispose(); }
 }
 
 // 配对原请求、编辑时看到的四槽及真实回执，跳过学习和重连消息。
 function recordAssignment(report, requests, replies, ids, previous, gap) {
-    const item = Array.from(requests).find(([, request]) => request.type === 40031 && JSON.stringify(request.value.skill_slot_ids) === JSON.stringify(ids));
+    const item = Array.from(requests).find(([, request]) => request.type === 40031 &&
+        JSON.stringify(request.value.skill_slot_ids) === JSON.stringify(ids) && JSON.stringify(request.value.expected_skill_slot_ids) === JSON.stringify(previous));
     assert(item, '技能槽按钮没有发送40031');
     const [key, { value: request }] = item, reply = replies.get(key);
     assert(reply && reply.error_code === 0 && reply.new_revision.toString() !== '0', '40031缺少真实成功回执');
@@ -140,6 +146,78 @@ function recordAssignment(report, requests, replies, ids, previous, gap) {
     assert.deepEqual(request.expected_skill_slot_ids, previous, '技能槽比较字段必须保留触摸时看到的四槽');
     if (gap) assert.equal(request.operation.expected_revision.toString(), gap.inventory, '修订错位时必须提交读到的实际库存修订');
     report.assignments.push({ ids, previous, commandSeq: reply.command_seq.toString(), revision: reply.new_revision.toString(), sameOperation: true });
+}
+
+// 通过普通角色或背包入口进入同一配置面板，保留真实弹窗和触屏路径。
+async function openSkillsTab(page, source) {
+    await touch(page, `${safe}BottomHUD/QuickNav/${source}`);
+    await touch(page, `${safe}UIMgr/Panels/${source}/SectionTabs/Skills`);
+    await page.waitForFunction(path => cc.find(path)?.activeInHierarchy, panel);
+}
+
+async function closeSkillPanels(page) {
+    for (let step = 0; step < 3; step++) {
+        const top = await page.evaluate(() => cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.ui?.top?.name);
+        if (!top) return;
+        await page.touchscreen.tap(8, 200);
+        await page.waitForFunction(previous => cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.ui?.top?.name !== previous, top);
+    }
+    assert.fail('角色和技能栈未随背景轻触返回');
+}
+
+// 待选后直接读取首屏真实可触行，点击和保存仍走原按钮、列表及 WebSocket。
+async function chooseVisibleSkull(page, cdp, slot, action) {
+    const visible = await page.waitForFunction(({ panel, slot, action }) => {
+        const root = cc.find(panel), list = root?.getChildByName('List')?.getComponent('List');
+        if (root?.getChildByPath(`AttackSlot${slot}/Label`)?.getComponent(cc.Label)?.string !== `${slot} · 待选` || !list) return null;
+        const index = list.items.findIndex(row => row.definition.id === 17);
+        const shown = list.rows.get(index), text = shown?.getChildByName('Text')?.getComponent(cc.Label)?.string;
+        const offset = list.scrollView.getScrollOffset().y;
+        return shown?.activeInHierarchy && offset <= 1 && text?.includes(action) ? { index, offset, text } : null;
+    }, { panel, slot, action }, { timeout: 3500 });
+    const sample = await visible.jsonValue();
+    await visible.dispose();
+    assert(sample.index < 2, '原已学治愈与骷髅应排进首屏');
+    assert.equal(await selectSkill(page, cdp, 17, true), 0, '待选时应直接点选骷髅，不需要上下滑动');
+    return sample;
+}
+
+async function assignKnownSummonFromFirstScreen(page, cdp, session, report, requests, replies, first) {
+    const initial = first.slots, placed = [17, 0, 0, 2], final = [0, 0, 17, 2];
+    const inventory = slots => observe(page, session, slots, '', first.map);
+    report.step = '城镇角色页不滚动，由空槽首屏直接放入骷髅';
+    await touch(page, panel + '/AttackSlot1');
+    const firstScreen = await chooseVisibleSkull(page, cdp, 1, '点选放入第 1 槽');
+    await inventory(placed);
+    recordAssignment(report, requests, replies, placed, initial);
+    if (testTownTabs) {
+        await closeSkillPanels(page);
+        await openSkillsTab(page, 'Inventory');
+        report.entries.push('背包页');
+    }
+    report.step = '普通技能列表先滑到底，再点第3槽并直接在首屏移槽';
+    assert(await selectSkill(page, cdp, 30, false) > 0);
+    const listOffset = () => page.evaluate(path => cc.find(path).getComponent('List').scrollView.getScrollOffset().y, `${panel}/List`);
+    const before = await listOffset();
+    assert(before > 300);
+    await touch(page, panel + '/AttackSlot3');
+    const afterScroll = await chooseVisibleSkull(page, cdp, 3, '点选放入第 3 槽');
+    await inventory(final);
+    recordAssignment(report, requests, replies, final, placed);
+    const restoredOffset = await listOffset();
+    assert(Math.abs(restoredOffset - before) <= 1, '编辑完成后需恢复原浏览位置');
+
+    report.step = '已填原槽按待选提示点同一技能移除，再按旧顺序放回';
+    await touch(page, panel + '/AttackSlot3');
+    await chooseVisibleSkull(page, cdp, 3, '已在此槽 · 点选移除');
+    await inventory(initial);
+    recordAssignment(report, requests, replies, initial, final);
+    await selectSkill(page, cdp, 17, true);
+    await touch(page, panel + '/AttackSlot3');
+    await inventory(final);
+    recordAssignment(report, requests, replies, final, initial);
+    report.priority = { firstScreen, before, afterScroll, restored: true, restoredOffset, removedSameSlot: true, skillFirstStillWorks: true };
+    return final;
 }
 
 // 已学骷髅且第 4 槽保留治愈术时，先点空槽应等待点选，并保护已有槽和未学习技能。
@@ -152,7 +230,7 @@ async function assignKnownSummonBySlot(page, cdp, session, report, requests, rep
     await waitForLabel('1 · 待选');
     const hint = await page.evaluate(path => cc.find(path)?.getComponent(cc.Label)?.string, `${panel}/Hint`);
     assert.match(hint, /第 1 槽待选.*已学技能/);
-    await observe(page, session, first.slots);
+    await observe(page, session, first.slots, '', first.map);
     assert.equal(requests.size, 0, '点空槽不能立即将默认预览技能移入');
     await page.screenshot({ path: path.join(output, 'summon-slot-awaiting-selection.png') });
     await selectSkill(page, cdp, 30, false);
@@ -166,16 +244,21 @@ async function assignKnownSummonBySlot(page, cdp, session, report, requests, rep
     await touch(page, target);
     await waitForLabel('1 · 待选');
     const swipes = await selectSkill(page, cdp, 17, true);
-    assert(swipes > 0);
+    report.slotFirst.selectionSwipes = swipes;
     const intermediate = [17, 0, 0, 2];
-    await observe(page, session, intermediate);
+    await observe(page, session, intermediate, '', first.map);
     recordAssignment(report, requests, replies, intermediate, first.slots);
     await waitForLabel('1 · 召唤骷髅');
+    if (testTownTabs) {
+        await closeSkillPanels(page);
+        await openSkillsTab(page, 'Inventory');
+        report.entries.push('背包页');
+    }
     report.step = '重新选技能后点第 3 槽，沿用原操作顺序';
     await selectSkill(page, cdp, 17, true);
     await touch(page, `${panel}/AttackSlot3`);
     const final = [0, 0, 17, 2];
-    await observe(page, session, final);
+    await observe(page, session, final, '', first.map);
     recordAssignment(report, requests, replies, final, intermediate);
     return final;
 }
@@ -184,7 +267,7 @@ async function main() {
     const report = { passed: false, errors: [], learning: [], assignments: [], connectedSockets: 0 };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
+    const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
     const page = await context.newPage(), requests = new Map(), replies = new Map();
     const cdp = await context.newCDPSession(page);
     page.on('pageerror', error => report.errors.push(error.message));
@@ -220,7 +303,7 @@ async function main() {
         await touch(page, safe + 'Enter');
         await scene(page, 'Game');
         session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
-        const first = await observe(page, session, [0, 0, 0, 2]);
+        let first = await observe(page, session, [0, 0, 0, 2]);
         assert.equal(first.ruleVersion, String(expected.ruleVersion));
         await page.waitForFunction(session => !!session.hosting, session, { timeout: 5000 });
         if (!await page.evaluate(session => session.hosting.autoBattleEnabled, session)) {
@@ -228,8 +311,20 @@ async function main() {
             await page.waitForFunction(session => session.hosting?.autoBattleEnabled === true, session, { timeout: 10000 });
         }
         report.automaticBattle = true;
-        await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
-        const finalSlots = testSlotFirst ? await assignKnownSummonBySlot(page, cdp, session, report, requests, replies, first) : [17, 30, 0, 2];
+        if (testTownTabs) {
+            report.step = '正常地图入口切到银杏山谷，再从角色页打开技能';
+            const directory = safe + 'UIMgr/Panels/TownDirectory';
+            await touch(page, safe + 'BottomHUD/Footer/Map');
+            await touch(page, directory + '/RegionList/View/Content', '比奇省');
+            await touch(page, directory + '/MapList/View/Content', '银杏山谷 · 城镇');
+            first = await observe(page, session, first.slots, '', '3');
+            assert.equal(first.sceneKind, 2);
+            await openSkillsTab(page, 'Role');
+            report.entries = ['角色页'];
+            report.town = { map: first.map, viewport };
+        } else await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
+        const finalSlots = testPriority ? await assignKnownSummonFromFirstScreen(page, cdp, session, report, requests, replies, first)
+            : testSlotFirst ? await assignKnownSummonBySlot(page, cdp, session, report, requests, replies, first) : [17, 30, 0, 2];
         let previous = first.slots;
         const lessons = testSlotFirst ? [] : [[1, 17, [17, 0, 0, 2]], [2, 30, finalSlots]];
         for (const [slot, skill, ids] of lessons) {
@@ -237,9 +332,15 @@ async function main() {
             const swipes = await selectSkill(page, cdp, skill, false);
             await touch(page, panel + '/Learn');
             await touch(page, confirm);
+            const waitUntil = Date.now() + 12000;
+            let learnedReceipt;
+            while (!learnedReceipt && Date.now() < waitUntil) {
+                const learnItem = Array.from(requests).find(([, request]) => request.type === 40010 && request.value.skill_id === skill);
+                if (learnItem) learnedReceipt = replies.get(learnItem[0]);
+                if (!learnedReceipt) await new Promise(resolve => setTimeout(resolve, 40));
+            }
+            assert.equal(learnedReceipt?.error_code, 0, '学习原书未收到成功回执');
             await page.waitForFunction(({ session, skill }) => session.inventory?.learnedSkills?.some(row => row.skillId === skill), { session, skill });
-            const learnItem = Array.from(requests).find(([, request]) => request.type === 40010 && request.value.skill_id === skill);
-            assert(learnItem && replies.get(learnItem[0])?.error_code === 0, '未收到学习原书的成功回执');
             report.learning.push({ skill, swipes, receipt: true });
             report.step = `学习完成后设置第${slot}槽`;
             const exerciseGap = testRevisionGap && slot === 1;
@@ -255,7 +356,7 @@ async function main() {
             }
             try {
                 await touch(page, `${panel}/AttackSlot${slot}`);
-                await observe(page, session, ids);
+                await observe(page, session, ids, '', first.map);
             } finally {
                 if (beforeBinding) {
                     await page.evaluate(({ session, beforeBinding, revision }) => {
@@ -271,7 +372,7 @@ async function main() {
         report.step = '用保存的重连按钮取新票并复核原技能槽';
         await page.evaluate(session => session.connection.socket.close(4001, '隔离召唤槽触屏验收'), session);
         await touch(page, `${reconnect}/Panel/Reconnect`);
-        const after = await observe(page, session, finalSlots, first.binding);
+        const after = await observe(page, session, finalSlots, first.binding, first.map);
         await page.waitForFunction(path => !cc.find(path)?.activeInHierarchy, reconnect);
         if (!await page.evaluate(path => cc.find(path)?.activeInHierarchy ?? false, panel)) await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
         await page.waitForFunction(({ path, testSlotFirst }) => {
@@ -283,15 +384,19 @@ async function main() {
         await page.screenshot({ path: path.join(output, 'summon-slots-reconnected.png') });
         assert.equal(after.role, first.role);
         assert.equal(report.connectedSockets, 2);
-        assert.equal(requests.size, testSlotFirst ? 2 : 4);
+        assert.equal(requests.size, testSlotFirst && !testPriority ? 2 : 4);
         assert(report.learning.every(row => row.swipes > 0), '两种召唤都应覆盖实际触屏滚动');
         assert.deepEqual(report.errors, []);
         report.reconnect = { newBinding: true, sameRole: true, slots: after.slots };
         report.passed = true;
         delete report.step;
     } catch (error) {
-        report.failure = { error: error.message, sent: Array.from(requests.values(), request => request.type === 40031
-            ? { id: request.type, slots: request.value.skill_slot_ids } : request.type),
+        report.failure = { error: error.message, sent: Array.from(requests, ([key, request]) => {
+            const reply = replies.get(key);
+            return { id: request.type, skill: request.value.skill_id, slots: request.value.skill_slot_ids,
+                expectedRevision: request.value.operation.expected_revision.toString(), requestedCommand: request.value.operation.command_seq.toString(),
+                response: reply?.error_code, observedRevision: reply?.new_revision.toString(), confirmedCommand: reply?.command_seq.toString() };
+        }),
             client: session ? await page.evaluate(session => session.lastError, session).catch(() => '') : '' };
         throw error;
     } finally {
