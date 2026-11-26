@@ -371,6 +371,9 @@ export namespace minimir {
             /** OperationResult role_card_daily. */
             role_card_daily?: (minimir.v1.RoleCardDailyReceipt.$Properties|null);
 
+            /** OperationResult item_market. */
+            item_market?: (minimir.v1.ItemMarketReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -461,12 +464,165 @@ export namespace minimir {
                 /** OperationResult role_card_daily */
                 role_card_daily?: (minimir.v1.RoleCardDailyReceipt.$Properties|null);
 
+                /** OperationResult item_market */
+                item_market?: (minimir.v1.ItemMarketReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketReceipt.
+         * @deprecated Use minimir.v1.ItemMarketReceipt.$Properties instead.
+         */
+        interface IItemMarketReceipt extends minimir.v1.ItemMarketReceipt.$Properties {
+        }
+
+        /** Represents an ItemMarketReceipt. */
+        class ItemMarketReceipt {
+
+            /**
+             * Constructs a new ItemMarketReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketReceipt action. */
+            action: number;
+
+            /** ItemMarketReceipt order_id. */
+            order_id: Uint8Array;
+
+            /** ItemMarketReceipt order_version. */
+            order_version: Long;
+
+            /** ItemMarketReceipt item_id. */
+            item_id: number;
+
+            /** ItemMarketReceipt quantity. */
+            quantity: Long;
+
+            /** ItemMarketReceipt unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** ItemMarketReceipt yuanbao_delta_units. */
+            yuanbao_delta_units: Long;
+
+            /** ItemMarketReceipt tax_yuanbao_units. */
+            tax_yuanbao_units: Long;
+
+            /** ItemMarketReceipt escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** ItemMarketReceipt escrow_version. */
+            escrow_version: Long;
+
+            /**
+             * Creates a new ItemMarketReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketReceipt instance
+             */
+            static create(properties: minimir.v1.ItemMarketReceipt.$Shape): minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape;
+            static create(properties?: minimir.v1.ItemMarketReceipt.$Properties): minimir.v1.ItemMarketReceipt;
+
+            /**
+             * Encodes the specified ItemMarketReceipt message. Does not implicitly {@link minimir.v1.ItemMarketReceipt.verify|verify} messages.
+             * @param message ItemMarketReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketReceipt message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketReceipt.verify|verify} messages.
+             * @param message ItemMarketReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape} ItemMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape;
+
+            /**
+             * Decodes an ItemMarketReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape} ItemMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape;
+
+            /**
+             * Verifies an ItemMarketReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketReceipt {
+
+            /** Properties of an ItemMarketReceipt. */
+            interface $Properties {
+
+                /** ItemMarketReceipt action */
+                action?: (number|null);
+
+                /** ItemMarketReceipt order_id */
+                order_id?: (Uint8Array|null);
+
+                /** ItemMarketReceipt order_version */
+                order_version?: (Long|null);
+
+                /** ItemMarketReceipt item_id */
+                item_id?: (number|null);
+
+                /** ItemMarketReceipt quantity */
+                quantity?: (Long|null);
+
+                /** ItemMarketReceipt unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** ItemMarketReceipt yuanbao_delta_units */
+                yuanbao_delta_units?: (Long|null);
+
+                /** ItemMarketReceipt tax_yuanbao_units */
+                tax_yuanbao_units?: (Long|null);
+
+                /** ItemMarketReceipt escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** ItemMarketReceipt escrow_version */
+                escrow_version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketReceipt. */
+            type $Shape = minimir.v1.ItemMarketReceipt.$Properties;
         }
 
         /**
@@ -17879,6 +18035,714 @@ export namespace minimir {
 
             /** Shape of a ClaimRoleCardDailyRequest. */
             type $Shape = minimir.v1.ClaimRoleCardDailyRequest.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketQuery.
+         * @deprecated Use minimir.v1.ItemMarketQuery.$Properties instead.
+         */
+        interface IItemMarketQuery extends minimir.v1.ItemMarketQuery.$Properties {
+        }
+
+        /** Represents an ItemMarketQuery. */
+        class ItemMarketQuery {
+
+            /**
+             * Constructs a new ItemMarketQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /** ItemMarketQuery scope. */
+            scope: number;
+
+            /** ItemMarketQuery item_id. */
+            item_id: number;
+
+            /** ItemMarketQuery page_size. */
+            page_size: number;
+
+            /** ItemMarketQuery cursor. */
+            cursor: Uint8Array;
+
+            /**
+             * Creates a new ItemMarketQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketQuery instance
+             */
+            static create(properties: minimir.v1.ItemMarketQuery.$Shape): minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape;
+            static create(properties?: minimir.v1.ItemMarketQuery.$Properties): minimir.v1.ItemMarketQuery;
+
+            /**
+             * Encodes the specified ItemMarketQuery message. Does not implicitly {@link minimir.v1.ItemMarketQuery.verify|verify} messages.
+             * @param message ItemMarketQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketQuery message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketQuery.verify|verify} messages.
+             * @param message ItemMarketQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape} ItemMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape;
+
+            /**
+             * Decodes an ItemMarketQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape} ItemMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape;
+
+            /**
+             * Verifies an ItemMarketQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketQuery {
+
+            /** Properties of an ItemMarketQuery. */
+            interface $Properties {
+
+                /** ItemMarketQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** ItemMarketQuery scope */
+                scope?: (number|null);
+
+                /** ItemMarketQuery item_id */
+                item_id?: (number|null);
+
+                /** ItemMarketQuery page_size */
+                page_size?: (number|null);
+
+                /** ItemMarketQuery cursor */
+                cursor?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketQuery. */
+            type $Shape = minimir.v1.ItemMarketQuery.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketOrderView.
+         * @deprecated Use minimir.v1.ItemMarketOrderView.$Properties instead.
+         */
+        interface IItemMarketOrderView extends minimir.v1.ItemMarketOrderView.$Properties {
+        }
+
+        /** Represents an ItemMarketOrderView. */
+        class ItemMarketOrderView {
+
+            /**
+             * Constructs a new ItemMarketOrderView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketOrderView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketOrderView order_id. */
+            order_id: Uint8Array;
+
+            /** ItemMarketOrderView version. */
+            version: Long;
+
+            /** ItemMarketOrderView state. */
+            state: number;
+
+            /** ItemMarketOrderView item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** ItemMarketOrderView remaining_quantity. */
+            remaining_quantity: Long;
+
+            /** ItemMarketOrderView unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** ItemMarketOrderView end_at_unix_ms. */
+            end_at_unix_ms: Long;
+
+            /** ItemMarketOrderView active_bid_count. */
+            active_bid_count: number;
+
+            /** ItemMarketOrderView owned. */
+            owned: boolean;
+
+            /** ItemMarketOrderView same_account. */
+            same_account: boolean;
+
+            /** ItemMarketOrderView my_active_bid. */
+            my_active_bid: boolean;
+
+            /** ItemMarketOrderView next_unit_price_yuanbao_units. */
+            next_unit_price_yuanbao_units: Long;
+
+            /**
+             * Creates a new ItemMarketOrderView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketOrderView instance
+             */
+            static create(properties: minimir.v1.ItemMarketOrderView.$Shape): minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape;
+            static create(properties?: minimir.v1.ItemMarketOrderView.$Properties): minimir.v1.ItemMarketOrderView;
+
+            /**
+             * Encodes the specified ItemMarketOrderView message. Does not implicitly {@link minimir.v1.ItemMarketOrderView.verify|verify} messages.
+             * @param message ItemMarketOrderView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketOrderView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketOrderView message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketOrderView.verify|verify} messages.
+             * @param message ItemMarketOrderView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketOrderView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketOrderView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape} ItemMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape;
+
+            /**
+             * Decodes an ItemMarketOrderView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape} ItemMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape;
+
+            /**
+             * Verifies an ItemMarketOrderView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketOrderView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketOrderView {
+
+            /** Properties of an ItemMarketOrderView. */
+            interface $Properties {
+
+                /** ItemMarketOrderView order_id */
+                order_id?: (Uint8Array|null);
+
+                /** ItemMarketOrderView version */
+                version?: (Long|null);
+
+                /** ItemMarketOrderView state */
+                state?: (number|null);
+
+                /** ItemMarketOrderView item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** ItemMarketOrderView remaining_quantity */
+                remaining_quantity?: (Long|null);
+
+                /** ItemMarketOrderView unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** ItemMarketOrderView end_at_unix_ms */
+                end_at_unix_ms?: (Long|null);
+
+                /** ItemMarketOrderView active_bid_count */
+                active_bid_count?: (number|null);
+
+                /** ItemMarketOrderView owned */
+                owned?: (boolean|null);
+
+                /** ItemMarketOrderView same_account */
+                same_account?: (boolean|null);
+
+                /** ItemMarketOrderView my_active_bid */
+                my_active_bid?: (boolean|null);
+
+                /** ItemMarketOrderView next_unit_price_yuanbao_units */
+                next_unit_price_yuanbao_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketOrderView. */
+            type $Shape = minimir.v1.ItemMarketOrderView.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketEscrowView.
+         * @deprecated Use minimir.v1.ItemMarketEscrowView.$Properties instead.
+         */
+        interface IItemMarketEscrowView extends minimir.v1.ItemMarketEscrowView.$Properties {
+        }
+
+        /** Represents an ItemMarketEscrowView. */
+        class ItemMarketEscrowView {
+
+            /**
+             * Constructs a new ItemMarketEscrowView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketEscrowView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketEscrowView escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** ItemMarketEscrowView order_id. */
+            order_id: Uint8Array;
+
+            /** ItemMarketEscrowView version. */
+            version: Long;
+
+            /** ItemMarketEscrowView kind. */
+            kind: number;
+
+            /** ItemMarketEscrowView item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** ItemMarketEscrowView yuanbao_units. */
+            yuanbao_units: Long;
+
+            /** ItemMarketEscrowView created_at_unix_ms. */
+            created_at_unix_ms: Long;
+
+            /**
+             * Creates a new ItemMarketEscrowView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketEscrowView instance
+             */
+            static create(properties: minimir.v1.ItemMarketEscrowView.$Shape): minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape;
+            static create(properties?: minimir.v1.ItemMarketEscrowView.$Properties): minimir.v1.ItemMarketEscrowView;
+
+            /**
+             * Encodes the specified ItemMarketEscrowView message. Does not implicitly {@link minimir.v1.ItemMarketEscrowView.verify|verify} messages.
+             * @param message ItemMarketEscrowView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketEscrowView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketEscrowView message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketEscrowView.verify|verify} messages.
+             * @param message ItemMarketEscrowView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketEscrowView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketEscrowView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape} ItemMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape;
+
+            /**
+             * Decodes an ItemMarketEscrowView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape} ItemMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape;
+
+            /**
+             * Verifies an ItemMarketEscrowView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketEscrowView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketEscrowView {
+
+            /** Properties of an ItemMarketEscrowView. */
+            interface $Properties {
+
+                /** ItemMarketEscrowView escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** ItemMarketEscrowView order_id */
+                order_id?: (Uint8Array|null);
+
+                /** ItemMarketEscrowView version */
+                version?: (Long|null);
+
+                /** ItemMarketEscrowView kind */
+                kind?: (number|null);
+
+                /** ItemMarketEscrowView item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** ItemMarketEscrowView yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** ItemMarketEscrowView created_at_unix_ms */
+                created_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketEscrowView. */
+            type $Shape = minimir.v1.ItemMarketEscrowView.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketState.
+         * @deprecated Use minimir.v1.ItemMarketState.$Properties instead.
+         */
+        interface IItemMarketState extends minimir.v1.ItemMarketState.$Properties {
+        }
+
+        /** Represents an ItemMarketState. */
+        class ItemMarketState {
+
+            /**
+             * Constructs a new ItemMarketState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketState scene_epoch. */
+            scene_epoch: Long;
+
+            /** ItemMarketState scope. */
+            scope: number;
+
+            /** ItemMarketState enabled. */
+            enabled: boolean;
+
+            /** ItemMarketState can_trade. */
+            can_trade: boolean;
+
+            /** ItemMarketState orders. */
+            orders: minimir.v1.ItemMarketOrderView.$Properties[];
+
+            /** ItemMarketState escrows. */
+            escrows: minimir.v1.ItemMarketEscrowView.$Properties[];
+
+            /** ItemMarketState next_cursor. */
+            next_cursor: Uint8Array;
+
+            /** ItemMarketState error_code. */
+            error_code: number;
+
+            /** ItemMarketState role_revision. */
+            role_revision: Long;
+
+            /**
+             * Creates a new ItemMarketState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketState instance
+             */
+            static create(properties: minimir.v1.ItemMarketState.$Shape): minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape;
+            static create(properties?: minimir.v1.ItemMarketState.$Properties): minimir.v1.ItemMarketState;
+
+            /**
+             * Encodes the specified ItemMarketState message. Does not implicitly {@link minimir.v1.ItemMarketState.verify|verify} messages.
+             * @param message ItemMarketState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketState message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketState.verify|verify} messages.
+             * @param message ItemMarketState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape} ItemMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape;
+
+            /**
+             * Decodes an ItemMarketState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape} ItemMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape;
+
+            /**
+             * Verifies an ItemMarketState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketState {
+
+            /** Properties of an ItemMarketState. */
+            interface $Properties {
+
+                /** ItemMarketState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** ItemMarketState scope */
+                scope?: (number|null);
+
+                /** ItemMarketState enabled */
+                enabled?: (boolean|null);
+
+                /** ItemMarketState can_trade */
+                can_trade?: (boolean|null);
+
+                /** ItemMarketState orders */
+                orders?: (minimir.v1.ItemMarketOrderView.$Properties[]|null);
+
+                /** ItemMarketState escrows */
+                escrows?: (minimir.v1.ItemMarketEscrowView.$Properties[]|null);
+
+                /** ItemMarketState next_cursor */
+                next_cursor?: (Uint8Array|null);
+
+                /** ItemMarketState error_code */
+                error_code?: (number|null);
+
+                /** ItemMarketState role_revision */
+                role_revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketState. */
+            type $Shape = minimir.v1.ItemMarketState.$Properties;
+        }
+
+        /**
+         * Properties of an ItemMarketAction.
+         * @deprecated Use minimir.v1.ItemMarketAction.$Properties instead.
+         */
+        interface IItemMarketAction extends minimir.v1.ItemMarketAction.$Properties {
+        }
+
+        /** Represents an ItemMarketAction. */
+        class ItemMarketAction {
+
+            /**
+             * Constructs a new ItemMarketAction.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemMarketAction.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemMarketAction action. */
+            action: number;
+
+            /** ItemMarketAction order_id. */
+            order_id: Uint8Array;
+
+            /** ItemMarketAction order_version. */
+            order_version: Long;
+
+            /** ItemMarketAction item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** ItemMarketAction item_version. */
+            item_version: Long;
+
+            /** ItemMarketAction quantity. */
+            quantity: Long;
+
+            /** ItemMarketAction unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** ItemMarketAction escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** ItemMarketAction escrow_version. */
+            escrow_version: Long;
+
+            /** ItemMarketAction operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new ItemMarketAction instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemMarketAction instance
+             */
+            static create(properties: minimir.v1.ItemMarketAction.$Shape): minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape;
+            static create(properties?: minimir.v1.ItemMarketAction.$Properties): minimir.v1.ItemMarketAction;
+
+            /**
+             * Encodes the specified ItemMarketAction message. Does not implicitly {@link minimir.v1.ItemMarketAction.verify|verify} messages.
+             * @param message ItemMarketAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemMarketAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemMarketAction message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketAction.verify|verify} messages.
+             * @param message ItemMarketAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemMarketAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemMarketAction message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape} ItemMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape;
+
+            /**
+             * Decodes an ItemMarketAction message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape} ItemMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape;
+
+            /**
+             * Verifies an ItemMarketAction message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemMarketAction
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemMarketAction {
+
+            /** Properties of an ItemMarketAction. */
+            interface $Properties {
+
+                /** ItemMarketAction action */
+                action?: (number|null);
+
+                /** ItemMarketAction order_id */
+                order_id?: (Uint8Array|null);
+
+                /** ItemMarketAction order_version */
+                order_version?: (Long|null);
+
+                /** ItemMarketAction item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** ItemMarketAction item_version */
+                item_version?: (Long|null);
+
+                /** ItemMarketAction quantity */
+                quantity?: (Long|null);
+
+                /** ItemMarketAction unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** ItemMarketAction escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** ItemMarketAction escrow_version */
+                escrow_version?: (Long|null);
+
+                /** ItemMarketAction operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemMarketAction. */
+            type $Shape = minimir.v1.ItemMarketAction.$Properties;
         }
     }
 }

@@ -1,0 +1,69 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "assets.proto";
+import "common.proto";
+
+// 查询范围 1 公开订单、2 本角色的订单与有效预购、3 本角色交易托管仓。
+message ItemMarketQuery {
+  uint64 scene_epoch = 1;
+  uint32 scope = 2;
+  uint32 item_id = 3;
+  uint32 page_size = 4;
+  bytes cursor = 5;
+}
+
+// 订单阶段 1 竞购、2 直购、3 成交、4 撤单、5 到期。关系字段只表明与当前角色或账号关系。
+message ItemMarketOrderView {
+  bytes order_id = 1;
+  uint64 version = 2;
+  uint32 state = 3;
+  ItemView item = 4;
+  int64 remaining_quantity = 5;
+  int64 unit_price_yuanbao_units = 6;
+  int64 end_at_unix_ms = 7;
+  uint32 active_bid_count = 8;
+  bool owned = 9;
+  bool same_account = 10;
+  bool my_active_bid = 11;
+  int64 next_unit_price_yuanbao_units = 12;
+}
+
+// 本角色可独立领取的托管项目，类型 1 物品、2 成交所得、3 预购退款。
+message ItemMarketEscrowView {
+  bytes escrow_id = 1;
+  bytes order_id = 2;
+  uint64 version = 3;
+  uint32 kind = 4;
+  ItemView item = 5;
+  int64 yuanbao_units = 6;
+  int64 created_at_unix_ms = 7;
+}
+
+message ItemMarketState {
+  uint64 scene_epoch = 1;
+  uint32 scope = 2;
+  bool enabled = 3;
+  bool can_trade = 4;
+  repeated ItemMarketOrderView orders = 5;
+  repeated ItemMarketEscrowView escrows = 6;
+  bytes next_cursor = 7;
+  uint32 error_code = 8;
+  uint64 role_revision = 9;
+}
+
+// 动作 1 上架、2 预购、3 加价、4 直购、5 撤单、6 领取。上架和直购数量为请求数量；预购、加价和撤单数量为原显示余量。
+// 单价为上架定价或成交确认页所见的当前价格。领取以原托管项目及版本为准，数量 0 表示整笔领取。
+message ItemMarketAction {
+  uint32 action = 1;
+  bytes order_id = 2;
+  uint64 order_version = 3;
+  bytes item_instance_id = 4;
+  uint64 item_version = 5;
+  int64 quantity = 6;
+  int64 unit_price_yuanbao_units = 7;
+  bytes escrow_id = 8;
+  uint64 escrow_version = 9;
+  OperationContext operation = 10;
+}

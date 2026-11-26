@@ -23,6 +23,7 @@ import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
 import { WarehouseReceiptGuard } from './WarehouseModel';
 import type { WarehouseReceipt } from './WarehouseModel';
 import { validateRoleCardState, type RoleCardState } from './RoleCardProtocol';
+import { itemMarketPageSize, validateItemMarketState, type ItemMarketScope, type ItemMarketState } from './ItemMarketProtocol';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 const recycleModel = new EquipmentRecycleModel();
@@ -88,7 +89,7 @@ export const session = {
 session.connection.subscribe((packet: Packet) => {
     if (packet.error) {
         // 月卡能力探测只有打开托管时触发，明确拒绝由对应请求处理，不污染旧服状态栏。
-        if (packet.id !== 40035 && packet.id !== 40036) session.lastError = protocolErrorMessage(packet.id, packet.error);
+        if (![40035, 40036, 40039, 40040].includes(packet.id)) session.lastError = protocolErrorMessage(packet.id, packet.error);
     }
     else switch (packet.id) {
         case 20002:
@@ -311,6 +312,17 @@ export async function queryRoleCard(productId = 0): Promise<RoleCardState> {
     if (!session.role || !session.ready || !isCurrentEntry(identity)) throw new Error('角色或地图已切换，请重新查看月卡');
     if (result?.errorCode) throw new ProtocolResponseError(40036, result.errorCode);
     return validateRoleCardState(result, sceneEpoch, productId);
+}
+
+// 道具市场查询只应用于原角色的当前普通场景。分页令牌由服务端签发并原样使用。
+export async function queryItemMarket(scope: ItemMarketScope, cursor = new Uint8Array(0)): Promise<ItemMarketState> {
+    const identity = currentEntryIdentity();
+    if (!session.role || !session.ready || !identity || !isCurrentEntry(identity)) throw new Error('道具市场尚未同步');
+    const sceneEpoch: Long = session.entry.sceneEpoch;
+    const result = await session.connection.request(40039, { sceneEpoch, scope, pageSize: itemMarketPageSize, cursor });
+    if (!session.role || !session.ready || !isCurrentEntry(identity)) throw new Error('角色或地图已切换，请重新查看道具市场');
+    if (result?.errorCode) throw new ProtocolResponseError(40040, result.errorCode);
+    return validateItemMarketState(result, sceneEpoch, scope);
 }
 
 function notify(): void { for (const update of Array.from(session.update)) { try { update(); } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); } } }

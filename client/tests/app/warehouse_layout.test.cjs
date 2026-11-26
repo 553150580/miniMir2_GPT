@@ -7,7 +7,8 @@ const component=(n,type)=>{const c=n._components.map(r=>scene[r.__id__]).find(c=
 const base='UIMgr/Panels/Warehouse/',bounds=n=>({l:n._lpos.x-size(n).width/2,r:n._lpos.x+size(n).width/2,b:n._lpos.y-size(n).height/2,t:n._lpos.y+size(n).height/2});
 const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.b<b.t&&a.t>b.b;
 test('仓库只追加保存子树与Functions入口；原1191对象只父children各追加一次，原地图/HUD/ItemLock全部字节语义保持',()=>{
- const projection=require('./helpers/hosting_purchase_layout.cjs')(require('./helpers/role_card_layout.cjs')(structuredClone(scene)));
+ const market=require('./helpers/item_market_layout.cjs')(structuredClone(scene));
+ const projection=require('./helpers/hosting_purchase_layout.cjs')(require('./helpers/role_card_layout.cjs')(market));
  const beforeDirectory=require('./helpers/inventory_grid_layout.cjs')(require('./helpers/skill_layout.cjs')(projection)).slice(0,1373);
  beforeDirectory[253]._children=beforeDirectory[253]._children.filter(x=>x.__id__<1373);
  const ground=beforeDirectory[26]._children.filter(ref=>ref.__id__>=1373);

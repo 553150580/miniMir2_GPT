@@ -69,6 +69,33 @@ test('购买月卡和特权日领在通知断线后保持原商品、报价、�
     }
 });
 
+test('道具市场六个动作均按原报价版本、目标、数量和流水在重连发送同样字节', () => {
+    const op = pending().value.operation;
+    const version = Long.fromString('9007199254740993', true);
+    const price = Long.fromString('9007199254740995');
+    const order = { orderId: id(4), orderVersion: version, quantity: Long.ONE, unitPriceYuanbaoUnits: price, operation: op };
+    const requests = [
+        { action: 1, itemInstanceId: id(3), itemVersion: version, quantity: Long.ONE, unitPriceYuanbaoUnits: price, operation: op },
+        ...[2, 3, 4, 5].map(action => ({ action, ...order })),
+        { action: 6, escrowId: id(5), escrowVersion: version, quantity: Long.ZERO, operation: op },
+    ];
+    for (const value of requests) {
+        const storage = new MemoryStorage(), journal = new PendingOperations(storage, key);
+        journal.set('roleA', { id: 40041, value });
+        const restored = new PendingOperations(storage, key).get('roleA').value;
+        const encode = request => pb.ItemMarketAction.encode({ action: request.action, order_id: request.orderId, order_version: request.orderVersion,
+            item_instance_id: request.itemInstanceId, item_version: request.itemVersion, quantity: request.quantity,
+            unit_price_yuanbao_units: request.unitPriceYuanbaoUnits, escrow_id: request.escrowId, escrow_version: request.escrowVersion,
+            operation: { op_id: op.opId, command_seq: op.commandSeq, expected_revision: op.expectedRevision, expected_rule_version: op.expectedRuleVersion } }).finish();
+        assert.deepEqual(encode(restored), encode(value));
+        assert.deepEqual(restored.operation, op);
+    }
+    for (const value of [{ ...requests[0], quantity: Long.ZERO }, { ...requests[1], unitPriceYuanbaoUnits: price.toUnsigned() },
+        { ...requests[5], quantity: Long.ONE }, { ...requests[5], orderId: id(4) }, { ...requests[2], orderVersion: Long.ONE }]) {
+        assert.throws(() => new PendingOperations().set('roleA', { id: 40041, value }), { code: 'INVALID_OPERATION' });
+    }
+});
+
 function mirrorExchange() {
     return { id: 40034, value: {
         packCount: 7, expectedPrice: Long.fromString('9007199254740993', false),

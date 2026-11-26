@@ -7,10 +7,11 @@ import (
 	"time"
 )
 
-// TestAcceptsPersonalBossQualification 核对仅允许当前版本和唯一一对已核对的旧、新夹具。
+// TestAcceptsPersonalBossQualification 核对当前版本以及已逐字段核对夹具之间的单向兼容。
 func TestAcceptsPersonalBossQualification(t *testing.T) {
 	const before = "4bb20bf3e8d235db1061e3223b8b28169f662d3e7e334291f6f65c09400acb1a"
 	const after = "6a421806cf5d45a8ead84bfda80be4a57eebcac00d3344140825fc860bfec9a6"
+	const market = "8cf30edfdf4db1cffbd2c0fe5688652a96496569f00aa19f26581f83a94fb266"
 	const unrelated = "af53a2647dab60517d43e75bba2b3a3c0cfc25e3b7295b5a931c330222adee65"
 	for _, tc := range []struct {
 		name      string   // 说明当前规则与原证明的关系。
@@ -20,6 +21,12 @@ func TestAcceptsPersonalBossQualification(t *testing.T) {
 		want      bool     // 可继续沿用这条原实战证明。
 	}{
 		{"双卡配置继承旧证明", &Fixture{RuleVersion: 30, Hash: after}, 30, before, true},
+		{"市场配置继承最早证明", &Fixture{RuleVersion: 30, Hash: market}, 30, before, true},
+		{"市场配置继承双卡证明", &Fixture{RuleVersion: 30, Hash: market}, 30, after, true},
+		{"市场配置接受现有证明", &Fixture{RuleVersion: 30, Hash: market}, 30, market, true},
+		{"双卡配置不反向接受市场证明", &Fixture{RuleVersion: 30, Hash: after}, 30, market, false},
+		{"市场配置不接受其他摘要", &Fixture{RuleVersion: 30, Hash: market}, 30, unrelated, false},
+		{"市场规则版本变化拒绝沿用", &Fixture{RuleVersion: 31, Hash: market}, 31, after, false},
 		{"当前配置接受当前证明", &Fixture{RuleVersion: 30, Hash: unrelated}, 30, unrelated, true},
 		{"配置摘要不相干", &Fixture{RuleVersion: 30, Hash: unrelated}, 30, before, false},
 		{"旧配置不反向接受新证明", &Fixture{RuleVersion: 30, Hash: before}, 30, after, false},

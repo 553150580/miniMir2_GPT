@@ -76,6 +76,17 @@ func TestPersonalBossAutomaticQualificationScope(t *testing.T) {
 	if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); err != nil {
 		t.Fatalf("双卡配置没有保留原通关证明：%v", err)
 	}
+	// 道具市场夹具只兼容两份先前已审定的通关证明，始终使用同一原战斗条件。
+	previous := state.Qualifications["3"].ConfigHash
+	roleCards := fixture.Hash
+	fixture.Hash = "8cf30edfdf4db1cffbd2c0fe5688652a96496569f00aa19f26581f83a94fb266"
+	q.ConfigHash = fixture.Hash
+	for _, hash := range []string{previous, roleCards} {
+		state.Qualifications["3"] = domain.PersonalBossQualification{Fingerprint: fingerprint, RuleVersion: 30, ConfigHash: hash}
+		if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); err != nil {
+			t.Fatalf("道具市场配置没有保留已核对的原通关证明 %s：%v", hash, err)
+		}
+	}
 }
 
 // TestPersonalBossAutomaticDurableMongo 验证有效卡与真实胜利的原子门禁，以及自动奖励判绑和重放。

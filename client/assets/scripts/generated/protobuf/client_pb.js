@@ -805,6 +805,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.MirrorArenaExchangeReceipt.$Properties|null} [mirror_arena_exchange] OperationResult mirror_arena_exchange
              * @property {minimir.v1.RoleCardPurchaseReceipt.$Properties|null} [role_card_purchase] OperationResult role_card_purchase
              * @property {minimir.v1.RoleCardDailyReceipt.$Properties|null} [role_card_daily] OperationResult role_card_daily
+             * @property {minimir.v1.ItemMarketReceipt.$Properties|null} [item_market] OperationResult item_market
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -909,6 +910,14 @@ $root.minimir = (function() {
             OperationResult.prototype.role_card_daily = null;
 
             /**
+             * OperationResult item_market.
+             * @member {minimir.v1.ItemMarketReceipt.$Properties|null|undefined} item_market
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.item_market = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -958,6 +967,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.RoleCardPurchaseReceipt.encode(message.role_card_purchase, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.role_card_daily != null && $Object.hasOwnProperty.call(message, "role_card_daily"))
                     $root.minimir.v1.RoleCardDailyReceipt.encode(message.role_card_daily, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.item_market != null && $Object.hasOwnProperty.call(message, "item_market"))
+                    $root.minimir.v1.ItemMarketReceipt.encode(message.item_market, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1084,6 +1095,12 @@ $root.minimir = (function() {
                             message.role_card_daily = $root.minimir.v1.RoleCardDailyReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.role_card_daily);
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.item_market = $root.minimir.v1.ItemMarketReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.item_market);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1167,6 +1184,11 @@ $root.minimir = (function() {
                     if (error)
                         return "role_card_daily." + error;
                 }
+                if (message.item_market != null && $Object.hasOwnProperty.call(message, "item_market")) {
+                    var error = $root.minimir.v1.ItemMarketReceipt.verify(message.item_market, _depth + 1);
+                    if (error)
+                        return "item_market." + error;
+                }
                 return null;
             };
 
@@ -1185,6 +1207,429 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.ItemMarketReceipt = (function() {
+
+            /**
+             * Properties of an ItemMarketReceipt.
+             * @typedef {Object} minimir.v1.ItemMarketReceipt.$Properties
+             * @property {number|null} [action] ItemMarketReceipt action
+             * @property {Uint8Array|null} [order_id] ItemMarketReceipt order_id
+             * @property {Long|null} [order_version] ItemMarketReceipt order_version
+             * @property {number|null} [item_id] ItemMarketReceipt item_id
+             * @property {Long|null} [quantity] ItemMarketReceipt quantity
+             * @property {Long|null} [unit_price_yuanbao_units] ItemMarketReceipt unit_price_yuanbao_units
+             * @property {Long|null} [yuanbao_delta_units] ItemMarketReceipt yuanbao_delta_units
+             * @property {Long|null} [tax_yuanbao_units] ItemMarketReceipt tax_yuanbao_units
+             * @property {Uint8Array|null} [escrow_id] ItemMarketReceipt escrow_id
+             * @property {Long|null} [escrow_version] ItemMarketReceipt escrow_version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketReceipt.
+             * @memberof minimir.v1
+             * @interface IItemMarketReceipt
+             * @augments minimir.v1.ItemMarketReceipt.$Properties
+             * @deprecated Use minimir.v1.ItemMarketReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketReceipt.
+             * @typedef {minimir.v1.ItemMarketReceipt.$Properties} minimir.v1.ItemMarketReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketReceipt.
+             * @constructor
+             * @param {minimir.v1.ItemMarketReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketReceipt action.
+             * @member {number} action
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.action = 0;
+
+            /**
+             * ItemMarketReceipt order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketReceipt order_version.
+             * @member {Long} order_version
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.order_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketReceipt item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.item_id = 0;
+
+            /**
+             * ItemMarketReceipt quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketReceipt unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketReceipt yuanbao_delta_units.
+             * @member {Long} yuanbao_delta_units
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.yuanbao_delta_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketReceipt tax_yuanbao_units.
+             * @member {Long} tax_yuanbao_units
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.tax_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketReceipt escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketReceipt escrow_version.
+             * @member {Long} escrow_version
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @instance
+             */
+            ItemMarketReceipt.prototype.escrow_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new ItemMarketReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {minimir.v1.ItemMarketReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketReceipt} ItemMarketReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketReceipt.$Shape): minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape;
+             *   (properties?: minimir.v1.ItemMarketReceipt.$Properties): minimir.v1.ItemMarketReceipt;
+             * }}
+             */
+            ItemMarketReceipt.create = function(properties) {
+                return new ItemMarketReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketReceipt message. Does not implicitly {@link minimir.v1.ItemMarketReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {minimir.v1.ItemMarketReceipt.$Properties} message ItemMarketReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.order_id);
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version") && (typeof message.order_version === "object" ? message.order_version.low || message.order_version.high : message.order_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.order_version);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.item_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.quantity);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.unit_price_yuanbao_units);
+                if (message.yuanbao_delta_units != null && $Object.hasOwnProperty.call(message, "yuanbao_delta_units") && (typeof message.yuanbao_delta_units === "object" ? message.yuanbao_delta_units.low || message.yuanbao_delta_units.high : message.yuanbao_delta_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.yuanbao_delta_units);
+                if (message.tax_yuanbao_units != null && $Object.hasOwnProperty.call(message, "tax_yuanbao_units") && (typeof message.tax_yuanbao_units === "object" ? message.tax_yuanbao_units.low || message.tax_yuanbao_units.high : message.tax_yuanbao_units !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.tax_yuanbao_units);
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 9, wireType 2 =*/74).bytes(message.escrow_id);
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version") && (typeof message.escrow_version === "object" ? message.escrow_version.low || message.escrow_version.high : message.escrow_version !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.escrow_version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketReceipt message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {minimir.v1.ItemMarketReceipt.$Properties} message ItemMarketReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape} ItemMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.order_version = value;
+                            else
+                                delete message.order_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_delta_units = value;
+                            else
+                                delete message.yuanbao_delta_units;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.tax_yuanbao_units = value;
+                            else
+                                delete message.tax_yuanbao_units;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.escrow_version = value;
+                            else
+                                delete message.escrow_version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketReceipt & minimir.v1.ItemMarketReceipt.$Shape} ItemMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketReceipt message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version"))
+                    if (!$util.isInteger(message.order_version) && !(message.order_version && $util.isInteger(message.order_version.low) && $util.isInteger(message.order_version.high)))
+                        return "order_version: integer|Long expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.yuanbao_delta_units != null && $Object.hasOwnProperty.call(message, "yuanbao_delta_units"))
+                    if (!$util.isInteger(message.yuanbao_delta_units) && !(message.yuanbao_delta_units && $util.isInteger(message.yuanbao_delta_units.low) && $util.isInteger(message.yuanbao_delta_units.high)))
+                        return "yuanbao_delta_units: integer|Long expected";
+                if (message.tax_yuanbao_units != null && $Object.hasOwnProperty.call(message, "tax_yuanbao_units"))
+                    if (!$util.isInteger(message.tax_yuanbao_units) && !(message.tax_yuanbao_units && $util.isInteger(message.tax_yuanbao_units.low) && $util.isInteger(message.tax_yuanbao_units.high)))
+                        return "tax_yuanbao_units: integer|Long expected";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version"))
+                    if (!$util.isInteger(message.escrow_version) && !(message.escrow_version && $util.isInteger(message.escrow_version.low) && $util.isInteger(message.escrow_version.high)))
+                        return "escrow_version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketReceipt";
+            };
+
+            return ItemMarketReceipt;
         })();
 
         v1.MirrorArenaExchangeReceipt = (function() {
@@ -47408,6 +47853,1971 @@ $root.minimir = (function() {
             };
 
             return ClaimRoleCardDailyRequest;
+        })();
+
+        v1.ItemMarketQuery = (function() {
+
+            /**
+             * Properties of an ItemMarketQuery.
+             * @typedef {Object} minimir.v1.ItemMarketQuery.$Properties
+             * @property {Long|null} [scene_epoch] ItemMarketQuery scene_epoch
+             * @property {number|null} [scope] ItemMarketQuery scope
+             * @property {number|null} [item_id] ItemMarketQuery item_id
+             * @property {number|null} [page_size] ItemMarketQuery page_size
+             * @property {Uint8Array|null} [cursor] ItemMarketQuery cursor
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketQuery.
+             * @memberof minimir.v1
+             * @interface IItemMarketQuery
+             * @augments minimir.v1.ItemMarketQuery.$Properties
+             * @deprecated Use minimir.v1.ItemMarketQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketQuery.
+             * @typedef {minimir.v1.ItemMarketQuery.$Properties} minimir.v1.ItemMarketQuery.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketQuery.
+             * @constructor
+             * @param {minimir.v1.ItemMarketQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.ItemMarketQuery
+             * @instance
+             */
+            ItemMarketQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketQuery scope.
+             * @member {number} scope
+             * @memberof minimir.v1.ItemMarketQuery
+             * @instance
+             */
+            ItemMarketQuery.prototype.scope = 0;
+
+            /**
+             * ItemMarketQuery item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.ItemMarketQuery
+             * @instance
+             */
+            ItemMarketQuery.prototype.item_id = 0;
+
+            /**
+             * ItemMarketQuery page_size.
+             * @member {number} page_size
+             * @memberof minimir.v1.ItemMarketQuery
+             * @instance
+             */
+            ItemMarketQuery.prototype.page_size = 0;
+
+            /**
+             * ItemMarketQuery cursor.
+             * @member {Uint8Array} cursor
+             * @memberof minimir.v1.ItemMarketQuery
+             * @instance
+             */
+            ItemMarketQuery.prototype.cursor = $util.newBuffer([]);
+
+            /**
+             * Creates a new ItemMarketQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {minimir.v1.ItemMarketQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketQuery} ItemMarketQuery instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketQuery.$Shape): minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape;
+             *   (properties?: minimir.v1.ItemMarketQuery.$Properties): minimir.v1.ItemMarketQuery;
+             * }}
+             */
+            ItemMarketQuery.create = function(properties) {
+                return new ItemMarketQuery(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketQuery message. Does not implicitly {@link minimir.v1.ItemMarketQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {minimir.v1.ItemMarketQuery.$Properties} message ItemMarketQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.scope);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.item_id);
+                if (message.page_size != null && $Object.hasOwnProperty.call(message, "page_size") && message.page_size !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.page_size);
+                if (message.cursor != null && $Object.hasOwnProperty.call(message, "cursor") && message.cursor.length)
+                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.cursor);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketQuery message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {minimir.v1.ItemMarketQuery.$Properties} message ItemMarketQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape} ItemMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.page_size = value;
+                            else
+                                delete message.page_size;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.cursor = value;
+                            else
+                                delete message.cursor;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketQuery & minimir.v1.ItemMarketQuery.$Shape} ItemMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketQuery message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.page_size != null && $Object.hasOwnProperty.call(message, "page_size"))
+                    if (!$util.isInteger(message.page_size))
+                        return "page_size: integer expected";
+                if (message.cursor != null && $Object.hasOwnProperty.call(message, "cursor"))
+                    if (!(message.cursor && typeof message.cursor.length === "number" || $util.isString(message.cursor)))
+                        return "cursor: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketQuery";
+            };
+
+            return ItemMarketQuery;
+        })();
+
+        v1.ItemMarketOrderView = (function() {
+
+            /**
+             * Properties of an ItemMarketOrderView.
+             * @typedef {Object} minimir.v1.ItemMarketOrderView.$Properties
+             * @property {Uint8Array|null} [order_id] ItemMarketOrderView order_id
+             * @property {Long|null} [version] ItemMarketOrderView version
+             * @property {number|null} [state] ItemMarketOrderView state
+             * @property {minimir.v1.ItemView.$Properties|null} [item] ItemMarketOrderView item
+             * @property {Long|null} [remaining_quantity] ItemMarketOrderView remaining_quantity
+             * @property {Long|null} [unit_price_yuanbao_units] ItemMarketOrderView unit_price_yuanbao_units
+             * @property {Long|null} [end_at_unix_ms] ItemMarketOrderView end_at_unix_ms
+             * @property {number|null} [active_bid_count] ItemMarketOrderView active_bid_count
+             * @property {boolean|null} [owned] ItemMarketOrderView owned
+             * @property {boolean|null} [same_account] ItemMarketOrderView same_account
+             * @property {boolean|null} [my_active_bid] ItemMarketOrderView my_active_bid
+             * @property {Long|null} [next_unit_price_yuanbao_units] ItemMarketOrderView next_unit_price_yuanbao_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketOrderView.
+             * @memberof minimir.v1
+             * @interface IItemMarketOrderView
+             * @augments minimir.v1.ItemMarketOrderView.$Properties
+             * @deprecated Use minimir.v1.ItemMarketOrderView.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketOrderView.
+             * @typedef {minimir.v1.ItemMarketOrderView.$Properties} minimir.v1.ItemMarketOrderView.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketOrderView.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketOrderView.
+             * @constructor
+             * @param {minimir.v1.ItemMarketOrderView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketOrderView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketOrderView order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketOrderView version.
+             * @member {Long} version
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketOrderView state.
+             * @member {number} state
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.state = 0;
+
+            /**
+             * ItemMarketOrderView item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.item = null;
+
+            /**
+             * ItemMarketOrderView remaining_quantity.
+             * @member {Long} remaining_quantity
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.remaining_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketOrderView unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketOrderView end_at_unix_ms.
+             * @member {Long} end_at_unix_ms
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.end_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketOrderView active_bid_count.
+             * @member {number} active_bid_count
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.active_bid_count = 0;
+
+            /**
+             * ItemMarketOrderView owned.
+             * @member {boolean} owned
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.owned = false;
+
+            /**
+             * ItemMarketOrderView same_account.
+             * @member {boolean} same_account
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.same_account = false;
+
+            /**
+             * ItemMarketOrderView my_active_bid.
+             * @member {boolean} my_active_bid
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.my_active_bid = false;
+
+            /**
+             * ItemMarketOrderView next_unit_price_yuanbao_units.
+             * @member {Long} next_unit_price_yuanbao_units
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @instance
+             */
+            ItemMarketOrderView.prototype.next_unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new ItemMarketOrderView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {minimir.v1.ItemMarketOrderView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketOrderView} ItemMarketOrderView instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketOrderView.$Shape): minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape;
+             *   (properties?: minimir.v1.ItemMarketOrderView.$Properties): minimir.v1.ItemMarketOrderView;
+             * }}
+             */
+            ItemMarketOrderView.create = function(properties) {
+                return new ItemMarketOrderView(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketOrderView message. Does not implicitly {@link minimir.v1.ItemMarketOrderView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {minimir.v1.ItemMarketOrderView.$Properties} message ItemMarketOrderView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketOrderView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.order_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.state);
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.remaining_quantity != null && $Object.hasOwnProperty.call(message, "remaining_quantity") && (typeof message.remaining_quantity === "object" ? message.remaining_quantity.low || message.remaining_quantity.high : message.remaining_quantity !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.remaining_quantity);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.unit_price_yuanbao_units);
+                if (message.end_at_unix_ms != null && $Object.hasOwnProperty.call(message, "end_at_unix_ms") && (typeof message.end_at_unix_ms === "object" ? message.end_at_unix_ms.low || message.end_at_unix_ms.high : message.end_at_unix_ms !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.end_at_unix_ms);
+                if (message.active_bid_count != null && $Object.hasOwnProperty.call(message, "active_bid_count") && message.active_bid_count !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.active_bid_count);
+                if (message.owned != null && $Object.hasOwnProperty.call(message, "owned") && message.owned !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.owned);
+                if (message.same_account != null && $Object.hasOwnProperty.call(message, "same_account") && message.same_account !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.same_account);
+                if (message.my_active_bid != null && $Object.hasOwnProperty.call(message, "my_active_bid") && message.my_active_bid !== false)
+                    writer.uint32(/* id 11, wireType 0 =*/88).bool(message.my_active_bid);
+                if (message.next_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "next_unit_price_yuanbao_units") && (typeof message.next_unit_price_yuanbao_units === "object" ? message.next_unit_price_yuanbao_units.low || message.next_unit_price_yuanbao_units.high : message.next_unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.next_unit_price_yuanbao_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketOrderView message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketOrderView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {minimir.v1.ItemMarketOrderView.$Properties} message ItemMarketOrderView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketOrderView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketOrderView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape} ItemMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketOrderView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketOrderView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.remaining_quantity = value;
+                            else
+                                delete message.remaining_quantity;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.end_at_unix_ms = value;
+                            else
+                                delete message.end_at_unix_ms;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.active_bid_count = value;
+                            else
+                                delete message.active_bid_count;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.owned = value;
+                            else
+                                delete message.owned;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.same_account = value;
+                            else
+                                delete message.same_account;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.my_active_bid = value;
+                            else
+                                delete message.my_active_bid;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.next_unit_price_yuanbao_units = value;
+                            else
+                                delete message.next_unit_price_yuanbao_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketOrderView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketOrderView & minimir.v1.ItemMarketOrderView.$Shape} ItemMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketOrderView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketOrderView message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketOrderView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                if (message.remaining_quantity != null && $Object.hasOwnProperty.call(message, "remaining_quantity"))
+                    if (!$util.isInteger(message.remaining_quantity) && !(message.remaining_quantity && $util.isInteger(message.remaining_quantity.low) && $util.isInteger(message.remaining_quantity.high)))
+                        return "remaining_quantity: integer|Long expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.end_at_unix_ms != null && $Object.hasOwnProperty.call(message, "end_at_unix_ms"))
+                    if (!$util.isInteger(message.end_at_unix_ms) && !(message.end_at_unix_ms && $util.isInteger(message.end_at_unix_ms.low) && $util.isInteger(message.end_at_unix_ms.high)))
+                        return "end_at_unix_ms: integer|Long expected";
+                if (message.active_bid_count != null && $Object.hasOwnProperty.call(message, "active_bid_count"))
+                    if (!$util.isInteger(message.active_bid_count))
+                        return "active_bid_count: integer expected";
+                if (message.owned != null && $Object.hasOwnProperty.call(message, "owned"))
+                    if (typeof message.owned !== "boolean")
+                        return "owned: boolean expected";
+                if (message.same_account != null && $Object.hasOwnProperty.call(message, "same_account"))
+                    if (typeof message.same_account !== "boolean")
+                        return "same_account: boolean expected";
+                if (message.my_active_bid != null && $Object.hasOwnProperty.call(message, "my_active_bid"))
+                    if (typeof message.my_active_bid !== "boolean")
+                        return "my_active_bid: boolean expected";
+                if (message.next_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "next_unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.next_unit_price_yuanbao_units) && !(message.next_unit_price_yuanbao_units && $util.isInteger(message.next_unit_price_yuanbao_units.low) && $util.isInteger(message.next_unit_price_yuanbao_units.high)))
+                        return "next_unit_price_yuanbao_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketOrderView
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketOrderView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketOrderView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketOrderView";
+            };
+
+            return ItemMarketOrderView;
+        })();
+
+        v1.ItemMarketEscrowView = (function() {
+
+            /**
+             * Properties of an ItemMarketEscrowView.
+             * @typedef {Object} minimir.v1.ItemMarketEscrowView.$Properties
+             * @property {Uint8Array|null} [escrow_id] ItemMarketEscrowView escrow_id
+             * @property {Uint8Array|null} [order_id] ItemMarketEscrowView order_id
+             * @property {Long|null} [version] ItemMarketEscrowView version
+             * @property {number|null} [kind] ItemMarketEscrowView kind
+             * @property {minimir.v1.ItemView.$Properties|null} [item] ItemMarketEscrowView item
+             * @property {Long|null} [yuanbao_units] ItemMarketEscrowView yuanbao_units
+             * @property {Long|null} [created_at_unix_ms] ItemMarketEscrowView created_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketEscrowView.
+             * @memberof minimir.v1
+             * @interface IItemMarketEscrowView
+             * @augments minimir.v1.ItemMarketEscrowView.$Properties
+             * @deprecated Use minimir.v1.ItemMarketEscrowView.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketEscrowView.
+             * @typedef {minimir.v1.ItemMarketEscrowView.$Properties} minimir.v1.ItemMarketEscrowView.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketEscrowView.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketEscrowView.
+             * @constructor
+             * @param {minimir.v1.ItemMarketEscrowView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketEscrowView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketEscrowView escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketEscrowView order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketEscrowView version.
+             * @member {Long} version
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketEscrowView kind.
+             * @member {number} kind
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.kind = 0;
+
+            /**
+             * ItemMarketEscrowView item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.item = null;
+
+            /**
+             * ItemMarketEscrowView yuanbao_units.
+             * @member {Long} yuanbao_units
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketEscrowView created_at_unix_ms.
+             * @member {Long} created_at_unix_ms
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @instance
+             */
+            ItemMarketEscrowView.prototype.created_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new ItemMarketEscrowView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {minimir.v1.ItemMarketEscrowView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketEscrowView} ItemMarketEscrowView instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketEscrowView.$Shape): minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape;
+             *   (properties?: minimir.v1.ItemMarketEscrowView.$Properties): minimir.v1.ItemMarketEscrowView;
+             * }}
+             */
+            ItemMarketEscrowView.create = function(properties) {
+                return new ItemMarketEscrowView(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketEscrowView message. Does not implicitly {@link minimir.v1.ItemMarketEscrowView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {minimir.v1.ItemMarketEscrowView.$Properties} message ItemMarketEscrowView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketEscrowView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.escrow_id);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.order_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.version);
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.kind);
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units") && (typeof message.yuanbao_units === "object" ? message.yuanbao_units.low || message.yuanbao_units.high : message.yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.yuanbao_units);
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms") && (typeof message.created_at_unix_ms === "object" ? message.created_at_unix_ms.low || message.created_at_unix_ms.high : message.created_at_unix_ms !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.created_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketEscrowView message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketEscrowView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {minimir.v1.ItemMarketEscrowView.$Properties} message ItemMarketEscrowView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketEscrowView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketEscrowView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape} ItemMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketEscrowView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketEscrowView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_units = value;
+                            else
+                                delete message.yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.created_at_unix_ms = value;
+                            else
+                                delete message.created_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketEscrowView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketEscrowView & minimir.v1.ItemMarketEscrowView.$Shape} ItemMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketEscrowView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketEscrowView message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketEscrowView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units"))
+                    if (!$util.isInteger(message.yuanbao_units) && !(message.yuanbao_units && $util.isInteger(message.yuanbao_units.low) && $util.isInteger(message.yuanbao_units.high)))
+                        return "yuanbao_units: integer|Long expected";
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms"))
+                    if (!$util.isInteger(message.created_at_unix_ms) && !(message.created_at_unix_ms && $util.isInteger(message.created_at_unix_ms.low) && $util.isInteger(message.created_at_unix_ms.high)))
+                        return "created_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketEscrowView
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketEscrowView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketEscrowView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketEscrowView";
+            };
+
+            return ItemMarketEscrowView;
+        })();
+
+        v1.ItemMarketState = (function() {
+
+            /**
+             * Properties of an ItemMarketState.
+             * @typedef {Object} minimir.v1.ItemMarketState.$Properties
+             * @property {Long|null} [scene_epoch] ItemMarketState scene_epoch
+             * @property {number|null} [scope] ItemMarketState scope
+             * @property {boolean|null} [enabled] ItemMarketState enabled
+             * @property {boolean|null} [can_trade] ItemMarketState can_trade
+             * @property {Array.<minimir.v1.ItemMarketOrderView.$Properties>|null} [orders] ItemMarketState orders
+             * @property {Array.<minimir.v1.ItemMarketEscrowView.$Properties>|null} [escrows] ItemMarketState escrows
+             * @property {Uint8Array|null} [next_cursor] ItemMarketState next_cursor
+             * @property {number|null} [error_code] ItemMarketState error_code
+             * @property {Long|null} [role_revision] ItemMarketState role_revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketState.
+             * @memberof minimir.v1
+             * @interface IItemMarketState
+             * @augments minimir.v1.ItemMarketState.$Properties
+             * @deprecated Use minimir.v1.ItemMarketState.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketState.
+             * @typedef {minimir.v1.ItemMarketState.$Properties} minimir.v1.ItemMarketState.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketState.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketState.
+             * @constructor
+             * @param {minimir.v1.ItemMarketState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketState = function (properties) {
+                this.orders = [];
+                this.escrows = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketState scope.
+             * @member {number} scope
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.scope = 0;
+
+            /**
+             * ItemMarketState enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.enabled = false;
+
+            /**
+             * ItemMarketState can_trade.
+             * @member {boolean} can_trade
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.can_trade = false;
+
+            /**
+             * ItemMarketState orders.
+             * @member {Array.<minimir.v1.ItemMarketOrderView.$Properties>} orders
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.orders = $util.emptyArray;
+
+            /**
+             * ItemMarketState escrows.
+             * @member {Array.<minimir.v1.ItemMarketEscrowView.$Properties>} escrows
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.escrows = $util.emptyArray;
+
+            /**
+             * ItemMarketState next_cursor.
+             * @member {Uint8Array} next_cursor
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.next_cursor = $util.newBuffer([]);
+
+            /**
+             * ItemMarketState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.error_code = 0;
+
+            /**
+             * ItemMarketState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.ItemMarketState
+             * @instance
+             */
+            ItemMarketState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new ItemMarketState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {minimir.v1.ItemMarketState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketState} ItemMarketState instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketState.$Shape): minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape;
+             *   (properties?: minimir.v1.ItemMarketState.$Properties): minimir.v1.ItemMarketState;
+             * }}
+             */
+            ItemMarketState.create = function(properties) {
+                return new ItemMarketState(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketState message. Does not implicitly {@link minimir.v1.ItemMarketState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {minimir.v1.ItemMarketState.$Properties} message ItemMarketState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.scope);
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.enabled);
+                if (message.can_trade != null && $Object.hasOwnProperty.call(message, "can_trade") && message.can_trade !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.can_trade);
+                if (message.orders != null && message.orders.length)
+                    for (var i = 0; i < message.orders.length; ++i)
+                        $root.minimir.v1.ItemMarketOrderView.encode(message.orders[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.escrows != null && message.escrows.length)
+                    for (var i = 0; i < message.escrows.length; ++i)
+                        $root.minimir.v1.ItemMarketEscrowView.encode(message.escrows[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.next_cursor != null && $Object.hasOwnProperty.call(message, "next_cursor") && message.next_cursor.length)
+                    writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.next_cursor);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.error_code);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.role_revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketState message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {minimir.v1.ItemMarketState.$Properties} message ItemMarketState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape} ItemMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.can_trade = value;
+                            else
+                                delete message.can_trade;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.orders && message.orders.length))
+                                message.orders = [];
+                            message.orders.push($root.minimir.v1.ItemMarketOrderView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.escrows && message.escrows.length))
+                                message.escrows = [];
+                            message.escrows.push($root.minimir.v1.ItemMarketEscrowView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.next_cursor = value;
+                            else
+                                delete message.next_cursor;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketState & minimir.v1.ItemMarketState.$Shape} ItemMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketState message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.can_trade != null && $Object.hasOwnProperty.call(message, "can_trade"))
+                    if (typeof message.can_trade !== "boolean")
+                        return "can_trade: boolean expected";
+                if (message.orders != null && $Object.hasOwnProperty.call(message, "orders")) {
+                    if (!$Array.isArray(message.orders))
+                        return "orders: array expected";
+                    for (var i = 0; i < message.orders.length; ++i) {
+                        var error = $root.minimir.v1.ItemMarketOrderView.verify(message.orders[i], _depth + 1);
+                        if (error)
+                            return "orders." + error;
+                    }
+                }
+                if (message.escrows != null && $Object.hasOwnProperty.call(message, "escrows")) {
+                    if (!$Array.isArray(message.escrows))
+                        return "escrows: array expected";
+                    for (var i = 0; i < message.escrows.length; ++i) {
+                        var error = $root.minimir.v1.ItemMarketEscrowView.verify(message.escrows[i], _depth + 1);
+                        if (error)
+                            return "escrows." + error;
+                    }
+                }
+                if (message.next_cursor != null && $Object.hasOwnProperty.call(message, "next_cursor"))
+                    if (!(message.next_cursor && typeof message.next_cursor.length === "number" || $util.isString(message.next_cursor)))
+                        return "next_cursor: buffer expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketState
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketState";
+            };
+
+            return ItemMarketState;
+        })();
+
+        v1.ItemMarketAction = (function() {
+
+            /**
+             * Properties of an ItemMarketAction.
+             * @typedef {Object} minimir.v1.ItemMarketAction.$Properties
+             * @property {number|null} [action] ItemMarketAction action
+             * @property {Uint8Array|null} [order_id] ItemMarketAction order_id
+             * @property {Long|null} [order_version] ItemMarketAction order_version
+             * @property {Uint8Array|null} [item_instance_id] ItemMarketAction item_instance_id
+             * @property {Long|null} [item_version] ItemMarketAction item_version
+             * @property {Long|null} [quantity] ItemMarketAction quantity
+             * @property {Long|null} [unit_price_yuanbao_units] ItemMarketAction unit_price_yuanbao_units
+             * @property {Uint8Array|null} [escrow_id] ItemMarketAction escrow_id
+             * @property {Long|null} [escrow_version] ItemMarketAction escrow_version
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] ItemMarketAction operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemMarketAction.
+             * @memberof minimir.v1
+             * @interface IItemMarketAction
+             * @augments minimir.v1.ItemMarketAction.$Properties
+             * @deprecated Use minimir.v1.ItemMarketAction.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemMarketAction.
+             * @typedef {minimir.v1.ItemMarketAction.$Properties} minimir.v1.ItemMarketAction.$Shape
+             */
+
+            /**
+             * Constructs a new ItemMarketAction.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemMarketAction.
+             * @constructor
+             * @param {minimir.v1.ItemMarketAction.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemMarketAction = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemMarketAction action.
+             * @member {number} action
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.action = 0;
+
+            /**
+             * ItemMarketAction order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketAction order_version.
+             * @member {Long} order_version
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.order_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketAction item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketAction item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketAction quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketAction unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemMarketAction escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * ItemMarketAction escrow_version.
+             * @member {Long} escrow_version
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.escrow_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemMarketAction operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.ItemMarketAction
+             * @instance
+             */
+            ItemMarketAction.prototype.operation = null;
+
+            /**
+             * Creates a new ItemMarketAction instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {minimir.v1.ItemMarketAction.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemMarketAction} ItemMarketAction instance
+             * @type {{
+             *   (properties: minimir.v1.ItemMarketAction.$Shape): minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape;
+             *   (properties?: minimir.v1.ItemMarketAction.$Properties): minimir.v1.ItemMarketAction;
+             * }}
+             */
+            ItemMarketAction.create = function(properties) {
+                return new ItemMarketAction(properties);
+            };
+
+            /**
+             * Encodes the specified ItemMarketAction message. Does not implicitly {@link minimir.v1.ItemMarketAction.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {minimir.v1.ItemMarketAction.$Properties} message ItemMarketAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketAction.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.order_id);
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version") && (typeof message.order_version === "object" ? message.order_version.low || message.order_version.high : message.order_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.order_version);
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.item_instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.item_version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.quantity);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.unit_price_yuanbao_units);
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.escrow_id);
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version") && (typeof message.escrow_version === "object" ? message.escrow_version.low || message.escrow_version.high : message.escrow_version !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.escrow_version);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemMarketAction message, length delimited. Does not implicitly {@link minimir.v1.ItemMarketAction.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {minimir.v1.ItemMarketAction.$Properties} message ItemMarketAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemMarketAction.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemMarketAction message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape} ItemMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketAction.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemMarketAction();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.order_version = value;
+                            else
+                                delete message.order_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.escrow_version = value;
+                            else
+                                delete message.escrow_version;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemMarketAction message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemMarketAction & minimir.v1.ItemMarketAction.$Shape} ItemMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemMarketAction.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemMarketAction message.
+             * @function verify
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemMarketAction.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version"))
+                    if (!$util.isInteger(message.order_version) && !(message.order_version && $util.isInteger(message.order_version.low) && $util.isInteger(message.order_version.high)))
+                        return "order_version: integer|Long expected";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version"))
+                    if (!$util.isInteger(message.escrow_version) && !(message.escrow_version && $util.isInteger(message.escrow_version.low) && $util.isInteger(message.escrow_version.high)))
+                        return "escrow_version: integer|Long expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemMarketAction
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemMarketAction
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemMarketAction.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemMarketAction";
+            };
+
+            return ItemMarketAction;
         })();
 
         return v1;

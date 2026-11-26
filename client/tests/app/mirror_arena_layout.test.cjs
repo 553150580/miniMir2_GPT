@@ -110,7 +110,8 @@ test('镜像战斗复用独立保存的菱形世界，被普通弹窗、顶层�
 });
 
 test('赛季入口默认关闭，旧镜像仅变更已验证的入口引用和标题、生命行座标', () => {
-    const oldCount = 2445, original = require('./helpers/role_card_layout.cjs')(structuredClone(scene)).slice(0, oldCount);
+    const projected = require('./helpers/item_market_layout.cjs')(structuredClone(scene));
+    const oldCount = 2445, original = require('./helpers/role_card_layout.cjs')(projected).slice(0, oldCount);
     const panels = nodeAt(safe, 'UIMgr/Panels'), lobby = nodeAt(panels, 'MirrorArena');
     const button = nodeAt(lobby, 'SeasonLedger'), season = nodeAt(panels, 'MirrorSeason'), hit = bounds(button);
     assert.equal(button._active, false);

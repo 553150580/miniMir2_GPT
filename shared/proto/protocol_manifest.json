@@ -1176,6 +1176,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.12 特权卡每日绑定元宝"
+    },
+    {
+      "value": 40039,
+      "name": "MsgC2SItemMarketQuery",
+      "proto_message": "ItemMarketQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.3 道具交易行、本人订单与交易托管仓"
+    },
+    {
+      "value": 40040,
+      "name": "MsgS2CItemMarketState",
+      "proto_message": "ItemMarketState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.3 道具交易行、本人订单与交易托管仓"
+    },
+    {
+      "value": 40041,
+      "name": "MsgC2SItemMarketAction",
+      "proto_message": "ItemMarketAction",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.3、4.9 道具竞购、直购、托管和佣金"
     }
   ],
   "error_codes": [

@@ -4,12 +4,13 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 141,
+  "message_count": 147,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "ItemMarketReceipt",
     "MirrorArenaExchangeReceipt",
     "HostingQuoteResult",
     "HostingPurchaseReceipt",
@@ -146,10 +147,15 @@
     "RoleCardQuery",
     "RoleCardState",
     "BuyRoleCardRequest",
-    "ClaimRoleCardDailyRequest"
+    "ClaimRoleCardDailyRequest",
+    "ItemMarketQuery",
+    "ItemMarketOrderView",
+    "ItemMarketEscrowView",
+    "ItemMarketState",
+    "ItemMarketAction"
   ],
-  "int64_field_count": 334,
-  "int64_boundary_cases": 1134,
+  "int64_field_count": 356,
+  "int64_boundary_cases": 1212,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -184,6 +190,42 @@
     {
       "message": "OperationResult",
       "field": "new_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "order_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "yuanbao_delta_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "tax_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "escrow_version",
       "type": "uint64",
       "cases": 3
     },
@@ -2154,9 +2196,105 @@
       "field": "role_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "ItemMarketQuery",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "remaining_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "end_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "next_unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketEscrowView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketEscrowView",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketEscrowView",
+      "field": "created_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "order_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "escrow_version",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 49,
+  "bytes_field_count": 59,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2171,6 +2309,16 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketReceipt",
+      "field": "escrow_id",
       "repeated": false
     },
     {
@@ -2402,6 +2550,46 @@
       "message": "BuyRoleCardRequest",
       "field": "quote_id",
       "repeated": false
+    },
+    {
+      "message": "ItemMarketQuery",
+      "field": "cursor",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketOrderView",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketEscrowView",
+      "field": "escrow_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketEscrowView",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketState",
+      "field": "next_cursor",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemMarketAction",
+      "field": "escrow_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2410,7 +2598,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "2b2e19125975a7bd30a586f3d2b7c9da761ddc9e8ed589c3551877786c528a7a"
+      "sha256": "ac9552fff0996c088d6e0e3c0835b48cfd6b276b911eef97a367867e2e96f894"
     },
     {
       "path": "shared/proto/account.proto",
@@ -2447,18 +2635,22 @@
     {
       "path": "shared/proto/role_card.proto",
       "sha256": "03d9c914dd24a78f9fbf6f7d8bf6d871095e21d9010a97abc535f2b0d8b981bb"
+    },
+    {
+      "path": "shared/proto/item_market.proto",
+      "sha256": "a0feaf6f6a8bc42685c0e4bafef46a030d2c637f4c8a2dd0ceb8e3ec4ae7286b"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "10f5453016c2e40c795fad08236e16cf7d7c66f87db0a72134932980e8b0a8aa",
-      "bytes": 2471495
+      "sha256": "f0affd9ff6d8c3a3c0d15c9b8a977484b4b7fbd1aba6133e84cd6acbc1125770",
+      "bytes": 2600796
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "761b3f956cb5acf399629153634ed3e7382866cfc1bd52559e501a5303b8f4a2",
-      "bytes": 775652
+      "sha256": "6490c589be1514bca84fafc0ad2b2b76d09d4dddf6724016031b8a5bd073cd54",
+      "bytes": 812062
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

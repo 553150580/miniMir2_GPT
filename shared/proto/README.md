@@ -12,6 +12,10 @@
 
 `40037 BuyRoleCardRequest` 带原报价和商品身份，足额扣除本角色非绑定元宝。`40038 ClaimRoleCardDailyRequest` 带原上海运营日，首次领取增加该角色的绑定元宝。两条请求均保留原经济操作编号。`40005 OperationResult` 的 `role_card_purchase` 和 `role_card_daily` 返回首次确认的原回执，客户端按原报价或运营日核对后清除本地未决请求。服务端在检查当前报价和卡期前先查询已有回执，健康重连可按原请求重查。
 
+`40039 ItemMarketQuery` 和 `40040 ItemMarketState` 分页返回当前运行服的公开拍品、本人订单及有效预购、本人专属待领。客户端原样传回分页游标。公开详情展示原物品属性和剩余量，托管实例与归属只向有权角色返回。
+
+`40041 ItemMarketAction` 使用角色经济序号提交上架、预购、加价、直购、撤单或领取。上架复核背包原物版本，预购和购买复核订单修订、数量和确认页原单价。加价后的单价由服务端计算。领取按原托管编号和修订整笔确认，持有原结果的角色可在特权到期后继续领取。服务端将原回执保存在 `40005 OperationResult.item_market`，同一经济操作重放会返回首次确认的结果。
+
 `20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。
 
 同一查询的字段 22 和 23 分别是 `dungeon_pending_rewards` 和 `dungeon_pending_rewards_more`。讨伐原奖包沿现有附件格式和 `40030` 领取，来源为 `dungeon`，时间为最终首领实际死亡。讨伐首屏返回最早八包，领取后可继续查看更晚的原奖包。个人和世界列表仍独立计数。

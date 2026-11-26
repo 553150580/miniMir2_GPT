@@ -115,6 +115,7 @@ type Operation struct {
 	MirrorExchange    *MirrorExchangeReceipt         `bson:"mirror_arena_exchange,omitempty"`  // 首次换取绑定羽毛确认的扣分与实例。
 	CardPurchase      *RoleCardPurchaseReceipt       `bson:"role_card_purchase,omitempty"`     // 首次游戏内购卡的扣款和有效期。
 	CardDaily         *RoleCardDailyReceipt          `bson:"role_card_daily,omitempty"`        // 首次特权按上海运营日领取的绑元。
+	ItemMarket        *ItemMarketReceipt             `bson:"item_market,omitempty"`            // 市场唯一资产操作原回执。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -215,6 +216,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 		for collection, models := range mirrorSeasonIndexes() {
 			indexes[collection] = models
 		}
+	}
+	for collection, models := range itemMarketIndexes() {
+		indexes[collection] = models
 	}
 	// name 定位目标集合，models 是为该集合建立的索引列表。
 	for name, models := range indexes {

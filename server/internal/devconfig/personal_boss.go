@@ -52,10 +52,21 @@ func (f *Fixture) AcceptsPersonalBossQualification(rule uint64, hash string) boo
 	if hash == f.Hash {
 		return true
 	}
-	// 两份已核对的规则 30 夹具之间仅新增双卡商品、日领及其来源证据。
+	if rule != 30 {
+		return false
+	}
+	// 三份已核对的规则 30 夹具依次新增双卡和道具市场，个人首领战斗输入相同。
 	const beforeRoleCards = "4bb20bf3e8d235db1061e3223b8b28169f662d3e7e334291f6f65c09400acb1a"
 	const withRoleCards = "6a421806cf5d45a8ead84bfda80be4a57eebcac00d3344140825fc860bfec9a6"
-	return rule == 30 && f.Hash == withRoleCards && hash == beforeRoleCards
+	const withItemMarket = "8cf30edfdf4db1cffbd2c0fe5688652a96496569f00aa19f26581f83a94fb266"
+	switch f.Hash {
+	case withRoleCards:
+		return hash == beforeRoleCards
+	case withItemMarket:
+		return hash == beforeRoleCards || hash == withRoleCards
+	default:
+		return false
+	}
 }
 
 // ChallengeMonster 只从独立挑战怪物目录解析编号。

@@ -98,6 +98,9 @@ const (
 	MsgS2CRoleCardState uint16 = 40036
 	MsgC2SBuyRoleCard uint16 = 40037
 	MsgC2SClaimRoleCardDaily uint16 = 40038
+	MsgC2SItemMarketQuery uint16 = 40039
+	MsgS2CItemMarketState uint16 = 40040
+	MsgC2SItemMarketAction uint16 = 40041
 )
 
 const (

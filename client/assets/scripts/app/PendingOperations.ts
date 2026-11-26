@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -256,6 +256,24 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['operatingDay', 'operation']);
         if (typeof item.operatingDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(item.operatingDay)) return invalid('特权奖励的运营日无效');
         payload = { operatingDay: item.operatingDay, operation: operation(item.operation, stored) };
+    } else if (id === 40041) {
+        // 保留首次确认的原库存/订单/托管版本、交易数量和非绑元宝单价。
+        const action = uint32((input.value as ObjectValue | null)?.action);
+        if (action < 1 || action > 6) return invalid('道具市场动作无效');
+        const [idField, versionField] = action === 1 ? ['itemInstanceId', 'itemVersion'] : action === 6 ? ['escrowId', 'escrowVersion'] : ['orderId', 'orderVersion'];
+        const fields = ['action', idField, versionField, 'quantity', 'operation'];
+        if (action !== 6) fields.push('unitPriceYuanbaoUnits');
+        const item = record(input.value, fields);
+        const version = longValue(item[versionField], stored), quantity = longValue(item.quantity, stored);
+        if (!version.unsigned || version.isZero() || quantity.unsigned || quantity.isNegative() || (action === 6 ? !quantity.isZero() : quantity.isZero())) {
+            return invalid('道具市场原版本或数量无效');
+        }
+        payload = { action, [idField]: bytes16(item[idField], stored), [versionField]: version, quantity, operation: operation(item.operation, stored) };
+        if (action !== 6) {
+            const price = longValue(item.unitPriceYuanbaoUnits, stored);
+            if (price.unsigned || price.isNegative() || price.isZero()) return invalid('道具市场单价无效');
+            payload.unitPriceYuanbaoUnits = price;
+        }
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

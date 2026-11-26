@@ -21,6 +21,20 @@ message OperationResult {
   MirrorArenaExchangeReceipt mirror_arena_exchange = 7;
   RoleCardPurchaseReceipt role_card_purchase = 8;
   RoleCardDailyReceipt role_card_daily = 9;
+  ItemMarketReceipt item_market = 10;
+}
+// 道具市场永久回执引用实际订单、数量与角色非绑定元宝变化，保留首次确认结果。
+message ItemMarketReceipt {
+  uint32 action = 1;
+  bytes order_id = 2;
+  uint64 order_version = 3;
+  uint32 item_id = 4;
+  int64 quantity = 5;
+  int64 unit_price_yuanbao_units = 6;
+  int64 yuanbao_delta_units = 7;
+  int64 tax_yuanbao_units = 8;
+  bytes escrow_id = 9;
+  uint64 escrow_version = 10;
 }
 // 兑换只按服务端权威价格成交。同一原操作重放返回首次扣分与原绑定羽毛。
 message MirrorArenaExchangeReceipt {

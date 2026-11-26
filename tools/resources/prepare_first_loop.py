@@ -24,6 +24,7 @@ import prepare_tasks_codex as tasks_codex
 import prepare_boss as bosses
 import prepare_hosting_benefits as hosting_benefits
 import prepare_role_cards as role_cards
+import prepare_item_market as item_market
 from creator_json_meta import content_meta_bytes
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
@@ -978,6 +979,7 @@ def fixture_from_rows(tables):
                 result['drop_quotas']=quotas
             result['hosting_benefits']=hosting_benefits.compile_benefits(tables['game_entitlement_rules'])
             result['role_cards']=role_cards.compile_role_cards(tables['game_card_products'],tables['game_entitlement_rules'])
+            result['item_market']=item_market.compile_rules(tables)
             result['_source_evidence']['ordinary_monster_appearances']=appearances
             catalog.extend(ordinary_maps[1:])
         if profile['rule_version']>=24:
@@ -1159,6 +1161,7 @@ def main():
         if errors:raise ValueError(errors)
         validate_map_asset(tables)
         selected={tid:tables[tid] for tid in TABLE_IDS}
+        selected.update(item_market.source_rows(tables))
         selected['game_drop_categories']=tables['game_drop_categories'];fixture=fixture_from_rows(selected)
         fixture['_source_evidence']['workbook_sync']='exported_from_current_unique_excel'
         fixture['_source_evidence']['source_locks']=schema['source_locks']
@@ -1176,6 +1179,7 @@ def main():
         if fixture['rule_version']>=30:
             fixture['_source_evidence']['hosting_benefits_compiler_sha256']=config.sha256(Path(hosting_benefits.__file__))
             fixture['_source_evidence']['role_cards_compiler_sha256']=config.sha256(Path(role_cards.__file__))
+            fixture['_source_evidence']['item_market_compiler_sha256']=config.sha256(Path(item_market.__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)
