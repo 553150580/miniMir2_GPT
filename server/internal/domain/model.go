@@ -157,6 +157,7 @@ type Role struct {
 	Wallet                       Wallet            `bson:"wallet" json:"wallet"`                                                           // 四类持久货币余额。
 	Items                        []Item            `bson:"items" json:"items"`                                                             // 当前背包的物品实例列表。
 	Equipped                     []Equipped        `bson:"equipped" json:"equipped"`                                                       // 当前装备栏的部位与物品。
+	Wing                         *WingState        `bson:"-" json:"wing,omitempty"`                                                        // 当前权威翅膀观察，来自独立角色实例文档。
 	Capacity                     int               `bson:"capacity" json:"capacity"`                                                       // 背包允许的实例槽数量。
 	PickupStopped                bool              `bson:"pickup_stopped" json:"pickup_stopped"`                                           // 上次入包失败后保留的拾取停止标记。
 	AutoRecycle                  AutoRecyclePolicy `bson:"auto_recycle" json:"auto_recycle"`                                               // 玩家最后确认的自动回收设置。
@@ -222,7 +223,7 @@ func (r Role) Summary() *pb.RoleSummary {
 // r 是调用该方法的角色实例，progression 记录成长，使用可变数量的成长状态表示。
 func (r Role) Inventory(progression ...*pb.ProgressionState) *pb.InventoryResult {
 	// p 保存当前处理所用的背包资产结果。
-	p := &pb.InventoryResult{Capacity: uint32(r.Capacity), Revision: uint64(r.Revision), Level: r.Level, Experience: r.Experience, AutoRecycle: r.AutoRecycle.Proto()}
+	p := &pb.InventoryResult{Capacity: uint32(r.Capacity), Revision: uint64(r.Revision), Level: r.Level, Experience: r.Experience, AutoRecycle: r.AutoRecycle.Proto(), Wing: r.Wing.Proto()}
 	p.SkillSlotIds = append([]uint32(nil), r.SkillSlotIDs...)
 	if len(progression) > 0 {
 		p.Progression = progression[0]

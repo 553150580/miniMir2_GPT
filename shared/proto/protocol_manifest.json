@@ -1356,6 +1356,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.6/4.7 原祝福油报价的扣瓶、绑定与幸运结算"
+    },
+    {
+      "value": 40052,
+      "name": "MsgC2SWingQuote",
+      "proto_message": "WingQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.24 翅膀激活或升阶的原羽毛和外观预览"
+    },
+    {
+      "value": 40053,
+      "name": "MsgS2CWingQuote",
+      "proto_message": "WingQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.24 翅膀激活或升阶的原羽毛和外观预览"
+    },
+    {
+      "value": 40054,
+      "name": "MsgC2SWingAction",
+      "proto_message": "WingActionRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.24 原翅膀实例升阶与外观切换"
     }
   ],
   "error_codes": [
@@ -1805,6 +1841,30 @@
       "display_zh": "武器、祝福油或绑定权限不满足本次条件",
       "status": "draft",
       "source_ref": "最终策划案4.6/4.7",
+      "active_in_scope": true
+    },
+    {
+      "value": 3960,
+      "name": "CodeWingUnavailable",
+      "display_zh": "当前不可培养翅膀",
+      "status": "draft",
+      "source_ref": "最终策划案4.24",
+      "active_in_scope": true
+    },
+    {
+      "value": 3961,
+      "name": "CodeWingQuoteChanged",
+      "display_zh": "原翅膀或羽毛报价已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.24",
+      "active_in_scope": true
+    },
+    {
+      "value": 3962,
+      "name": "CodeWingInputs",
+      "display_zh": "羽毛、翅膀阶数或外观不满足本次条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.24",
       "active_in_scope": true
     }
   ]

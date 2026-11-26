@@ -7,6 +7,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeTaskCodexUnavailable, CodeTaskCodexDayChanged,
     CodeForgeUnavailable, CodeForgeQuoteChanged, CodeForgeInputs,
     CodeWeaponOilUnavailable, CodeWeaponOilQuoteChanged, CodeWeaponOilInputs,
+    CodeWingUnavailable, CodeWingQuoteChanged, CodeWingInputs,
     CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -52,6 +53,11 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         if (errorCode === CodeWeaponOilUnavailable) return '当前规则、角色或场景未开放祝福油培养';
         if (errorCode === CodeWeaponOilQuoteChanged || errorCode === CodeOperationConflict) return '原武器或油堆已变化，请重新报价';
         if (errorCode === CodeWeaponOilInputs) return '当前武器、油堆或绑定授权不满足条件';
+    }
+    if (messageId === 40052 || messageId === 40053 || messageId === 40054) {
+        if (errorCode === CodeWingUnavailable) return '当前规则、角色或场景未开放翅膀养成';
+        if (errorCode === CodeWingQuoteChanged || errorCode === CodeOperationConflict) return '原翅膀或羽毛已变化，请重新确认';
+        if (errorCode === CodeWingInputs) return '原翅膀、羽毛或外观不满足条件';
     }
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';

@@ -19,6 +19,7 @@ import { BossTransition } from './BossTransition';
 import { DungeonTransition } from './DungeonTransition';
 import { PetBornModel } from './PetBornModel';
 import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
+import { observedWingState } from './WingModel';
 import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
 import { WarehouseReceiptGuard } from './WarehouseModel';
 import type { WarehouseReceipt } from './WarehouseModel';
@@ -157,6 +158,7 @@ session.connection.subscribe((packet: Packet) => {
             try {
                 if (session.inventory && packet.value.revision.lessThan(session.inventory.revision)) break;
                 if (packet.value.autoRecycle) packet.value.autoRecycle = observedAutoRecycle(packet.value.autoRecycle);
+                if (packet.value.wing || session.inventory?.wing) packet.value.wing = observedWingState(packet.value.wing, session.inventory?.wing);
                 if (packet.value.progression) packet.value.progression = observedProgression(packet.value.progression);
                 recycleModel.synchronize(packet.value.revision);
                 experienceModel.synchronize(packet.value.revision);

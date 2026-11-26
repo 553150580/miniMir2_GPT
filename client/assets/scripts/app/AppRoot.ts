@@ -52,6 +52,9 @@ import { GameForge } from './GameForge';
 import { forgeReceipt, forgeRecipeFor } from './ForgeModel';
 import type { ForgeReceipt, ForgeSnapshot } from './ForgeModel';
 import { GameWeaponOil } from './GameWeaponOil';
+import { GameWings } from './GameWings';
+import { validateWingReceipt, wingRules, wingSlotLabel } from './WingModel';
+import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
 import { weaponOilItemId, weaponOilReceipt } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -85,6 +88,7 @@ import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied 
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
+const roleWingRow = Object.freeze({ wing: true });
 let signInResume: { accountId: string; name: string; origin: string | undefined; role: string | null } | null = null;
 
 function selectedRoleIdentity(role: any): string {
@@ -132,6 +136,7 @@ export class AppRoot extends Component {
     private itemActions?: GameItemActions;
     private forge?: GameForge;
     private weaponOil?: GameWeaponOil;
+    private wings?: GameWings;
     private roleEquipment?: GameRoleEquipment;
     private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
@@ -526,6 +531,10 @@ export class AppRoot extends Component {
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(40049, request), submit: request => this.economic(40051, request) });
+        this.wings = new GameWings({ snapshot: () => this.wingSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
+            confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
+            quote: request => session.connection.request(40052, request), submit: request => this.economic(40054, request) });
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1428,10 +1437,14 @@ export class AppRoot extends Component {
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
-            const items = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
+            const wornItems = (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
+            // 角色专属翅膀单列在保存的装备清单中，不占用普通部位或耗材槽。
+            const items = panel === 'Inventory' ? session.inventory?.items ?? [] :
+                (session.inventory && this.currentWingRules() ? [roleWingRow, ...wornItems] : wornItems);
             list.setItems(items, (node, item: any) => {
-                const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const label = node.getChildByName('Text')!.getComponent(Label)!;
+                if (item === roleWingRow) { label.string = wingSlotLabel(session.inventory?.wing); return; }
+                const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const name = definition?.name ?? item.itemId, ownership = item.bound ? '绑定' : '非绑定';
                 const durability = definition?.kind === 'equipment' ? equipmentDurabilityText(item) : '';
                 if (panel === 'Inventory') {
@@ -1444,6 +1457,7 @@ export class AppRoot extends Component {
             }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
+                if (panel === 'Role' && selected === roleWingRow) { this.wings?.open(); return; }
                 const currentItems = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
                 const item = currentItems.find((row: any) => selected?.instanceId instanceof Uint8Array && row.instanceId.toString() === selected.instanceId.toString());
                 if (panel === 'Inventory') this.selectedItem = item ?? null;
@@ -1547,6 +1561,22 @@ export class AppRoot extends Component {
             this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
         return { scope: `${attachmentKey(identity)}:${parent}`, role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision,
             items: inventory.items, equipped: inventory.equipped, catalog: gameplay.items, oilItemId, blocked };
+    }
+
+    private currentWingRules() {
+        const raw = this.world?.gameplay.wings;
+        return raw ? wingRules(raw) : undefined;
+    }
+
+    private wingSnapshot(): WingSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, rules = this.currentWingRules();
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || !rules || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || (entry.sceneKind >= 3 && entry.sceneKind !== miningSceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, rules,
+            wing: inventory.wing ?? null, inventory: inventory.items, blocked };
     }
 
     private selectEquippedSlot(slot: number): void {
@@ -2172,6 +2202,7 @@ export class AppRoot extends Component {
         let goldMarketReceipt: GoldMarketReceipt | undefined;
         let forged: ForgeReceipt | undefined;
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
+        let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
@@ -2190,6 +2221,10 @@ export class AppRoot extends Component {
             if (pending.id === 40051) {
                 const request = pending.value as unknown as WeaponOilCommitRequest;
                 oiled = { request, result: this.weaponOil?.reconcile(request, result.weaponOil) ?? weaponOilReceipt(request, result.weaponOil) };
+            }
+            if (pending.id === 40054) {
+                const request = pending.value as unknown as WingActionRequest;
+                wing = { request, receipt: this.wings?.reconcile(request, result.wing) ?? validateWingReceipt(request, result.wing) };
             }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
@@ -2213,6 +2248,11 @@ export class AppRoot extends Component {
         if (oiled) {
             this.weaponOil?.accept(role, oiled.request, oiled.result);
             this.status(`祝福油已结算，原武器幸运+${equipmentCurrentLuck(oiled.result.weapon)}`);
+            return;
+        }
+        if (wing) {
+            this.wings?.accept(role, wing.request, wing.receipt);
+            this.status(wing.request.action === 2 ? '翅膀外观已保存' : `翅膀已达 ${wing.receipt.wing.rank}阶`);
             return;
         }
         if (recycleOil.length) {

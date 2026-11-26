@@ -12,15 +12,16 @@ import uuid
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tools/environment')]
 import mongodb_hosting_load as mongo
+from creator_work_paths import creator_work_path
 
 
 def browser_build(path):
     """只接受工作目录中的独立构建，避免将实际试玩入口作为验收对象。"""
     if path is None:
         return None
-    build = path.resolve(strict=True)
-    if not build.is_relative_to(ROOT / '.work') or not (build / 'index.html').is_file():
-        raise ValueError('浏览器验收须提供项目 .work 内的独立 Creator Web Mobile 构建')
+    build = creator_work_path(path, ROOT, strict=True)
+    if not (build / 'index.html').is_file():
+        raise ValueError('浏览器验收须提供实际的独立 Creator Web Mobile 构建')
     return build
 
 

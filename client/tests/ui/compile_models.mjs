@@ -27,6 +27,7 @@ const result = spawnSync(process.execPath, [path.join(typescript, 'lib/tsc.js'),
     path.join(source, 'app/MirrorArenaModel.ts'),
     path.join(source, 'app/MiningModel.ts'),
     path.join(source, 'app/EquipmentRecycleOilModel.ts'),
+    path.join(source, 'app/WingModel.ts'),
     ...['ui/PanelStackState.ts', 'ui/VirtualListWindow.ts', 'input/NavigationIntent.ts', 'app/WarehouseModel.ts', 'app/EquipmentModel.ts', 'app/LevelGrowthModel.ts', 'app/AutoRecycleModel.ts', 'app/GridProjection.ts', 'app/SourceMapModel.ts', 'app/SourceChunkCache.ts', 'app/SourceProjection.ts', 'app/MapTravelModel.ts', 'app/PetTrainingModel.ts', 'app/OwnedPetModel.ts', 'app/PetBornModel.ts', 'app/NavigationCancelAssembler.ts', 'app/RoleBindingModel.ts', 'app/TeleportModel.ts', 'app/MapAttachmentCoordinator.ts', 'app/BeamGeometry.ts', 'app/EntityHeadAnchor.ts', 'app/CombatStatusModel.ts', 'app/StatusPlayback.ts', 'app/CastingSupplyModel.ts', 'app/HudModel.ts', 'app/SystemMessageLog.ts', 'app/PotionModel.ts', 'app/SkillModel.ts', 'app/CastPlayback.ts', 'app/SkillAssetsModel.ts'].map(file => path.join(source, file)),
 ], { cwd: root, stdio: 'inherit' });
 if (result.error) throw result.error;

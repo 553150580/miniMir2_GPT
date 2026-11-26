@@ -1,0 +1,8 @@
+{
+  "feather_item_id": 900031,
+  "feather_max_stack": 99,
+  "rank_feathers": [1, 2, 3],
+  "world_boss_template_id": 2,
+  "world_boss_minimum_damage": 1,
+  "world_boss_feathers": 6
+}

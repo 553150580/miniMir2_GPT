@@ -111,6 +111,7 @@ type Operation struct {
 	Vendor            *VendorReceipt                 `bson:"npc_trade,omitempty"`              // NPC 买卖或修理的原成交参数和结果。
 	Forge             *ForgeResultReceipt            `bson:"forge,omitempty"`                  // 图纸打造的原投入、结果及成品。
 	WeaponOil         *WeaponOilResultReceipt        `bson:"weapon_oil,omitempty"`             // 武器祝福油原投入、回退、保底以及同一武器的变更。
+	Wing              *WingActionReceipt             `bson:"wing,omitempty"`                   // 原翅膀的激活、升阶或外观事务。
 	TaskCodex         *TaskCodexClaimReceipt         `bson:"tasks_codex_claim,omitempty"`      // 原任务或图鉴领取确认的定义及绑定奖励。
 	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
 	SkillSlotIDs      []uint32                       `bson:"skill_slot_ids,omitempty"`         // 已确认的四个技能槽位。
@@ -221,6 +222,10 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	if s.Cfg.Fixture.LuckOil != nil {
 		indexes[weaponOilQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
+	}
+	if s.Cfg.Fixture.Wings != nil {
+		indexes[roleWingCollection] = wingIndexes()
+		indexes[wingQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {
@@ -403,7 +408,13 @@ func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
 // Role 按持久角色编号读取完整聚合，并应用读取期兼容核验。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，id 区分当前步骤指向的目标对象。
 func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
-	return s.readRole(ctx, bson.M{"_id": id})
+	role, err := s.readRole(ctx, bson.M{"_id": id})
+	if err != nil || s.Cfg.Fixture.Wings == nil {
+		return role, err
+	}
+	// 入场、资产和收益都在同一读取入口装配翅膀；仅签票的账号读原角色归属即可。
+	role.Wing, err = s.readRoleWing(ctx, role.ID)
+	return role, err
 }
 
 // readRole 使用调用方提供的授权查询条件，恢复绑定信任并补齐旧装备耐久。

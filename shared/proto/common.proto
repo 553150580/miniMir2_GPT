@@ -28,6 +28,30 @@ message OperationResult {
   ForgeReceipt forge = 12;
   WeaponOilReceipt weapon_oil = 13;
   RecycleOilReceipt recycle_oil = 14;
+  WingReceipt wing = 15;
+}
+// 一名角色永久拥有的同一个翅膀实例。隐藏外观仍保持全部属性。
+message WingState {
+  bytes wing_id = 1;
+  uint32 rank = 2;
+  uint32 appearance_tier = 3;
+  bool hidden = 4;
+  uint32 luck = 5;
+  uint32 oil_to_six = 6;
+  uint32 oil_to_nine = 7;
+  uint64 version = 8;
+}
+message WingFeatherSpend {
+  // 实际消费前的原羽毛堆叠。
+  ItemView item = 1;
+  int64 quantity = 2;
+}
+// 同一原操作重放首次确认的翅膀和羽毛。动作 2 只变更外观。
+message WingReceipt {
+  uint32 action = 1;
+  WingState wing = 2;
+  bytes quote_id = 3;
+  repeated WingFeatherSpend feathers = 4;
 }
 // 手动分解原件时的已确认祝福油判定。未命中的原件保留抽样记录。
 message RecycleOilReceipt {

@@ -113,6 +113,9 @@ const (
 	MsgC2SWeaponOilQuote uint16 = 40049
 	MsgS2CWeaponOilQuote uint16 = 40050
 	MsgC2SWeaponOilCommit uint16 = 40051
+	MsgC2SWingQuote uint16 = 40052
+	MsgS2CWingQuote uint16 = 40053
+	MsgC2SWingAction uint16 = 40054
 )
 
 const (
@@ -172,4 +175,7 @@ const (
 	CodeWeaponOilUnavailable uint32 = 3953
 	CodeWeaponOilQuoteChanged uint32 = 3954
 	CodeWeaponOilInputs uint32 = 3955
+	CodeWingUnavailable uint32 = 3960
+	CodeWingQuoteChanged uint32 = 3961
+	CodeWingInputs uint32 = 3962
 )

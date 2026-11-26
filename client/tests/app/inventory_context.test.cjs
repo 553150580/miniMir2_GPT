@@ -17,7 +17,8 @@ function fixture() {
     const nodes = new Map(), node = path => {
         if (!nodes.has(path)) {
             const listeners = new Map(), saved = { active: true, on(event, listener) { listeners.set(event, listener); }, emit(event, ...args) { listeners.get(event)?.(...args); }, getComponent() { return this.component; } };
-            saved.component = { node: saved, string: '', interactable: false, offset: 517, setItemsCount: 0, items: [], setItems(items) { this.items = items.slice(); this.setItemsCount++; } };
+            saved.component = { node: saved, string: '', interactable: false, offset: 517, setItemsCount: 0, items: [],
+                setItems(items, render) { this.items = items.slice(); this.render = render; this.setItemsCount++; } };
             nodes.set(path, saved);
         }
         return nodes.get(path);
@@ -83,4 +84,34 @@ test('实际装备条目打开保存滚动详情provider保留单件属性/来�
     const f=fixture(),definition=f.app.world.gameplay.items.find(row=>row.item_id===218);definition.equipment_stage=0;definition.base_attributes={physical_attack_min:1,physical_attack_max:3,magic_attack_min:0,magic_attack_max:1,spirit_attack_min:0,spirit_attack_max:2,physical_defence_min:0,physical_defence_max:0,magic_defence_min:0,magic_defence_max:0,attack_speed:0};
     const worn={...f.s.inventory.items[2],instanceId:bytes(8),quantity:Long.ONE,recycleBlockFlags:8};f.s.inventory.equipped=[{slot:0,item:worn}];let read;f.app.combatStatus={showLiveDetails(title,provider){assert.equal(title,'木剑');read=provider;}};f.selectEquipped(worn);
     assert(read().includes('已穿戴装备'));assert(read().includes('魔法攻击 0–1'));assert(read().includes('道术攻击 0–2'));assert(read().some(line=>line.startsWith('来源 ')));f.s.inventory.equipped=[];assert.deepEqual(read(),['原装备已离开此列表，请重新选择']);f.s.entry={...f.s.entry,sceneEpoch:f.s.entry.sceneEpoch.add(1)};assert.equal(read(),null);assert.equal(f.inventory.offset,517);
+});
+
+test('保存的角色装备列表新增翅膀独立首行，背包原条目、普通槽与滚动上下文保持', () => {
+    const f = fixture(), role = f.node('UIMgr/Panels/Role/List').component;
+    const worn = { ...f.s.inventory.items[2], instanceId: bytes(8), quantity: Long.ONE, recycleBlockFlags: 8 };
+    f.s.inventory = { ...f.s.inventory, equipped: [{ slot: 0, item: worn }] };
+    f.app.refreshGame();
+    assert.deepEqual(role.items, [worn]);
+    f.app.world.gameplay.wings = { feather_item_id: 900032, max_rank: 10, appearance_tiers: [1, 3, 5, 7, 10],
+        ranks: [{ rank: 1, feathers: 3 }] };
+    f.s.inventory = { ...f.s.inventory };
+    f.app.refreshGame();
+    assert.equal(role.items.length, 2);
+    assert.equal(role.items[1], worn);
+    assert.deepEqual(f.inventory.items, f.s.inventory.items);
+    const text = {}, row = { getChildByName: () => ({ getComponent: () => text }) };
+    role.render(row, role.items[0]);
+    assert.equal(text.string, '翅膀 · 未激活');
+    let entries = 0;
+    f.app.wings = { open() { ++entries; } };
+    f.selectEquipped(role.items[0]);
+    assert.equal(entries, 1);
+    assert.equal(f.app.selectedEquipped, null);
+    assert.equal(f.s.connection.sent.length, 0);
+    assert.equal(role.offset, 517);
+    f.s.inventory = { ...f.s.inventory, wing: { wingId: bytes(9), version: Long.UONE, rank: 1, appearanceTier: 1,
+        hidden: true, luck: 0, oilToSix: 0, oilToNine: 0 } };
+    f.app.refreshGame();
+    role.render(row, role.items[0]);
+    assert.equal(text.string, '翅膀 · 1阶 · 外观隐藏');
 });

@@ -4,12 +4,15 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 166,
+  "message_count": 169,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "WingState",
+    "WingFeatherSpend",
+    "WingReceipt",
     "RecycleOilReceipt",
     "RecycleOilRoll",
     "WeaponOilReceipt",
@@ -173,8 +176,8 @@
     "ForgeQuote",
     "ForgeCommitRequest"
   ],
-  "int64_field_count": 409,
-  "int64_boundary_cases": 1402,
+  "int64_field_count": 411,
+  "int64_boundary_cases": 1409,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -211,6 +214,18 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "WingState",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingFeatherSpend",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "ForgeReceipt",
@@ -2631,7 +2646,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 76,
+  "bytes_field_count": 78,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2646,6 +2661,16 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "WingState",
+      "field": "wing_id",
+      "repeated": false
+    },
+    {
+      "message": "WingReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -3020,7 +3045,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "e241f9fc67ba446d426f76bf0a2fdd21e5cafb241bab30b7671da9277a206db3"
+      "sha256": "18a53423f72f122117ff670f8b4170a04c87b53a5558f56c10ac017203836d61"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3032,7 +3057,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "7ee1ced78ec752ac549317e3af368b068af636db9380ccdfafcb65ae1d76770c"
+      "sha256": "12d6689bca5aaffe6fb111fd328a9236b17a1a27d84a8fed877d8eb6ed56bb69"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -3078,13 +3103,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "6ee6e1673f47c50dbae49688389fb9c6c65194ec07ce7ae00cb1f749e0f4107b",
-      "bytes": 3047208
+      "sha256": "276c5cb737796323565677a3c1715efcc9a92d829e7fc24646332d5fac6c523d",
+      "bytes": 3166612
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "487637aefc8626978afccf206da3d3e0fd4e7e8f15415ff41f273029681e31f3",
-      "bytes": 944672
+      "sha256": "665bef0f50414f2dbb47182e5f882496df8939e994c10c034ee319fd857c3fa1",
+      "bytes": 981966
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

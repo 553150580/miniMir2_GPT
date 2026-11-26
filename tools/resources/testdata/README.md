@@ -17,3 +17,5 @@ Windows 可用 `./tools/dev.ps1 python3 -B tools/server/run_integration_batches.
 `luck-oil-isolated.json` 为武器培养专项声明候选油物品编号和堆叠上限。成功率、失败回退及保底条件来自唯一玩法工作簿。使用 `./tools/dev.ps1 python3 tools/server/run_integration_batches.py --group weapon-oil` 重新装配前置目录和这份隔离规则，逐字节核对后进入独立 MongoDB。初始库存由专项提供，正式常规来源继续待核验。
 
 手动分解出油继承原 `luck-oil-isolated.json` 物品定义，从工作簿读取精确分母、单瓶和绑定规则。`--group recycle-oil` 核对两套候选产物、正耐久手动分解的真库资产流转及普通击杀到武器用油的联机路径。
+
+`wings-isolated.json` 仅为启用的原世界首领模板和前三阶声明独立验收输入。羽毛编号、堆叠、有效伤害门槛、参与奖励数量、1／2／3 根的费用均为隔离数据。最高阶及外观节点由唯一工作簿投影，正式羽毛需求与属性仍待核验。通过 `--group wing` 可逐字节核对全部前置配置并重走真实联机发奖、扣包和原角色实例。

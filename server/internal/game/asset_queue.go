@@ -16,10 +16,42 @@ func waitsForAssetSlot(id uint16) bool {
 	case p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit,
 		p.MsgC2SCastWithMaterial, p.MsgC2SSetCastingSupply, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange,
 		p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction,
-		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit:
+		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction:
 		return true
 	}
 	return false
+}
+
+// historicalGrowthOperation 判断培养操作是否已位于同一个角色确认的经济水位内。
+func historicalGrowthOperation(r *room, op *pb.OperationContext) bool {
+	return r.Role.EconomicSeq > 0 && op != nil && len(op.OpId) == 16 && op.CommandSeq > 0 && op.CommandSeq <= uint64(r.Role.EconomicSeq)
+}
+
+// replayGrowthOperation 让已就绪的原角色确认旧培养回执，包括当前附着已进入挑战场的情况。
+func (w *worker) replayGrowthOperation(r *room, c command) bool {
+	if !r.Ready || r.Role.EconomicSeq <= 0 {
+		return false
+	}
+	var operation *pb.OperationContext
+	switch c.frame.ID {
+	case p.MsgC2SWeaponOilCommit:
+		if request, valid := readWeaponOilCommit(c.frame); valid {
+			operation = request.Operation
+		}
+	case p.MsgC2SWingAction:
+		if request, valid := readWingAction(c.frame); valid {
+			operation = request.Operation
+		}
+	}
+	if !historicalGrowthOperation(r, operation) {
+		return false
+	}
+	if r.Pending {
+		w.queueAssetCommand(r, c)
+	} else {
+		w.asset(r, c.frame, c.at)
+	}
+	return true
 }
 
 // assetCommandFingerprint 用消息号和正文核对同一原操作，拒绝换内容重放。

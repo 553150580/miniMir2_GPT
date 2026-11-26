@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -107,6 +107,15 @@ function operation(value: unknown, stored: boolean): ObjectValue {
         expectedRevision: longValue(context.expectedRevision, stored),
         expectedRuleVersion: longValue(context.expectedRuleVersion, stored),
     };
+}
+
+// 只有首次激活的翅膀身份允许空字节，持久化仍保持原请求形状。
+function wingId(value: unknown, stored: boolean): Uint8Array {
+    if (stored) {
+        const tag = record(value, ['$type', 'hex']);
+        if (tag.$type === 'Bytes16' && tag.hex === '') return new Uint8Array();
+    } else if (value instanceof Uint8Array && value.length === 0) return new Uint8Array();
+    return bytes16(value, stored);
 }
 
 function normalize(value: unknown, stored: boolean): PendingOperation {
@@ -313,6 +322,30 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
             weapon: { instanceId: bytes16(weapon.instanceId, stored), version, equipped: weapon.equipped }, allowBound: item.allowBound,
             operation: operation(item.operation, stored) };
+    } else if (id === 40054) {
+        // 翅膀成长只按原报价重查，外观只重查原实例、版本及明确的显隐。
+        const action = uint32((input.value as ObjectValue | null)?.action);
+        if (action !== 1 && action !== 2) return invalid('未知翅膀操作');
+        const fields = ['action', 'wingId', 'wingVersion', 'operation'];
+        const item = record(input.value, action === 1 ? fields.concat('quoteId', 'uiSessionId', 'allowBound') : fields.concat('appearanceTier', 'hidden'));
+        const instance = wingId(item.wingId, stored), version = longValue(item.wingVersion, stored);
+        if (!version.unsigned || version.isZero() !== (instance.length === 0) || BigInt(version.toString()) >= 0x7fffffffffffffffn) {
+            return invalid('翅膀操作需要原实例与原版本');
+        }
+        payload = { action, wingId: instance, wingVersion: version, operation: operation(item.operation, stored) };
+        if (action === 1) {
+            if (typeof item.allowBound !== 'boolean') return invalid('翅膀成长需要明确绑定授权');
+            payload.quoteId = bytes16(item.quoteId, stored);
+            payload.uiSessionId = bytes16(item.uiSessionId, stored);
+            payload.allowBound = item.allowBound;
+        } else {
+            const appearanceTier = uint32(item.appearanceTier);
+            if (!instance.length || appearanceTier < 1 || typeof item.hidden !== 'boolean') {
+                return invalid('翅膀外观需要原实例和明确样式及显隐');
+            }
+            payload.appearanceTier = appearanceTier;
+            payload.hidden = item.hidden;
+        }
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

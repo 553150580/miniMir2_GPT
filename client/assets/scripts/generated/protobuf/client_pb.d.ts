@@ -386,6 +386,9 @@ export namespace minimir {
             /** OperationResult recycle_oil. */
             recycle_oil?: (minimir.v1.RecycleOilReceipt.$Properties|null);
 
+            /** OperationResult wing. */
+            wing?: (minimir.v1.WingReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -491,12 +494,369 @@ export namespace minimir {
                 /** OperationResult recycle_oil */
                 recycle_oil?: (minimir.v1.RecycleOilReceipt.$Properties|null);
 
+                /** OperationResult wing */
+                wing?: (minimir.v1.WingReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a WingState.
+         * @deprecated Use minimir.v1.WingState.$Properties instead.
+         */
+        interface IWingState extends minimir.v1.WingState.$Properties {
+        }
+
+        /** Represents a WingState. */
+        class WingState {
+
+            /**
+             * Constructs a new WingState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingState wing_id. */
+            wing_id: Uint8Array;
+
+            /** WingState rank. */
+            rank: number;
+
+            /** WingState appearance_tier. */
+            appearance_tier: number;
+
+            /** WingState hidden. */
+            hidden: boolean;
+
+            /** WingState luck. */
+            luck: number;
+
+            /** WingState oil_to_six. */
+            oil_to_six: number;
+
+            /** WingState oil_to_nine. */
+            oil_to_nine: number;
+
+            /** WingState version. */
+            version: Long;
+
+            /**
+             * Creates a new WingState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingState instance
+             */
+            static create(properties: minimir.v1.WingState.$Shape): minimir.v1.WingState & minimir.v1.WingState.$Shape;
+            static create(properties?: minimir.v1.WingState.$Properties): minimir.v1.WingState;
+
+            /**
+             * Encodes the specified WingState message. Does not implicitly {@link minimir.v1.WingState.verify|verify} messages.
+             * @param message WingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingState message, length delimited. Does not implicitly {@link minimir.v1.WingState.verify|verify} messages.
+             * @param message WingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingState & minimir.v1.WingState.$Shape} WingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingState & minimir.v1.WingState.$Shape;
+
+            /**
+             * Decodes a WingState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingState & minimir.v1.WingState.$Shape} WingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingState & minimir.v1.WingState.$Shape;
+
+            /**
+             * Verifies a WingState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingState {
+
+            /** Properties of a WingState. */
+            interface $Properties {
+
+                /** WingState wing_id */
+                wing_id?: (Uint8Array|null);
+
+                /** WingState rank */
+                rank?: (number|null);
+
+                /** WingState appearance_tier */
+                appearance_tier?: (number|null);
+
+                /** WingState hidden */
+                hidden?: (boolean|null);
+
+                /** WingState luck */
+                luck?: (number|null);
+
+                /** WingState oil_to_six */
+                oil_to_six?: (number|null);
+
+                /** WingState oil_to_nine */
+                oil_to_nine?: (number|null);
+
+                /** WingState version */
+                version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingState. */
+            type $Shape = minimir.v1.WingState.$Properties;
+        }
+
+        /**
+         * Properties of a WingFeatherSpend.
+         * @deprecated Use minimir.v1.WingFeatherSpend.$Properties instead.
+         */
+        interface IWingFeatherSpend extends minimir.v1.WingFeatherSpend.$Properties {
+        }
+
+        /** Represents a WingFeatherSpend. */
+        class WingFeatherSpend {
+
+            /**
+             * Constructs a new WingFeatherSpend.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingFeatherSpend.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingFeatherSpend item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WingFeatherSpend quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new WingFeatherSpend instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingFeatherSpend instance
+             */
+            static create(properties: minimir.v1.WingFeatherSpend.$Shape): minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape;
+            static create(properties?: minimir.v1.WingFeatherSpend.$Properties): minimir.v1.WingFeatherSpend;
+
+            /**
+             * Encodes the specified WingFeatherSpend message. Does not implicitly {@link minimir.v1.WingFeatherSpend.verify|verify} messages.
+             * @param message WingFeatherSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingFeatherSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingFeatherSpend message, length delimited. Does not implicitly {@link minimir.v1.WingFeatherSpend.verify|verify} messages.
+             * @param message WingFeatherSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingFeatherSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingFeatherSpend message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape} WingFeatherSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape;
+
+            /**
+             * Decodes a WingFeatherSpend message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape} WingFeatherSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape;
+
+            /**
+             * Verifies a WingFeatherSpend message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingFeatherSpend
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingFeatherSpend {
+
+            /** Properties of a WingFeatherSpend. */
+            interface $Properties {
+
+                /** WingFeatherSpend item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WingFeatherSpend quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingFeatherSpend. */
+            type $Shape = minimir.v1.WingFeatherSpend.$Properties;
+        }
+
+        /**
+         * Properties of a WingReceipt.
+         * @deprecated Use minimir.v1.WingReceipt.$Properties instead.
+         */
+        interface IWingReceipt extends minimir.v1.WingReceipt.$Properties {
+        }
+
+        /** Represents a WingReceipt. */
+        class WingReceipt {
+
+            /**
+             * Constructs a new WingReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingReceipt action. */
+            action: number;
+
+            /** WingReceipt wing. */
+            wing?: (minimir.v1.WingState.$Properties|null);
+
+            /** WingReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** WingReceipt feathers. */
+            feathers: minimir.v1.WingFeatherSpend.$Properties[];
+
+            /**
+             * Creates a new WingReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingReceipt instance
+             */
+            static create(properties: minimir.v1.WingReceipt.$Shape): minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape;
+            static create(properties?: minimir.v1.WingReceipt.$Properties): minimir.v1.WingReceipt;
+
+            /**
+             * Encodes the specified WingReceipt message. Does not implicitly {@link minimir.v1.WingReceipt.verify|verify} messages.
+             * @param message WingReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingReceipt message, length delimited. Does not implicitly {@link minimir.v1.WingReceipt.verify|verify} messages.
+             * @param message WingReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape} WingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape;
+
+            /**
+             * Decodes a WingReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape} WingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape;
+
+            /**
+             * Verifies a WingReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingReceipt {
+
+            /** Properties of a WingReceipt. */
+            interface $Properties {
+
+                /** WingReceipt action */
+                action?: (number|null);
+
+                /** WingReceipt wing */
+                wing?: (minimir.v1.WingState.$Properties|null);
+
+                /** WingReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WingReceipt feathers */
+                feathers?: (minimir.v1.WingFeatherSpend.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingReceipt. */
+            type $Shape = minimir.v1.WingReceipt.$Properties;
         }
 
         /**
@@ -9374,6 +9734,9 @@ export namespace minimir {
             /** InventoryResult skill_slot_ids. */
             skill_slot_ids: number[];
 
+            /** InventoryResult wing. */
+            wing?: (minimir.v1.WingState.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -9466,6 +9829,9 @@ export namespace minimir {
 
                 /** InventoryResult skill_slot_ids */
                 skill_slot_ids?: (number[]|null);
+
+                /** InventoryResult wing */
+                wing?: (minimir.v1.WingState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -21875,6 +22241,534 @@ export namespace minimir {
 
             /** Shape of a WeaponOilCommitRequest. */
             type $Shape = minimir.v1.WeaponOilCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a WingFeatherRef.
+         * @deprecated Use minimir.v1.WingFeatherRef.$Properties instead.
+         */
+        interface IWingFeatherRef extends minimir.v1.WingFeatherRef.$Properties {
+        }
+
+        /** Represents a WingFeatherRef. */
+        class WingFeatherRef {
+
+            /**
+             * Constructs a new WingFeatherRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingFeatherRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingFeatherRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** WingFeatherRef version. */
+            version: Long;
+
+            /** WingFeatherRef quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new WingFeatherRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingFeatherRef instance
+             */
+            static create(properties: minimir.v1.WingFeatherRef.$Shape): minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape;
+            static create(properties?: minimir.v1.WingFeatherRef.$Properties): minimir.v1.WingFeatherRef;
+
+            /**
+             * Encodes the specified WingFeatherRef message. Does not implicitly {@link minimir.v1.WingFeatherRef.verify|verify} messages.
+             * @param message WingFeatherRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingFeatherRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingFeatherRef message, length delimited. Does not implicitly {@link minimir.v1.WingFeatherRef.verify|verify} messages.
+             * @param message WingFeatherRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingFeatherRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingFeatherRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape} WingFeatherRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape;
+
+            /**
+             * Decodes a WingFeatherRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape} WingFeatherRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape;
+
+            /**
+             * Verifies a WingFeatherRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingFeatherRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingFeatherRef {
+
+            /** Properties of a WingFeatherRef. */
+            interface $Properties {
+
+                /** WingFeatherRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** WingFeatherRef version */
+                version?: (Long|null);
+
+                /** WingFeatherRef quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingFeatherRef. */
+            type $Shape = minimir.v1.WingFeatherRef.$Properties;
+        }
+
+        /**
+         * Properties of a WingQuoteRequest.
+         * @deprecated Use minimir.v1.WingQuoteRequest.$Properties instead.
+         */
+        interface IWingQuoteRequest extends minimir.v1.WingQuoteRequest.$Properties {
+        }
+
+        /** Represents a WingQuoteRequest. */
+        class WingQuoteRequest {
+
+            /**
+             * Constructs a new WingQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** WingQuoteRequest wing_id. */
+            wing_id: Uint8Array;
+
+            /** WingQuoteRequest wing_version. */
+            wing_version: Long;
+
+            /** WingQuoteRequest feathers. */
+            feathers: minimir.v1.WingFeatherRef.$Properties[];
+
+            /** WingQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** WingQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new WingQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingQuoteRequest instance
+             */
+            static create(properties: minimir.v1.WingQuoteRequest.$Shape): minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.WingQuoteRequest.$Properties): minimir.v1.WingQuoteRequest;
+
+            /**
+             * Encodes the specified WingQuoteRequest message. Does not implicitly {@link minimir.v1.WingQuoteRequest.verify|verify} messages.
+             * @param message WingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.WingQuoteRequest.verify|verify} messages.
+             * @param message WingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape} WingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape;
+
+            /**
+             * Decodes a WingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape} WingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape;
+
+            /**
+             * Verifies a WingQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingQuoteRequest {
+
+            /** Properties of a WingQuoteRequest. */
+            interface $Properties {
+
+                /** WingQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WingQuoteRequest wing_id */
+                wing_id?: (Uint8Array|null);
+
+                /** WingQuoteRequest wing_version */
+                wing_version?: (Long|null);
+
+                /** WingQuoteRequest feathers */
+                feathers?: (minimir.v1.WingFeatherRef.$Properties[]|null);
+
+                /** WingQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** WingQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingQuoteRequest. */
+            type $Shape = minimir.v1.WingQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a WingQuote.
+         * @deprecated Use minimir.v1.WingQuote.$Properties instead.
+         */
+        interface IWingQuote extends minimir.v1.WingQuote.$Properties {
+        }
+
+        /** Represents a WingQuote. */
+        class WingQuote {
+
+            /**
+             * Constructs a new WingQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** WingQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** WingQuote wing. */
+            wing?: (minimir.v1.WingState.$Properties|null);
+
+            /** WingQuote target_rank. */
+            target_rank: number;
+
+            /** WingQuote target_appearance_tier. */
+            target_appearance_tier: number;
+
+            /** WingQuote feathers. */
+            feathers: minimir.v1.WingFeatherSpend.$Properties[];
+
+            /** WingQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** WingQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** WingQuote role_revision. */
+            role_revision: Long;
+
+            /** WingQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new WingQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingQuote instance
+             */
+            static create(properties: minimir.v1.WingQuote.$Shape): minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape;
+            static create(properties?: minimir.v1.WingQuote.$Properties): minimir.v1.WingQuote;
+
+            /**
+             * Encodes the specified WingQuote message. Does not implicitly {@link minimir.v1.WingQuote.verify|verify} messages.
+             * @param message WingQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingQuote message, length delimited. Does not implicitly {@link minimir.v1.WingQuote.verify|verify} messages.
+             * @param message WingQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape} WingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape;
+
+            /**
+             * Decodes a WingQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape} WingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape;
+
+            /**
+             * Verifies a WingQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingQuote {
+
+            /** Properties of a WingQuote. */
+            interface $Properties {
+
+                /** WingQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WingQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WingQuote wing */
+                wing?: (minimir.v1.WingState.$Properties|null);
+
+                /** WingQuote target_rank */
+                target_rank?: (number|null);
+
+                /** WingQuote target_appearance_tier */
+                target_appearance_tier?: (number|null);
+
+                /** WingQuote feathers */
+                feathers?: (minimir.v1.WingFeatherSpend.$Properties[]|null);
+
+                /** WingQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** WingQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** WingQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** WingQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingQuote. */
+            type $Shape = minimir.v1.WingQuote.$Properties;
+        }
+
+        /**
+         * Properties of a WingActionRequest.
+         * @deprecated Use minimir.v1.WingActionRequest.$Properties instead.
+         */
+        interface IWingActionRequest extends minimir.v1.WingActionRequest.$Properties {
+        }
+
+        /** Represents a WingActionRequest. */
+        class WingActionRequest {
+
+            /**
+             * Constructs a new WingActionRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingActionRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingActionRequest action. */
+            action: number;
+
+            /** WingActionRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** WingActionRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** WingActionRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** WingActionRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** WingActionRequest wing_id. */
+            wing_id: Uint8Array;
+
+            /** WingActionRequest wing_version. */
+            wing_version: Long;
+
+            /** WingActionRequest appearance_tier. */
+            appearance_tier: number;
+
+            /** WingActionRequest hidden. */
+            hidden: boolean;
+
+            /**
+             * Creates a new WingActionRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingActionRequest instance
+             */
+            static create(properties: minimir.v1.WingActionRequest.$Shape): minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape;
+            static create(properties?: minimir.v1.WingActionRequest.$Properties): minimir.v1.WingActionRequest;
+
+            /**
+             * Encodes the specified WingActionRequest message. Does not implicitly {@link minimir.v1.WingActionRequest.verify|verify} messages.
+             * @param message WingActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingActionRequest message, length delimited. Does not implicitly {@link minimir.v1.WingActionRequest.verify|verify} messages.
+             * @param message WingActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingActionRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape} WingActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape;
+
+            /**
+             * Decodes a WingActionRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape} WingActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape;
+
+            /**
+             * Verifies a WingActionRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingActionRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingActionRequest {
+
+            /** Properties of a WingActionRequest. */
+            interface $Properties {
+
+                /** WingActionRequest action */
+                action?: (number|null);
+
+                /** WingActionRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** WingActionRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WingActionRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** WingActionRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** WingActionRequest wing_id */
+                wing_id?: (Uint8Array|null);
+
+                /** WingActionRequest wing_version */
+                wing_version?: (Long|null);
+
+                /** WingActionRequest appearance_tier */
+                appearance_tier?: (number|null);
+
+                /** WingActionRequest hidden */
+                hidden?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingActionRequest. */
+            type $Shape = minimir.v1.WingActionRequest.$Properties;
         }
     }
 }

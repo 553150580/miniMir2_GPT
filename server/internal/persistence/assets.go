@@ -56,6 +56,9 @@ type AssetRequest struct {
 	WeaponOilCommit     *pb.WeaponOilCommitRequest // 武器祝福油的原确认报价、实例和界面会话。
 	WeaponOilGate       uint32                     // 房间只对首次用油生效的门禁码。
 	WeaponOilAcceptedAt time.Time                  `json:"-"` // 房间收到原用油确认的时刻，在排队和重试中保持。
+	WingAction          *pb.WingActionRequest      // 角色确认的原翅膀升阶或外观请求。
+	WingGate            uint32                     // 首次变更时原场景的门禁，不影响历史回执。
+	WingAcceptedAt      time.Time                  `json:"-"` // 游戏房间首次受理本请求的时间。
 
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
@@ -121,6 +124,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetWeaponOilCommit && q.WeaponOilAcceptedAt.IsZero() {
 		q.WeaponOilAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetWingAction && q.WingAcceptedAt.IsZero() {
+		q.WingAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -183,7 +189,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -210,6 +216,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var vendor *VendorReceipt
 		var forge *ForgeResultReceipt                      // 真成功或真失败时的原打造事实。
 		var weaponOil *WeaponOilResultReceipt              // 一瓶原油的实际扣除、原武器和确定结果。
+		var wing *WingActionReceipt                        // 原翅膀的新状态和确切羽毛消费。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -238,6 +245,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetWeaponOilCommit:
 			r, businessCode, weaponOil, e = s.commitWeaponOil(tc, a, r, q)
+			if e != nil {
+				return e
+			}
+		case AssetWingAction:
+			r, businessCode, wing, e = s.commitWingAction(tc, a, r, q, opID)
 			if e != nil {
 				return e
 			}
@@ -387,6 +399,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Vendor = vendor
 		op.Forge = forge
 		op.WeaponOil = weaponOil
+		op.Wing = wing
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -443,6 +456,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["weapon_oil"] = weaponOil
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
+			audit["origin_server_id"] = r.Origin
+		}
+		if wing != nil {
+			audit["wing"] = wing
+			audit["rule_version"] = wing.Rule
+			audit["config_hash"] = wing.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -533,6 +552,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.GoldMarket = receipt.GoldMarket.Proto()
 		result.Forge = receipt.Forge.Proto()
 		result.WeaponOil = receipt.WeaponOil.Proto()
+		result.Wing = receipt.Wing.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 	}
 	return out, result, receipt, e

@@ -220,8 +220,8 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 	}
 	if rules := f.CombatLuck; rules != nil {
-		// 真实角色目前没有翅膀培养实例，在线战斗和挑战快照均只使用实际生效装备。
-		a.LuckAttackPPM = equipmentLuck(r, f, 0)
+		// 在线角色和挑战快照共同读取已经确认的装备及唯一翅膀的原幸运。
+		a.LuckAttackPPM = equipmentLuck(r, f, roleWingLuck(r.Role, f))
 		a.LuckResistancePPM = rules.RoleResistancePPM[r.Role.Job]
 	}
 	return a

@@ -307,6 +307,8 @@ type Fixture struct {
 	LuckOil *LuckOilConfig `json:"luck_oil,omitempty"`
 	// EquipmentRecycleOil 是显式装配的手动分解出油候选。
 	EquipmentRecycleOil *EquipmentRecycleOilConfig `json:"equipment_recycle_oil,omitempty"`
+	// Wings 保存允许使用的羽毛、已配费用的升阶和固定外观演进规则。
+	Wings *WingConfig `json:"wings,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -622,6 +624,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateEquipmentRecycleOil(); err != nil {
+		return err
+	}
+	if err := f.validateWings(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

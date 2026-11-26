@@ -480,16 +480,9 @@ func verifyDirectoryBrowser(t *testing.T, account string, webRoot string, entrie
 	t.Helper()
 	repo, err := filepath.Abs("../../..")
 	must(t, err)
-	build, err := filepath.Abs(webRoot)
+	build, err := creatorBrowserBuildPath(repo, webRoot)
 	must(t, err)
 	work := filepath.Join(repo, ".work")
-	relative, err := filepath.Rel(work, build)
-	must(t, err)
-	if !filepath.IsLocal(relative) || relative == "." {
-		t.Fatal("区服浏览器验收只使用工作目录内的独立构建")
-	}
-	_, err = os.Stat(filepath.Join(build, "index.html"))
-	must(t, err)
 	upstream, err := url.Parse("http://" + account)
 	must(t, err)
 	proxy := httputil.NewSingleHostReverseProxy(upstream)

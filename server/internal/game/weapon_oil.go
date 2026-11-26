@@ -76,28 +76,6 @@ func readWeaponOilCommit(frame wire.Frame) (*pb.WeaponOilCommitRequest, bool) {
 	return &request, valid
 }
 
-// historicalWeaponOil 判断操作是否已落在当前角色确认的经济水位内。
-func historicalWeaponOil(r *room, op *pb.OperationContext) bool {
-	return r.Role.EconomicSeq > 0 && op != nil && len(op.OpId) == 16 && op.CommandSeq > 0 && op.CommandSeq <= uint64(r.Role.EconomicSeq)
-}
-
-// replayWeaponOil 允许已就绪的新附着查询旧回执，即便当前正在观察一个不能培养的挑战场景。
-func (w *worker) replayWeaponOil(r *room, c command) bool {
-	if c.frame.ID != p.MsgC2SWeaponOilCommit || !r.Ready || r.Role.EconomicSeq <= 0 {
-		return false
-	}
-	request, valid := readWeaponOilCommit(c.frame)
-	if !valid || !historicalWeaponOil(r, request.Operation) {
-		return false
-	}
-	if r.Pending {
-		w.queueAssetCommand(r, c)
-	} else {
-		w.asset(r, c.frame, c.at)
-	}
-	return true
-}
-
 // weaponOilWearPending 只检查首次确认所指的穿戴武器。背包物品和原操作重放无需等待这笔磨损。
 func weaponOilWearPending(r *room, request *pb.WeaponOilCommitRequest) bool {
 	op, weapon := request.Operation, request.Weapon

@@ -26,6 +26,8 @@ message InventoryResult {
   ProgressionState progression = 9;
   // 四个有序槽，0表示空。历史未设置的角色可以缺省。
   repeated uint32 skill_slot_ids = 10;
+  // 已激活翅膀是装备面板的独立位置，无背包或普通装备格占用。
+  WingState wing = 11;
 }
 message SetSkillSlotsRequest {
   repeated uint32 skill_slot_ids = 1;

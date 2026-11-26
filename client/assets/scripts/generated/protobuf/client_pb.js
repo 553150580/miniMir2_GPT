@@ -810,6 +810,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.ForgeReceipt.$Properties|null} [forge] OperationResult forge
              * @property {minimir.v1.WeaponOilReceipt.$Properties|null} [weapon_oil] OperationResult weapon_oil
              * @property {minimir.v1.RecycleOilReceipt.$Properties|null} [recycle_oil] OperationResult recycle_oil
+             * @property {minimir.v1.WingReceipt.$Properties|null} [wing] OperationResult wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -954,6 +955,14 @@ $root.minimir = (function() {
             OperationResult.prototype.recycle_oil = null;
 
             /**
+             * OperationResult wing.
+             * @member {minimir.v1.WingReceipt.$Properties|null|undefined} wing
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.wing = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1013,6 +1022,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.WeaponOilReceipt.encode(message.weapon_oil, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
                 if (message.recycle_oil != null && $Object.hasOwnProperty.call(message, "recycle_oil"))
                     $root.minimir.v1.RecycleOilReceipt.encode(message.recycle_oil, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingReceipt.encode(message.wing, writer.uint32(/* id 15, wireType 2 =*/122).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1169,6 +1180,12 @@ $root.minimir = (function() {
                             message.recycle_oil = $root.minimir.v1.RecycleOilReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.recycle_oil);
                             continue;
                         }
+                    case 15: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1277,6 +1294,11 @@ $root.minimir = (function() {
                     if (error)
                         return "recycle_oil." + error;
                 }
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingReceipt.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
                 return null;
             };
 
@@ -1295,6 +1317,912 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.WingState = (function() {
+
+            /**
+             * Properties of a WingState.
+             * @typedef {Object} minimir.v1.WingState.$Properties
+             * @property {Uint8Array|null} [wing_id] WingState wing_id
+             * @property {number|null} [rank] WingState rank
+             * @property {number|null} [appearance_tier] WingState appearance_tier
+             * @property {boolean|null} [hidden] WingState hidden
+             * @property {number|null} [luck] WingState luck
+             * @property {number|null} [oil_to_six] WingState oil_to_six
+             * @property {number|null} [oil_to_nine] WingState oil_to_nine
+             * @property {Long|null} [version] WingState version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingState.
+             * @memberof minimir.v1
+             * @interface IWingState
+             * @augments minimir.v1.WingState.$Properties
+             * @deprecated Use minimir.v1.WingState.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingState.
+             * @typedef {minimir.v1.WingState.$Properties} minimir.v1.WingState.$Shape
+             */
+
+            /**
+             * Constructs a new WingState.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingState.
+             * @constructor
+             * @param {minimir.v1.WingState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingState wing_id.
+             * @member {Uint8Array} wing_id
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.wing_id = $util.newBuffer([]);
+
+            /**
+             * WingState rank.
+             * @member {number} rank
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.rank = 0;
+
+            /**
+             * WingState appearance_tier.
+             * @member {number} appearance_tier
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.appearance_tier = 0;
+
+            /**
+             * WingState hidden.
+             * @member {boolean} hidden
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.hidden = false;
+
+            /**
+             * WingState luck.
+             * @member {number} luck
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.luck = 0;
+
+            /**
+             * WingState oil_to_six.
+             * @member {number} oil_to_six
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.oil_to_six = 0;
+
+            /**
+             * WingState oil_to_nine.
+             * @member {number} oil_to_nine
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.oil_to_nine = 0;
+
+            /**
+             * WingState version.
+             * @member {Long} version
+             * @memberof minimir.v1.WingState
+             * @instance
+             */
+            WingState.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new WingState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {minimir.v1.WingState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingState} WingState instance
+             * @type {{
+             *   (properties: minimir.v1.WingState.$Shape): minimir.v1.WingState & minimir.v1.WingState.$Shape;
+             *   (properties?: minimir.v1.WingState.$Properties): minimir.v1.WingState;
+             * }}
+             */
+            WingState.create = function(properties) {
+                return new WingState(properties);
+            };
+
+            /**
+             * Encodes the specified WingState message. Does not implicitly {@link minimir.v1.WingState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {minimir.v1.WingState.$Properties} message WingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id") && message.wing_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.wing_id);
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank") && message.rank !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.rank);
+                if (message.appearance_tier != null && $Object.hasOwnProperty.call(message, "appearance_tier") && message.appearance_tier !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.appearance_tier);
+                if (message.hidden != null && $Object.hasOwnProperty.call(message, "hidden") && message.hidden !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.hidden);
+                if (message.luck != null && $Object.hasOwnProperty.call(message, "luck") && message.luck !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.luck);
+                if (message.oil_to_six != null && $Object.hasOwnProperty.call(message, "oil_to_six") && message.oil_to_six !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.oil_to_six);
+                if (message.oil_to_nine != null && $Object.hasOwnProperty.call(message, "oil_to_nine") && message.oil_to_nine !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.oil_to_nine);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingState message, length delimited. Does not implicitly {@link minimir.v1.WingState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {minimir.v1.WingState.$Properties} message WingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingState & minimir.v1.WingState.$Shape} WingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.wing_id = value;
+                            else
+                                delete message.wing_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.rank = value;
+                            else
+                                delete message.rank;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.appearance_tier = value;
+                            else
+                                delete message.appearance_tier;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.hidden = value;
+                            else
+                                delete message.hidden;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.luck = value;
+                            else
+                                delete message.luck;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.oil_to_six = value;
+                            else
+                                delete message.oil_to_six;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.oil_to_nine = value;
+                            else
+                                delete message.oil_to_nine;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingState & minimir.v1.WingState.$Shape} WingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingState message.
+             * @function verify
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id"))
+                    if (!(message.wing_id && typeof message.wing_id.length === "number" || $util.isString(message.wing_id)))
+                        return "wing_id: buffer expected";
+                if (message.rank != null && $Object.hasOwnProperty.call(message, "rank"))
+                    if (!$util.isInteger(message.rank))
+                        return "rank: integer expected";
+                if (message.appearance_tier != null && $Object.hasOwnProperty.call(message, "appearance_tier"))
+                    if (!$util.isInteger(message.appearance_tier))
+                        return "appearance_tier: integer expected";
+                if (message.hidden != null && $Object.hasOwnProperty.call(message, "hidden"))
+                    if (typeof message.hidden !== "boolean")
+                        return "hidden: boolean expected";
+                if (message.luck != null && $Object.hasOwnProperty.call(message, "luck"))
+                    if (!$util.isInteger(message.luck))
+                        return "luck: integer expected";
+                if (message.oil_to_six != null && $Object.hasOwnProperty.call(message, "oil_to_six"))
+                    if (!$util.isInteger(message.oil_to_six))
+                        return "oil_to_six: integer expected";
+                if (message.oil_to_nine != null && $Object.hasOwnProperty.call(message, "oil_to_nine"))
+                    if (!$util.isInteger(message.oil_to_nine))
+                        return "oil_to_nine: integer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingState
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingState";
+            };
+
+            return WingState;
+        })();
+
+        v1.WingFeatherSpend = (function() {
+
+            /**
+             * Properties of a WingFeatherSpend.
+             * @typedef {Object} minimir.v1.WingFeatherSpend.$Properties
+             * @property {minimir.v1.ItemView.$Properties|null} [item] WingFeatherSpend item
+             * @property {Long|null} [quantity] WingFeatherSpend quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingFeatherSpend.
+             * @memberof minimir.v1
+             * @interface IWingFeatherSpend
+             * @augments minimir.v1.WingFeatherSpend.$Properties
+             * @deprecated Use minimir.v1.WingFeatherSpend.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingFeatherSpend.
+             * @typedef {minimir.v1.WingFeatherSpend.$Properties} minimir.v1.WingFeatherSpend.$Shape
+             */
+
+            /**
+             * Constructs a new WingFeatherSpend.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingFeatherSpend.
+             * @constructor
+             * @param {minimir.v1.WingFeatherSpend.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingFeatherSpend = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingFeatherSpend item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.WingFeatherSpend
+             * @instance
+             */
+            WingFeatherSpend.prototype.item = null;
+
+            /**
+             * WingFeatherSpend quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.WingFeatherSpend
+             * @instance
+             */
+            WingFeatherSpend.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new WingFeatherSpend instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {minimir.v1.WingFeatherSpend.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingFeatherSpend} WingFeatherSpend instance
+             * @type {{
+             *   (properties: minimir.v1.WingFeatherSpend.$Shape): minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape;
+             *   (properties?: minimir.v1.WingFeatherSpend.$Properties): minimir.v1.WingFeatherSpend;
+             * }}
+             */
+            WingFeatherSpend.create = function(properties) {
+                return new WingFeatherSpend(properties);
+            };
+
+            /**
+             * Encodes the specified WingFeatherSpend message. Does not implicitly {@link minimir.v1.WingFeatherSpend.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {minimir.v1.WingFeatherSpend.$Properties} message WingFeatherSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingFeatherSpend.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingFeatherSpend message, length delimited. Does not implicitly {@link minimir.v1.WingFeatherSpend.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {minimir.v1.WingFeatherSpend.$Properties} message WingFeatherSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingFeatherSpend.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingFeatherSpend message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape} WingFeatherSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingFeatherSpend.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingFeatherSpend();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingFeatherSpend message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingFeatherSpend & minimir.v1.WingFeatherSpend.$Shape} WingFeatherSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingFeatherSpend.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingFeatherSpend message.
+             * @function verify
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingFeatherSpend.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingFeatherSpend
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingFeatherSpend
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingFeatherSpend.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingFeatherSpend";
+            };
+
+            return WingFeatherSpend;
+        })();
+
+        v1.WingReceipt = (function() {
+
+            /**
+             * Properties of a WingReceipt.
+             * @typedef {Object} minimir.v1.WingReceipt.$Properties
+             * @property {number|null} [action] WingReceipt action
+             * @property {minimir.v1.WingState.$Properties|null} [wing] WingReceipt wing
+             * @property {Uint8Array|null} [quote_id] WingReceipt quote_id
+             * @property {Array.<minimir.v1.WingFeatherSpend.$Properties>|null} [feathers] WingReceipt feathers
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingReceipt.
+             * @memberof minimir.v1
+             * @interface IWingReceipt
+             * @augments minimir.v1.WingReceipt.$Properties
+             * @deprecated Use minimir.v1.WingReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingReceipt.
+             * @typedef {minimir.v1.WingReceipt.$Properties} minimir.v1.WingReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new WingReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingReceipt.
+             * @constructor
+             * @param {minimir.v1.WingReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingReceipt = function (properties) {
+                this.feathers = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingReceipt action.
+             * @member {number} action
+             * @memberof minimir.v1.WingReceipt
+             * @instance
+             */
+            WingReceipt.prototype.action = 0;
+
+            /**
+             * WingReceipt wing.
+             * @member {minimir.v1.WingState.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WingReceipt
+             * @instance
+             */
+            WingReceipt.prototype.wing = null;
+
+            /**
+             * WingReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WingReceipt
+             * @instance
+             */
+            WingReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WingReceipt feathers.
+             * @member {Array.<minimir.v1.WingFeatherSpend.$Properties>} feathers
+             * @memberof minimir.v1.WingReceipt
+             * @instance
+             */
+            WingReceipt.prototype.feathers = $util.emptyArray;
+
+            /**
+             * Creates a new WingReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {minimir.v1.WingReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingReceipt} WingReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.WingReceipt.$Shape): minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape;
+             *   (properties?: minimir.v1.WingReceipt.$Properties): minimir.v1.WingReceipt;
+             * }}
+             */
+            WingReceipt.create = function(properties) {
+                return new WingReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified WingReceipt message. Does not implicitly {@link minimir.v1.WingReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {minimir.v1.WingReceipt.$Properties} message WingReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.quote_id);
+                if (message.feathers != null && message.feathers.length)
+                    for (var i = 0; i < message.feathers.length; ++i)
+                        $root.minimir.v1.WingFeatherSpend.encode(message.feathers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingReceipt message, length delimited. Does not implicitly {@link minimir.v1.WingReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {minimir.v1.WingReceipt.$Properties} message WingReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape} WingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.feathers && message.feathers.length))
+                                message.feathers = [];
+                            message.feathers.push($root.minimir.v1.WingFeatherSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingReceipt & minimir.v1.WingReceipt.$Shape} WingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingReceipt message.
+             * @function verify
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.feathers != null && $Object.hasOwnProperty.call(message, "feathers")) {
+                    if (!$Array.isArray(message.feathers))
+                        return "feathers: array expected";
+                    for (var i = 0; i < message.feathers.length; ++i) {
+                        var error = $root.minimir.v1.WingFeatherSpend.verify(message.feathers[i], _depth + 1);
+                        if (error)
+                            return "feathers." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingReceipt";
+            };
+
+            return WingReceipt;
         })();
 
         v1.RecycleOilReceipt = (function() {
@@ -24561,6 +25489,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.AutoRecyclePolicy.$Properties|null} [auto_recycle] InventoryResult auto_recycle
              * @property {minimir.v1.ProgressionState.$Properties|null} [progression] InventoryResult progression
              * @property {Array.<number>|null} [skill_slot_ids] InventoryResult skill_slot_ids
+             * @property {minimir.v1.WingState.$Properties|null} [wing] InventoryResult wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -24677,6 +25606,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.skill_slot_ids = $util.emptyArray;
 
             /**
+             * InventoryResult wing.
+             * @member {minimir.v1.WingState.$Properties|null|undefined} wing
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.wing = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -24731,6 +25668,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.ProgressionState.encode(message.progression, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
                 if (message.skill_slot_ids != null && message.skill_slot_ids.length)
                     writer.uint32(/* id 10, wireType 2 =*/82).uint32s(message.skill_slot_ids);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -24874,6 +25813,12 @@ $root.minimir = (function() {
                             message.skill_slot_ids.push(reader.uint32());
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -24977,6 +25922,11 @@ $root.minimir = (function() {
                     for (var i = 0; i < message.skill_slot_ids.length; ++i)
                         if (!$util.isInteger(message.skill_slot_ids[i]))
                             return "skill_slot_ids: integer[] expected";
+                }
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
                 }
                 return null;
             };
@@ -58352,6 +59302,1434 @@ $root.minimir = (function() {
             };
 
             return WeaponOilCommitRequest;
+        })();
+
+        v1.WingFeatherRef = (function() {
+
+            /**
+             * Properties of a WingFeatherRef.
+             * @typedef {Object} minimir.v1.WingFeatherRef.$Properties
+             * @property {Uint8Array|null} [instance_id] WingFeatherRef instance_id
+             * @property {Long|null} [version] WingFeatherRef version
+             * @property {Long|null} [quantity] WingFeatherRef quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingFeatherRef.
+             * @memberof minimir.v1
+             * @interface IWingFeatherRef
+             * @augments minimir.v1.WingFeatherRef.$Properties
+             * @deprecated Use minimir.v1.WingFeatherRef.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingFeatherRef.
+             * @typedef {minimir.v1.WingFeatherRef.$Properties} minimir.v1.WingFeatherRef.$Shape
+             */
+
+            /**
+             * Constructs a new WingFeatherRef.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingFeatherRef.
+             * @constructor
+             * @param {minimir.v1.WingFeatherRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingFeatherRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingFeatherRef instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.WingFeatherRef
+             * @instance
+             */
+            WingFeatherRef.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * WingFeatherRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.WingFeatherRef
+             * @instance
+             */
+            WingFeatherRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingFeatherRef quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.WingFeatherRef
+             * @instance
+             */
+            WingFeatherRef.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new WingFeatherRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {minimir.v1.WingFeatherRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingFeatherRef} WingFeatherRef instance
+             * @type {{
+             *   (properties: minimir.v1.WingFeatherRef.$Shape): minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape;
+             *   (properties?: minimir.v1.WingFeatherRef.$Properties): minimir.v1.WingFeatherRef;
+             * }}
+             */
+            WingFeatherRef.create = function(properties) {
+                return new WingFeatherRef(properties);
+            };
+
+            /**
+             * Encodes the specified WingFeatherRef message. Does not implicitly {@link minimir.v1.WingFeatherRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {minimir.v1.WingFeatherRef.$Properties} message WingFeatherRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingFeatherRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingFeatherRef message, length delimited. Does not implicitly {@link minimir.v1.WingFeatherRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {minimir.v1.WingFeatherRef.$Properties} message WingFeatherRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingFeatherRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingFeatherRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape} WingFeatherRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingFeatherRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingFeatherRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingFeatherRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingFeatherRef & minimir.v1.WingFeatherRef.$Shape} WingFeatherRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingFeatherRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingFeatherRef message.
+             * @function verify
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingFeatherRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingFeatherRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingFeatherRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingFeatherRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingFeatherRef";
+            };
+
+            return WingFeatherRef;
+        })();
+
+        v1.WingQuoteRequest = (function() {
+
+            /**
+             * Properties of a WingQuoteRequest.
+             * @typedef {Object} minimir.v1.WingQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] WingQuoteRequest scene_epoch
+             * @property {Uint8Array|null} [wing_id] WingQuoteRequest wing_id
+             * @property {Long|null} [wing_version] WingQuoteRequest wing_version
+             * @property {Array.<minimir.v1.WingFeatherRef.$Properties>|null} [feathers] WingQuoteRequest feathers
+             * @property {boolean|null} [allow_bound] WingQuoteRequest allow_bound
+             * @property {Uint8Array|null} [ui_session_id] WingQuoteRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IWingQuoteRequest
+             * @augments minimir.v1.WingQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.WingQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingQuoteRequest.
+             * @typedef {minimir.v1.WingQuoteRequest.$Properties} minimir.v1.WingQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new WingQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.WingQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingQuoteRequest = function (properties) {
+                this.feathers = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingQuoteRequest wing_id.
+             * @member {Uint8Array} wing_id
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.wing_id = $util.newBuffer([]);
+
+            /**
+             * WingQuoteRequest wing_version.
+             * @member {Long} wing_version
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.wing_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingQuoteRequest feathers.
+             * @member {Array.<minimir.v1.WingFeatherRef.$Properties>} feathers
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.feathers = $util.emptyArray;
+
+            /**
+             * WingQuoteRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.allow_bound = false;
+
+            /**
+             * WingQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WingQuoteRequest
+             * @instance
+             */
+            WingQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new WingQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {minimir.v1.WingQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingQuoteRequest} WingQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.WingQuoteRequest.$Shape): minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.WingQuoteRequest.$Properties): minimir.v1.WingQuoteRequest;
+             * }}
+             */
+            WingQuoteRequest.create = function(properties) {
+                return new WingQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified WingQuoteRequest message. Does not implicitly {@link minimir.v1.WingQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {minimir.v1.WingQuoteRequest.$Properties} message WingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id") && message.wing_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.wing_id);
+                if (message.wing_version != null && $Object.hasOwnProperty.call(message, "wing_version") && (typeof message.wing_version === "object" ? message.wing_version.low || message.wing_version.high : message.wing_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.wing_version);
+                if (message.feathers != null && message.feathers.length)
+                    for (var i = 0; i < message.feathers.length; ++i)
+                        $root.minimir.v1.WingFeatherRef.encode(message.feathers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.allow_bound);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.WingQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {minimir.v1.WingQuoteRequest.$Properties} message WingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape} WingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.wing_id = value;
+                            else
+                                delete message.wing_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.wing_version = value;
+                            else
+                                delete message.wing_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.feathers && message.feathers.length))
+                                message.feathers = [];
+                            message.feathers.push($root.minimir.v1.WingFeatherRef.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingQuoteRequest & minimir.v1.WingQuoteRequest.$Shape} WingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id"))
+                    if (!(message.wing_id && typeof message.wing_id.length === "number" || $util.isString(message.wing_id)))
+                        return "wing_id: buffer expected";
+                if (message.wing_version != null && $Object.hasOwnProperty.call(message, "wing_version"))
+                    if (!$util.isInteger(message.wing_version) && !(message.wing_version && $util.isInteger(message.wing_version.low) && $util.isInteger(message.wing_version.high)))
+                        return "wing_version: integer|Long expected";
+                if (message.feathers != null && $Object.hasOwnProperty.call(message, "feathers")) {
+                    if (!$Array.isArray(message.feathers))
+                        return "feathers: array expected";
+                    for (var i = 0; i < message.feathers.length; ++i) {
+                        var error = $root.minimir.v1.WingFeatherRef.verify(message.feathers[i], _depth + 1);
+                        if (error)
+                            return "feathers." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingQuoteRequest";
+            };
+
+            return WingQuoteRequest;
+        })();
+
+        v1.WingQuote = (function() {
+
+            /**
+             * Properties of a WingQuote.
+             * @typedef {Object} minimir.v1.WingQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] WingQuote quote_id
+             * @property {Long|null} [scene_epoch] WingQuote scene_epoch
+             * @property {minimir.v1.WingState.$Properties|null} [wing] WingQuote wing
+             * @property {number|null} [target_rank] WingQuote target_rank
+             * @property {number|null} [target_appearance_tier] WingQuote target_appearance_tier
+             * @property {Array.<minimir.v1.WingFeatherSpend.$Properties>|null} [feathers] WingQuote feathers
+             * @property {boolean|null} [allow_bound] WingQuote allow_bound
+             * @property {Long|null} [expires_at_unix_ms] WingQuote expires_at_unix_ms
+             * @property {Long|null} [role_revision] WingQuote role_revision
+             * @property {Uint8Array|null} [ui_session_id] WingQuote ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingQuote.
+             * @memberof minimir.v1
+             * @interface IWingQuote
+             * @augments minimir.v1.WingQuote.$Properties
+             * @deprecated Use minimir.v1.WingQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingQuote.
+             * @typedef {minimir.v1.WingQuote.$Properties} minimir.v1.WingQuote.$Shape
+             */
+
+            /**
+             * Constructs a new WingQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingQuote.
+             * @constructor
+             * @param {minimir.v1.WingQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingQuote = function (properties) {
+                this.feathers = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WingQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingQuote wing.
+             * @member {minimir.v1.WingState.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.wing = null;
+
+            /**
+             * WingQuote target_rank.
+             * @member {number} target_rank
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.target_rank = 0;
+
+            /**
+             * WingQuote target_appearance_tier.
+             * @member {number} target_appearance_tier
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.target_appearance_tier = 0;
+
+            /**
+             * WingQuote feathers.
+             * @member {Array.<minimir.v1.WingFeatherSpend.$Properties>} feathers
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.feathers = $util.emptyArray;
+
+            /**
+             * WingQuote allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.allow_bound = false;
+
+            /**
+             * WingQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WingQuote
+             * @instance
+             */
+            WingQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new WingQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {minimir.v1.WingQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingQuote} WingQuote instance
+             * @type {{
+             *   (properties: minimir.v1.WingQuote.$Shape): minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape;
+             *   (properties?: minimir.v1.WingQuote.$Properties): minimir.v1.WingQuote;
+             * }}
+             */
+            WingQuote.create = function(properties) {
+                return new WingQuote(properties);
+            };
+
+            /**
+             * Encodes the specified WingQuote message. Does not implicitly {@link minimir.v1.WingQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {minimir.v1.WingQuote.$Properties} message WingQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.target_rank != null && $Object.hasOwnProperty.call(message, "target_rank") && message.target_rank !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.target_rank);
+                if (message.target_appearance_tier != null && $Object.hasOwnProperty.call(message, "target_appearance_tier") && message.target_appearance_tier !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.target_appearance_tier);
+                if (message.feathers != null && message.feathers.length)
+                    for (var i = 0; i < message.feathers.length; ++i)
+                        $root.minimir.v1.WingFeatherSpend.encode(message.feathers[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.allow_bound);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.expires_at_unix_ms);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.role_revision);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 10, wireType 2 =*/82).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingQuote message, length delimited. Does not implicitly {@link minimir.v1.WingQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {minimir.v1.WingQuote.$Properties} message WingQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape} WingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_rank = value;
+                            else
+                                delete message.target_rank;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_appearance_tier = value;
+                            else
+                                delete message.target_appearance_tier;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.feathers && message.feathers.length))
+                                message.feathers = [];
+                            message.feathers.push($root.minimir.v1.WingFeatherSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingQuote & minimir.v1.WingQuote.$Shape} WingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingQuote message.
+             * @function verify
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
+                if (message.target_rank != null && $Object.hasOwnProperty.call(message, "target_rank"))
+                    if (!$util.isInteger(message.target_rank))
+                        return "target_rank: integer expected";
+                if (message.target_appearance_tier != null && $Object.hasOwnProperty.call(message, "target_appearance_tier"))
+                    if (!$util.isInteger(message.target_appearance_tier))
+                        return "target_appearance_tier: integer expected";
+                if (message.feathers != null && $Object.hasOwnProperty.call(message, "feathers")) {
+                    if (!$Array.isArray(message.feathers))
+                        return "feathers: array expected";
+                    for (var i = 0; i < message.feathers.length; ++i) {
+                        var error = $root.minimir.v1.WingFeatherSpend.verify(message.feathers[i], _depth + 1);
+                        if (error)
+                            return "feathers." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingQuote";
+            };
+
+            return WingQuote;
+        })();
+
+        v1.WingActionRequest = (function() {
+
+            /**
+             * Properties of a WingActionRequest.
+             * @typedef {Object} minimir.v1.WingActionRequest.$Properties
+             * @property {number|null} [action] WingActionRequest action
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] WingActionRequest operation
+             * @property {Uint8Array|null} [quote_id] WingActionRequest quote_id
+             * @property {Uint8Array|null} [ui_session_id] WingActionRequest ui_session_id
+             * @property {boolean|null} [allow_bound] WingActionRequest allow_bound
+             * @property {Uint8Array|null} [wing_id] WingActionRequest wing_id
+             * @property {Long|null} [wing_version] WingActionRequest wing_version
+             * @property {number|null} [appearance_tier] WingActionRequest appearance_tier
+             * @property {boolean|null} [hidden] WingActionRequest hidden
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingActionRequest.
+             * @memberof minimir.v1
+             * @interface IWingActionRequest
+             * @augments minimir.v1.WingActionRequest.$Properties
+             * @deprecated Use minimir.v1.WingActionRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingActionRequest.
+             * @typedef {minimir.v1.WingActionRequest.$Properties} minimir.v1.WingActionRequest.$Shape
+             */
+
+            /**
+             * Constructs a new WingActionRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingActionRequest.
+             * @constructor
+             * @param {minimir.v1.WingActionRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingActionRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingActionRequest action.
+             * @member {number} action
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.action = 0;
+
+            /**
+             * WingActionRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.operation = null;
+
+            /**
+             * WingActionRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WingActionRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * WingActionRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.allow_bound = false;
+
+            /**
+             * WingActionRequest wing_id.
+             * @member {Uint8Array} wing_id
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.wing_id = $util.newBuffer([]);
+
+            /**
+             * WingActionRequest wing_version.
+             * @member {Long} wing_version
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.wing_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WingActionRequest appearance_tier.
+             * @member {number} appearance_tier
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.appearance_tier = 0;
+
+            /**
+             * WingActionRequest hidden.
+             * @member {boolean} hidden
+             * @memberof minimir.v1.WingActionRequest
+             * @instance
+             */
+            WingActionRequest.prototype.hidden = false;
+
+            /**
+             * Creates a new WingActionRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {minimir.v1.WingActionRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingActionRequest} WingActionRequest instance
+             * @type {{
+             *   (properties: minimir.v1.WingActionRequest.$Shape): minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape;
+             *   (properties?: minimir.v1.WingActionRequest.$Properties): minimir.v1.WingActionRequest;
+             * }}
+             */
+            WingActionRequest.create = function(properties) {
+                return new WingActionRequest(properties);
+            };
+
+            /**
+             * Encodes the specified WingActionRequest message. Does not implicitly {@link minimir.v1.WingActionRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {minimir.v1.WingActionRequest.$Properties} message WingActionRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingActionRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.quote_id);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.ui_session_id);
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.allow_bound);
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id") && message.wing_id.length)
+                    writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.wing_id);
+                if (message.wing_version != null && $Object.hasOwnProperty.call(message, "wing_version") && (typeof message.wing_version === "object" ? message.wing_version.low || message.wing_version.high : message.wing_version !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.wing_version);
+                if (message.appearance_tier != null && $Object.hasOwnProperty.call(message, "appearance_tier") && message.appearance_tier !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.appearance_tier);
+                if (message.hidden != null && $Object.hasOwnProperty.call(message, "hidden") && message.hidden !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.hidden);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingActionRequest message, length delimited. Does not implicitly {@link minimir.v1.WingActionRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {minimir.v1.WingActionRequest.$Properties} message WingActionRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingActionRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingActionRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape} WingActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingActionRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingActionRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.wing_id = value;
+                            else
+                                delete message.wing_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.wing_version = value;
+                            else
+                                delete message.wing_version;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.appearance_tier = value;
+                            else
+                                delete message.appearance_tier;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.hidden = value;
+                            else
+                                delete message.hidden;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingActionRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingActionRequest & minimir.v1.WingActionRequest.$Shape} WingActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingActionRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingActionRequest message.
+             * @function verify
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingActionRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id"))
+                    if (!(message.wing_id && typeof message.wing_id.length === "number" || $util.isString(message.wing_id)))
+                        return "wing_id: buffer expected";
+                if (message.wing_version != null && $Object.hasOwnProperty.call(message, "wing_version"))
+                    if (!$util.isInteger(message.wing_version) && !(message.wing_version && $util.isInteger(message.wing_version.low) && $util.isInteger(message.wing_version.high)))
+                        return "wing_version: integer|Long expected";
+                if (message.appearance_tier != null && $Object.hasOwnProperty.call(message, "appearance_tier"))
+                    if (!$util.isInteger(message.appearance_tier))
+                        return "appearance_tier: integer expected";
+                if (message.hidden != null && $Object.hasOwnProperty.call(message, "hidden"))
+                    if (typeof message.hidden !== "boolean")
+                        return "hidden: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingActionRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingActionRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingActionRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingActionRequest";
+            };
+
+            return WingActionRequest;
         })();
 
         return v1;

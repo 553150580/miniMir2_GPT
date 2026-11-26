@@ -12,9 +12,10 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 SELECTED = ['assets', 'settings', 'profiles', '.creator', 'node_modules', 'package.json', 'package-lock.json', 'tsconfig.json']
 EDITOR_CACHES = ['settings/v2/packages/information.json']
-sys.path.insert(0, str(ROOT / 'tools/resources'))
+sys.path[:0] = [str(ROOT / 'tools/resources'), str(ROOT / 'tools')]
 from prepare_first_loop import public_gameplay
 from creator_json_meta import content_meta_bytes
+from creator_work_paths import creator_work_path
 
 
 def sha(path):
@@ -28,10 +29,7 @@ def save(path, value):
 
 
 def work_path(value):
-    path = Path(value).resolve()
-    if not path.is_relative_to((ROOT / '.work').resolve()) or path == (ROOT / '.work').resolve():
-        raise ValueError('独立工程必须位于本项目.work子目录')
-    return path
+    return creator_work_path(value, ROOT)
 
 
 def files(directory):

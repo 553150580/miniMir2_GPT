@@ -1,0 +1,49 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 由玩家选择具体羽毛堆并确认数量，服务端不自动更换投入。
+message WingFeatherRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  int64 quantity = 3;
+}
+
+message WingQuoteRequest {
+  uint64 scene_epoch = 1;
+  // 尚未激活时两个实例字段均缺省。
+  bytes wing_id = 2;
+  uint64 wing_version = 3;
+  repeated WingFeatherRef feathers = 4;
+  bool allow_bound = 5;
+  bytes ui_session_id = 6;
+}
+
+// 显示原位翅膀、目标阶及实际选中的每一笔绑定或非绑定羽毛。
+message WingQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  WingState wing = 3;
+  uint32 target_rank = 4;
+  uint32 target_appearance_tier = 5;
+  repeated WingFeatherSpend feathers = 6;
+  bool allow_bound = 7;
+  uint64 expires_at_unix_ms = 8;
+  uint64 role_revision = 9;
+  bytes ui_session_id = 10;
+}
+
+message WingActionRequest {
+  // 1 确认激活或升阶，2 切换已解锁的外观及显隐。
+  uint32 action = 1;
+  OperationContext operation = 2;
+  bytes quote_id = 3;
+  bytes ui_session_id = 4;
+  bool allow_bound = 5;
+  bytes wing_id = 6;
+  uint64 wing_version = 7;
+  uint32 appearance_tier = 8;
+  bool hidden = 9;
+}
