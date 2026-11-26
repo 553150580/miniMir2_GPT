@@ -46,6 +46,29 @@ test('金币补时仅保存原报价和整数秒，重连保持同一操作的�
     }
 });
 
+test('购买月卡和特权日领在通知断线后保持原商品、报价、运营日与流水', () => {
+    const purchase = { id: 40037, value: { quoteId: id(9), productId: 2, operation: pending().value.operation } };
+    const daily = { id: 40038, value: { operatingDay: '2026-11-26', operation: pending().value.operation } };
+    const storage = new MemoryStorage(), ledger = new PendingOperations(storage, key);
+    ledger.set('roleA', purchase);
+    ledger.set('roleB', daily);
+    const resumed = new PendingOperations(storage, key);
+    const encode = request => {
+        const value = request.value, op = value.operation;
+        const operation = { op_id: op.opId, command_seq: op.commandSeq, expected_revision: op.expectedRevision,
+            expected_rule_version: op.expectedRuleVersion };
+        return request.id === 40037 ? pb.BuyRoleCardRequest.encode({ quote_id: value.quoteId, product_id: value.productId, operation }).finish()
+            : pb.ClaimRoleCardDailyRequest.encode({ operating_day: value.operatingDay, operation }).finish();
+    };
+    assert.deepEqual(encode(resumed.get('roleA')), encode(purchase));
+    assert.deepEqual(encode(resumed.get('roleB')), encode(daily));
+    assert.throws(() => resumed.set('roleB', { ...daily, value: { ...daily.value, operatingDay: '2026-11-27' } }), { code: 'PENDING_EXISTS' });
+    for (const [request, changes] of [[purchase, { productId: 0 }], [purchase, { quoteId: new Uint8Array(15) }],
+        [purchase, { priceYuanbaoUnits: 30000 }], [daily, { operatingDay: '2026-11-26T12:00:00Z' }]]) {
+        assert.throws(() => new PendingOperations().set('roleA', { ...request, value: { ...request.value, ...changes } }), { code: 'INVALID_OPERATION' });
+    }
+});
+
 function mirrorExchange() {
     return { id: 40034, value: {
         packCount: 7, expectedPrice: Long.fromString('9007199254740993', false),

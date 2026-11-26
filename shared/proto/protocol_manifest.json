@@ -1128,6 +1128,54 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.19 镜像赛季兑换"
+    },
+    {
+      "value": 40035,
+      "name": "MsgC2SRoleCardQuery",
+      "proto_message": "RoleCardQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 角色双卡权益与元宝购卡"
+    },
+    {
+      "value": 40036,
+      "name": "MsgS2CRoleCardState",
+      "proto_message": "RoleCardState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 角色双卡权益与元宝购卡"
+    },
+    {
+      "value": 40037,
+      "name": "MsgC2SBuyRoleCard",
+      "proto_message": "BuyRoleCardRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 角色双卡非绑元宝购买"
+    },
+    {
+      "value": 40038,
+      "name": "MsgC2SClaimRoleCardDaily",
+      "proto_message": "ClaimRoleCardDailyRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 特权卡每日绑定元宝"
     }
   ],
   "error_codes": [

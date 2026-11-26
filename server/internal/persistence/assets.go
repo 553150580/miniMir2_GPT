@@ -28,6 +28,9 @@ type AssetRequest struct {
 	Benefit          uint32                  // 当前领取托管时长所请求的权益类型。
 	HostingClaimAt   time.Time               `json:"-"` // 服务端受理原领取的时刻，由同一任务重试复用。
 	HostingPurchase  *HostingPurchaseTerms   // 玩家在确认页看到并提交的原补时交易事实。
+	CardPurchase     *RoleCardQuote          // 当前场景签发的原双卡报价，客户端只发送报价编号。
+	CardDay          string                  // 特权每日领取原本看到的上海运营日。
+	CardAcceptedAt   time.Time               `json:"-"` // 服务端实际受理领取的时刻，重试时会保留。
 	ValidRevive      bool                    // 房间判断本次复活选择是否有对应的有效现场。
 	ReviveDeathID    string                  // 请求复活的原死亡身份。
 	ItemDefinitionID uint32                  // 需要和物品实例一致的配置物品编号。
@@ -160,8 +163,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
-		if q.Kind == AssetMirrorArenaExchange {
-			// 普通收益可推进角色修订。兑换仍核对下个经济序号、原报价，并用交易中读到的修订及余额提交。
+		if q.Kind == AssetMirrorArenaExchange || q.Kind == AssetBuyRoleCard || q.Kind == AssetClaimRoleCardDaily {
+			// 普通收益可推进角色修订。此处经济命令另行复核原报价、角色资格与当前余额。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
 		if !sequenceValid || !revisionValid || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
@@ -190,6 +193,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
 		var hostingPurchase *HostingPurchaseReceipt        // 首次补时确认的原价格、扣款与到账。
 		var mirrorExchange *MirrorExchangeReceipt          // 首次兑换确认的原扣分、余量与绑定羽毛。
+		var cardPurchase *RoleCardPurchaseReceipt          // 首次购卡的扣款和原有效期变更。
+		var cardDaily *RoleCardDailyReceipt                // 首次特权日领操作所确认的绑定元宝。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetMirrorArenaExchange:
@@ -233,6 +238,13 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		case AssetBuyHostingTime:
 			// 仅对首次写入检查事务当前的价档和时钟。更早的确定回执已在前面按原操作身份返回。
 			r, hostingPurchase, businessCode = applyHostingPurchase(r, &s.Cfg.Fixture, q.HostingPurchase, q.SceneEpoch, time.Now())
+		case AssetBuyRoleCard:
+			r, cardPurchase, businessCode = applyRoleCardPurchase(r, &s.Cfg.Fixture, q.CardPurchase, q.SceneEpoch, time.Now())
+		case AssetClaimRoleCardDaily:
+			r, cardDaily, businessCode, e = s.applyRoleCardDaily(tc, r, q.CardDay, bossTime(q.CardAcceptedAt))
+			if e != nil {
+				return e
+			}
 		case "revive":
 			if !q.ValidRevive || r.RetiredDeathID != "" && r.RetiredDeathID != q.ReviveDeathID {
 				businessCode = p.CodeInvalidArgument
@@ -313,6 +325,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if e = s.replace(tc, r, oldRevision); e != nil {
 			return e
 		}
+		if cardPurchase != nil {
+			if e = s.insertRoleCardPeriod(tc, r, opID, cardPurchase); e != nil {
+				return e
+			}
+		}
 		// 角色变更、永久回执和审计同属本事务，其中任何一项失败都会回滚。
 		// op 组装操作所需的数据。
 		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting, Recycling: recycling}
@@ -328,6 +345,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.HostingClaim = hostingClaim
 		op.HostingPurchase = hostingPurchase
 		op.MirrorExchange = mirrorExchange
+		op.CardPurchase, op.CardDaily = cardPurchase, cardDaily
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -396,6 +414,18 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
+		if cardPurchase != nil {
+			audit["role_card_purchase"] = cardPurchase
+			audit["rule_version"] = cardPurchase.Quote.RuleVersion
+			audit["config_hash"] = cardPurchase.Quote.ConfigHash
+			audit["origin_server_id"] = r.Origin
+		}
+		if cardDaily != nil {
+			audit["role_card_daily"] = cardDaily
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+			audit["origin_server_id"] = r.Origin
+		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
 		}
@@ -412,6 +442,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	} else {
 		result.HostingPurchase = receipt.HostingPurchase.Proto()
 		result.MirrorArenaExchange = receipt.MirrorExchange.Proto()
+		result.RoleCardPurchase = receipt.CardPurchase.Proto()
+		result.RoleCardDaily = receipt.CardDaily.Proto()
 	}
 	return out, result, receipt, e
 }

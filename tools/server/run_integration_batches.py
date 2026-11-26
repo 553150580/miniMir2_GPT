@@ -24,7 +24,7 @@ GROUP_PREFIXES = {
                   'MongoPermanent', 'MongoReceipt', 'PotionMongo'),
     'warehouses': ('Warehouse', 'SkillAsset', 'SkillPageMerge'),
     'hosting': ('ManaPotion', 'AutoTarget', 'CompactTown', 'FirstLoop', 'FullBagOffline',
-                'HostingPurchase',
+                'HostingPurchase', 'HostingRoleCards',
                 'LevelGrowthNatural', 'MapTravel'),
     'scene-lifecycle': ('MonsterRespawn', 'SharedTown'),
     'skills': ('Combat', 'Displacement', 'PetRuntime', 'SkillAttackSlots', 'SkillLearning', 'SummonPet', 'Taoist', 'Teleport'),

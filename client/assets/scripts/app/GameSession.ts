@@ -1,5 +1,5 @@
 import Long from 'long';
-import { GameConnection, Packet, newOperationId } from './GameConnection';
+import { GameConnection, Packet, ProtocolResponseError, newOperationId } from './GameConnection';
 import { SceneManager } from '../core/scene/SceneManager';
 import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
@@ -22,6 +22,7 @@ import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
 import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
 import { WarehouseReceiptGuard } from './WarehouseModel';
 import type { WarehouseReceipt } from './WarehouseModel';
+import { validateRoleCardState, type RoleCardState } from './RoleCardProtocol';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 const recycleModel = new EquipmentRecycleModel();
@@ -85,7 +86,10 @@ export const session = {
     quickSkills: new Map<string, number>(),
 };
 session.connection.subscribe((packet: Packet) => {
-    if (packet.error) { session.lastError = protocolErrorMessage(packet.id, packet.error); }
+    if (packet.error) {
+        // 月卡能力探测只有打开托管时触发，明确拒绝由对应请求处理，不污染旧服状态栏。
+        if (packet.id !== 40035 && packet.id !== 40036) session.lastError = protocolErrorMessage(packet.id, packet.error);
+    }
     else switch (packet.id) {
         case 20002:
             acceptEntry(packet); break;
@@ -295,6 +299,18 @@ export function isCurrentEntry(identity: AttachmentIdentity): boolean {
         && current.scene.toString() === identity.scene.toString() && current.baseline.toString() === identity.baseline.toString()
         && current.map.toString() === identity.map.toString() && current.travelId === identity.travelId
         && (current.serverTransitionId ?? '') === (identity.serverTransitionId ?? '');
+}
+
+// queryRoleCard 只接受当前角色同一连接和基线上返回的权威卡目录或原报价。
+export async function queryRoleCard(productId = 0): Promise<RoleCardState> {
+    const identity = currentEntryIdentity();
+    if (!session.role || !session.ready || !identity || !isCurrentEntry(identity)) throw new Error('角色月卡状态尚未同步');
+    if (!Number.isInteger(productId) || productId < 0 || productId > 0xffffffff) throw new Error('角色月卡商品编号无效');
+    const sceneEpoch: Long = session.entry.sceneEpoch;
+    const result = await session.connection.request(40035, { sceneEpoch, productId });
+    if (!session.role || !session.ready || !isCurrentEntry(identity)) throw new Error('角色或地图已切换，请重新查看月卡');
+    if (result?.errorCode) throw new ProtocolResponseError(40036, result.errorCode);
+    return validateRoleCardState(result, sceneEpoch, productId);
 }
 
 function notify(): void { for (const update of Array.from(session.update)) { try { update(); } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); } } }

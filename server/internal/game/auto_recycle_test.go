@@ -10,6 +10,7 @@ import (
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
 	"testing"
+	"time"
 )
 
 // recycleOwner 处理回收所有者。
@@ -187,7 +188,7 @@ func TestAutoRecycleAndLockAreEconomicCommandsWithOriginalOperation(t *testing.T
 		// w 接收回收所有者供后续步骤使用，r 接收回收所有者供后续步骤使用。
 		w, r, _, _, _ := recycleOwner(t)
 		r.Pending = false
-		w.asset(r, f)
+		w.asset(r, f, time.Time{})
 		if !r.Pending || r.PendingOperationID != domain.Hex(op.OpId) || r.PendingRetry == nil || r.AssetGeneration != 8 {
 			t.Fatal("新请求未占原owner单槽", tc.id)
 		}

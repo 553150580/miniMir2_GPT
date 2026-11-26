@@ -28,6 +28,10 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     }
     if (errorCode === CodeServerBusy) return '服务暂时繁忙，请稍后重试。';
     if (errorCode === CodeRoleSlotOrNameOccupied) return '角色槽位或名称已被占用，请查看角色列表或更换名称后重试';
+    if (messageId === 40037 && errorCode === CodeVendorFunds) return '非绑定元宝余额不足';
+    if ((messageId === 40035 || messageId === 40036 || messageId === 40037) && errorCode === CodeOperationConflict) return '月卡报价或原资产已变化，请重新报价';
+    if (messageId === 40038 && errorCode === CodeOperationConflict) return '今日奖励已领取或运营日已变化，请刷新月卡状态';
+    if (messageId === 40038 && errorCode === CodeLineForbidden) return '本角色当前没有可领取的特权卡奖励';
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
     if (errorCode === CodeWarehouseFull) return '背包或仓库没有空位，原物品保持原处';
     if (errorCode === CodeWarehouseChanged) return '原仓库、物品或版本已变化，请重新查询';

@@ -44,6 +44,20 @@ type PersonalBossConfig struct {
 	ItemReward            *ChallengeItemReward // 只有配置了附件的场次预留待领容量。
 }
 
+// AcceptsPersonalBossQualification 只校验已持久化的通关证明身份，预约仍需匹配当前完整配置。
+func (f *Fixture) AcceptsPersonalBossQualification(rule uint64, hash string) bool {
+	if f == nil || rule != f.RuleVersion || hash == "" {
+		return false
+	}
+	if hash == f.Hash {
+		return true
+	}
+	// 两份已核对的规则 30 夹具之间仅新增双卡商品、日领及其来源证据。
+	const beforeRoleCards = "4bb20bf3e8d235db1061e3223b8b28169f662d3e7e334291f6f65c09400acb1a"
+	const withRoleCards = "6a421806cf5d45a8ead84bfda80be4a57eebcac00d3344140825fc860bfec9a6"
+	return rule == 30 && f.Hash == withRoleCards && hash == beforeRoleCards
+}
+
 // ChallengeMonster 只从独立挑战怪物目录解析编号。
 func (f *Fixture) ChallengeMonster(id uint32) (Monster, bool) {
 	for _, monster := range f.ChallengeMonsters {

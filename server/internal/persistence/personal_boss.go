@@ -166,7 +166,7 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 		}
 		state := personalBossProgress(r)
 		if q.Automatic {
-			if err := checkAutomaticPersonalBoss(r, state, cfg.HostingBenefits, q, bossTime(time.Now())); err != nil {
+			if err := checkAutomaticPersonalBoss(r, state, cfg, q, bossTime(time.Now())); err != nil {
 				return err
 			}
 		}
@@ -314,7 +314,11 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		record.SuccessDay, record.Successes = day, state.Successes
 		cooldown = record.SuccessCooldown
 		if record.Automatic {
-			record.RewardPrivilegeUntil = r.PrivilegeUntil
+			until, err := s.RolePrivilegeUntilAt(ctx, r, record.FinishedAt)
+			if err != nil {
+				return r, err
+			}
+			record.RewardPrivilegeUntil = until
 		}
 		if err := applyPersonalBossGold(&r, record); err != nil {
 			return r, err

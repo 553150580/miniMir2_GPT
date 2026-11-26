@@ -211,7 +211,11 @@ func (w *worker) advanceEventsUsing(r *room, now time.Time, resolve func(*room, 
 		return
 	}
 	r.AdvancingEvents = true
-	defer func() { r.AdvancingEvents = false; r.EventBatch = nil }()
+	defer func() {
+		r.AdvancingEvents = false
+		r.EventBatch = nil
+		r.pruneHostingCardHistory(now)
+	}()
 	// events 初始化用作事件集合的已到期事件列表。
 	events := []dueEvent{}
 	// world 接收遍历场景世界集合时当前的元素。
@@ -490,9 +494,9 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 	fact.Gold = m.Monster.GoldMin + w.draw(m.Monster.GoldMax-m.Monster.GoldMin+1)
 	// 只为原普通怪击杀冻结卡收益；原场景和事件时间在离线和在线都相同。
 	fixture := &w.e.Store.Cfg.Fixture
-	if fixture.HostingBenefits != nil && r.Role.HostingCardUntil.After(at) {
+	if until := r.hostingCardUntilAt(at); fixture.HostingBenefits != nil && !until.IsZero() {
 		if mapTemplate, ordinary := fixture.MapByID(fact.MapID); ordinary && mapTemplate.SceneKindValue() == devconfig.SceneKindPersonal {
-			bonus, err := persistence.NewHostingKillBonus(r.Role.HostingCardUntil, fact.Monster.Exp, fact.Gold, fixture.HostingBenefits)
+			bonus, err := persistence.NewHostingKillBonus(until, fact.Monster.Exp, fact.Gold, fixture.HostingBenefits)
 			if err != nil {
 				w.isolateRoom(r)
 				return

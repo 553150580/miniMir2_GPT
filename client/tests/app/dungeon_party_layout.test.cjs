@@ -38,7 +38,7 @@ const overlap = (a, b) => a.l < b.r && a.r > b.l && a.b < b.t && a.t > b.b;
 
 // 将早期镜像入口和赛季窗口的已知挂载引用剥离后，再逐字段核对原讨伐布局快照。
 function beforeMirror(count) {
-    const restored = structuredClone(scene.slice(0, count));
+    const restored = require('./helpers/role_card_layout.cjs')(structuredClone(scene)).slice(0, count);
     const mounts = [
         ['', 'MirrorArenaBattle'],
         [panels, panels + '/MirrorArena'],

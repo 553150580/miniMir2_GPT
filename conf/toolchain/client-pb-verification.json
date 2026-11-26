@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 133,
+  "message_count": 141,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -13,6 +13,10 @@
     "MirrorArenaExchangeReceipt",
     "HostingQuoteResult",
     "HostingPurchaseReceipt",
+    "RoleCardProductView",
+    "RoleCardQuoteView",
+    "RoleCardPurchaseReceipt",
+    "RoleCardDailyReceipt",
     "Heartbeat",
     "HeartbeatResult",
     "Batch",
@@ -138,10 +142,14 @@
     "MirrorArenaState",
     "MirrorArenaExchangeRequest",
     "MirrorArenaCombatFrame",
-    "MirrorArenaCombatObservation"
+    "MirrorArenaCombatObservation",
+    "RoleCardQuery",
+    "RoleCardState",
+    "BuyRoleCardRequest",
+    "ClaimRoleCardDailyRequest"
   ],
-  "int64_field_count": 318,
-  "int64_boundary_cases": 1074,
+  "int64_field_count": 334,
+  "int64_boundary_cases": 1134,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -266,6 +274,66 @@
     {
       "message": "HostingPurchaseReceipt",
       "field": "balance_seconds",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardProductView",
+      "field": "price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardQuoteView",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleCardQuoteView",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardQuoteView",
+      "field": "previous_until_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardPurchaseReceipt",
+      "field": "effective_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardPurchaseReceipt",
+      "field": "new_until_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardPurchaseReceipt",
+      "field": "yuanbao_balance_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardDailyReceipt",
+      "field": "granted_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardDailyReceipt",
+      "field": "bound_yuanbao_balance_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardDailyReceipt",
+      "field": "accepted_at_unix_ms",
       "type": "int64",
       "cases": 4
     },
@@ -2050,9 +2118,45 @@
       "field": "server_unix_ms",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "RoleCardQuery",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleCardState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleCardState",
+      "field": "privilege_until_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardState",
+      "field": "hosting_until_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardState",
+      "field": "daily_privilege_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RoleCardState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 47,
+  "bytes_field_count": 49,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2076,6 +2180,11 @@
     },
     {
       "message": "HostingQuoteResult",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "RoleCardQuoteView",
       "field": "quote_id",
       "repeated": false
     },
@@ -2288,6 +2397,11 @@
       "message": "MirrorArenaCombatObservation",
       "field": "payload",
       "repeated": false
+    },
+    {
+      "message": "BuyRoleCardRequest",
+      "field": "quote_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2296,7 +2410,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "7de7d8412fb5b5299456ee8f81811eba9441b02dc2238db8a5e2b7bfbce1cfac"
+      "sha256": "2b2e19125975a7bd30a586f3d2b7c9da761ddc9e8ed589c3551877786c528a7a"
     },
     {
       "path": "shared/proto/account.proto",
@@ -2329,18 +2443,22 @@
     {
       "path": "shared/proto/mirror_arena.proto",
       "sha256": "c227da59cb4afe8e27e539aeaf3f7aba1f05b518854dd7bed575322f36779478"
+    },
+    {
+      "path": "shared/proto/role_card.proto",
+      "sha256": "03d9c914dd24a78f9fbf6f7d8bf6d871095e21d9010a97abc535f2b0d8b981bb"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "8e9e780916edb6029bc80974ca032348397ea965c5553244b96b7736e84f5eac",
-      "bytes": 2344663
+      "sha256": "10f5453016c2e40c795fad08236e16cf7d7c66f87db0a72134932980e8b0a8aa",
+      "bytes": 2471495
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "86dde2e9a6620de8dded4b003c7bdba7b59dd8f5a96656a997d7b905e43081c8",
-      "bytes": 732667
+      "sha256": "761b3f956cb5acf399629153634ed3e7382866cfc1bd52559e501a5303b8f4a2",
+      "bytes": 775652
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

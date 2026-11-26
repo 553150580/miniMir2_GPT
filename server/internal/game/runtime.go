@@ -40,7 +40,7 @@ type command struct {
 	runStore    *persistence.Store  // 首次查票后选定的运行服持久层，等待和重试时保留。
 	done        func(*worker)       // 在房间分片 goroutine 上执行的内部工作。
 	tick        time.Time           // 发出房间逻辑帧时采样的服务器时刻。
-	at          time.Time           // 记录断开发生时刻，标定在线和托管事件的归属边界。
+	at          time.Time           // 记录断开或日领请求进入分片前的时刻。
 	disconnect  bool                // 把这条控制命令解释为对应连接的断开。
 	fromWaiting bool                // 该命令从房间等待队列重放时为真。
 }
@@ -220,6 +220,8 @@ type room struct {
 	DeferMovementSnapshot bool                      // 暂缓中途位移快照，留待同一组合动作完整提交后再观察。
 
 	hostingQuote         *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
+	roleCardQuote        *persistence.RoleCardQuote        // 当前附着为当前场景签发的双月卡报价。
+	hostingCardHistory   []hostingCardChange               // 尚可能被在途命中引用的原托管卡期。
 	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
 	dungeonStart         *dungeonStartAttempt              // 本原角色正在等待的整队开战确认。
 	dungeonMatch         *dungeonAttachment                // 原角色观察或健康续接的同一讨伐场。
@@ -384,7 +386,11 @@ func (e *Engine) Handle(c Connection, f wire.Frame) {
 		c.Deliver(wire.Frame{ID: f.ID, Request: f.Request, Error: p.CodeUnauthenticated})
 		return
 	}
-	e.post(e.worker(id), command{role: id, conn: c, frame: f})
+	cmd := command{role: id, conn: c, frame: f}
+	if f.ID == p.MsgC2SClaimRoleCardDaily {
+		cmd.at = time.Now()
+	}
+	e.post(e.worker(id), cmd)
 }
 
 // Disconnect 将连接退出排入独立控制队列，并保存断开时刻。
@@ -566,6 +572,7 @@ func (w *worker) command(c command) {
 			r.PreviewGeneration++
 			r.PreviewInFlight = false
 			r.hostingQuote = nil
+			r.roleCardQuote = nil
 			r.Conn = nil
 			r.Ready = false
 			r.PetBornReady = nil
@@ -725,6 +732,8 @@ func (w *worker) roomCommand(r *room, c command) {
 		w.vendorPreview(r, c.frame)
 	case p.MsgC2SHostingQuote:
 		w.quoteHostingPurchase(r, c.frame, time.Now())
+	case p.MsgC2SRoleCardQuery:
+		w.queryRoleCards(r, c.frame, time.Now())
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
 	case p.MsgC2STaskCodexState:
@@ -807,8 +816,8 @@ func (w *worker) roomCommand(r *room, c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
-		w.asset(r, c.frame)
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily:
+		w.asset(r, c.frame, c.at)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
 	}
@@ -1102,12 +1111,17 @@ func pointPB(p devconfig.Point) *pb.GridPoint { return &pb.GridPoint{X: int32(p.
 
 // asset 解析持久资产指令及操作身份，应用门禁并进入原子事务队列。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，f 记录协议帧。
-func (w *worker) asset(r *room, f wire.Frame) {
+func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 	// reviveID 标识当前业务使用的复活。
 	reviveID := ""
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: assetCommandFingerprint(f)}
 	switch f.ID {
+	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily:
+		if !r.readRoleCardAsset(f, &q, acceptedAt) {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
 	case p.MsgC2SMirrorArenaExchange:
 		var request pb.MirrorArenaExchangeRequest
 		if proto.Unmarshal(f.Payload, &request) != nil || len(request.ProtoReflect().GetUnknown()) != 0 {
@@ -1296,6 +1310,8 @@ func (w *worker) asset(r *room, f wire.Frame) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
+	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily:
+		return true
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
 		return true
 	}
@@ -1308,6 +1324,16 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SBuyRoleCard:
+		var q pb.BuyRoleCardRequest // 购买使用调用方保存的原经济操作。
+		if proto.Unmarshal(f.Payload, &q) == nil {
+			op = q.Operation
+		}
+	case p.MsgC2SClaimRoleCardDaily:
+		var q pb.ClaimRoleCardDailyRequest // 每日领取也可按原编号恢复。
+		if proto.Unmarshal(f.Payload, &q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SMirrorArenaExchange:
 		q := &pb.MirrorArenaExchangeRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {

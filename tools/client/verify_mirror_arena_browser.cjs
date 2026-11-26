@@ -58,12 +58,12 @@ async function fill(page, name, value) {
     await editor.fill(value);
 }
 
-async function login(page, side) {
+async function login(page, side, credentials = {}) {
     await page.bringToFront();
     await page.goto(base.href);
     await scene(page, 'Login');
-    await fill(page, 'Account', process.env['MINIMIR_MIRROR_' + side.toUpperCase() + '_ACCOUNT']);
-    await fill(page, 'Password', process.env['MINIMIR_MIRROR_' + side.toUpperCase() + '_PASSWORD']);
+    await fill(page, 'Account', credentials.account ?? process.env['MINIMIR_MIRROR_' + side.toUpperCase() + '_ACCOUNT']);
+    await fill(page, 'Password', credentials.password ?? process.env['MINIMIR_MIRROR_' + side.toUpperCase() + '_PASSWORD']);
     await touch(page, safe + 'Login');
     await scene(page, 'ServerSelect');
     await touch(page, safe + 'RegionList/View/Content', expected.region);

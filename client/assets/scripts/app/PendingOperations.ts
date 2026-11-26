@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -245,6 +245,17 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         if (packs < 1 || packs > 100 || !expectedItemId || expectedPrice.unsigned || expectedPrice.isNegative() || expectedPrice.isZero() ||
             expectedPackQuantity.unsigned || expectedPackQuantity.isNegative() || expectedPackQuantity.isZero()) return invalid('兑换需保留原价格、物品与数量');
         payload = { packCount: packs, expectedPrice, expectedItemId, expectedPackQuantity, operation: operation(item.operation, stored) };
+    } else if (id === 40037) {
+        // 重连后保留原报价与商品。不得从当前价目重建已提交的购卡请求。
+        const item = record(input.value, ['quoteId', 'productId', 'operation']);
+        const productId = uint32(item.productId);
+        if (!productId) return invalid('购卡需要非零商品编号');
+        payload = { quoteId: bytes16(item.quoteId, stored), productId, operation: operation(item.operation, stored) };
+    } else if (id === 40038) {
+        // 原领取操作总是重放原上海运营日，不能跨日替换成今天。
+        const item = record(input.value, ['operatingDay', 'operation']);
+        if (typeof item.operatingDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(item.operatingDay)) return invalid('特权奖励的运营日无效');
+        payload = { operatingDay: item.operatingDay, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

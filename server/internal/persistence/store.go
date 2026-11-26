@@ -113,6 +113,8 @@ type Operation struct {
 	HostingClaim      *HostingClaimReceipt           `bson:"hosting_claim,omitempty"`          // 首次确认的日领时长及原权益快照。
 	HostingPurchase   *HostingPurchaseReceipt        `bson:"hosting_purchase,omitempty"`       // 首次购买确认的账本来源、价格和扣款。
 	MirrorExchange    *MirrorExchangeReceipt         `bson:"mirror_arena_exchange,omitempty"`  // 首次换取绑定羽毛确认的扣分与实例。
+	CardPurchase      *RoleCardPurchaseReceipt       `bson:"role_card_purchase,omitempty"`     // 首次游戏内购卡的扣款和有效期。
+	CardDaily         *RoleCardDailyReceipt          `bson:"role_card_daily,omitempty"`        // 首次特权按上海运营日领取的绑元。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -204,6 +206,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		worldBossRewardCollection: externalChallengeRewardIndexes(),
 		dungeonCollection:         dungeonIndexes(),
 		dungeonRewardCollection:   externalChallengeRewardIndexes(),
+		roleCardPeriodCollection:  roleCardPeriodIndexes(),
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {

@@ -9,7 +9,8 @@ function load(file,requireModule){const code=ts.transpileModule(fs.readFileSync(
 function harness(options={}){
     let operation=0;
     class Connection{constructor(){this.generation=1;this.binding=Long.UONE;this.connected=true;this.sent=[];}subscribe(listener){this.listener=listener;}onStatus(listener){this.status=message=>{this.generation++;this.connected=false;listener(message);};}deliver(id,value,extra={}){this.listener({id,value,error:0,binding:this.binding,...extra});}send(id,value){this.sent.push({id,value});}}
-    const result=load('client/assets/scripts/app/GameSession.ts',id=>id==='long'?Long:id==='./GameConnection'?{GameConnection:Connection,newOperationId:()=>new Uint8Array(16).fill(++operation)}
+    const result=load('client/assets/scripts/app/GameSession.ts',id=>id==='long'?Long:id==='./GameConnection'?{GameConnection:Connection,ProtocolResponseError,newOperationId:()=>new Uint8Array(16).fill(++operation)}
+        :id==='./RoleCardProtocol'?load('client/assets/scripts/app/RoleCardProtocol.ts',id=>id==='long'?Long:{})
         :id==='./BaselineAssembler'?(options.realBaselines?require(path.join(root,'.work/ui-tests/app/BaselineAssembler.js')):{BaselineAssembler:class{reset(){}accept(value){return value;}}}):id==='./GameErrors'?{protocolErrorMessage:()=> '协议错误'}
         :id==='./TeleportModel'?require(path.join(root,'.work/ui-tests/app/TeleportModel.js')):id==='./RoleBindingModel'?require(path.join(root,'.work/ui-tests/app/RoleBindingModel.js')):id==='./MapTravelModel'?require(path.join(root,'.work/ui-tests/app/MapTravelModel.js')):id==='./SkillModel'?require(path.join(root,'.work/ui-tests/app/SkillModel.js')):id==='./PetBornModel'?require(path.join(root,'.work/ui-tests/app/PetBornModel.js')):{});
     result.session.role={job:0,name:'测试角色',key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(9)}};

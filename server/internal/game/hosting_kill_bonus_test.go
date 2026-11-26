@@ -72,6 +72,44 @@ func TestHostingKillBonusUsesOriginalImpact(t *testing.T) {
 	}
 }
 
+// TestHostingKillBonusPreservesPeriodAcrossPurchase 核对过期后购卡时仍在途的三个命中区间。
+func TestHostingKillBonusPreservesPeriodAcrossPurchase(t *testing.T) {
+	w, r, _ := stageAWorker(t, 0)
+	f := &w.e.Store.Cfg.Fixture
+	r.MapID = f.Map.ID
+	f.HostingBenefits = &devconfig.HostingBenefits{KillExperienceBonusBP: 2000, DirectGoldBonusBP: 2000}
+	purchasedAt := time.Unix(1800000000, 0)
+	oldUntil := purchasedAt.Add(-time.Second)
+	newUntil := purchasedAt.Add(30 * 24 * time.Hour)
+	r.Role.Revision, r.Role.HostingCardUntil = 4, oldUntil
+	r.Attacks = []pendingAttack{{Due: oldUntil.Add(-time.Millisecond)}, {Due: oldUntil}, {Due: purchasedAt}}
+	next := r.Role
+	next.Revision, next.HostingCardSince, next.HostingCardUntil = 5, purchasedAt, newUntil
+	op := persistence.Operation{Revision: next.Revision, CardPurchase: &persistence.RoleCardPurchaseReceipt{
+		Quote:       persistence.RoleCardQuote{Kind: devconfig.RoleCardKindHosting},
+		EffectiveAt: purchasedAt, PreviousUntil: oldUntil, ValidSince: purchasedAt, ValidUntil: newUntil,
+	}}
+	r.acceptRoleCardReceipt(next, op, purchasedAt.Add(time.Second))
+	r.Role = next
+	r.acceptRoleCardReceipt(next, op, purchasedAt.Add(2*time.Second)) // 同一原回执重放不重复记录。
+	if len(r.hostingCardHistory) != 1 {
+		t.Fatalf("应仅保存一笔在途命中引用的卡期，实际 %d 笔", len(r.hostingCardHistory))
+	}
+	for i, until := range []time.Time{oldUntil, {}, newUntil} {
+		w.enqueueKillFact(r, r.Monsters[0], r.Attacks[i].Due, &r.Player, "", time.Time{})
+		fact := r.KillFacts[i]
+		bonus := fact.HostingKillBonus
+		if until.IsZero() && bonus != nil || !until.IsZero() && (bonus == nil || !bonus.CardUntil.Equal(until)) {
+			t.Fatalf("第 %d 个原命中卡期错误：%+v", i, bonus)
+		}
+	}
+	r.Attacks = nil
+	r.pruneHostingCardHistory(purchasedAt)
+	if len(r.hostingCardHistory) != 0 {
+		t.Fatal("不再被在途命中引用的卡期应回收")
+	}
+}
+
 // TestHostingKillBonusRespectsEquipmentGuarantee 验证真实保底替换了原金币分支后只增加直接经验。
 func TestHostingKillBonusRespectsEquipmentGuarantee(t *testing.T) {
 	w, r, _ := stageAWorker(t, 0)

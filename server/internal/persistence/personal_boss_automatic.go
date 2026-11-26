@@ -11,15 +11,15 @@ import (
 )
 
 // checkAutomaticPersonalBoss 在预约事务内核对当前卡权益和原模板的真实通关证明。
-func checkAutomaticPersonalBoss(r domain.Role, state domain.PersonalBossProgress, benefits *devconfig.HostingBenefits, q PersonalBossBegin, at time.Time) error {
-	if benefits == nil || !benefits.AutoPersonalBoss {
+func checkAutomaticPersonalBoss(r domain.Role, state domain.PersonalBossProgress, fixture *devconfig.Fixture, q PersonalBossBegin, at time.Time) error {
+	if fixture.HostingBenefits == nil || !fixture.HostingBenefits.AutoPersonalBoss {
 		return Fail(p.CodeLineForbidden, "托管卡自动个人首领未开放")
 	}
-	if !r.HostingCardUntil.After(at) {
+	if !r.HostingCardActiveAt(at) {
 		return Fail(p.CodeLineForbidden, "角色托管卡已过期或未生效")
 	}
 	proof := state.Qualifications[bossTemplateKey(q.TemplateID)]
-	if proof.Fingerprint != q.Qualification || proof.RuleVersion != q.RuleVersion || proof.ConfigHash != q.ConfigHash {
+	if proof.Fingerprint != q.Qualification || !fixture.AcceptsPersonalBossQualification(proof.RuleVersion, proof.ConfigHash) {
 		return Fail(p.CodeLineForbidden, "本档个人首领需要先按当前战斗条件完成实战")
 	}
 	return nil

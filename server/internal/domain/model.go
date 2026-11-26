@@ -158,7 +158,10 @@ type Role struct {
 	ClaimedSeconds               int64             `bson:"claimed_seconds" json:"-"`                                                       // 该业务日已领取的托管秒数。
 	NoEquipmentKills             int               `bson:"no_equipment_kills" json:"-"`                                                    // 为装备掉落保底跟踪的连续未掉装备次数。
 	PrivilegeUntil               time.Time         `bson:"privilege_until" json:"-"`                                                       // 角色特权的到期时刻。
+	PrivilegeSince               time.Time         `bson:"privilege_since,omitempty" json:"-"`                                             // 角色当前连续特权期起点，旧角色仅保存到期时刻。
+	PrivilegeClaimDay            string            `bson:"privilege_claim_day,omitempty" json:"-"`                                         // 角色最后领取特权绑定元宝的上海运营日。
 	HostingCardUntil             time.Time         `bson:"hosting_card_until" json:"-"`                                                    // 角色托管卡权益的到期时刻。
+	HostingCardSince             time.Time         `bson:"hosting_card_since,omitempty" json:"-"`                                          // 角色当前连续托管卡期起点，旧角色仅保存到期时刻。
 	Report                       Report            `bson:"hosting_report" json:"hosting_report"`                                           // 最近一段已确认的离线托管战报。
 	Skills                       []LearnedSkill    `bson:"learned_skills" json:"learned_skills"`                                           // 已学习技能及其当前等级。
 	SkillSlotIDs                 []uint32          `bson:"skill_slot_ids,omitempty" json:"-"`                                              // 四个持久技能槽，零为空，缺省保留旧角色默认规则。

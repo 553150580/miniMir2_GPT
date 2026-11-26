@@ -365,6 +365,12 @@ export namespace minimir {
             /** OperationResult mirror_arena_exchange. */
             mirror_arena_exchange?: (minimir.v1.MirrorArenaExchangeReceipt.$Properties|null);
 
+            /** OperationResult role_card_purchase. */
+            role_card_purchase?: (minimir.v1.RoleCardPurchaseReceipt.$Properties|null);
+
+            /** OperationResult role_card_daily. */
+            role_card_daily?: (minimir.v1.RoleCardDailyReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -448,6 +454,12 @@ export namespace minimir {
 
                 /** OperationResult mirror_arena_exchange */
                 mirror_arena_exchange?: (minimir.v1.MirrorArenaExchangeReceipt.$Properties|null);
+
+                /** OperationResult role_card_purchase */
+                role_card_purchase?: (minimir.v1.RoleCardPurchaseReceipt.$Properties|null);
+
+                /** OperationResult role_card_daily */
+                role_card_daily?: (minimir.v1.RoleCardDailyReceipt.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -875,6 +887,474 @@ export namespace minimir {
 
             /** Shape of a HostingPurchaseReceipt. */
             type $Shape = minimir.v1.HostingPurchaseReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardProductView.
+         * @deprecated Use minimir.v1.RoleCardProductView.$Properties instead.
+         */
+        interface IRoleCardProductView extends minimir.v1.RoleCardProductView.$Properties {
+        }
+
+        /** Represents a RoleCardProductView. */
+        class RoleCardProductView {
+
+            /**
+             * Constructs a new RoleCardProductView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardProductView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardProductView product_id. */
+            product_id: number;
+
+            /** RoleCardProductView kind. */
+            kind: number;
+
+            /** RoleCardProductView days. */
+            days: number;
+
+            /** RoleCardProductView price_yuanbao_units. */
+            price_yuanbao_units: Long;
+
+            /**
+             * Creates a new RoleCardProductView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardProductView instance
+             */
+            static create(properties: minimir.v1.RoleCardProductView.$Shape): minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape;
+            static create(properties?: minimir.v1.RoleCardProductView.$Properties): minimir.v1.RoleCardProductView;
+
+            /**
+             * Encodes the specified RoleCardProductView message. Does not implicitly {@link minimir.v1.RoleCardProductView.verify|verify} messages.
+             * @param message RoleCardProductView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardProductView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardProductView message, length delimited. Does not implicitly {@link minimir.v1.RoleCardProductView.verify|verify} messages.
+             * @param message RoleCardProductView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardProductView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardProductView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape} RoleCardProductView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape;
+
+            /**
+             * Decodes a RoleCardProductView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape} RoleCardProductView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape;
+
+            /**
+             * Verifies a RoleCardProductView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardProductView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardProductView {
+
+            /** Properties of a RoleCardProductView. */
+            interface $Properties {
+
+                /** RoleCardProductView product_id */
+                product_id?: (number|null);
+
+                /** RoleCardProductView kind */
+                kind?: (number|null);
+
+                /** RoleCardProductView days */
+                days?: (number|null);
+
+                /** RoleCardProductView price_yuanbao_units */
+                price_yuanbao_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardProductView. */
+            type $Shape = minimir.v1.RoleCardProductView.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardQuoteView.
+         * @deprecated Use minimir.v1.RoleCardQuoteView.$Properties instead.
+         */
+        interface IRoleCardQuoteView extends minimir.v1.RoleCardQuoteView.$Properties {
+        }
+
+        /** Represents a RoleCardQuoteView. */
+        class RoleCardQuoteView {
+
+            /**
+             * Constructs a new RoleCardQuoteView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardQuoteView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardQuoteView quote_id. */
+            quote_id: Uint8Array;
+
+            /** RoleCardQuoteView product. */
+            product?: (minimir.v1.RoleCardProductView.$Properties|null);
+
+            /** RoleCardQuoteView rule_version. */
+            rule_version: Long;
+
+            /** RoleCardQuoteView config_hash. */
+            config_hash: string;
+
+            /** RoleCardQuoteView expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** RoleCardQuoteView previous_until_unix_ms. */
+            previous_until_unix_ms: Long;
+
+            /**
+             * Creates a new RoleCardQuoteView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardQuoteView instance
+             */
+            static create(properties: minimir.v1.RoleCardQuoteView.$Shape): minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape;
+            static create(properties?: minimir.v1.RoleCardQuoteView.$Properties): minimir.v1.RoleCardQuoteView;
+
+            /**
+             * Encodes the specified RoleCardQuoteView message. Does not implicitly {@link minimir.v1.RoleCardQuoteView.verify|verify} messages.
+             * @param message RoleCardQuoteView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardQuoteView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardQuoteView message, length delimited. Does not implicitly {@link minimir.v1.RoleCardQuoteView.verify|verify} messages.
+             * @param message RoleCardQuoteView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardQuoteView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardQuoteView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape} RoleCardQuoteView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape;
+
+            /**
+             * Decodes a RoleCardQuoteView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape} RoleCardQuoteView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape;
+
+            /**
+             * Verifies a RoleCardQuoteView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardQuoteView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardQuoteView {
+
+            /** Properties of a RoleCardQuoteView. */
+            interface $Properties {
+
+                /** RoleCardQuoteView quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** RoleCardQuoteView product */
+                product?: (minimir.v1.RoleCardProductView.$Properties|null);
+
+                /** RoleCardQuoteView rule_version */
+                rule_version?: (Long|null);
+
+                /** RoleCardQuoteView config_hash */
+                config_hash?: (string|null);
+
+                /** RoleCardQuoteView expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** RoleCardQuoteView previous_until_unix_ms */
+                previous_until_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardQuoteView. */
+            type $Shape = minimir.v1.RoleCardQuoteView.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardPurchaseReceipt.
+         * @deprecated Use minimir.v1.RoleCardPurchaseReceipt.$Properties instead.
+         */
+        interface IRoleCardPurchaseReceipt extends minimir.v1.RoleCardPurchaseReceipt.$Properties {
+        }
+
+        /** Represents a RoleCardPurchaseReceipt. */
+        class RoleCardPurchaseReceipt {
+
+            /**
+             * Constructs a new RoleCardPurchaseReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardPurchaseReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardPurchaseReceipt quote. */
+            quote?: (minimir.v1.RoleCardQuoteView.$Properties|null);
+
+            /** RoleCardPurchaseReceipt effective_at_unix_ms. */
+            effective_at_unix_ms: Long;
+
+            /** RoleCardPurchaseReceipt new_until_unix_ms. */
+            new_until_unix_ms: Long;
+
+            /** RoleCardPurchaseReceipt yuanbao_balance_units. */
+            yuanbao_balance_units: Long;
+
+            /**
+             * Creates a new RoleCardPurchaseReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardPurchaseReceipt instance
+             */
+            static create(properties: minimir.v1.RoleCardPurchaseReceipt.$Shape): minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape;
+            static create(properties?: minimir.v1.RoleCardPurchaseReceipt.$Properties): minimir.v1.RoleCardPurchaseReceipt;
+
+            /**
+             * Encodes the specified RoleCardPurchaseReceipt message. Does not implicitly {@link minimir.v1.RoleCardPurchaseReceipt.verify|verify} messages.
+             * @param message RoleCardPurchaseReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardPurchaseReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardPurchaseReceipt message, length delimited. Does not implicitly {@link minimir.v1.RoleCardPurchaseReceipt.verify|verify} messages.
+             * @param message RoleCardPurchaseReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardPurchaseReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardPurchaseReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape} RoleCardPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape;
+
+            /**
+             * Decodes a RoleCardPurchaseReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape} RoleCardPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape;
+
+            /**
+             * Verifies a RoleCardPurchaseReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardPurchaseReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardPurchaseReceipt {
+
+            /** Properties of a RoleCardPurchaseReceipt. */
+            interface $Properties {
+
+                /** RoleCardPurchaseReceipt quote */
+                quote?: (minimir.v1.RoleCardQuoteView.$Properties|null);
+
+                /** RoleCardPurchaseReceipt effective_at_unix_ms */
+                effective_at_unix_ms?: (Long|null);
+
+                /** RoleCardPurchaseReceipt new_until_unix_ms */
+                new_until_unix_ms?: (Long|null);
+
+                /** RoleCardPurchaseReceipt yuanbao_balance_units */
+                yuanbao_balance_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardPurchaseReceipt. */
+            type $Shape = minimir.v1.RoleCardPurchaseReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardDailyReceipt.
+         * @deprecated Use minimir.v1.RoleCardDailyReceipt.$Properties instead.
+         */
+        interface IRoleCardDailyReceipt extends minimir.v1.RoleCardDailyReceipt.$Properties {
+        }
+
+        /** Represents a RoleCardDailyReceipt. */
+        class RoleCardDailyReceipt {
+
+            /**
+             * Constructs a new RoleCardDailyReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardDailyReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardDailyReceipt operating_day. */
+            operating_day: string;
+
+            /** RoleCardDailyReceipt granted_units. */
+            granted_units: Long;
+
+            /** RoleCardDailyReceipt bound_yuanbao_balance_units. */
+            bound_yuanbao_balance_units: Long;
+
+            /** RoleCardDailyReceipt accepted_at_unix_ms. */
+            accepted_at_unix_ms: Long;
+
+            /**
+             * Creates a new RoleCardDailyReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardDailyReceipt instance
+             */
+            static create(properties: minimir.v1.RoleCardDailyReceipt.$Shape): minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape;
+            static create(properties?: minimir.v1.RoleCardDailyReceipt.$Properties): minimir.v1.RoleCardDailyReceipt;
+
+            /**
+             * Encodes the specified RoleCardDailyReceipt message. Does not implicitly {@link minimir.v1.RoleCardDailyReceipt.verify|verify} messages.
+             * @param message RoleCardDailyReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardDailyReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardDailyReceipt message, length delimited. Does not implicitly {@link minimir.v1.RoleCardDailyReceipt.verify|verify} messages.
+             * @param message RoleCardDailyReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardDailyReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardDailyReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape} RoleCardDailyReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape;
+
+            /**
+             * Decodes a RoleCardDailyReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape} RoleCardDailyReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape;
+
+            /**
+             * Verifies a RoleCardDailyReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardDailyReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardDailyReceipt {
+
+            /** Properties of a RoleCardDailyReceipt. */
+            interface $Properties {
+
+                /** RoleCardDailyReceipt operating_day */
+                operating_day?: (string|null);
+
+                /** RoleCardDailyReceipt granted_units */
+                granted_units?: (Long|null);
+
+                /** RoleCardDailyReceipt bound_yuanbao_balance_units */
+                bound_yuanbao_balance_units?: (Long|null);
+
+                /** RoleCardDailyReceipt accepted_at_unix_ms */
+                accepted_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardDailyReceipt. */
+            type $Shape = minimir.v1.RoleCardDailyReceipt.$Properties;
         }
 
         /**
@@ -16937,6 +17417,468 @@ export namespace minimir {
 
             /** Shape of a MirrorArenaCombatObservation. */
             type $Shape = minimir.v1.MirrorArenaCombatObservation.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardQuery.
+         * @deprecated Use minimir.v1.RoleCardQuery.$Properties instead.
+         */
+        interface IRoleCardQuery extends minimir.v1.RoleCardQuery.$Properties {
+        }
+
+        /** Represents a RoleCardQuery. */
+        class RoleCardQuery {
+
+            /**
+             * Constructs a new RoleCardQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /** RoleCardQuery product_id. */
+            product_id: number;
+
+            /**
+             * Creates a new RoleCardQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardQuery instance
+             */
+            static create(properties: minimir.v1.RoleCardQuery.$Shape): minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape;
+            static create(properties?: minimir.v1.RoleCardQuery.$Properties): minimir.v1.RoleCardQuery;
+
+            /**
+             * Encodes the specified RoleCardQuery message. Does not implicitly {@link minimir.v1.RoleCardQuery.verify|verify} messages.
+             * @param message RoleCardQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardQuery message, length delimited. Does not implicitly {@link minimir.v1.RoleCardQuery.verify|verify} messages.
+             * @param message RoleCardQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape} RoleCardQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape;
+
+            /**
+             * Decodes a RoleCardQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape} RoleCardQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape;
+
+            /**
+             * Verifies a RoleCardQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardQuery {
+
+            /** Properties of a RoleCardQuery. */
+            interface $Properties {
+
+                /** RoleCardQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** RoleCardQuery product_id */
+                product_id?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardQuery. */
+            type $Shape = minimir.v1.RoleCardQuery.$Properties;
+        }
+
+        /**
+         * Properties of a RoleCardState.
+         * @deprecated Use minimir.v1.RoleCardState.$Properties instead.
+         */
+        interface IRoleCardState extends minimir.v1.RoleCardState.$Properties {
+        }
+
+        /** Represents a RoleCardState. */
+        class RoleCardState {
+
+            /**
+             * Constructs a new RoleCardState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleCardState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleCardState scene_epoch. */
+            scene_epoch: Long;
+
+            /** RoleCardState products. */
+            products: minimir.v1.RoleCardProductView.$Properties[];
+
+            /** RoleCardState quote. */
+            quote?: (minimir.v1.RoleCardQuoteView.$Properties|null);
+
+            /** RoleCardState privilege_until_unix_ms. */
+            privilege_until_unix_ms: Long;
+
+            /** RoleCardState hosting_until_unix_ms. */
+            hosting_until_unix_ms: Long;
+
+            /** RoleCardState operating_day. */
+            operating_day: string;
+
+            /** RoleCardState daily_privilege_units. */
+            daily_privilege_units: Long;
+
+            /** RoleCardState privilege_claimable. */
+            privilege_claimable: boolean;
+
+            /** RoleCardState error_code. */
+            error_code: number;
+
+            /** RoleCardState role_revision. */
+            role_revision: Long;
+
+            /**
+             * Creates a new RoleCardState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleCardState instance
+             */
+            static create(properties: minimir.v1.RoleCardState.$Shape): minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape;
+            static create(properties?: minimir.v1.RoleCardState.$Properties): minimir.v1.RoleCardState;
+
+            /**
+             * Encodes the specified RoleCardState message. Does not implicitly {@link minimir.v1.RoleCardState.verify|verify} messages.
+             * @param message RoleCardState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleCardState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleCardState message, length delimited. Does not implicitly {@link minimir.v1.RoleCardState.verify|verify} messages.
+             * @param message RoleCardState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleCardState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleCardState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape} RoleCardState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape;
+
+            /**
+             * Decodes a RoleCardState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape} RoleCardState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape;
+
+            /**
+             * Verifies a RoleCardState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleCardState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleCardState {
+
+            /** Properties of a RoleCardState. */
+            interface $Properties {
+
+                /** RoleCardState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** RoleCardState products */
+                products?: (minimir.v1.RoleCardProductView.$Properties[]|null);
+
+                /** RoleCardState quote */
+                quote?: (minimir.v1.RoleCardQuoteView.$Properties|null);
+
+                /** RoleCardState privilege_until_unix_ms */
+                privilege_until_unix_ms?: (Long|null);
+
+                /** RoleCardState hosting_until_unix_ms */
+                hosting_until_unix_ms?: (Long|null);
+
+                /** RoleCardState operating_day */
+                operating_day?: (string|null);
+
+                /** RoleCardState daily_privilege_units */
+                daily_privilege_units?: (Long|null);
+
+                /** RoleCardState privilege_claimable */
+                privilege_claimable?: (boolean|null);
+
+                /** RoleCardState error_code */
+                error_code?: (number|null);
+
+                /** RoleCardState role_revision */
+                role_revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleCardState. */
+            type $Shape = minimir.v1.RoleCardState.$Properties;
+        }
+
+        /**
+         * Properties of a BuyRoleCardRequest.
+         * @deprecated Use minimir.v1.BuyRoleCardRequest.$Properties instead.
+         */
+        interface IBuyRoleCardRequest extends minimir.v1.BuyRoleCardRequest.$Properties {
+        }
+
+        /** Represents a BuyRoleCardRequest. */
+        class BuyRoleCardRequest {
+
+            /**
+             * Constructs a new BuyRoleCardRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BuyRoleCardRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BuyRoleCardRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** BuyRoleCardRequest product_id. */
+            product_id: number;
+
+            /** BuyRoleCardRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new BuyRoleCardRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BuyRoleCardRequest instance
+             */
+            static create(properties: minimir.v1.BuyRoleCardRequest.$Shape): minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape;
+            static create(properties?: minimir.v1.BuyRoleCardRequest.$Properties): minimir.v1.BuyRoleCardRequest;
+
+            /**
+             * Encodes the specified BuyRoleCardRequest message. Does not implicitly {@link minimir.v1.BuyRoleCardRequest.verify|verify} messages.
+             * @param message BuyRoleCardRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BuyRoleCardRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BuyRoleCardRequest message, length delimited. Does not implicitly {@link minimir.v1.BuyRoleCardRequest.verify|verify} messages.
+             * @param message BuyRoleCardRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BuyRoleCardRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BuyRoleCardRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape} BuyRoleCardRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape;
+
+            /**
+             * Decodes a BuyRoleCardRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape} BuyRoleCardRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape;
+
+            /**
+             * Verifies a BuyRoleCardRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BuyRoleCardRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BuyRoleCardRequest {
+
+            /** Properties of a BuyRoleCardRequest. */
+            interface $Properties {
+
+                /** BuyRoleCardRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** BuyRoleCardRequest product_id */
+                product_id?: (number|null);
+
+                /** BuyRoleCardRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BuyRoleCardRequest. */
+            type $Shape = minimir.v1.BuyRoleCardRequest.$Properties;
+        }
+
+        /**
+         * Properties of a ClaimRoleCardDailyRequest.
+         * @deprecated Use minimir.v1.ClaimRoleCardDailyRequest.$Properties instead.
+         */
+        interface IClaimRoleCardDailyRequest extends minimir.v1.ClaimRoleCardDailyRequest.$Properties {
+        }
+
+        /** Represents a ClaimRoleCardDailyRequest. */
+        class ClaimRoleCardDailyRequest {
+
+            /**
+             * Constructs a new ClaimRoleCardDailyRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ClaimRoleCardDailyRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ClaimRoleCardDailyRequest operating_day. */
+            operating_day: string;
+
+            /** ClaimRoleCardDailyRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new ClaimRoleCardDailyRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ClaimRoleCardDailyRequest instance
+             */
+            static create(properties: minimir.v1.ClaimRoleCardDailyRequest.$Shape): minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape;
+            static create(properties?: minimir.v1.ClaimRoleCardDailyRequest.$Properties): minimir.v1.ClaimRoleCardDailyRequest;
+
+            /**
+             * Encodes the specified ClaimRoleCardDailyRequest message. Does not implicitly {@link minimir.v1.ClaimRoleCardDailyRequest.verify|verify} messages.
+             * @param message ClaimRoleCardDailyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ClaimRoleCardDailyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ClaimRoleCardDailyRequest message, length delimited. Does not implicitly {@link minimir.v1.ClaimRoleCardDailyRequest.verify|verify} messages.
+             * @param message ClaimRoleCardDailyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ClaimRoleCardDailyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ClaimRoleCardDailyRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape} ClaimRoleCardDailyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape;
+
+            /**
+             * Decodes a ClaimRoleCardDailyRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape} ClaimRoleCardDailyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape;
+
+            /**
+             * Verifies a ClaimRoleCardDailyRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ClaimRoleCardDailyRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ClaimRoleCardDailyRequest {
+
+            /** Properties of a ClaimRoleCardDailyRequest. */
+            interface $Properties {
+
+                /** ClaimRoleCardDailyRequest operating_day */
+                operating_day?: (string|null);
+
+                /** ClaimRoleCardDailyRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ClaimRoleCardDailyRequest. */
+            type $Shape = minimir.v1.ClaimRoleCardDailyRequest.$Properties;
         }
     }
 }

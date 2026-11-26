@@ -47,22 +47,34 @@ func TestPersonalBossAutomaticQualificationScope(t *testing.T) {
 	state := domain.PersonalBossProgress{Qualifications: map[string]domain.PersonalBossQualification{
 		"3": {Fingerprint: fingerprint, RuleVersion: 30, ConfigHash: config},
 	}}
-	benefits := &devconfig.HostingBenefits{AutoPersonalBoss: true}
-	if err := checkAutomaticPersonalBoss(r, state, benefits, q, at); err != nil {
+	fixture := &devconfig.Fixture{RuleVersion: q.RuleVersion, Hash: config, HostingBenefits: &devconfig.HostingBenefits{AutoPersonalBoss: true}}
+	if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); err != nil {
 		t.Fatal(err)
 	}
-	if err := checkAutomaticPersonalBoss(r, state, benefits, q, r.HostingCardUntil); Code(err) != p.CodeLineForbidden {
+	if err := checkAutomaticPersonalBoss(r, state, fixture, q, r.HostingCardUntil); Code(err) != p.CodeLineForbidden {
 		t.Fatalf("托管卡到期时仍允许自动预约：%v", err)
 	}
-	for _, change := range []PersonalBossBegin{
-		{Qualification: fingerprint, RuleVersion: 30, ConfigHash: config, TemplateID: 4},
-		{Qualification: fingerprint, RuleVersion: 31, ConfigHash: config, TemplateID: 3},
-		{Qualification: fingerprint, RuleVersion: 30, ConfigHash: Hash([]byte("另一个版本摘要")), TemplateID: 3},
-		{Qualification: Hash([]byte("角色换装")), RuleVersion: 30, ConfigHash: config, TemplateID: 3},
+	for _, proof := range []domain.PersonalBossQualification{
+		{Fingerprint: fingerprint, RuleVersion: 31, ConfigHash: config},
+		{Fingerprint: fingerprint, RuleVersion: 30, ConfigHash: Hash([]byte("另一个版本摘要"))},
+		{Fingerprint: Hash([]byte("角色换装")), RuleVersion: 30, ConfigHash: config},
 	} {
-		if err := checkAutomaticPersonalBoss(r, state, benefits, change, at); Code(err) != p.CodeLineForbidden {
-			t.Fatalf("接受不同战斗条件的通关证明：%+v %v", change, err)
+		state.Qualifications["3"] = proof
+		if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); Code(err) != p.CodeLineForbidden {
+			t.Fatalf("接受不同战斗条件的通关证明：%+v %v", proof, err)
 		}
+	}
+	state.Qualifications["4"] = domain.PersonalBossQualification{Fingerprint: fingerprint, RuleVersion: 30, ConfigHash: config}
+	if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); Code(err) != p.CodeLineForbidden {
+		t.Fatalf("接受其他档位的通关证明：%v", err)
+	}
+	// 预约使用当前完整摘要，只允许已核对的前一份规则 30 夹具沿用原战斗条件证明。
+	fixture.Hash = "6a421806cf5d45a8ead84bfda80be4a57eebcac00d3344140825fc860bfec9a6"
+	q.ConfigHash = fixture.Hash
+	state.Qualifications["3"] = domain.PersonalBossQualification{Fingerprint: fingerprint, RuleVersion: 30,
+		ConfigHash: "4bb20bf3e8d235db1061e3223b8b28169f662d3e7e334291f6f65c09400acb1a"}
+	if err := checkAutomaticPersonalBoss(r, state, fixture, q, at); err != nil {
+		t.Fatalf("双卡配置没有保留原通关证明：%v", err)
 	}
 }
 

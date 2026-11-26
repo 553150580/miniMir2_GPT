@@ -23,6 +23,7 @@ import personal_map_contract as personal_map
 import prepare_tasks_codex as tasks_codex
 import prepare_boss as bosses
 import prepare_hosting_benefits as hosting_benefits
+import prepare_role_cards as role_cards
 from creator_json_meta import content_meta_bytes
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
@@ -33,7 +34,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries','game_drop_quotas',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','game_entitlement_rules','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','game_entitlement_rules','game_card_products','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -938,7 +939,8 @@ def fixture_from_rows(tables):
         'initial_inventory':profile['initial_inventory'],'initial_bound_gold':profile['initial_bound_gold'],'inventory_capacity':profile['inventory_capacity'],
         '_source_evidence':{'status':'candidate','official_180_restoration_verified':False,
                             'buff_names':buff_names,
-                            'record_sources':{tid:[{'id':r['id'],'source_ref':r['source_ref'],'note':r['note']} for r in rows] for tid,rows in tables.items()},
+                            'record_sources':{tid:[{'id':r['id'],'source_ref':r['source_ref'],'note':r['note']} for r in rows
+                                                   if tid!='game_card_products' or r['payment_key']=='ingot'] for tid,rows in tables.items()},
                             'player_stats':profile['player_stats_source'],'technical_parameters':profile['technical_parameters_notice'],
                             'damage_scope':profile['damage_scope_notice'],'revive':profile['revive_notice'],
                             'potion_effects':{
@@ -975,6 +977,7 @@ def fixture_from_rows(tables):
             if quotas:
                 result['drop_quotas']=quotas
             result['hosting_benefits']=hosting_benefits.compile_benefits(tables['game_entitlement_rules'])
+            result['role_cards']=role_cards.compile_role_cards(tables['game_card_products'],tables['game_entitlement_rules'])
             result['_source_evidence']['ordinary_monster_appearances']=appearances
             catalog.extend(ordinary_maps[1:])
         if profile['rule_version']>=24:
@@ -1172,6 +1175,7 @@ def main():
             fixture['_source_evidence']['npc_shop_compiler_sha256']=config.sha256(Path(npc_shops.__file__))
         if fixture['rule_version']>=30:
             fixture['_source_evidence']['hosting_benefits_compiler_sha256']=config.sha256(Path(hosting_benefits.__file__))
+            fixture['_source_evidence']['role_cards_compiler_sha256']=config.sha256(Path(role_cards.__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)

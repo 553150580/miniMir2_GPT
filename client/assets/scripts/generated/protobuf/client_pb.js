@@ -803,6 +803,8 @@ $root.minimir = (function() {
              * @property {boolean|null} [pending] OperationResult pending
              * @property {minimir.v1.HostingPurchaseReceipt.$Properties|null} [hosting_purchase] OperationResult hosting_purchase
              * @property {minimir.v1.MirrorArenaExchangeReceipt.$Properties|null} [mirror_arena_exchange] OperationResult mirror_arena_exchange
+             * @property {minimir.v1.RoleCardPurchaseReceipt.$Properties|null} [role_card_purchase] OperationResult role_card_purchase
+             * @property {minimir.v1.RoleCardDailyReceipt.$Properties|null} [role_card_daily] OperationResult role_card_daily
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -891,6 +893,22 @@ $root.minimir = (function() {
             OperationResult.prototype.mirror_arena_exchange = null;
 
             /**
+             * OperationResult role_card_purchase.
+             * @member {minimir.v1.RoleCardPurchaseReceipt.$Properties|null|undefined} role_card_purchase
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.role_card_purchase = null;
+
+            /**
+             * OperationResult role_card_daily.
+             * @member {minimir.v1.RoleCardDailyReceipt.$Properties|null|undefined} role_card_daily
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.role_card_daily = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -936,6 +954,10 @@ $root.minimir = (function() {
                     $root.minimir.v1.HostingPurchaseReceipt.encode(message.hosting_purchase, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
                 if (message.mirror_arena_exchange != null && $Object.hasOwnProperty.call(message, "mirror_arena_exchange"))
                     $root.minimir.v1.MirrorArenaExchangeReceipt.encode(message.mirror_arena_exchange, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.role_card_purchase != null && $Object.hasOwnProperty.call(message, "role_card_purchase"))
+                    $root.minimir.v1.RoleCardPurchaseReceipt.encode(message.role_card_purchase, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.role_card_daily != null && $Object.hasOwnProperty.call(message, "role_card_daily"))
+                    $root.minimir.v1.RoleCardDailyReceipt.encode(message.role_card_daily, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1050,6 +1072,18 @@ $root.minimir = (function() {
                             message.mirror_arena_exchange = $root.minimir.v1.MirrorArenaExchangeReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.mirror_arena_exchange);
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            message.role_card_purchase = $root.minimir.v1.RoleCardPurchaseReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.role_card_purchase);
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            message.role_card_daily = $root.minimir.v1.RoleCardDailyReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.role_card_daily);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1122,6 +1156,16 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.MirrorArenaExchangeReceipt.verify(message.mirror_arena_exchange, _depth + 1);
                     if (error)
                         return "mirror_arena_exchange." + error;
+                }
+                if (message.role_card_purchase != null && $Object.hasOwnProperty.call(message, "role_card_purchase")) {
+                    var error = $root.minimir.v1.RoleCardPurchaseReceipt.verify(message.role_card_purchase, _depth + 1);
+                    if (error)
+                        return "role_card_purchase." + error;
+                }
+                if (message.role_card_daily != null && $Object.hasOwnProperty.call(message, "role_card_daily")) {
+                    var error = $root.minimir.v1.RoleCardDailyReceipt.verify(message.role_card_daily, _depth + 1);
+                    if (error)
+                        return "role_card_daily." + error;
                 }
                 return null;
             };
@@ -2294,6 +2338,1190 @@ $root.minimir = (function() {
             };
 
             return HostingPurchaseReceipt;
+        })();
+
+        v1.RoleCardProductView = (function() {
+
+            /**
+             * Properties of a RoleCardProductView.
+             * @typedef {Object} minimir.v1.RoleCardProductView.$Properties
+             * @property {number|null} [product_id] RoleCardProductView product_id
+             * @property {number|null} [kind] RoleCardProductView kind
+             * @property {number|null} [days] RoleCardProductView days
+             * @property {Long|null} [price_yuanbao_units] RoleCardProductView price_yuanbao_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardProductView.
+             * @memberof minimir.v1
+             * @interface IRoleCardProductView
+             * @augments minimir.v1.RoleCardProductView.$Properties
+             * @deprecated Use minimir.v1.RoleCardProductView.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardProductView.
+             * @typedef {minimir.v1.RoleCardProductView.$Properties} minimir.v1.RoleCardProductView.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardProductView.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardProductView.
+             * @constructor
+             * @param {minimir.v1.RoleCardProductView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardProductView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardProductView product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.RoleCardProductView
+             * @instance
+             */
+            RoleCardProductView.prototype.product_id = 0;
+
+            /**
+             * RoleCardProductView kind.
+             * @member {number} kind
+             * @memberof minimir.v1.RoleCardProductView
+             * @instance
+             */
+            RoleCardProductView.prototype.kind = 0;
+
+            /**
+             * RoleCardProductView days.
+             * @member {number} days
+             * @memberof minimir.v1.RoleCardProductView
+             * @instance
+             */
+            RoleCardProductView.prototype.days = 0;
+
+            /**
+             * RoleCardProductView price_yuanbao_units.
+             * @member {Long} price_yuanbao_units
+             * @memberof minimir.v1.RoleCardProductView
+             * @instance
+             */
+            RoleCardProductView.prototype.price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RoleCardProductView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {minimir.v1.RoleCardProductView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardProductView} RoleCardProductView instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardProductView.$Shape): minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape;
+             *   (properties?: minimir.v1.RoleCardProductView.$Properties): minimir.v1.RoleCardProductView;
+             * }}
+             */
+            RoleCardProductView.create = function(properties) {
+                return new RoleCardProductView(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardProductView message. Does not implicitly {@link minimir.v1.RoleCardProductView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {minimir.v1.RoleCardProductView.$Properties} message RoleCardProductView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardProductView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.product_id);
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.kind);
+                if (message.days != null && $Object.hasOwnProperty.call(message, "days") && message.days !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.days);
+                if (message.price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "price_yuanbao_units") && (typeof message.price_yuanbao_units === "object" ? message.price_yuanbao_units.low || message.price_yuanbao_units.high : message.price_yuanbao_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.price_yuanbao_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardProductView message, length delimited. Does not implicitly {@link minimir.v1.RoleCardProductView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {minimir.v1.RoleCardProductView.$Properties} message RoleCardProductView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardProductView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardProductView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape} RoleCardProductView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardProductView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardProductView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.days = value;
+                            else
+                                delete message.days;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.price_yuanbao_units = value;
+                            else
+                                delete message.price_yuanbao_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardProductView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardProductView & minimir.v1.RoleCardProductView.$Shape} RoleCardProductView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardProductView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardProductView message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardProductView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.days != null && $Object.hasOwnProperty.call(message, "days"))
+                    if (!$util.isInteger(message.days))
+                        return "days: integer expected";
+                if (message.price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "price_yuanbao_units"))
+                    if (!$util.isInteger(message.price_yuanbao_units) && !(message.price_yuanbao_units && $util.isInteger(message.price_yuanbao_units.low) && $util.isInteger(message.price_yuanbao_units.high)))
+                        return "price_yuanbao_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardProductView
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardProductView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardProductView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardProductView";
+            };
+
+            return RoleCardProductView;
+        })();
+
+        v1.RoleCardQuoteView = (function() {
+
+            /**
+             * Properties of a RoleCardQuoteView.
+             * @typedef {Object} minimir.v1.RoleCardQuoteView.$Properties
+             * @property {Uint8Array|null} [quote_id] RoleCardQuoteView quote_id
+             * @property {minimir.v1.RoleCardProductView.$Properties|null} [product] RoleCardQuoteView product
+             * @property {Long|null} [rule_version] RoleCardQuoteView rule_version
+             * @property {string|null} [config_hash] RoleCardQuoteView config_hash
+             * @property {Long|null} [expires_at_unix_ms] RoleCardQuoteView expires_at_unix_ms
+             * @property {Long|null} [previous_until_unix_ms] RoleCardQuoteView previous_until_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardQuoteView.
+             * @memberof minimir.v1
+             * @interface IRoleCardQuoteView
+             * @augments minimir.v1.RoleCardQuoteView.$Properties
+             * @deprecated Use minimir.v1.RoleCardQuoteView.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardQuoteView.
+             * @typedef {minimir.v1.RoleCardQuoteView.$Properties} minimir.v1.RoleCardQuoteView.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardQuoteView.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardQuoteView.
+             * @constructor
+             * @param {minimir.v1.RoleCardQuoteView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardQuoteView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardQuoteView quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * RoleCardQuoteView product.
+             * @member {minimir.v1.RoleCardProductView.$Properties|null|undefined} product
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.product = null;
+
+            /**
+             * RoleCardQuoteView rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RoleCardQuoteView config_hash.
+             * @member {string} config_hash
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.config_hash = "";
+
+            /**
+             * RoleCardQuoteView expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardQuoteView previous_until_unix_ms.
+             * @member {Long} previous_until_unix_ms
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @instance
+             */
+            RoleCardQuoteView.prototype.previous_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RoleCardQuoteView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {minimir.v1.RoleCardQuoteView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardQuoteView} RoleCardQuoteView instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardQuoteView.$Shape): minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape;
+             *   (properties?: minimir.v1.RoleCardQuoteView.$Properties): minimir.v1.RoleCardQuoteView;
+             * }}
+             */
+            RoleCardQuoteView.create = function(properties) {
+                return new RoleCardQuoteView(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardQuoteView message. Does not implicitly {@link minimir.v1.RoleCardQuoteView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {minimir.v1.RoleCardQuoteView.$Properties} message RoleCardQuoteView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardQuoteView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.product != null && $Object.hasOwnProperty.call(message, "product"))
+                    $root.minimir.v1.RoleCardProductView.encode(message.product, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash") && message.config_hash !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.config_hash);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.expires_at_unix_ms);
+                if (message.previous_until_unix_ms != null && $Object.hasOwnProperty.call(message, "previous_until_unix_ms") && (typeof message.previous_until_unix_ms === "object" ? message.previous_until_unix_ms.low || message.previous_until_unix_ms.high : message.previous_until_unix_ms !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.previous_until_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardQuoteView message, length delimited. Does not implicitly {@link minimir.v1.RoleCardQuoteView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {minimir.v1.RoleCardQuoteView.$Properties} message RoleCardQuoteView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardQuoteView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardQuoteView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape} RoleCardQuoteView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardQuoteView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardQuoteView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.product = $root.minimir.v1.RoleCardProductView.decode(reader, reader.size(), $undefined, _depth + 1, message.product);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.config_hash = value;
+                            else
+                                delete message.config_hash;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.previous_until_unix_ms = value;
+                            else
+                                delete message.previous_until_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardQuoteView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardQuoteView & minimir.v1.RoleCardQuoteView.$Shape} RoleCardQuoteView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardQuoteView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardQuoteView message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardQuoteView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.product != null && $Object.hasOwnProperty.call(message, "product")) {
+                    var error = $root.minimir.v1.RoleCardProductView.verify(message.product, _depth + 1);
+                    if (error)
+                        return "product." + error;
+                }
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash"))
+                    if (!$util.isString(message.config_hash))
+                        return "config_hash: string expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.previous_until_unix_ms != null && $Object.hasOwnProperty.call(message, "previous_until_unix_ms"))
+                    if (!$util.isInteger(message.previous_until_unix_ms) && !(message.previous_until_unix_ms && $util.isInteger(message.previous_until_unix_ms.low) && $util.isInteger(message.previous_until_unix_ms.high)))
+                        return "previous_until_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardQuoteView
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardQuoteView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardQuoteView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardQuoteView";
+            };
+
+            return RoleCardQuoteView;
+        })();
+
+        v1.RoleCardPurchaseReceipt = (function() {
+
+            /**
+             * Properties of a RoleCardPurchaseReceipt.
+             * @typedef {Object} minimir.v1.RoleCardPurchaseReceipt.$Properties
+             * @property {minimir.v1.RoleCardQuoteView.$Properties|null} [quote] RoleCardPurchaseReceipt quote
+             * @property {Long|null} [effective_at_unix_ms] RoleCardPurchaseReceipt effective_at_unix_ms
+             * @property {Long|null} [new_until_unix_ms] RoleCardPurchaseReceipt new_until_unix_ms
+             * @property {Long|null} [yuanbao_balance_units] RoleCardPurchaseReceipt yuanbao_balance_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardPurchaseReceipt.
+             * @memberof minimir.v1
+             * @interface IRoleCardPurchaseReceipt
+             * @augments minimir.v1.RoleCardPurchaseReceipt.$Properties
+             * @deprecated Use minimir.v1.RoleCardPurchaseReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardPurchaseReceipt.
+             * @typedef {minimir.v1.RoleCardPurchaseReceipt.$Properties} minimir.v1.RoleCardPurchaseReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardPurchaseReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardPurchaseReceipt.
+             * @constructor
+             * @param {minimir.v1.RoleCardPurchaseReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardPurchaseReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardPurchaseReceipt quote.
+             * @member {minimir.v1.RoleCardQuoteView.$Properties|null|undefined} quote
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @instance
+             */
+            RoleCardPurchaseReceipt.prototype.quote = null;
+
+            /**
+             * RoleCardPurchaseReceipt effective_at_unix_ms.
+             * @member {Long} effective_at_unix_ms
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @instance
+             */
+            RoleCardPurchaseReceipt.prototype.effective_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardPurchaseReceipt new_until_unix_ms.
+             * @member {Long} new_until_unix_ms
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @instance
+             */
+            RoleCardPurchaseReceipt.prototype.new_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardPurchaseReceipt yuanbao_balance_units.
+             * @member {Long} yuanbao_balance_units
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @instance
+             */
+            RoleCardPurchaseReceipt.prototype.yuanbao_balance_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RoleCardPurchaseReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {minimir.v1.RoleCardPurchaseReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardPurchaseReceipt} RoleCardPurchaseReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardPurchaseReceipt.$Shape): minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape;
+             *   (properties?: minimir.v1.RoleCardPurchaseReceipt.$Properties): minimir.v1.RoleCardPurchaseReceipt;
+             * }}
+             */
+            RoleCardPurchaseReceipt.create = function(properties) {
+                return new RoleCardPurchaseReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardPurchaseReceipt message. Does not implicitly {@link minimir.v1.RoleCardPurchaseReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {minimir.v1.RoleCardPurchaseReceipt.$Properties} message RoleCardPurchaseReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardPurchaseReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote"))
+                    $root.minimir.v1.RoleCardQuoteView.encode(message.quote, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.effective_at_unix_ms != null && $Object.hasOwnProperty.call(message, "effective_at_unix_ms") && (typeof message.effective_at_unix_ms === "object" ? message.effective_at_unix_ms.low || message.effective_at_unix_ms.high : message.effective_at_unix_ms !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.effective_at_unix_ms);
+                if (message.new_until_unix_ms != null && $Object.hasOwnProperty.call(message, "new_until_unix_ms") && (typeof message.new_until_unix_ms === "object" ? message.new_until_unix_ms.low || message.new_until_unix_ms.high : message.new_until_unix_ms !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.new_until_unix_ms);
+                if (message.yuanbao_balance_units != null && $Object.hasOwnProperty.call(message, "yuanbao_balance_units") && (typeof message.yuanbao_balance_units === "object" ? message.yuanbao_balance_units.low || message.yuanbao_balance_units.high : message.yuanbao_balance_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.yuanbao_balance_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardPurchaseReceipt message, length delimited. Does not implicitly {@link minimir.v1.RoleCardPurchaseReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {minimir.v1.RoleCardPurchaseReceipt.$Properties} message RoleCardPurchaseReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardPurchaseReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardPurchaseReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape} RoleCardPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardPurchaseReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardPurchaseReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.quote = $root.minimir.v1.RoleCardQuoteView.decode(reader, reader.size(), $undefined, _depth + 1, message.quote);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.effective_at_unix_ms = value;
+                            else
+                                delete message.effective_at_unix_ms;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.new_until_unix_ms = value;
+                            else
+                                delete message.new_until_unix_ms;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_balance_units = value;
+                            else
+                                delete message.yuanbao_balance_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardPurchaseReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardPurchaseReceipt & minimir.v1.RoleCardPurchaseReceipt.$Shape} RoleCardPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardPurchaseReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardPurchaseReceipt message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardPurchaseReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote")) {
+                    var error = $root.minimir.v1.RoleCardQuoteView.verify(message.quote, _depth + 1);
+                    if (error)
+                        return "quote." + error;
+                }
+                if (message.effective_at_unix_ms != null && $Object.hasOwnProperty.call(message, "effective_at_unix_ms"))
+                    if (!$util.isInteger(message.effective_at_unix_ms) && !(message.effective_at_unix_ms && $util.isInteger(message.effective_at_unix_ms.low) && $util.isInteger(message.effective_at_unix_ms.high)))
+                        return "effective_at_unix_ms: integer|Long expected";
+                if (message.new_until_unix_ms != null && $Object.hasOwnProperty.call(message, "new_until_unix_ms"))
+                    if (!$util.isInteger(message.new_until_unix_ms) && !(message.new_until_unix_ms && $util.isInteger(message.new_until_unix_ms.low) && $util.isInteger(message.new_until_unix_ms.high)))
+                        return "new_until_unix_ms: integer|Long expected";
+                if (message.yuanbao_balance_units != null && $Object.hasOwnProperty.call(message, "yuanbao_balance_units"))
+                    if (!$util.isInteger(message.yuanbao_balance_units) && !(message.yuanbao_balance_units && $util.isInteger(message.yuanbao_balance_units.low) && $util.isInteger(message.yuanbao_balance_units.high)))
+                        return "yuanbao_balance_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardPurchaseReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardPurchaseReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardPurchaseReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardPurchaseReceipt";
+            };
+
+            return RoleCardPurchaseReceipt;
+        })();
+
+        v1.RoleCardDailyReceipt = (function() {
+
+            /**
+             * Properties of a RoleCardDailyReceipt.
+             * @typedef {Object} minimir.v1.RoleCardDailyReceipt.$Properties
+             * @property {string|null} [operating_day] RoleCardDailyReceipt operating_day
+             * @property {Long|null} [granted_units] RoleCardDailyReceipt granted_units
+             * @property {Long|null} [bound_yuanbao_balance_units] RoleCardDailyReceipt bound_yuanbao_balance_units
+             * @property {Long|null} [accepted_at_unix_ms] RoleCardDailyReceipt accepted_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardDailyReceipt.
+             * @memberof minimir.v1
+             * @interface IRoleCardDailyReceipt
+             * @augments minimir.v1.RoleCardDailyReceipt.$Properties
+             * @deprecated Use minimir.v1.RoleCardDailyReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardDailyReceipt.
+             * @typedef {minimir.v1.RoleCardDailyReceipt.$Properties} minimir.v1.RoleCardDailyReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardDailyReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardDailyReceipt.
+             * @constructor
+             * @param {minimir.v1.RoleCardDailyReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardDailyReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardDailyReceipt operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @instance
+             */
+            RoleCardDailyReceipt.prototype.operating_day = "";
+
+            /**
+             * RoleCardDailyReceipt granted_units.
+             * @member {Long} granted_units
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @instance
+             */
+            RoleCardDailyReceipt.prototype.granted_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardDailyReceipt bound_yuanbao_balance_units.
+             * @member {Long} bound_yuanbao_balance_units
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @instance
+             */
+            RoleCardDailyReceipt.prototype.bound_yuanbao_balance_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardDailyReceipt accepted_at_unix_ms.
+             * @member {Long} accepted_at_unix_ms
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @instance
+             */
+            RoleCardDailyReceipt.prototype.accepted_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RoleCardDailyReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {minimir.v1.RoleCardDailyReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardDailyReceipt} RoleCardDailyReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardDailyReceipt.$Shape): minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape;
+             *   (properties?: minimir.v1.RoleCardDailyReceipt.$Properties): minimir.v1.RoleCardDailyReceipt;
+             * }}
+             */
+            RoleCardDailyReceipt.create = function(properties) {
+                return new RoleCardDailyReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardDailyReceipt message. Does not implicitly {@link minimir.v1.RoleCardDailyReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {minimir.v1.RoleCardDailyReceipt.$Properties} message RoleCardDailyReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardDailyReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.operating_day);
+                if (message.granted_units != null && $Object.hasOwnProperty.call(message, "granted_units") && (typeof message.granted_units === "object" ? message.granted_units.low || message.granted_units.high : message.granted_units !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.granted_units);
+                if (message.bound_yuanbao_balance_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_balance_units") && (typeof message.bound_yuanbao_balance_units === "object" ? message.bound_yuanbao_balance_units.low || message.bound_yuanbao_balance_units.high : message.bound_yuanbao_balance_units !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.bound_yuanbao_balance_units);
+                if (message.accepted_at_unix_ms != null && $Object.hasOwnProperty.call(message, "accepted_at_unix_ms") && (typeof message.accepted_at_unix_ms === "object" ? message.accepted_at_unix_ms.low || message.accepted_at_unix_ms.high : message.accepted_at_unix_ms !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.accepted_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardDailyReceipt message, length delimited. Does not implicitly {@link minimir.v1.RoleCardDailyReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {minimir.v1.RoleCardDailyReceipt.$Properties} message RoleCardDailyReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardDailyReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardDailyReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape} RoleCardDailyReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardDailyReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardDailyReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.granted_units = value;
+                            else
+                                delete message.granted_units;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_balance_units = value;
+                            else
+                                delete message.bound_yuanbao_balance_units;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.accepted_at_unix_ms = value;
+                            else
+                                delete message.accepted_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardDailyReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardDailyReceipt & minimir.v1.RoleCardDailyReceipt.$Shape} RoleCardDailyReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardDailyReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardDailyReceipt message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardDailyReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.granted_units != null && $Object.hasOwnProperty.call(message, "granted_units"))
+                    if (!$util.isInteger(message.granted_units) && !(message.granted_units && $util.isInteger(message.granted_units.low) && $util.isInteger(message.granted_units.high)))
+                        return "granted_units: integer|Long expected";
+                if (message.bound_yuanbao_balance_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_balance_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_balance_units) && !(message.bound_yuanbao_balance_units && $util.isInteger(message.bound_yuanbao_balance_units.low) && $util.isInteger(message.bound_yuanbao_balance_units.high)))
+                        return "bound_yuanbao_balance_units: integer|Long expected";
+                if (message.accepted_at_unix_ms != null && $Object.hasOwnProperty.call(message, "accepted_at_unix_ms"))
+                    if (!$util.isInteger(message.accepted_at_unix_ms) && !(message.accepted_at_unix_ms && $util.isInteger(message.accepted_at_unix_ms.low) && $util.isInteger(message.accepted_at_unix_ms.high)))
+                        return "accepted_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardDailyReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardDailyReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardDailyReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardDailyReceipt";
+            };
+
+            return RoleCardDailyReceipt;
         })();
 
         v1.Heartbeat = (function() {
@@ -45013,6 +46241,1173 @@ $root.minimir = (function() {
             };
 
             return MirrorArenaCombatObservation;
+        })();
+
+        v1.RoleCardQuery = (function() {
+
+            /**
+             * Properties of a RoleCardQuery.
+             * @typedef {Object} minimir.v1.RoleCardQuery.$Properties
+             * @property {Long|null} [scene_epoch] RoleCardQuery scene_epoch
+             * @property {number|null} [product_id] RoleCardQuery product_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardQuery.
+             * @memberof minimir.v1
+             * @interface IRoleCardQuery
+             * @augments minimir.v1.RoleCardQuery.$Properties
+             * @deprecated Use minimir.v1.RoleCardQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardQuery.
+             * @typedef {minimir.v1.RoleCardQuery.$Properties} minimir.v1.RoleCardQuery.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardQuery.
+             * @constructor
+             * @param {minimir.v1.RoleCardQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.RoleCardQuery
+             * @instance
+             */
+            RoleCardQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RoleCardQuery product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.RoleCardQuery
+             * @instance
+             */
+            RoleCardQuery.prototype.product_id = 0;
+
+            /**
+             * Creates a new RoleCardQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {minimir.v1.RoleCardQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardQuery} RoleCardQuery instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardQuery.$Shape): minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape;
+             *   (properties?: minimir.v1.RoleCardQuery.$Properties): minimir.v1.RoleCardQuery;
+             * }}
+             */
+            RoleCardQuery.create = function(properties) {
+                return new RoleCardQuery(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardQuery message. Does not implicitly {@link minimir.v1.RoleCardQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {minimir.v1.RoleCardQuery.$Properties} message RoleCardQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.product_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardQuery message, length delimited. Does not implicitly {@link minimir.v1.RoleCardQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {minimir.v1.RoleCardQuery.$Properties} message RoleCardQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape} RoleCardQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardQuery & minimir.v1.RoleCardQuery.$Shape} RoleCardQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardQuery message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardQuery";
+            };
+
+            return RoleCardQuery;
+        })();
+
+        v1.RoleCardState = (function() {
+
+            /**
+             * Properties of a RoleCardState.
+             * @typedef {Object} minimir.v1.RoleCardState.$Properties
+             * @property {Long|null} [scene_epoch] RoleCardState scene_epoch
+             * @property {Array.<minimir.v1.RoleCardProductView.$Properties>|null} [products] RoleCardState products
+             * @property {minimir.v1.RoleCardQuoteView.$Properties|null} [quote] RoleCardState quote
+             * @property {Long|null} [privilege_until_unix_ms] RoleCardState privilege_until_unix_ms
+             * @property {Long|null} [hosting_until_unix_ms] RoleCardState hosting_until_unix_ms
+             * @property {string|null} [operating_day] RoleCardState operating_day
+             * @property {Long|null} [daily_privilege_units] RoleCardState daily_privilege_units
+             * @property {boolean|null} [privilege_claimable] RoleCardState privilege_claimable
+             * @property {number|null} [error_code] RoleCardState error_code
+             * @property {Long|null} [role_revision] RoleCardState role_revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleCardState.
+             * @memberof minimir.v1
+             * @interface IRoleCardState
+             * @augments minimir.v1.RoleCardState.$Properties
+             * @deprecated Use minimir.v1.RoleCardState.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleCardState.
+             * @typedef {minimir.v1.RoleCardState.$Properties} minimir.v1.RoleCardState.$Shape
+             */
+
+            /**
+             * Constructs a new RoleCardState.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleCardState.
+             * @constructor
+             * @param {minimir.v1.RoleCardState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleCardState = function (properties) {
+                this.products = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleCardState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RoleCardState products.
+             * @member {Array.<minimir.v1.RoleCardProductView.$Properties>} products
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.products = $util.emptyArray;
+
+            /**
+             * RoleCardState quote.
+             * @member {minimir.v1.RoleCardQuoteView.$Properties|null|undefined} quote
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.quote = null;
+
+            /**
+             * RoleCardState privilege_until_unix_ms.
+             * @member {Long} privilege_until_unix_ms
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.privilege_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardState hosting_until_unix_ms.
+             * @member {Long} hosting_until_unix_ms
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.hosting_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardState operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.operating_day = "";
+
+            /**
+             * RoleCardState daily_privilege_units.
+             * @member {Long} daily_privilege_units
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.daily_privilege_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RoleCardState privilege_claimable.
+             * @member {boolean} privilege_claimable
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.privilege_claimable = false;
+
+            /**
+             * RoleCardState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.error_code = 0;
+
+            /**
+             * RoleCardState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.RoleCardState
+             * @instance
+             */
+            RoleCardState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new RoleCardState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {minimir.v1.RoleCardState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleCardState} RoleCardState instance
+             * @type {{
+             *   (properties: minimir.v1.RoleCardState.$Shape): minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape;
+             *   (properties?: minimir.v1.RoleCardState.$Properties): minimir.v1.RoleCardState;
+             * }}
+             */
+            RoleCardState.create = function(properties) {
+                return new RoleCardState(properties);
+            };
+
+            /**
+             * Encodes the specified RoleCardState message. Does not implicitly {@link minimir.v1.RoleCardState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {minimir.v1.RoleCardState.$Properties} message RoleCardState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.products != null && message.products.length)
+                    for (var i = 0; i < message.products.length; ++i)
+                        $root.minimir.v1.RoleCardProductView.encode(message.products[i], writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote"))
+                    $root.minimir.v1.RoleCardQuoteView.encode(message.quote, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.privilege_until_unix_ms != null && $Object.hasOwnProperty.call(message, "privilege_until_unix_ms") && (typeof message.privilege_until_unix_ms === "object" ? message.privilege_until_unix_ms.low || message.privilege_until_unix_ms.high : message.privilege_until_unix_ms !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.privilege_until_unix_ms);
+                if (message.hosting_until_unix_ms != null && $Object.hasOwnProperty.call(message, "hosting_until_unix_ms") && (typeof message.hosting_until_unix_ms === "object" ? message.hosting_until_unix_ms.low || message.hosting_until_unix_ms.high : message.hosting_until_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.hosting_until_unix_ms);
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.operating_day);
+                if (message.daily_privilege_units != null && $Object.hasOwnProperty.call(message, "daily_privilege_units") && (typeof message.daily_privilege_units === "object" ? message.daily_privilege_units.low || message.daily_privilege_units.high : message.daily_privilege_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.daily_privilege_units);
+                if (message.privilege_claimable != null && $Object.hasOwnProperty.call(message, "privilege_claimable") && message.privilege_claimable !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.privilege_claimable);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.error_code);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.role_revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleCardState message, length delimited. Does not implicitly {@link minimir.v1.RoleCardState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {minimir.v1.RoleCardState.$Properties} message RoleCardState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleCardState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleCardState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape} RoleCardState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleCardState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.products && message.products.length))
+                                message.products = [];
+                            message.products.push($root.minimir.v1.RoleCardProductView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.quote = $root.minimir.v1.RoleCardQuoteView.decode(reader, reader.size(), $undefined, _depth + 1, message.quote);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.privilege_until_unix_ms = value;
+                            else
+                                delete message.privilege_until_unix_ms;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hosting_until_unix_ms = value;
+                            else
+                                delete message.hosting_until_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.daily_privilege_units = value;
+                            else
+                                delete message.daily_privilege_units;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.privilege_claimable = value;
+                            else
+                                delete message.privilege_claimable;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleCardState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleCardState & minimir.v1.RoleCardState.$Shape} RoleCardState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleCardState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleCardState message.
+             * @function verify
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleCardState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.products != null && $Object.hasOwnProperty.call(message, "products")) {
+                    if (!$Array.isArray(message.products))
+                        return "products: array expected";
+                    for (var i = 0; i < message.products.length; ++i) {
+                        var error = $root.minimir.v1.RoleCardProductView.verify(message.products[i], _depth + 1);
+                        if (error)
+                            return "products." + error;
+                    }
+                }
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote")) {
+                    var error = $root.minimir.v1.RoleCardQuoteView.verify(message.quote, _depth + 1);
+                    if (error)
+                        return "quote." + error;
+                }
+                if (message.privilege_until_unix_ms != null && $Object.hasOwnProperty.call(message, "privilege_until_unix_ms"))
+                    if (!$util.isInteger(message.privilege_until_unix_ms) && !(message.privilege_until_unix_ms && $util.isInteger(message.privilege_until_unix_ms.low) && $util.isInteger(message.privilege_until_unix_ms.high)))
+                        return "privilege_until_unix_ms: integer|Long expected";
+                if (message.hosting_until_unix_ms != null && $Object.hasOwnProperty.call(message, "hosting_until_unix_ms"))
+                    if (!$util.isInteger(message.hosting_until_unix_ms) && !(message.hosting_until_unix_ms && $util.isInteger(message.hosting_until_unix_ms.low) && $util.isInteger(message.hosting_until_unix_ms.high)))
+                        return "hosting_until_unix_ms: integer|Long expected";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.daily_privilege_units != null && $Object.hasOwnProperty.call(message, "daily_privilege_units"))
+                    if (!$util.isInteger(message.daily_privilege_units) && !(message.daily_privilege_units && $util.isInteger(message.daily_privilege_units.low) && $util.isInteger(message.daily_privilege_units.high)))
+                        return "daily_privilege_units: integer|Long expected";
+                if (message.privilege_claimable != null && $Object.hasOwnProperty.call(message, "privilege_claimable"))
+                    if (typeof message.privilege_claimable !== "boolean")
+                        return "privilege_claimable: boolean expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleCardState
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleCardState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleCardState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleCardState";
+            };
+
+            return RoleCardState;
+        })();
+
+        v1.BuyRoleCardRequest = (function() {
+
+            /**
+             * Properties of a BuyRoleCardRequest.
+             * @typedef {Object} minimir.v1.BuyRoleCardRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] BuyRoleCardRequest quote_id
+             * @property {number|null} [product_id] BuyRoleCardRequest product_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] BuyRoleCardRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BuyRoleCardRequest.
+             * @memberof minimir.v1
+             * @interface IBuyRoleCardRequest
+             * @augments minimir.v1.BuyRoleCardRequest.$Properties
+             * @deprecated Use minimir.v1.BuyRoleCardRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a BuyRoleCardRequest.
+             * @typedef {minimir.v1.BuyRoleCardRequest.$Properties} minimir.v1.BuyRoleCardRequest.$Shape
+             */
+
+            /**
+             * Constructs a new BuyRoleCardRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a BuyRoleCardRequest.
+             * @constructor
+             * @param {minimir.v1.BuyRoleCardRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BuyRoleCardRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BuyRoleCardRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @instance
+             */
+            BuyRoleCardRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * BuyRoleCardRequest product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @instance
+             */
+            BuyRoleCardRequest.prototype.product_id = 0;
+
+            /**
+             * BuyRoleCardRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @instance
+             */
+            BuyRoleCardRequest.prototype.operation = null;
+
+            /**
+             * Creates a new BuyRoleCardRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {minimir.v1.BuyRoleCardRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BuyRoleCardRequest} BuyRoleCardRequest instance
+             * @type {{
+             *   (properties: minimir.v1.BuyRoleCardRequest.$Shape): minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape;
+             *   (properties?: minimir.v1.BuyRoleCardRequest.$Properties): minimir.v1.BuyRoleCardRequest;
+             * }}
+             */
+            BuyRoleCardRequest.create = function(properties) {
+                return new BuyRoleCardRequest(properties);
+            };
+
+            /**
+             * Encodes the specified BuyRoleCardRequest message. Does not implicitly {@link minimir.v1.BuyRoleCardRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {minimir.v1.BuyRoleCardRequest.$Properties} message BuyRoleCardRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BuyRoleCardRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.product_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BuyRoleCardRequest message, length delimited. Does not implicitly {@link minimir.v1.BuyRoleCardRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {minimir.v1.BuyRoleCardRequest.$Properties} message BuyRoleCardRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BuyRoleCardRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BuyRoleCardRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape} BuyRoleCardRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BuyRoleCardRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BuyRoleCardRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BuyRoleCardRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BuyRoleCardRequest & minimir.v1.BuyRoleCardRequest.$Shape} BuyRoleCardRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BuyRoleCardRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BuyRoleCardRequest message.
+             * @function verify
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BuyRoleCardRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BuyRoleCardRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.BuyRoleCardRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BuyRoleCardRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BuyRoleCardRequest";
+            };
+
+            return BuyRoleCardRequest;
+        })();
+
+        v1.ClaimRoleCardDailyRequest = (function() {
+
+            /**
+             * Properties of a ClaimRoleCardDailyRequest.
+             * @typedef {Object} minimir.v1.ClaimRoleCardDailyRequest.$Properties
+             * @property {string|null} [operating_day] ClaimRoleCardDailyRequest operating_day
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] ClaimRoleCardDailyRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ClaimRoleCardDailyRequest.
+             * @memberof minimir.v1
+             * @interface IClaimRoleCardDailyRequest
+             * @augments minimir.v1.ClaimRoleCardDailyRequest.$Properties
+             * @deprecated Use minimir.v1.ClaimRoleCardDailyRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a ClaimRoleCardDailyRequest.
+             * @typedef {minimir.v1.ClaimRoleCardDailyRequest.$Properties} minimir.v1.ClaimRoleCardDailyRequest.$Shape
+             */
+
+            /**
+             * Constructs a new ClaimRoleCardDailyRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a ClaimRoleCardDailyRequest.
+             * @constructor
+             * @param {minimir.v1.ClaimRoleCardDailyRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ClaimRoleCardDailyRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ClaimRoleCardDailyRequest operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @instance
+             */
+            ClaimRoleCardDailyRequest.prototype.operating_day = "";
+
+            /**
+             * ClaimRoleCardDailyRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @instance
+             */
+            ClaimRoleCardDailyRequest.prototype.operation = null;
+
+            /**
+             * Creates a new ClaimRoleCardDailyRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {minimir.v1.ClaimRoleCardDailyRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ClaimRoleCardDailyRequest} ClaimRoleCardDailyRequest instance
+             * @type {{
+             *   (properties: minimir.v1.ClaimRoleCardDailyRequest.$Shape): minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape;
+             *   (properties?: minimir.v1.ClaimRoleCardDailyRequest.$Properties): minimir.v1.ClaimRoleCardDailyRequest;
+             * }}
+             */
+            ClaimRoleCardDailyRequest.create = function(properties) {
+                return new ClaimRoleCardDailyRequest(properties);
+            };
+
+            /**
+             * Encodes the specified ClaimRoleCardDailyRequest message. Does not implicitly {@link minimir.v1.ClaimRoleCardDailyRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {minimir.v1.ClaimRoleCardDailyRequest.$Properties} message ClaimRoleCardDailyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ClaimRoleCardDailyRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.operating_day);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ClaimRoleCardDailyRequest message, length delimited. Does not implicitly {@link minimir.v1.ClaimRoleCardDailyRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {minimir.v1.ClaimRoleCardDailyRequest.$Properties} message ClaimRoleCardDailyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ClaimRoleCardDailyRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ClaimRoleCardDailyRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape} ClaimRoleCardDailyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ClaimRoleCardDailyRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ClaimRoleCardDailyRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ClaimRoleCardDailyRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ClaimRoleCardDailyRequest & minimir.v1.ClaimRoleCardDailyRequest.$Shape} ClaimRoleCardDailyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ClaimRoleCardDailyRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ClaimRoleCardDailyRequest message.
+             * @function verify
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ClaimRoleCardDailyRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ClaimRoleCardDailyRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.ClaimRoleCardDailyRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ClaimRoleCardDailyRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ClaimRoleCardDailyRequest";
+            };
+
+            return ClaimRoleCardDailyRequest;
         })();
 
         return v1;

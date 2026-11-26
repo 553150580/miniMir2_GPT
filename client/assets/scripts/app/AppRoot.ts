@@ -10,7 +10,7 @@ import { NavigationIntent } from '../input/NavigationIntent';
 import { TouchJoystick } from '../input/TouchJoystick';
 import { MapTouchNavigator } from '../input/MapTouchNavigator';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
-import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
+import { currentEntryIdentity, isCurrentEntry, operation, queryRoleCard, roleIdentity, session } from './GameSession';
 import { accountIdentity, GameReconnect } from './GameReconnect';
 import { connectRoleEntry, isRoleAccountAuthenticationError } from './RoleEntry';
 import { ServerDirectory } from './ServerDirectory';
@@ -23,6 +23,9 @@ import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
 import { GameHosting } from './GameHosting';
+import { GameRoleCards } from './GameRoleCards';
+import { validateRoleCardDailyReceipt, validateRoleCardPurchaseReceipt, type RoleCardBuyRequest, type RoleCardDailyReceipt,
+    type RoleCardDailyRequest, type RoleCardPurchaseReceipt } from './RoleCardProtocol';
 import { hostingReceiptMessage, type HostingPurchaseRequest } from './HostingPurchaseModel';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErrors';
@@ -96,6 +99,7 @@ export class AppRoot extends Component {
     private hud?: GameHUD;
     private messages?: GameMessages;
     private hosting?: GameHosting;
+    private roleCards?: GameRoleCards;
     private skills?: GameSkills;
     private tasksCodex?: GameTasksCodex;
     private boss?: GameBoss;
@@ -572,6 +576,14 @@ export class AppRoot extends Component {
             buy: request => this.economic(40007, request), reason: code => protocolErrorMessage(40032, code),
         });
         this.cleanups.push(() => this.hosting?.dispose());
+        this.roleCards = new GameRoleCards(this.find('UIMgr/Panels/Hosting/RoleCards'), this.find('UIMgr/Panels/RoleCards'), this.popup, () => {
+            const identity = currentEntryIdentity(), { entry, wallet } = session;
+            if (this.disposed || !session.ready || this.attaching || this.leaving || session.travel.blocksInput || session.teleport.blocksInput
+                || !identity || !isCurrentEntry(identity) || !wallet || ![1, 2].includes(entry.sceneKind)) return undefined;
+            return { scope: attachmentKey(identity), role: identity.role, ruleVersion: entry.resourceVersion,
+                balance: wallet.yuanbaoUnits, pending: this.economicBusy || this.unresolved };
+        }, { query: queryRoleCard, buy: request => this.economic(40037, request), claim: request => this.economic(40038, request) });
+        this.cleanups.push(() => this.roleCards?.dispose());
         this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
         const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
         const directory = new TownDirectory(this.find('UIMgr/Panels/TownDirectory'), row => this.selectTownDestination(row));
@@ -751,18 +763,27 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/Hosting/BuyMinus', () => this.hosting?.adjust(-1));
         this.button('UIMgr/Panels/Hosting/BuyPlus', () => this.hosting?.adjust(1));
         this.button('UIMgr/Panels/Hosting/BuyQuote', () => this.hosting?.confirmPurchase());
+        this.button('UIMgr/Panels/Hosting/RoleCards', () => {
+            if (!this.roleCards?.available) return;
+            this.ui!.open('RoleCards');
+            return this.roleCards.open();
+        });
+        this.button('UIMgr/Panels/RoleCards/BuyPrivilege', () => this.roleCards?.confirmPurchase(1));
+        this.button('UIMgr/Panels/RoleCards/BuyHosting', () => this.roleCards?.confirmPurchase(2));
+        this.button('UIMgr/Panels/RoleCards/Claim', () => this.roleCards?.claimDaily());
         this.button('UIMgr/Panels/Inventory/Equip', () => this.changeEquipment(false));
         this.button('UIMgr/Panels/Inventory/Recycle', () => this.recycleSelectedInventory());
     }
 
     private openGamePanel(panel: string): void {
         this.ui!.open(panel);
-        if (panel === 'Hosting') this.hosting?.open();
+        if (panel === 'Hosting') { this.hosting?.open(); this.roleCards?.discover(); }
         this.refreshGame();
     }
 
     private handleSessionUpdate(): void {
         if (this.disposed) return;
+        this.roleCards?.sync();
         this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
@@ -1347,6 +1368,7 @@ export class AppRoot extends Component {
         this.lastInventory = session.inventory;
         this.itemActions?.refresh();
         this.hosting?.refresh(session.hosting?.remainHostingSec);
+        this.roleCards?.sync();
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -1951,11 +1973,12 @@ export class AppRoot extends Component {
             throw new Error('操作回执身份不匹配，保留原请求等待核对');
         }
         if (result.pending) { this.unresolved = true; throw new Error('操作仍在处理中，请重新认证查询结果'); }
-        let hostingReceipt: string | undefined;
-        if (pending.id === 40007 && !result.errorCode) {
-            try { hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest); }
-            catch (error) { this.unresolved = true; throw error; }
-        }
+        let hostingReceipt: string | undefined, cardPurchase: RoleCardPurchaseReceipt | undefined, cardDaily: RoleCardDailyReceipt | undefined;
+        if (!result.errorCode) try {
+            if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
+            if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
+            if (pending.id === 40038) cardDaily = validateRoleCardDailyReceipt(result.roleCardDaily, pending.value as unknown as RoleCardDailyRequest);
+        } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
             if (pending.id === 40022) session.warehouseReceipts.cancel(expected);
@@ -1965,6 +1988,8 @@ export class AppRoot extends Component {
             this.hosting?.acceptReceipt(role, hostingReceipt);
             this.hosting?.refresh(session.hosting?.remainHostingSec);
         }
+        if (cardPurchase) this.roleCards?.acceptPurchase(role, cardPurchase);
+        if (cardDaily) this.roleCards?.acceptDaily(role, cardDaily);
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
         this.status('操作已由服务端确认');
     }

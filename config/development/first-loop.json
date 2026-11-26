@@ -9904,6 +9904,18 @@
           "note": "策划要求联合限额但未给数量。"
         }
       ],
+      "game_card_products": [
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md:346-361；4.12、5.5",
+          "note": null
+        },
+        {
+          "id": 8,
+          "source_ref": "最终策划案.md:346-361；4.12、5.5",
+          "note": null
+        }
+      ],
       "dev_first_loop_profile": [
         {
           "id": 1,
@@ -10987,7 +10999,7 @@
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
       "sha256": "3d92b927ac4914612696b9e99232c97b9b64274b722edddba0c341cc9b101161"
     },
-    "exporter_sha256": "b2c8eefc257f4e08d422c5ecf85afbb532e1e58a6d3191cdef6bead14622d191",
+    "exporter_sha256": "b6704b1187d871e469f7506e83a003bee03b94760288c6a1b580af1c41cb3941",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -11005,7 +11017,8 @@
     },
     "compact_town_compiler_sha256": "62f908de23d0a1e0de18c31a936f858bc302b85ec730f54e9b3921d76d514759",
     "npc_shop_compiler_sha256": "65e958bbac05507af632022718c11673b8ded2e997cf7b54eca330621090935c",
-    "hosting_benefits_compiler_sha256": "b58272ab4b90886720aea63a116045f88847fd273587fcb9c15d5d32aa9d091d"
+    "hosting_benefits_compiler_sha256": "b58272ab4b90886720aea63a116045f88847fd273587fcb9c15d5d32aa9d091d",
+    "role_cards_compiler_sha256": "5a810a415259d34a7757c8e23d644db7b8f35e37ed2e1277581c9a5e92c0d936"
   },
   "ordinary_drop_pools": [
     {
@@ -11312,6 +11325,23 @@
     "auto_personal_boss": true,
     "kill_experience_bonus_bp": 2000,
     "direct_gold_bonus_bp": 2000
+  },
+  "role_cards": {
+    "products": [
+      {
+        "id": 7,
+        "kind": 1,
+        "days": 30,
+        "price_yuanbao_units": 30000
+      },
+      {
+        "id": 8,
+        "kind": 2,
+        "days": 30,
+        "price_yuanbao_units": 45000
+      }
+    ],
+    "daily_privilege_units": 2000
   },
   "map_regions": [
     {

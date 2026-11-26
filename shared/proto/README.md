@@ -8,6 +8,10 @@
 
 `40032 HostingQuoteRequest` 查询已确认场景的托管补时报价。零秒只查询当前等级档、规则和购买粒度。实际数量由 `40033 HostingQuoteResult` 回传报价编号、精确整数费用、两个钱包各自应扣金额及有效期。`40007 BuyHostingTimeRequest` 用原报价编号、秒数和经济操作身份成交。`40005 OperationResult` 的 `hosting_purchase` 在成交及同一操作重放时返回原报价和原到账余额。没有生效且已审定的价格时，旧版日领和托管流程继续可用。
 
+`40035 RoleCardQuery` 查询原场景角色的双月卡目录和当前期限，指定商品编号时申请 30 秒内的购买报价。`40036 RoleCardState` 返回服务器上海运营日、当日特权领取资格和可购买商品。未装配双月卡规则的服务端返回空目录。购买报价只在当前角色、会话和场景内可用于首次提交。
+
+`40037 BuyRoleCardRequest` 带原报价和商品身份，足额扣除本角色非绑定元宝。`40038 ClaimRoleCardDailyRequest` 带原上海运营日，首次领取增加该角色的绑定元宝。两条请求均保留原经济操作编号。`40005 OperationResult` 的 `role_card_purchase` 和 `role_card_daily` 返回首次确认的原回执，客户端按原报价或运营日核对后清除本地未决请求。服务端在检查当前报价和卡期前先查询已有回执，健康重连可按原请求重查。
+
 `20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。
 
 同一查询的字段 22 和 23 分别是 `dungeon_pending_rewards` 和 `dungeon_pending_rewards_more`。讨伐原奖包沿现有附件格式和 `40030` 领取，来源为 `dungeon`，时间为最终首领实际死亡。讨伐首屏返回最早八包，领取后可继续查看更晚的原奖包。个人和世界列表仍独立计数。

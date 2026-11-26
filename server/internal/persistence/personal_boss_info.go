@@ -83,7 +83,7 @@ func personalBossAvailability(r domain.Role, state domain.PersonalBossProgress, 
 		out.PendingRewardCapacity = cfg.ItemReward.PendingLimit
 	}
 	out.DailyLimit = cfg.DailySuccessLimit
-	if r.PrivilegeUntil.After(at) {
+	if r.PrivilegeActiveAt(at) {
 		out.DailyLimit += cfg.PrivilegeSuccessBonus
 	}
 	if state.SuccessDay == day {

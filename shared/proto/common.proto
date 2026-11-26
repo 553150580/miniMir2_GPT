@@ -19,6 +19,8 @@ message OperationResult {
   bool pending = 5;
   HostingPurchaseReceipt hosting_purchase = 6;
   MirrorArenaExchangeReceipt mirror_arena_exchange = 7;
+  RoleCardPurchaseReceipt role_card_purchase = 8;
+  RoleCardDailyReceipt role_card_daily = 9;
 }
 // 兑换只按服务端权威价格成交。同一原操作重放返回首次扣分与原绑定羽毛。
 message MirrorArenaExchangeReceipt {
@@ -51,6 +53,36 @@ message HostingQuoteResult {
 }
 // 成交回执保留原报价及到账快照，用于同一操作的持久重放。
 message HostingPurchaseReceipt { HostingQuoteResult quote = 1; int64 balance_seconds = 2; }
+// 卡商品只公布已开放的款式、有效天数和非绑元宝报价单位。
+message RoleCardProductView {
+  uint32 product_id = 1;
+  uint32 kind = 2;
+  uint32 days = 3;
+  int64 price_yuanbao_units = 4;
+}
+// 原报价冻结角色当时卡有效期及规则身份，确认购买时回传同一报价编号。
+message RoleCardQuoteView {
+  bytes quote_id = 1;
+  RoleCardProductView product = 2;
+  uint64 rule_version = 3;
+  string config_hash = 4;
+  int64 expires_at_unix_ms = 5;
+  int64 previous_until_unix_ms = 6;
+}
+// 购买回执保留首次确认时的报价、生效区间和付款账户余额。
+message RoleCardPurchaseReceipt {
+  RoleCardQuoteView quote = 1;
+  int64 effective_at_unix_ms = 2;
+  int64 new_until_unix_ms = 3;
+  int64 yuanbao_balance_units = 4;
+}
+// 日领回执按上海运营日确认原绑定元宝及首次到账余额。
+message RoleCardDailyReceipt {
+  string operating_day = 1;
+  int64 granted_units = 2;
+  int64 bound_yuanbao_balance_units = 3;
+  int64 accepted_at_unix_ms = 4;
+}
 message Heartbeat { uint64 client_monotonic_ms = 1; }
 message HeartbeatResult { uint64 server_unix_ms = 1; }
 // 批次内每项为带msg_id/request_seq/binding_epoch等头的完整应用body。

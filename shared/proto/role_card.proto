@@ -1,0 +1,38 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 商品为零时读取目录与角色状态，指定商品时由服务端生成当前购买报价。
+message RoleCardQuery {
+  uint64 scene_epoch = 1;
+  uint32 product_id = 2;
+}
+
+// 双卡状态由当前角色所有者返回，每日领取以服务端上海运营日为准。
+message RoleCardState {
+  uint64 scene_epoch = 1;
+  repeated RoleCardProductView products = 2;
+  RoleCardQuoteView quote = 3;
+  int64 privilege_until_unix_ms = 4;
+  int64 hosting_until_unix_ms = 5;
+  string operating_day = 6;
+  int64 daily_privilege_units = 7;
+  bool privilege_claimable = 8;
+  uint32 error_code = 9;
+  uint64 role_revision = 10;
+}
+
+// 购买只接受原报价和商品身份，价格与卡时长由服务端确定。
+message BuyRoleCardRequest {
+  bytes quote_id = 1;
+  uint32 product_id = 2;
+  OperationContext operation = 3;
+}
+
+// 领取只接受上次查询确认的原运营日，资产操作编号可在重连后恢复。
+message ClaimRoleCardDailyRequest {
+  string operating_day = 1;
+  OperationContext operation = 2;
+}

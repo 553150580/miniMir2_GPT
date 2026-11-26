@@ -40,7 +40,7 @@ func applyHostingClaim(r domain.Role, kind uint32, at time.Time, rules *devconfi
 		free, card = rules.FreeDailySeconds, rules.CardDailySeconds
 	}
 	// active 和 limit 固定原受理时的权益，到期时刻本身已无卡权益。
-	active, limit := r.HostingCardUntil.After(at), free
+	active, limit := r.HostingCardActiveAt(at), free
 	if active {
 		limit = card
 	}

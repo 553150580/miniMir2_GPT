@@ -143,6 +143,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	w.cancelMapTravelOnDetach(r)
 	w.cancelTownNavigation(r)
 	r.hostingQuote = nil
+	r.roleCardQuote = nil
 	r.Role, r.Auth = role, auth
 	if run := r.personalBoss; run != nil {
 		run.auth = auth

@@ -14,7 +14,8 @@ import (
 func waitsForAssetSlot(id uint16) bool {
 	switch id {
 	case p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit,
-		p.MsgC2SCastWithMaterial, p.MsgC2SSetCastingSupply, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
+		p.MsgC2SCastWithMaterial, p.MsgC2SSetCastingSupply, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange,
+		p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily:
 		return true
 	}
 	return false

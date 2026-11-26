@@ -94,6 +94,10 @@ const (
 	MsgC2SHostingQuote uint16 = 40032
 	MsgS2CHostingQuote uint16 = 40033
 	MsgC2SMirrorArenaExchange uint16 = 40034
+	MsgC2SRoleCardQuery uint16 = 40035
+	MsgS2CRoleCardState uint16 = 40036
+	MsgC2SBuyRoleCard uint16 = 40037
+	MsgC2SClaimRoleCardDaily uint16 = 40038
 )
 
 const (

@@ -7,6 +7,36 @@ import (
 	"time"
 )
 
+// TestAcceptsPersonalBossQualification 核对仅允许当前版本和唯一一对已核对的旧、新夹具。
+func TestAcceptsPersonalBossQualification(t *testing.T) {
+	const before = "4bb20bf3e8d235db1061e3223b8b28169f662d3e7e334291f6f65c09400acb1a"
+	const after = "6a421806cf5d45a8ead84bfda80be4a57eebcac00d3344140825fc860bfec9a6"
+	const unrelated = "af53a2647dab60517d43e75bba2b3a3c0cfc25e3b7295b5a931c330222adee65"
+	for _, tc := range []struct {
+		name      string   // 说明当前规则与原证明的关系。
+		fixture   *Fixture // 当前加载的主夹具身份。
+		proofRule uint64   // 持久证明保存的规则版本。
+		proofHash string   // 持久证明保存的完整配置摘要。
+		want      bool     // 可继续沿用这条原实战证明。
+	}{
+		{"双卡配置继承旧证明", &Fixture{RuleVersion: 30, Hash: after}, 30, before, true},
+		{"当前配置接受当前证明", &Fixture{RuleVersion: 30, Hash: unrelated}, 30, unrelated, true},
+		{"配置摘要不相干", &Fixture{RuleVersion: 30, Hash: unrelated}, 30, before, false},
+		{"旧配置不反向接受新证明", &Fixture{RuleVersion: 30, Hash: before}, 30, after, false},
+		{"旧证明版本不同", &Fixture{RuleVersion: 30, Hash: after}, 29, before, false},
+		{"规则版本变更", &Fixture{RuleVersion: 31, Hash: after}, 31, before, false},
+		{"相同摘要也须同规则版本", &Fixture{RuleVersion: 30, Hash: after}, 31, after, false},
+		{"空身份不算证据", &Fixture{RuleVersion: 30}, 30, "", false},
+		{"无当前配置", nil, 30, before, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := tc.fixture.AcceptsPersonalBossQualification(tc.proofRule, tc.proofHash); got != tc.want {
+				t.Fatalf("通关证明是否允许沿用=%v，预期 %v", got, tc.want)
+			}
+		})
+	}
+}
+
 // TestPersonalBossReleaseResolvesDedicatedSource 验证独立装配不会向普通刷怪和通用地图导入挑战。
 func TestPersonalBossReleaseResolvesDedicatedSource(t *testing.T) {
 	data := []byte(`{

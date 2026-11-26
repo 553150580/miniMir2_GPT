@@ -324,6 +324,8 @@ type Fixture struct {
 	OrdinaryEquipmentQuotas []OrdinaryEquipmentQuota `json:"drop_quotas,omitempty"`
 	// HostingBenefits 包含当日领时、普通怪击杀加成及个人首领自动挑战权益。
 	HostingBenefits *HostingBenefits `json:"hosting_benefits,omitempty"`
+	// RoleCards 包含角色级非绑定元宝月卡和特权卡每日绑元领取。历史配置缺省关闭。
+	RoleCards *RoleCardConfig `json:"role_cards,omitempty"`
 	// HostingTimePrices 仅包含显式发布的补时价格版本，缺省时关闭金币购时。
 	HostingTimePrices []HostingTimePriceVersion `json:"hosting_time_prices,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
@@ -571,6 +573,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateHostingBenefits(); err != nil {
+		return err
+	}
+	if err := f.validateRoleCards(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

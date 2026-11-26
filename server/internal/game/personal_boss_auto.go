@@ -90,7 +90,7 @@ func (w *worker) maybeStartAutomaticPersonalBoss(owner *room, now time.Time) {
 			continue
 		}
 		proof, ok := progress.Qualifications[strconv.FormatUint(uint64(option.TemplateID), 10)]
-		if !ok || proof.RuleVersion != fixture.RuleVersion || proof.ConfigHash != fixture.Hash ||
+		if !ok || !fixture.AcceptsPersonalBossQualification(proof.RuleVersion, proof.ConfigHash) ||
 			!persistence.CanBookPersonalBoss(owner.Role, option, now) {
 			continue
 		}
