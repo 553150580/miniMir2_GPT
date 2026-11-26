@@ -55,6 +55,11 @@ import { GameWeaponOil } from './GameWeaponOil';
 import { GameWings } from './GameWings';
 import { GameEquipmentEnhancement } from './GameEquipmentEnhancement';
 import { equipmentEnhancementRules, enhancementSlotLines, observedEnhancementSlots, validateEquipmentEnhancementReceipt } from './EquipmentEnhancementModel';
+import { GameEquipmentRefine } from './GameEquipmentRefine';
+import { equipmentRefineQuality, equipmentRefineRules, refineRecycleHint } from './EquipmentRefineRules';
+import type { RefineAction, RefineSnapshot } from './EquipmentRefineModel';
+import { recycleRefineResultLines, validateRecycleRefineReceipt, validateRefineReceipt } from './EquipmentRefineReceipt';
+import type { RecycleRefineRoll, RefineReceipt } from './EquipmentRefineReceipt';
 import type { EquipmentEnhancementCommit, EquipmentEnhancementReceipt, EquipmentEnhancementSnapshot } from './EquipmentEnhancementModel';
 import { validateWingReceipt, wingRules, wingSlotLabel } from './WingModel';
 import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
@@ -143,6 +148,9 @@ export class AppRoot extends Component {
     private equipmentEnhancement?: GameEquipmentEnhancement;
     private equipmentEnhancementRulesSource?: unknown;
     private equipmentEnhancementRules?: ReturnType<typeof equipmentEnhancementRules>;
+    private equipmentRefine?: GameEquipmentRefine;
+    private equipmentRefineRulesSource?: unknown;
+    private equipmentRefineRules?: ReturnType<typeof equipmentRefineRules>;
     private roleEquipment?: GameRoleEquipment;
     private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
@@ -547,6 +555,13 @@ export class AppRoot extends Component {
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(40055, request),
             submit: (request, expectedRevision) => this.economic(40057, request, expectedRevision) });
+        this.equipmentRefine = new GameEquipmentRefine(safe, this.popup, {
+            snapshot: () => this.equipmentRefineSnapshot(), newSession: newOperationId,
+            quote: request => session.connection.request(40058, request),
+            submit: (request, expectedRevision) => this.economic(40060, request, expectedRevision),
+            tap: () => this.tapSound?.(), error: error => this.error(error),
+        });
+        this.cleanups.push(() => this.equipmentRefine?.dispose());
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1482,7 +1497,8 @@ export class AppRoot extends Component {
                 this.refreshInventoryContext();
                 if (!item) { this.popup!.show('Details', { title: '物品已变化', message: '所选物品已离开此列表\n请重新选择。' }); return; }
                 if (panel === 'Inventory' && this.itemActions) { this.openInventoryItemActions(item.instanceId); return; }
-                if (panel === 'Role' && this.selectedEquipped && this.equipmentEnhancementSnapshot()?.slots.has(this.selectedEquipped.slot)) {
+                if (panel === 'Role' && this.selectedEquipped && (this.equipmentEnhancementSnapshot()?.slots.has(this.selectedEquipped.slot) ||
+                    equipmentRefineQuality(this.currentEquipmentRefineRules(), item))) {
                     this.selectEquippedSlot(this.selectedEquipped.slot);
                     return;
                 }
@@ -1507,6 +1523,7 @@ export class AppRoot extends Component {
         }
         this.lastInventory = session.inventory;
         this.itemActions?.refresh();
+        this.equipmentRefine?.refresh();
         this.hosting?.refresh(session.hosting?.remainHostingSec);
         this.roleCards?.sync();
         this.itemMarket?.sync();
@@ -1540,10 +1557,13 @@ export class AppRoot extends Component {
             const forge = this.forge, forgeSnapshot = definition?.kind === 'forge_blueprint' ? this.forgeSnapshot() : null;
             const recipe = forgeSnapshot && forgeRecipeFor(forgeSnapshot, item.itemId);
             const oil = definition?.kind === 'equipment' && definition.equip_slot === 0 ? this.weaponOilSnapshot() : null;
+            const refineRules = this.currentEquipmentRefineRules();
+            const showRefine = definition?.kind === 'equipment' && equipmentRefineQuality(refineRules, item);
             return inventoryItemActionView({ item, definition, ready: !blockedReason, blockedReason, equipment: this.equipmentSnapshot(),
                 assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0',
                 miningReason: mining?.toolBlock, forgeReason: forgeSnapshot?.blocked ? '目前不能使用此图纸' : '',
-                recycleOil: this.currentRecycleOilRule() }, {
+                recycleOil: this.currentRecycleOilRule(),
+                recycleRefineHint: showRefine ? refineRecycleHint(refineRules, item, definition, manualRecycleBlockReason(item)) : '' }, {
                 equip: selected(() => this.changeEquipment(false)), recycle: selected(() => this.recycleSelectedInventory()),
                 lock: selected(() => this.setItemLock()), usePotion: () => this.usePotion(item.itemId, new Uint8Array(item.instanceId)),
                 learn: () => this.learnSkill(skill, new Uint8Array(item.instanceId)),
@@ -1551,6 +1571,7 @@ export class AppRoot extends Component {
                 mine: mining ? () => mining.useTool(new Uint8Array(item.instanceId)) : undefined,
                 forge: forge && recipe ? () => forge.open(item) : undefined,
                 weaponOil: oil && !oil.blocked && this.weaponOil ? () => this.weaponOil!.open({ instanceId: item.instanceId, equipped: false }) : undefined,
+                refine: showRefine && this.equipmentRefine ? () => this.equipmentRefine!.open(item.instanceId, false) : undefined,
             });
         });
     }
@@ -1610,6 +1631,29 @@ export class AppRoot extends Component {
         return rules && slots ? { rules, slots } : undefined;
     }
 
+    private currentEquipmentRefineRules() {
+        const raw = this.world?.gameplay.equipment_refine;
+        if (raw !== this.equipmentRefineRulesSource) {
+            this.equipmentRefineRulesSource = raw;
+            this.equipmentRefineRules = equipmentRefineRules(raw);
+        }
+        return this.equipmentRefineRules;
+    }
+
+    // 覆盖层不会变更下方的角色或背包页，旧连接及已切换的角色不能继续操作。
+    private equipmentRefineSnapshot(): RefineSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, parent = this.ui?.top?.name;
+        const rules = this.currentEquipmentRefineRules();
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || !rules ||
+            (parent !== 'Inventory' && parent !== 'Role')) return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: `${attachmentKey(identity)}:${parent}`, role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision,
+            items: inventory.items, equipped: inventory.equipped, catalog: this.world!.gameplay.items, rules, blocked };
+    }
+
     // 强化面板绑定角色、附着与原角色面板，永久提交复用经济操作账本。
     private equipmentEnhancementSnapshot(): EquipmentEnhancementSnapshot | null {
         const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, state = this.currentEnhancementState();
@@ -1635,7 +1679,8 @@ export class AppRoot extends Component {
         this.refreshInventoryContext();
         const definition = this.world?.gameplay.items.find((row: any) => row.item_id === entry.item.itemId);
         const canShowOil = slot === 0 && this.weaponOilSnapshot() && this.weaponOil;
-        if (definition?.kind === 'equipment' && this.itemActions && (canShowOil || enhancement)) {
+        const canShowRefine = equipmentRefineQuality(this.currentEquipmentRefineRules(), entry.item);
+        if (definition?.kind === 'equipment' && this.itemActions && (canShowOil || enhancement || canShowRefine)) {
             this.itemActions.open(() => {
                 if (!scope || !isCurrentEntry(scope) || this.ui?.top?.name !== 'Role') return null;
                 const current = session.inventory?.equipped.find((value: EquippedSelection) =>
@@ -1643,6 +1688,7 @@ export class AppRoot extends Component {
                 if (!current) return null;
                 const oil = canShowOil ? this.weaponOilSnapshot() : null;
                 const upgrades = enhancement ? this.equipmentEnhancementSnapshot() : null;
+                const refine = canShowRefine ? this.equipmentRefineSnapshot() : null;
                 const lines = equipmentDetailLines(definition, current, session.inventory?.level, session.role?.job, true);
                 return { title: definition.name, lines: upgrades ? [...enhancementSlotLines(upgrades, slot), ...lines] : lines,
                     actions: [
@@ -1650,6 +1696,8 @@ export class AppRoot extends Component {
                             run: () => this.equipmentEnhancement!.open(slot) }] : []),
                         ...(oil ? [{ label: '祝福油培养', enabled: !oil.blocked,
                             run: () => this.weaponOil!.open({ instanceId: current.instanceId, equipped: true }) }] : []),
+                        ...(refine ? [{ label: '装备洗炼', enabled: !refine.blocked,
+                            run: () => this.equipmentRefine!.open(current.instanceId, true) }] : []),
                     ] };
             });
             return;
@@ -1770,7 +1818,8 @@ export class AppRoot extends Component {
         const protectedReason = manualRecycleBlockReason(captured);
         if (protectedReason) throw new Error(protectedReason);
         const rule = this.currentRecycleOilRule();
-        const message = rule ? equipmentRecycleOilConfirmation(definition.name, captured, rule) : `分解${definition.name}？分解所得继承装备绑定状态。`;
+        const oilText = rule ? equipmentRecycleOilConfirmation(definition.name, captured, rule) : `分解${definition.name}？分解所得继承装备绑定状态。`;
+        const message = [oilText, refineRecycleHint(this.currentEquipmentRefineRules(), captured, definition)].filter(Boolean).join('\n');
         if (!await this.popup!.confirm('Confirm', message)) return;
         if (this.disposed) return;
         const current = session.inventory?.items.find((row: any) => recycleItemKey(row.instanceId) === recycleItemKey(captured.instanceId));
@@ -1780,18 +1829,20 @@ export class AppRoot extends Component {
     }
 
     // 结果只显示已经确认的判定。点击产物前仍观察服务端库存，不从回执直接增加物品。
-    private showRecycleOilResult(identity: AttachmentIdentity, rolls: readonly RecycleOilRoll[], recovering: boolean): void {
-        const summary = recycleOilResultSummary(rolls);
+    private showRecycleResult(identity: AttachmentIdentity, rolls: readonly RecycleOilRoll[], refine: readonly RecycleRefineRoll[], recovering: boolean): void {
+        const stoneLines = recycleRefineResultLines(refine);
+        const summary = [...(rolls.length ? [recycleOilResultSummary(rolls)] : []), ...stoneLines].join(' · ');
         if (!this.itemActions || !this.ui || (!recovering && this.ui.top?.name !== 'Inventory') ||
             (this.popup?.top && this.popup.top.name !== 'ItemActions')) {
             this.status(summary);
             return;
         }
-        const oils = rolls.flatMap(row => row.oil ? [row.oil] : []);
-        const findOil = (id: Uint8Array) => session.inventory?.items.find((item: { instanceId: Uint8Array }) =>
+        const outputs = [...rolls.flatMap(row => row.oil ? [{ item: row.oil, name: '祝福油' }] : []),
+            ...refine.flatMap(row => row.stone ? [{ item: row.stone, name: '洗炼石' }] : [])];
+        const findOutput = (id: Uint8Array) => session.inventory?.items.find((item: { instanceId: Uint8Array }) =>
             recycleItemKey(item.instanceId) === recycleItemKey(id));
-        const openOil = (id: Uint8Array): void => {
-            const current = findOil(id);
+        const openOutput = (id: Uint8Array): void => {
+            const current = findOutput(id);
             if (!isCurrentEntry(identity) || !current) return;
             this.ui!.open('Inventory');
             this.selectedItem = current;
@@ -1800,11 +1851,13 @@ export class AppRoot extends Component {
         };
         this.itemActions.open(() => {
             if (this.disposed || !isCurrentEntry(identity)) return null;
-            return { title: '装备分解结果', lines: [...(rolls.length > 1 ? [summary] : []), ...recycleOilResultLines(rolls)],
-                actions: oils.length === 1 ? [{ label: '查看祝福油', enabled: !!findOil(oils[0].instanceId), run: () => openOil(oils[0].instanceId) }] : [],
-                options: oils.length > 1 ? oils.map(item => ({ key: recycleItemKey(item.instanceId),
-                    label: `查看${item.bound ? '绑定' : '非绑定'}油 ${recycleItemKey(item.instanceId).slice(-8)}`,
-                    enabled: !!findOil(item.instanceId), choose: () => openOil(item.instanceId) })) : undefined };
+            return { title: '装备分解结果', lines: [...(rolls.length > 1 ? [recycleOilResultSummary(rolls)] : []),
+                ...recycleOilResultLines(rolls), ...stoneLines],
+                actions: outputs.length === 1 ? [{ label: '查看' + outputs[0].name, enabled: !!findOutput(outputs[0].item.instanceId),
+                    run: () => openOutput(outputs[0].item.instanceId) }] : [],
+                options: outputs.length > 1 ? outputs.map(({ item, name }) => ({ key: recycleItemKey(item.instanceId),
+                    label: `查看${item.bound ? '绑定' : '非绑定'}${name} ${recycleItemKey(item.instanceId).slice(-8)}`,
+                    enabled: !!findOutput(item.instanceId), choose: () => openOutput(item.instanceId) })) : undefined };
         });
     }
     private async saveAutoRecycle(applyExisting: boolean): Promise<void> {
@@ -2224,7 +2277,7 @@ export class AppRoot extends Component {
         if (this.economicBusy || this.unresolved) throw new Error('上一笔操作正在核对，请等待回执');
         if (!session.pending || session.pending.get(roleIdentity())) throw new Error('上一笔操作需要沿原身份核对');
         const context = operation(id === 40031 ? value.expectedSkillSlotIds : undefined);
-        // 强化按原报价的修订持久重放，场景内其他收益可独立推进当前库存修订。
+        // 养成按原报价的修订持久重放，场景内其他收益可独立推进当前库存修订。
         if (quotedRevision) context.expectedRevision = quotedRevision;
         const payload = { ...value, operation: context };
         try { session.pending.set(roleIdentity(), { id, value: payload }); }
@@ -2262,12 +2315,18 @@ export class AppRoot extends Component {
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
         let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
+        let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
+        let recycleRefine: readonly RecycleRefineRoll[] = [];
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
             if (pending.id === 40002 && result.recycleOil != null) {
                 const oilItemId = recovering ? undefined : this.currentRecycleOilRule()?.oilItemId;
                 recycleOil = validateRecycleOilReceipt(pending.value.itemInstanceIds as Uint8Array[], result.recycleOil, oilItemId);
+            }
+            if (pending.id === 40002 && result.recycleRefine != null) {
+                recycleRefine = validateRecycleRefineReceipt(pending.value.itemInstanceIds as Uint8Array[], result.recycleRefine,
+                    recovering ? undefined : this.currentEquipmentRefineRules()?.stoneItemId);
             }
             if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
             if (pending.id === 40038) cardDaily = validateRoleCardDailyReceipt(result.roleCardDaily, pending.value as unknown as RoleCardDailyRequest);
@@ -2289,6 +2348,11 @@ export class AppRoot extends Component {
                 const request = pending.value as unknown as EquipmentEnhancementCommit;
                 enhanced = { request, receipt: this.equipmentEnhancement?.reconcile(request, result.equipmentEnhancement) ??
                     validateEquipmentEnhancementReceipt(request, result.equipmentEnhancement) };
+            }
+            if (pending.id === 40060) {
+                const request = pending.value as unknown as RefineAction;
+                refined = { request, receipt: this.equipmentRefine?.reconcile(request, result.equipmentRefine) ??
+                    validateRefineReceipt(request, result.equipmentRefine) };
             }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
@@ -2325,8 +2389,13 @@ export class AppRoot extends Component {
             this.status(`${equipmentSlotName(slot)}${success ? '强化成功' : '强化未成功'} · 部位+${afterLevel}`);
             return;
         }
-        if (recycleOil.length) {
-            this.showRecycleOilResult(identity, recycleOil, recovering);
+        if (refined) {
+            this.equipmentRefine?.accept(role, refined.request, refined.receipt);
+            this.status(refined.request.action === 1 ? '已生成新词条候选' : refined.request.action === 2 ? '已采纳新词条' : '已放弃新词条');
+            return;
+        }
+        if (recycleOil.length || recycleRefine.length) {
+            this.showRecycleResult(identity, recycleOil, recycleRefine, recovering);
             return;
         }
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();

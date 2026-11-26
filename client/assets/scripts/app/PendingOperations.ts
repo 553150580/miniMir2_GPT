@@ -24,7 +24,7 @@ export class PendingOperationError extends Error {
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
 const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026,
-    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 30002]);
+    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -360,6 +360,23 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         if (slot > 9) return invalid('部位强化必须使用原普通装备槽');
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
             slot, operation: operation(item.operation, stored) };
+    } else if (id === 40060) {
+        const action = uint32((input.value as ObjectValue | null)?.action);
+        if (action !== 1 && action !== 2 && action !== 3) return invalid('未知洗炼动作');
+        const fields = ['action', 'target', 'uiSessionId', 'operation'];
+        const item = record(input.value, action === 1 ? fields.concat('quoteId', 'allowBound') : fields.concat('pendingId'));
+        const target = record(item.target, ['instanceId', 'version', 'equipped']);
+        const version = longValue(target.version, stored);
+        if (typeof target.equipped !== 'boolean' || !version.unsigned || version.isZero() || BigInt(version.toString()) >= 0x7fffffffffffffffn) {
+            return invalid('洗炼需要原装备、位置和精确版本');
+        }
+        payload = { action, target: { instanceId: bytes16(target.instanceId, stored), version, equipped: target.equipped },
+            uiSessionId: bytes16(item.uiSessionId, stored), operation: operation(item.operation, stored) };
+        if (action === 1) {
+            if (typeof item.allowBound !== 'boolean') return invalid('生成候选需要原绑定授权');
+            payload.quoteId = bytes16(item.quoteId, stored);
+            payload.allowBound = item.allowBound;
+        } else payload.pendingId = bytes16(item.pendingId, stored);
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

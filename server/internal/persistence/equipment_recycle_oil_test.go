@@ -26,13 +26,13 @@ func recycleOilTestFixture(t *testing.T) devconfig.Fixture {
 func TestManualRecycleOilFrozenSource(t *testing.T) {
 	f := recycleOilTestFixture(t)
 	role := recycleRole()
-	attempt := recycleOilAttempt{operationID: "asset:" + role.ID + ":" + domain.ID(), seed: "unit-test-original-seed"}
+	attempt := equipmentRecycleAttempt{operationID: "asset:" + role.ID + ":" + domain.ID(), seed: "unit-test-original-seed"}
 	sample := func(bound, hit bool) domain.Item {
 		item := recycleItem(218, bound)
 		item.InitialLuck, item.CurrentLuck, item.DurabilityU, item.MaxDurabilityU, item.OriginalDurabilityU = 2, 8, 100, 200, 300
 		for index := range 1024 {
 			item.ID = fmt.Sprintf("%032x", index+1)
-			draw, err := attempt.roll(item.ID, 30)
+			draw, err := attempt.draw(equipmentRecycleOilRandomDomain, item.ID, 30)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -86,7 +86,7 @@ func TestRecycleOilScopeAndFlowProtection(t *testing.T) {
 	broken.ID, broken.DurabilityU = domain.ID(), 0
 	other := recycleItem(35, false)
 	role.Items = []domain.Item{item, broken, other}
-	attempt := recycleOilAttempt{operationID: "asset:" + role.ID + ":" + domain.ID()}
+	attempt := equipmentRecycleAttempt{operationID: "asset:" + role.ID + ":" + domain.ID()}
 	for _, ids := range [][]string{{item.ID, other.ID}, {item.ID, domain.ID()}, {item.ID, item.ID}} {
 		next, receipt, code, err := recycleManual(role, ids, f, &attempt)
 		if err != nil || code != p.CodeInvalidArgument || receipt != nil || attempt.seed != "" || !reflect.DeepEqual(next, role) {
@@ -180,7 +180,7 @@ func TestRecycleOilUsesLuckAllowedByEquipmentSlot(t *testing.T) {
 	invalidWeapon.InitialLuck, invalidWeapon.CurrentLuck = 2, 10
 	invalidWeapon.DurabilityU, invalidWeapon.MaxDurabilityU, invalidWeapon.OriginalDurabilityU = 10, 20, 20
 	role.Items = []domain.Item{invalidWeapon}
-	attempt := recycleOilAttempt{operationID: "valid-scope-only"}
+	attempt := equipmentRecycleAttempt{operationID: "valid-scope-only"}
 	after, receipt, code, err := recycleManual(role, []string{invalidWeapon.ID}, f, &attempt)
 	if err != nil || code != 0 || receipt == nil || receipt.Gold != 50 || after.Wallet.Gold != role.Wallet.Gold+50 ||
 		len(after.Items) != 0 || receipt.oilProto() != nil || attempt.seed != "" {

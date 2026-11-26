@@ -1,0 +1,58 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+import "item_view.proto";
+
+// 原装备只能在确认时指示的背包或穿戴位置操作。
+message EquipmentRefineItemRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  bool equipped = 3;
+}
+message EquipmentRefineStoneRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  int64 quantity = 3;
+}
+
+// 使用左侧已采纳的词条作为锁槽依据，材料由玩家明确选择。
+message EquipmentRefineQuoteRequest {
+  uint64 scene_epoch = 1;
+  EquipmentRefineItemRef target = 2;
+  repeated uint32 locked_slots = 3;
+  repeated EquipmentRefineStoneRef stones = 4;
+  bool allow_bound = 5;
+  bytes ui_session_id = 6;
+}
+
+// 公开实际分账和本次决定的绑定，随机候选在扣费前隐藏。
+message EquipmentRefineQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  ItemView target = 3;
+  bool equipped = 4;
+  repeated uint32 locked_slots = 5;
+  repeated EquipmentRefineSpend stones = 6;
+  bool allow_bound = 7;
+  int64 gold = 8;
+  int64 bound_gold = 9;
+  int64 yuanbao_units = 10;
+  int64 bound_yuanbao_units = 11;
+  bool output_bound = 12;
+  uint64 expires_at_unix_ms = 13;
+  uint64 role_revision = 14;
+  bytes ui_session_id = 15;
+}
+
+// 动作 1 生成或覆盖已付候选，2 采纳，3 放弃。
+message EquipmentRefineActionRequest {
+  uint32 action = 1;
+  OperationContext operation = 2;
+  EquipmentRefineItemRef target = 3;
+  bytes quote_id = 4;
+  bytes ui_session_id = 5;
+  bytes pending_id = 6;
+  bool allow_bound = 7;
+}

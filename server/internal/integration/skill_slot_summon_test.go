@@ -36,6 +36,7 @@ func TestSkillAttackSlotsSummonMongoWS(t *testing.T) {
 	boss.Map.MonsterSpawns[0] = devconfig.Point{X: boss.Map.PlayerSpawn.X + 1, Y: boss.Map.PlayerSpawn.Y}
 	boss.Monster.HP, boss.Monster.AttackMin, boss.Monster.AttackMax, boss.Monster.MoveMS, boss.Monster.AttackMS = 10000, 0, 0, 60000, 60000
 	cfg, ctx, store := m1FieldServices(t, cfg)
+	attackActionMS := cfg.Fixture.CombatTiming.PlayerAttackActionMS
 	wantSlots := []uint32{skeleton.ID, shinsu.ID, 0, 0}
 	for _, route := range []struct {
 		name      string
@@ -64,23 +65,27 @@ func TestSkillAttackSlotsSummonMongoWS(t *testing.T) {
 			}
 			setSkillAttackSlots(c, wantSlots)
 			// 无护符的召唤候选会跳过，当前前格敌人仍收到普通攻击。
-			assertSummonSlotBasicAttack(c)
+			attackReadyAt := assertSummonSlotBasicAttack(c, attackActionMS)
 			const bought = 12
 			buyTaoistSupplyAtVendor(c, &cfg.Fixture, skeleton.MaterialItemID, bought)
 			material := equipTaoistVendorSupply(c, skeleton.MaterialItemID)
 			travelToBaseline(c, 2, cfg.Fixture.Map.ID)
 			travelAcknowledge(c, false)
-			time.Sleep(time.Duration(c.player().MoveIntervalMs)*time.Millisecond + 100*time.Millisecond)
+			// 健康切图保留上次普攻和买符前行走的时钟，等待两者均已到期。
+			moveInterval := time.Duration(c.player().GetMoveIntervalMs()) * time.Millisecond
+			time.Sleep(max(time.Until(attackReadyAt), moveInterval))
 			if route.automatic {
 				// 首领场继承槽位，但其独立战斗没有原背包永久写权限，只能落到普通攻击。
 				challenge, _ := enterReconnectBoss(t, c, boss.TemplateID, false)
-				assertSummonSlotBasicAttack(c)
+				attackReadyAt = assertSummonSlotBasicAttack(c, attackActionMS)
 				if c.scene.OwnedPet != nil || summonWSEquipped(t, c).Quantity != bought {
 					t.Fatal("个人首领内的槽位召唤改变了原宠物或护符")
 				}
 				c.send(p.MsgC2SPersonalBossLeave, &pb.PersonalBossLeave{SceneEpoch: c.entry.SceneEpoch, ChallengeId: challenge.ChallengeId})
 				returnFromWorldBossTest(c, challenge.ChallengeId)
 				applyAutoSkillPreferences(c, &pb.AutoSkillSettings{Enabled: true, DisabledSkillIds: []uint32{skeleton.ID}})
+				// 返回普通地图后也等原普攻动作释放，继续用真实目标拒绝与召唤回执验收。
+				time.Sleep(time.Until(attackReadyAt))
 			}
 			target := m1LiveMonster(t, c, 1, nil)
 			invalid := c.send(p.MsgC2SAttackIntent, &pb.AttackIntent{SceneEpoch: c.entry.SceneEpoch, TargetHandle: target.EntityHandle, TargetLife: target.Life + 1})
@@ -110,7 +115,7 @@ func TestSkillAttackSlotsSummonMongoWS(t *testing.T) {
 			// 活宠在槽位中始终跳过。无论另一种也在槽中还是原召唤冷却已结束，都继续落回普通攻击。
 			time.Sleep(time.Duration(max(skeleton.CooldownBaseMS, shinsu.CooldownBaseMS))*time.Millisecond + 100*time.Millisecond)
 			if !route.automatic {
-				assertSummonSlotBasicAttack(c)
+				assertSummonSlotBasicAttack(c, attackActionMS)
 			} else {
 				travelUntilWithin(c, 6*time.Second, func(frame wire.Frame) bool { return frame.ID == p.MsgS2CAttackAccepted })
 				c.auto(false, 1)
@@ -138,15 +143,27 @@ func TestSkillAttackSlotsSummonMongoWS(t *testing.T) {
 	}
 }
 
-// assertSummonSlotBasicAttack 核对当前明确选择的近格原怪仍收到普通攻击。
-func assertSummonSlotBasicAttack(c *client) {
+// assertSummonSlotBasicAttack 核对原目标普通攻击，并从本次受理回包计算最早的后续攻击时点。
+func assertSummonSlotBasicAttack(c *client, attackActionMS int64) time.Time {
 	c.t.Helper()
 	target := m1LiveMonster(c.t, c, 1, nil)
-	c.send(p.MsgC2SAttackIntent, &pb.AttackIntent{SceneEpoch: c.entry.SceneEpoch, TargetHandle: target.EntityHandle, TargetLife: target.Life})
-	frame := travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool { return frame.ID == p.MsgS2CAttackAccepted })
+	intent := &pb.AttackIntent{SceneEpoch: c.entry.SceneEpoch, TargetHandle: target.EntityHandle, TargetLife: target.Life}
+	c.send(p.MsgC2SAttackIntent, intent)
 	var attack pb.AttackAccepted
-	must(c.t, proto.Unmarshal(frame.Payload, &attack))
+	travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool {
+		if frame.ID != p.MsgS2CAttackAccepted {
+			return false
+		}
+		must(c.t, proto.Unmarshal(frame.Payload, &attack))
+		return attack.SceneEpoch == intent.SceneEpoch && attack.InputSequence == intent.InputSequence
+	})
 	if attack.SkillId != 0 || attack.TargetHandle != target.EntityHandle || attack.InputSequence == 0 {
 		c.t.Fatalf("不可用召唤未回落原目标的普通攻击：%v", &attack)
 	}
+	attackIntervalMS := int64(c.player().GetAttackIntervalMs())
+	if attackIntervalMS <= 0 || attackActionMS <= 0 {
+		c.t.Fatalf("普通攻击缺少权威时钟：间隔=%d，动作=%d", attackIntervalMS, attackActionMS)
+	}
+	// 服务端先受理再发回包，从收到回包开始等待覆盖原攻击冷却与动作就绪时间。
+	return time.Now().Add(time.Duration(max(attackIntervalMS, attackActionMS)) * time.Millisecond)
 }

@@ -2,17 +2,14 @@
 package persistence
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"math"
-
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
 )
 
-const equipmentRecycleOilSource = "equipment_recycle" // 油携带被销毁装备的原实例号作为来源。
+const equipmentRecycleOilSource = "equipment_recycle"           // 油携带被销毁装备的原实例号作为来源。
+const equipmentRecycleOilRandomDomain = "equipment-recycle-oil" // 保留祝福油原抽样及实例身份命名空间。
 
 // RecycleOilRoll 冻结一个实际分解原件的幸运、抽样和最多一瓶原产物。
 type RecycleOilRoll struct {
@@ -23,31 +20,9 @@ type RecycleOilRoll struct {
 	Oil                 *domain.Item `bson:"oil,omitempty"`         // 命中后唯一入包的原油，不命中时为空。
 }
 
-// recycleOilAttempt 在一次资产事务的全部驱动重试之间保留原身份与抽样种子。
-type recycleOilAttempt struct {
-	operationID string // 现有永久操作主键，固定产油身份的来源。
-	seed        string // 只在首次需要抽样时生成，既不保存也不发送给客户端。
-}
-
-// roll 使用私有种子和原装备身份，避免请求顺序改变或 MongoDB 重试造成重复抽样。
-func (a *recycleOilAttempt) roll(itemID string, denominator uint32) (uint32, error) {
-	if a.seed == "" {
-		var bytes [32]byte
-		if _, err := rand.Read(bytes[:]); err != nil {
-			return 0, err
-		}
-		a.seed = hex.EncodeToString(bytes[:])
-	}
-	return sourceDraw("equipment-recycle-oil:draw:"+a.seed+":"+a.operationID+":"+itemID, denominator), nil
-}
-
 // validEquipmentRecycleOil 验证本阶段新来源的单瓶资产，不把其他目录、可合并的假油或伪原件放行。
 func validEquipmentRecycleOil(item domain.Item, definition devconfig.Item) bool {
-	return item.SourceKind == equipmentRecycleOilSource && item.ItemID == definition.ID && definition.EquipmentRecycleMaterial &&
-		!definition.IsEquipment && definition.Stackable && definition.MaxStack >= 1 && item.Quantity == 1 &&
-		item.Version > 0 && item.Version < math.MaxInt64 && lowerHex(item.ID, 16) && lowerHex(item.SourceID, 16) && item.ID != item.SourceID &&
-		item.Quality == 0 && item.OrePurity == 0 && item.InitialLuck == 0 && item.CurrentLuck == 0 &&
-		item.LuckOilToSix == 0 && item.LuckOilToNine == 0 && item.DurabilityU == 0 && item.MaxDurabilityU == 0 && item.OriginalDurabilityU == 0
+	return item.SourceKind == equipmentRecycleOilSource && definition.EquipmentRecycleMaterial && validEquipmentRecycleMaterialInstance(item, definition)
 }
 
 // equipmentRecycleLuck 只读取原装备部位允许的幸运范围。非武器只能使用初始幸运。
@@ -67,7 +42,7 @@ func equipmentRecycleLuck(item domain.Item, f *devconfig.Fixture) uint32 {
 }
 
 // applyManualRecycleOil 给已经移除原装备的背包追加各自独立的油瓶，既有油不会被跨来源合并。
-func applyManualRecycleOil(before domain.Role, out *domain.Role, receipt *EquipmentRecyclingReceipt, f *devconfig.Fixture, attempt *recycleOilAttempt) error {
+func applyManualRecycleOil(before domain.Role, out *domain.Role, receipt *EquipmentRecyclingReceipt, f *devconfig.Fixture, attempt *equipmentRecycleAttempt) error {
 	rules := f.EquipmentRecycleOil
 	if rules == nil {
 		return nil
@@ -84,13 +59,13 @@ func applyManualRecycleOil(before domain.Role, out *domain.Role, receipt *Equipm
 		if luck == 0 || !item.HasValidDurability() || item.DurabilityU <= 0 {
 			continue
 		}
-		draw, err := attempt.roll(item.ID, rules.Denominator)
+		draw, err := attempt.draw(equipmentRecycleOilRandomDomain, item.ID, rules.Denominator)
 		if err != nil {
 			return err
 		}
 		fact := RecycleOilRoll{EquipmentInstanceID: item.ID, Luck: luck, Denominator: rules.Denominator, Draw: draw}
 		if draw < luck {
-			id := Hash([]byte("equipment-recycle-oil:item:" + attempt.operationID + ":" + item.ID))[:32]
+			id := Hash([]byte(equipmentRecycleOilRandomDomain + ":item:" + attempt.operationID + ":" + item.ID))[:32]
 			oil := domain.Item{ID: id, ItemID: definition.ID, Quantity: 1, Version: 1, Bound: item.Bound,
 				SourceKind: equipmentRecycleOilSource, SourceID: item.ID}
 			if !validEquipmentRecycleOil(oil, definition) || before.HasItemInstance(id) || out.HasItemInstance(id) {

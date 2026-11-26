@@ -119,6 +119,9 @@ const (
 	MsgC2SEquipmentEnhancementQuote uint16 = 40055
 	MsgS2CEquipmentEnhancementQuote uint16 = 40056
 	MsgC2SEquipmentEnhancementCommit uint16 = 40057
+	MsgC2SEquipmentRefineQuote uint16 = 40058
+	MsgS2CEquipmentRefineQuote uint16 = 40059
+	MsgC2SEquipmentRefineAction uint16 = 40060
 )
 
 const (
@@ -184,4 +187,7 @@ const (
 	CodeEquipmentEnhancementUnavailable uint32 = 3963
 	CodeEquipmentEnhancementQuoteChanged uint32 = 3964
 	CodeEquipmentEnhancementInputs uint32 = 3965
+	CodeEquipmentRefineUnavailable uint32 = 3970
+	CodeEquipmentRefineChanged uint32 = 3971
+	CodeEquipmentRefineInputs uint32 = 3972
 )

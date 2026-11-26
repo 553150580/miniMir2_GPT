@@ -64,6 +64,10 @@ type AssetRequest struct {
 	EquipmentEnhancementGate       uint32                                // 首次提交在当前场景的受理结果。
 	EquipmentEnhancementAcceptedAt time.Time                             `json:"-"` // 原确认到达游戏房间的时刻，排队重试保持。
 
+	EquipmentRefine           *pb.EquipmentRefineActionRequest // 原付费、采纳或放弃指令。
+	EquipmentRefineGate       uint32                           // 当前场景对首次洗炼写入的门禁。
+	EquipmentRefineAcceptedAt time.Time                        `json:"-"` // 首次确认到达游戏房间的时间，排队重试保持。
+
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
 	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
@@ -134,6 +138,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetEquipmentEnhancement && q.EquipmentEnhancementAcceptedAt.IsZero() {
 		q.EquipmentEnhancementAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetEquipmentRefine && q.EquipmentRefineAcceptedAt.IsZero() {
+		q.EquipmentRefineAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -153,7 +160,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	} else if q.Kind == AssetAutoUsePotion {
 		return out, result, receipt, Fail(p.CodeInvalidArgument, "自动用药缺少来源流水")
 	}
-	oil := recycleOilAttempt{operationID: opID} // 懒取种子，已有回执不抽样，事务驱动重试沿用同一份。
+	recycleDraw := equipmentRecycleAttempt{operationID: opID} // 懒取种子，已有回执不抽样，事务重试沿用。
 	// e 保存整个事务的执行错误，tc 将回调里的所有数据库操作纳入同一次事务。
 	e := s.guardedTx(ctx, a, func(tc context.Context) error {
 		receipt = Operation{}
@@ -196,7 +203,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -225,6 +232,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var weaponOil *WeaponOilResultReceipt              // 一瓶原油的实际扣除和原培养对象结果。
 		var wing *WingActionReceipt                        // 原翅膀的新状态和确切羽毛消费。
 		var enhancement *EquipmentEnhancementReceipt       // 原强化结果和每个已扣石堆。
+		var refine *EquipmentRefineReceipt                 // 原洗炼动作与已付结果的永久确认。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -266,6 +274,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			if e != nil {
 				return e
 			}
+		case AssetEquipmentRefine:
+			r, businessCode, refine, e = s.commitEquipmentRefine(tc, a, r, q, opID)
+			if e != nil {
+				return e
+			}
 		case "warehouse":
 			if q.Warehouse == nil || !proto.Equal(q.Warehouse.Operation, q.Context) {
 				businessCode = p.CodeInvalidArgument
@@ -278,7 +291,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		case "equip":
 			r, equipment, businessCode = equipEquipment(r, q, s.Cfg.Fixture)
 		case "recycle":
-			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture, &oil)
+			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture, &recycleDraw)
 			if e != nil {
 				return e
 			}
@@ -414,6 +427,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.WeaponOil = weaponOil
 		op.Wing = wing
 		op.EquipmentEnhancement = enhancement
+		op.EquipmentRefine = refine
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -482,6 +496,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["equipment_enhancement"] = enhancement
 			audit["rule_version"] = enhancement.Rule
 			audit["config_hash"] = enhancement.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if refine != nil {
+			audit["equipment_refine"] = refine
+			audit["rule_version"] = refine.Rule
+			audit["config_hash"] = refine.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -576,7 +596,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if receipt.EquipmentEnhancement != nil {
 			result.EquipmentEnhancement = receipt.EquipmentEnhancement.Proto()
 		}
+		result.EquipmentRefine = receipt.EquipmentRefine.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
+		result.RecycleRefine = receipt.Recycling.refineProto()
 	}
 	return out, result, receipt, e
 }

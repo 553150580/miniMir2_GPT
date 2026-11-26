@@ -27,6 +27,7 @@ interface InventoryActionInput {
     readonly miningReason?: string;
     readonly forgeReason?: string;
     readonly recycleOil?: EquipmentRecycleOilRule;
+    readonly recycleRefineHint?: string;
 }
 interface InventoryActions {
     equip(): Promise<void>;
@@ -38,13 +39,15 @@ interface InventoryActions {
     mine?(): Promise<void>;
     forge?(): void;
     weaponOil?(): void;
+    refine?(): void;
 }
 
 // 使用当前角色与背包数据生成操作；处理器由上层绑定同一个原实例。
 export function inventoryItemActionView(input: InventoryActionInput, handlers: InventoryActions): ItemActionView {
     const { item, definition, equipment, assets, supply, skill } = input;
     const lines = definition?.kind === 'equipment' ?
-        [...(input.recycleOil ? equipmentRecycleOilLines(input.recycleOil, item, manualRecycleBlockReason(item)) : []),
+        [...(input.recycleRefineHint ? [input.recycleRefineHint] : []),
+            ...(input.recycleOil ? equipmentRecycleOilLines(input.recycleOil, item, manualRecycleBlockReason(item)) : []),
             ...equipmentDetailLines(definition, item, equipment.level, equipment.job, false)]
         : [`数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品', `来源 ${sourceName(item.sourceKind)}`, `品质 ${item.quality ?? 0}`];
     const actions: ItemAction[] = [];
@@ -90,6 +93,9 @@ export function inventoryItemActionView(input: InventoryActionInput, handlers: I
             break;
     }
     if (!input.ready && input.blockedReason) lines.push(input.blockedReason);
-    return { title: definition?.name ?? '物品详情', lines, actions,
-        ...(handlers.weaponOil ? { optionsFirst: true, options: [{ key: 'weapon-oil', label: '祝福油培养', enabled: input.ready, choose: handlers.weaponOil }] } : {}) };
+    const options = [
+        ...(handlers.refine ? [{ key: 'equipment-refine', label: '装备洗炼', enabled: input.ready, choose: handlers.refine }] : []),
+        ...(handlers.weaponOil ? [{ key: 'weapon-oil', label: '祝福油培养', enabled: input.ready, choose: handlers.weaponOil }] : []),
+    ];
+    return { title: definition?.name ?? '物品详情', lines, actions, ...(options.length ? { optionsFirst: true, options } : {}) };
 }

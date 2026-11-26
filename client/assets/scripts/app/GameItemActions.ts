@@ -29,8 +29,8 @@ export class GameItemActions {
     private busy = false;
     private rendered = '';
 
-    constructor(safe: Node, private readonly popup: PopupView, private readonly report: (error: unknown) => void) {
-        const panel = safe.getChildByPath('PopupView/Panels/ItemActions');
+    constructor(safe: Node, private readonly popup: PopupView, private readonly report: (error: unknown) => void, panelName = 'ItemActions') {
+        const panel = safe.getChildByPath('PopupView/Panels/' + panelName);
         const list = panel?.getChildByName('List')?.getComponent(List);
         if (!panel || !list) throw new Error('物品详情尚未完整保存在场景');
         this.panel = panel;
@@ -48,7 +48,7 @@ export class GameItemActions {
         this.read = read;
         this.busy = false;
         this.rendered = '';
-        this.popup.show('ItemActions');
+        this.popup.show(this.panel.name);
         this.refresh();
     }
 

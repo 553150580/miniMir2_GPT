@@ -305,6 +305,10 @@ func warehouseItemValid(i domain.Item, f devconfig.Fixture) bool {
 		definition, found := f.Item(i.ItemID)
 		return found && validEquipmentRecycleOil(i, definition)
 	}
+	if i.SourceKind == equipmentRecycleRefineSource {
+		definition, found := f.Item(i.ItemID)
+		return found && validEquipmentRecycleRefineStone(i, definition)
+	}
 	// 完整迁移不重解释旧目录；部分拆分另核当前明确的堆叠能力。
 	return true
 }

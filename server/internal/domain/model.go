@@ -74,6 +74,8 @@ type Item struct {
 	Locked              bool   `bson:"locked,omitempty" json:"locked"`                                         // 锁定时禁止相应资产流转。
 	PendingResultID     string `bson:"pending_result_id,omitempty" json:"-"`                                   // 待确认结果占用该物品时记录的操作标识。
 	ReservationID       string `bson:"reservation_id,omitempty" json:"-"`                                      // 当前预留此物品的业务标识。
+
+	Refine EquipmentRefineState `bson:"refine,omitempty" json:"-"` // 原装备已采纳词条及最新的已付待选。
 }
 
 // Proto 返回协议供调用方使用。
@@ -86,6 +88,7 @@ func (i Item) Proto() *pb.ItemView {
 		wire.MaxDurabilityU = uint64(i.MaxDurabilityU)
 		wire.OriginalDurabilityU = uint64(i.OriginalDurabilityU)
 	}
+	wire.RefineAffixes, wire.RefinePending = i.refineProto()
 	return wire
 }
 

@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 
 module.exports = function normalizeGoldMarketLayout(scene) {
+    require('./equipment_refine_layout.cjs')(scene);
     for (const [parentId, parentName, childId, childName] of [
         [419, 'Page2', 2762, 'GoldMarket'], [253, 'Panels', 2769, 'GoldMarket'],
         [253, 'Panels', 2864, 'GoldMarketPlace'], [253, 'Panels', 2924, 'GoldMarketDetail'],

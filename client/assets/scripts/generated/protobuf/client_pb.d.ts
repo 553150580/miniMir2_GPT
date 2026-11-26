@@ -392,6 +392,12 @@ export namespace minimir {
             /** OperationResult equipment_enhancement. */
             equipment_enhancement?: (minimir.v1.EquipmentEnhancementReceipt.$Properties|null);
 
+            /** OperationResult equipment_refine. */
+            equipment_refine?: (minimir.v1.EquipmentRefineReceipt.$Properties|null);
+
+            /** OperationResult recycle_refine. */
+            recycle_refine?: (minimir.v1.RecycleRefineReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -503,12 +509,468 @@ export namespace minimir {
                 /** OperationResult equipment_enhancement */
                 equipment_enhancement?: (minimir.v1.EquipmentEnhancementReceipt.$Properties|null);
 
+                /** OperationResult equipment_refine */
+                equipment_refine?: (minimir.v1.EquipmentRefineReceipt.$Properties|null);
+
+                /** OperationResult recycle_refine */
+                recycle_refine?: (minimir.v1.RecycleRefineReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineSpend.
+         * @deprecated Use minimir.v1.EquipmentRefineSpend.$Properties instead.
+         */
+        interface IEquipmentRefineSpend extends minimir.v1.EquipmentRefineSpend.$Properties {
+        }
+
+        /** Represents an EquipmentRefineSpend. */
+        class EquipmentRefineSpend {
+
+            /**
+             * Constructs a new EquipmentRefineSpend.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineSpend.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineSpend item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** EquipmentRefineSpend quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new EquipmentRefineSpend instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineSpend instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineSpend.$Shape): minimir.v1.EquipmentRefineSpend & minimir.v1.EquipmentRefineSpend.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineSpend.$Properties): minimir.v1.EquipmentRefineSpend;
+
+            /**
+             * Encodes the specified EquipmentRefineSpend message. Does not implicitly {@link minimir.v1.EquipmentRefineSpend.verify|verify} messages.
+             * @param message EquipmentRefineSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineSpend message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineSpend.verify|verify} messages.
+             * @param message EquipmentRefineSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineSpend message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineSpend & minimir.v1.EquipmentRefineSpend.$Shape} EquipmentRefineSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineSpend & minimir.v1.EquipmentRefineSpend.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineSpend message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineSpend & minimir.v1.EquipmentRefineSpend.$Shape} EquipmentRefineSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineSpend & minimir.v1.EquipmentRefineSpend.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineSpend message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineSpend
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineSpend {
+
+            /** Properties of an EquipmentRefineSpend. */
+            interface $Properties {
+
+                /** EquipmentRefineSpend item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** EquipmentRefineSpend quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineSpend. */
+            type $Shape = minimir.v1.EquipmentRefineSpend.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineReceipt.
+         * @deprecated Use minimir.v1.EquipmentRefineReceipt.$Properties instead.
+         */
+        interface IEquipmentRefineReceipt extends minimir.v1.EquipmentRefineReceipt.$Properties {
+        }
+
+        /** Represents an EquipmentRefineReceipt. */
+        class EquipmentRefineReceipt {
+
+            /**
+             * Constructs a new EquipmentRefineReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineReceipt action. */
+            action: number;
+
+            /** EquipmentRefineReceipt target. */
+            target?: (minimir.v1.ItemView.$Properties|null);
+
+            /** EquipmentRefineReceipt equipped. */
+            equipped: boolean;
+
+            /** EquipmentRefineReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentRefineReceipt pending_id. */
+            pending_id: Uint8Array;
+
+            /** EquipmentRefineReceipt stones. */
+            stones: minimir.v1.EquipmentRefineSpend.$Properties[];
+
+            /** EquipmentRefineReceipt gold. */
+            gold: Long;
+
+            /** EquipmentRefineReceipt bound_gold. */
+            bound_gold: Long;
+
+            /** EquipmentRefineReceipt yuanbao_units. */
+            yuanbao_units: Long;
+
+            /** EquipmentRefineReceipt bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
+            /**
+             * Creates a new EquipmentRefineReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineReceipt instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineReceipt.$Shape): minimir.v1.EquipmentRefineReceipt & minimir.v1.EquipmentRefineReceipt.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineReceipt.$Properties): minimir.v1.EquipmentRefineReceipt;
+
+            /**
+             * Encodes the specified EquipmentRefineReceipt message. Does not implicitly {@link minimir.v1.EquipmentRefineReceipt.verify|verify} messages.
+             * @param message EquipmentRefineReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineReceipt message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineReceipt.verify|verify} messages.
+             * @param message EquipmentRefineReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineReceipt & minimir.v1.EquipmentRefineReceipt.$Shape} EquipmentRefineReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineReceipt & minimir.v1.EquipmentRefineReceipt.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineReceipt & minimir.v1.EquipmentRefineReceipt.$Shape} EquipmentRefineReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineReceipt & minimir.v1.EquipmentRefineReceipt.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineReceipt {
+
+            /** Properties of an EquipmentRefineReceipt. */
+            interface $Properties {
+
+                /** EquipmentRefineReceipt action */
+                action?: (number|null);
+
+                /** EquipmentRefineReceipt target */
+                target?: (minimir.v1.ItemView.$Properties|null);
+
+                /** EquipmentRefineReceipt equipped */
+                equipped?: (boolean|null);
+
+                /** EquipmentRefineReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentRefineReceipt pending_id */
+                pending_id?: (Uint8Array|null);
+
+                /** EquipmentRefineReceipt stones */
+                stones?: (minimir.v1.EquipmentRefineSpend.$Properties[]|null);
+
+                /** EquipmentRefineReceipt gold */
+                gold?: (Long|null);
+
+                /** EquipmentRefineReceipt bound_gold */
+                bound_gold?: (Long|null);
+
+                /** EquipmentRefineReceipt yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** EquipmentRefineReceipt bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineReceipt. */
+            type $Shape = minimir.v1.EquipmentRefineReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RecycleRefineReceipt.
+         * @deprecated Use minimir.v1.RecycleRefineReceipt.$Properties instead.
+         */
+        interface IRecycleRefineReceipt extends minimir.v1.RecycleRefineReceipt.$Properties {
+        }
+
+        /** Represents a RecycleRefineReceipt. */
+        class RecycleRefineReceipt {
+
+            /**
+             * Constructs a new RecycleRefineReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RecycleRefineReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RecycleRefineReceipt rolls. */
+            rolls: minimir.v1.RecycleRefineRoll.$Properties[];
+
+            /**
+             * Creates a new RecycleRefineReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RecycleRefineReceipt instance
+             */
+            static create(properties: minimir.v1.RecycleRefineReceipt.$Shape): minimir.v1.RecycleRefineReceipt & minimir.v1.RecycleRefineReceipt.$Shape;
+            static create(properties?: minimir.v1.RecycleRefineReceipt.$Properties): minimir.v1.RecycleRefineReceipt;
+
+            /**
+             * Encodes the specified RecycleRefineReceipt message. Does not implicitly {@link minimir.v1.RecycleRefineReceipt.verify|verify} messages.
+             * @param message RecycleRefineReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RecycleRefineReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RecycleRefineReceipt message, length delimited. Does not implicitly {@link minimir.v1.RecycleRefineReceipt.verify|verify} messages.
+             * @param message RecycleRefineReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RecycleRefineReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RecycleRefineReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleRefineReceipt & minimir.v1.RecycleRefineReceipt.$Shape} RecycleRefineReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RecycleRefineReceipt & minimir.v1.RecycleRefineReceipt.$Shape;
+
+            /**
+             * Decodes a RecycleRefineReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleRefineReceipt & minimir.v1.RecycleRefineReceipt.$Shape} RecycleRefineReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RecycleRefineReceipt & minimir.v1.RecycleRefineReceipt.$Shape;
+
+            /**
+             * Verifies a RecycleRefineReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RecycleRefineReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RecycleRefineReceipt {
+
+            /** Properties of a RecycleRefineReceipt. */
+            interface $Properties {
+
+                /** RecycleRefineReceipt rolls */
+                rolls?: (minimir.v1.RecycleRefineRoll.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RecycleRefineReceipt. */
+            type $Shape = minimir.v1.RecycleRefineReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RecycleRefineRoll.
+         * @deprecated Use minimir.v1.RecycleRefineRoll.$Properties instead.
+         */
+        interface IRecycleRefineRoll extends minimir.v1.RecycleRefineRoll.$Properties {
+        }
+
+        /** Represents a RecycleRefineRoll. */
+        class RecycleRefineRoll {
+
+            /**
+             * Constructs a new RecycleRefineRoll.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RecycleRefineRoll.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RecycleRefineRoll equipment_instance_id. */
+            equipment_instance_id: Uint8Array;
+
+            /** RecycleRefineRoll stone. */
+            stone?: (minimir.v1.ItemView.$Properties|null);
+
+            /**
+             * Creates a new RecycleRefineRoll instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RecycleRefineRoll instance
+             */
+            static create(properties: minimir.v1.RecycleRefineRoll.$Shape): minimir.v1.RecycleRefineRoll & minimir.v1.RecycleRefineRoll.$Shape;
+            static create(properties?: minimir.v1.RecycleRefineRoll.$Properties): minimir.v1.RecycleRefineRoll;
+
+            /**
+             * Encodes the specified RecycleRefineRoll message. Does not implicitly {@link minimir.v1.RecycleRefineRoll.verify|verify} messages.
+             * @param message RecycleRefineRoll message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RecycleRefineRoll.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RecycleRefineRoll message, length delimited. Does not implicitly {@link minimir.v1.RecycleRefineRoll.verify|verify} messages.
+             * @param message RecycleRefineRoll message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RecycleRefineRoll.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RecycleRefineRoll message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleRefineRoll & minimir.v1.RecycleRefineRoll.$Shape} RecycleRefineRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RecycleRefineRoll & minimir.v1.RecycleRefineRoll.$Shape;
+
+            /**
+             * Decodes a RecycleRefineRoll message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleRefineRoll & minimir.v1.RecycleRefineRoll.$Shape} RecycleRefineRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RecycleRefineRoll & minimir.v1.RecycleRefineRoll.$Shape;
+
+            /**
+             * Verifies a RecycleRefineRoll message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RecycleRefineRoll
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RecycleRefineRoll {
+
+            /** Properties of a RecycleRefineRoll. */
+            interface $Properties {
+
+                /** RecycleRefineRoll equipment_instance_id */
+                equipment_instance_id?: (Uint8Array|null);
+
+                /** RecycleRefineRoll stone */
+                stone?: (minimir.v1.ItemView.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RecycleRefineRoll. */
+            type $Shape = minimir.v1.RecycleRefineRoll.$Properties;
         }
 
         /**
@@ -3476,6 +3938,12 @@ export namespace minimir {
             /** ItemView current_luck. */
             current_luck: number;
 
+            /** ItemView refine_affixes. */
+            refine_affixes: minimir.v1.EquipmentRefineAffix.$Properties[];
+
+            /** ItemView refine_pending. */
+            refine_pending?: (minimir.v1.EquipmentRefinePending.$Properties|null);
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -3587,12 +4055,240 @@ export namespace minimir {
                 /** ItemView current_luck */
                 current_luck?: (number|null);
 
+                /** ItemView refine_affixes */
+                refine_affixes?: (minimir.v1.EquipmentRefineAffix.$Properties[]|null);
+
+                /** ItemView refine_pending */
+                refine_pending?: (minimir.v1.EquipmentRefinePending.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an ItemView. */
             type $Shape = minimir.v1.ItemView.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineAffix.
+         * @deprecated Use minimir.v1.EquipmentRefineAffix.$Properties instead.
+         */
+        interface IEquipmentRefineAffix extends minimir.v1.EquipmentRefineAffix.$Properties {
+        }
+
+        /** Represents an EquipmentRefineAffix. */
+        class EquipmentRefineAffix {
+
+            /**
+             * Constructs a new EquipmentRefineAffix.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineAffix.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineAffix slot. */
+            slot: number;
+
+            /** EquipmentRefineAffix attribute_id. */
+            attribute_id: number;
+
+            /** EquipmentRefineAffix tier. */
+            tier: number;
+
+            /** EquipmentRefineAffix value_units. */
+            value_units: Long;
+
+            /**
+             * Creates a new EquipmentRefineAffix instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineAffix instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineAffix.$Shape): minimir.v1.EquipmentRefineAffix & minimir.v1.EquipmentRefineAffix.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineAffix.$Properties): minimir.v1.EquipmentRefineAffix;
+
+            /**
+             * Encodes the specified EquipmentRefineAffix message. Does not implicitly {@link minimir.v1.EquipmentRefineAffix.verify|verify} messages.
+             * @param message EquipmentRefineAffix message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineAffix.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineAffix message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineAffix.verify|verify} messages.
+             * @param message EquipmentRefineAffix message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineAffix.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineAffix message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineAffix & minimir.v1.EquipmentRefineAffix.$Shape} EquipmentRefineAffix
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineAffix & minimir.v1.EquipmentRefineAffix.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineAffix message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineAffix & minimir.v1.EquipmentRefineAffix.$Shape} EquipmentRefineAffix
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineAffix & minimir.v1.EquipmentRefineAffix.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineAffix message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineAffix
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineAffix {
+
+            /** Properties of an EquipmentRefineAffix. */
+            interface $Properties {
+
+                /** EquipmentRefineAffix slot */
+                slot?: (number|null);
+
+                /** EquipmentRefineAffix attribute_id */
+                attribute_id?: (number|null);
+
+                /** EquipmentRefineAffix tier */
+                tier?: (number|null);
+
+                /** EquipmentRefineAffix value_units */
+                value_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineAffix. */
+            type $Shape = minimir.v1.EquipmentRefineAffix.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefinePending.
+         * @deprecated Use minimir.v1.EquipmentRefinePending.$Properties instead.
+         */
+        interface IEquipmentRefinePending extends minimir.v1.EquipmentRefinePending.$Properties {
+        }
+
+        /** Represents an EquipmentRefinePending. */
+        class EquipmentRefinePending {
+
+            /**
+             * Constructs a new EquipmentRefinePending.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefinePending.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefinePending pending_id. */
+            pending_id: Uint8Array;
+
+            /** EquipmentRefinePending affixes. */
+            affixes: minimir.v1.EquipmentRefineAffix.$Properties[];
+
+            /** EquipmentRefinePending locked_slots. */
+            locked_slots: number[];
+
+            /**
+             * Creates a new EquipmentRefinePending instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefinePending instance
+             */
+            static create(properties: minimir.v1.EquipmentRefinePending.$Shape): minimir.v1.EquipmentRefinePending & minimir.v1.EquipmentRefinePending.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefinePending.$Properties): minimir.v1.EquipmentRefinePending;
+
+            /**
+             * Encodes the specified EquipmentRefinePending message. Does not implicitly {@link minimir.v1.EquipmentRefinePending.verify|verify} messages.
+             * @param message EquipmentRefinePending message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefinePending.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefinePending message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefinePending.verify|verify} messages.
+             * @param message EquipmentRefinePending message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefinePending.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefinePending message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefinePending & minimir.v1.EquipmentRefinePending.$Shape} EquipmentRefinePending
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefinePending & minimir.v1.EquipmentRefinePending.$Shape;
+
+            /**
+             * Decodes an EquipmentRefinePending message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefinePending & minimir.v1.EquipmentRefinePending.$Shape} EquipmentRefinePending
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefinePending & minimir.v1.EquipmentRefinePending.$Shape;
+
+            /**
+             * Verifies an EquipmentRefinePending message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefinePending
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefinePending {
+
+            /** Properties of an EquipmentRefinePending. */
+            interface $Properties {
+
+                /** EquipmentRefinePending pending_id */
+                pending_id?: (Uint8Array|null);
+
+                /** EquipmentRefinePending affixes */
+                affixes?: (minimir.v1.EquipmentRefineAffix.$Properties[]|null);
+
+                /** EquipmentRefinePending locked_slots */
+                locked_slots?: (number[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefinePending. */
+            type $Shape = minimir.v1.EquipmentRefinePending.$Properties;
         }
 
         /**
@@ -23747,6 +24443,660 @@ export namespace minimir {
 
             /** Shape of an EquipmentEnhancementCommitRequest. */
             type $Shape = minimir.v1.EquipmentEnhancementCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineItemRef.
+         * @deprecated Use minimir.v1.EquipmentRefineItemRef.$Properties instead.
+         */
+        interface IEquipmentRefineItemRef extends minimir.v1.EquipmentRefineItemRef.$Properties {
+        }
+
+        /** Represents an EquipmentRefineItemRef. */
+        class EquipmentRefineItemRef {
+
+            /**
+             * Constructs a new EquipmentRefineItemRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineItemRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineItemRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** EquipmentRefineItemRef version. */
+            version: Long;
+
+            /** EquipmentRefineItemRef equipped. */
+            equipped: boolean;
+
+            /**
+             * Creates a new EquipmentRefineItemRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineItemRef instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineItemRef.$Shape): minimir.v1.EquipmentRefineItemRef & minimir.v1.EquipmentRefineItemRef.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineItemRef.$Properties): minimir.v1.EquipmentRefineItemRef;
+
+            /**
+             * Encodes the specified EquipmentRefineItemRef message. Does not implicitly {@link minimir.v1.EquipmentRefineItemRef.verify|verify} messages.
+             * @param message EquipmentRefineItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineItemRef message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineItemRef.verify|verify} messages.
+             * @param message EquipmentRefineItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineItemRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineItemRef & minimir.v1.EquipmentRefineItemRef.$Shape} EquipmentRefineItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineItemRef & minimir.v1.EquipmentRefineItemRef.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineItemRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineItemRef & minimir.v1.EquipmentRefineItemRef.$Shape} EquipmentRefineItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineItemRef & minimir.v1.EquipmentRefineItemRef.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineItemRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineItemRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineItemRef {
+
+            /** Properties of an EquipmentRefineItemRef. */
+            interface $Properties {
+
+                /** EquipmentRefineItemRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** EquipmentRefineItemRef version */
+                version?: (Long|null);
+
+                /** EquipmentRefineItemRef equipped */
+                equipped?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineItemRef. */
+            type $Shape = minimir.v1.EquipmentRefineItemRef.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineStoneRef.
+         * @deprecated Use minimir.v1.EquipmentRefineStoneRef.$Properties instead.
+         */
+        interface IEquipmentRefineStoneRef extends minimir.v1.EquipmentRefineStoneRef.$Properties {
+        }
+
+        /** Represents an EquipmentRefineStoneRef. */
+        class EquipmentRefineStoneRef {
+
+            /**
+             * Constructs a new EquipmentRefineStoneRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineStoneRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineStoneRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** EquipmentRefineStoneRef version. */
+            version: Long;
+
+            /** EquipmentRefineStoneRef quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new EquipmentRefineStoneRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineStoneRef instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineStoneRef.$Shape): minimir.v1.EquipmentRefineStoneRef & minimir.v1.EquipmentRefineStoneRef.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineStoneRef.$Properties): minimir.v1.EquipmentRefineStoneRef;
+
+            /**
+             * Encodes the specified EquipmentRefineStoneRef message. Does not implicitly {@link minimir.v1.EquipmentRefineStoneRef.verify|verify} messages.
+             * @param message EquipmentRefineStoneRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineStoneRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineStoneRef message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineStoneRef.verify|verify} messages.
+             * @param message EquipmentRefineStoneRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineStoneRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineStoneRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineStoneRef & minimir.v1.EquipmentRefineStoneRef.$Shape} EquipmentRefineStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineStoneRef & minimir.v1.EquipmentRefineStoneRef.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineStoneRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineStoneRef & minimir.v1.EquipmentRefineStoneRef.$Shape} EquipmentRefineStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineStoneRef & minimir.v1.EquipmentRefineStoneRef.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineStoneRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineStoneRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineStoneRef {
+
+            /** Properties of an EquipmentRefineStoneRef. */
+            interface $Properties {
+
+                /** EquipmentRefineStoneRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** EquipmentRefineStoneRef version */
+                version?: (Long|null);
+
+                /** EquipmentRefineStoneRef quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineStoneRef. */
+            type $Shape = minimir.v1.EquipmentRefineStoneRef.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineQuoteRequest.
+         * @deprecated Use minimir.v1.EquipmentRefineQuoteRequest.$Properties instead.
+         */
+        interface IEquipmentRefineQuoteRequest extends minimir.v1.EquipmentRefineQuoteRequest.$Properties {
+        }
+
+        /** Represents an EquipmentRefineQuoteRequest. */
+        class EquipmentRefineQuoteRequest {
+
+            /**
+             * Constructs a new EquipmentRefineQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** EquipmentRefineQuoteRequest target. */
+            target?: (minimir.v1.EquipmentRefineItemRef.$Properties|null);
+
+            /** EquipmentRefineQuoteRequest locked_slots. */
+            locked_slots: number[];
+
+            /** EquipmentRefineQuoteRequest stones. */
+            stones: minimir.v1.EquipmentRefineStoneRef.$Properties[];
+
+            /** EquipmentRefineQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** EquipmentRefineQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new EquipmentRefineQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineQuoteRequest instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineQuoteRequest.$Shape): minimir.v1.EquipmentRefineQuoteRequest & minimir.v1.EquipmentRefineQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineQuoteRequest.$Properties): minimir.v1.EquipmentRefineQuoteRequest;
+
+            /**
+             * Encodes the specified EquipmentRefineQuoteRequest message. Does not implicitly {@link minimir.v1.EquipmentRefineQuoteRequest.verify|verify} messages.
+             * @param message EquipmentRefineQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineQuoteRequest.verify|verify} messages.
+             * @param message EquipmentRefineQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineQuoteRequest & minimir.v1.EquipmentRefineQuoteRequest.$Shape} EquipmentRefineQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineQuoteRequest & minimir.v1.EquipmentRefineQuoteRequest.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineQuoteRequest & minimir.v1.EquipmentRefineQuoteRequest.$Shape} EquipmentRefineQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineQuoteRequest & minimir.v1.EquipmentRefineQuoteRequest.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineQuoteRequest {
+
+            /** Properties of an EquipmentRefineQuoteRequest. */
+            interface $Properties {
+
+                /** EquipmentRefineQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** EquipmentRefineQuoteRequest target */
+                target?: (minimir.v1.EquipmentRefineItemRef.$Properties|null);
+
+                /** EquipmentRefineQuoteRequest locked_slots */
+                locked_slots?: (number[]|null);
+
+                /** EquipmentRefineQuoteRequest stones */
+                stones?: (minimir.v1.EquipmentRefineStoneRef.$Properties[]|null);
+
+                /** EquipmentRefineQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** EquipmentRefineQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineQuoteRequest. */
+            type $Shape = minimir.v1.EquipmentRefineQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineQuote.
+         * @deprecated Use minimir.v1.EquipmentRefineQuote.$Properties instead.
+         */
+        interface IEquipmentRefineQuote extends minimir.v1.EquipmentRefineQuote.$Properties {
+        }
+
+        /** Represents an EquipmentRefineQuote. */
+        class EquipmentRefineQuote {
+
+            /**
+             * Constructs a new EquipmentRefineQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentRefineQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** EquipmentRefineQuote target. */
+            target?: (minimir.v1.ItemView.$Properties|null);
+
+            /** EquipmentRefineQuote equipped. */
+            equipped: boolean;
+
+            /** EquipmentRefineQuote locked_slots. */
+            locked_slots: number[];
+
+            /** EquipmentRefineQuote stones. */
+            stones: minimir.v1.EquipmentRefineSpend.$Properties[];
+
+            /** EquipmentRefineQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** EquipmentRefineQuote gold. */
+            gold: Long;
+
+            /** EquipmentRefineQuote bound_gold. */
+            bound_gold: Long;
+
+            /** EquipmentRefineQuote yuanbao_units. */
+            yuanbao_units: Long;
+
+            /** EquipmentRefineQuote bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
+            /** EquipmentRefineQuote output_bound. */
+            output_bound: boolean;
+
+            /** EquipmentRefineQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** EquipmentRefineQuote role_revision. */
+            role_revision: Long;
+
+            /** EquipmentRefineQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new EquipmentRefineQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineQuote instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineQuote.$Shape): minimir.v1.EquipmentRefineQuote & minimir.v1.EquipmentRefineQuote.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineQuote.$Properties): minimir.v1.EquipmentRefineQuote;
+
+            /**
+             * Encodes the specified EquipmentRefineQuote message. Does not implicitly {@link minimir.v1.EquipmentRefineQuote.verify|verify} messages.
+             * @param message EquipmentRefineQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineQuote message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineQuote.verify|verify} messages.
+             * @param message EquipmentRefineQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineQuote & minimir.v1.EquipmentRefineQuote.$Shape} EquipmentRefineQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineQuote & minimir.v1.EquipmentRefineQuote.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineQuote & minimir.v1.EquipmentRefineQuote.$Shape} EquipmentRefineQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineQuote & minimir.v1.EquipmentRefineQuote.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineQuote {
+
+            /** Properties of an EquipmentRefineQuote. */
+            interface $Properties {
+
+                /** EquipmentRefineQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentRefineQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** EquipmentRefineQuote target */
+                target?: (minimir.v1.ItemView.$Properties|null);
+
+                /** EquipmentRefineQuote equipped */
+                equipped?: (boolean|null);
+
+                /** EquipmentRefineQuote locked_slots */
+                locked_slots?: (number[]|null);
+
+                /** EquipmentRefineQuote stones */
+                stones?: (minimir.v1.EquipmentRefineSpend.$Properties[]|null);
+
+                /** EquipmentRefineQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** EquipmentRefineQuote gold */
+                gold?: (Long|null);
+
+                /** EquipmentRefineQuote bound_gold */
+                bound_gold?: (Long|null);
+
+                /** EquipmentRefineQuote yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** EquipmentRefineQuote bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
+
+                /** EquipmentRefineQuote output_bound */
+                output_bound?: (boolean|null);
+
+                /** EquipmentRefineQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** EquipmentRefineQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** EquipmentRefineQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineQuote. */
+            type $Shape = minimir.v1.EquipmentRefineQuote.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRefineActionRequest.
+         * @deprecated Use minimir.v1.EquipmentRefineActionRequest.$Properties instead.
+         */
+        interface IEquipmentRefineActionRequest extends minimir.v1.EquipmentRefineActionRequest.$Properties {
+        }
+
+        /** Represents an EquipmentRefineActionRequest. */
+        class EquipmentRefineActionRequest {
+
+            /**
+             * Constructs a new EquipmentRefineActionRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRefineActionRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRefineActionRequest action. */
+            action: number;
+
+            /** EquipmentRefineActionRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** EquipmentRefineActionRequest target. */
+            target?: (minimir.v1.EquipmentRefineItemRef.$Properties|null);
+
+            /** EquipmentRefineActionRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentRefineActionRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** EquipmentRefineActionRequest pending_id. */
+            pending_id: Uint8Array;
+
+            /** EquipmentRefineActionRequest allow_bound. */
+            allow_bound: boolean;
+
+            /**
+             * Creates a new EquipmentRefineActionRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRefineActionRequest instance
+             */
+            static create(properties: minimir.v1.EquipmentRefineActionRequest.$Shape): minimir.v1.EquipmentRefineActionRequest & minimir.v1.EquipmentRefineActionRequest.$Shape;
+            static create(properties?: minimir.v1.EquipmentRefineActionRequest.$Properties): minimir.v1.EquipmentRefineActionRequest;
+
+            /**
+             * Encodes the specified EquipmentRefineActionRequest message. Does not implicitly {@link minimir.v1.EquipmentRefineActionRequest.verify|verify} messages.
+             * @param message EquipmentRefineActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRefineActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRefineActionRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRefineActionRequest.verify|verify} messages.
+             * @param message EquipmentRefineActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRefineActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRefineActionRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRefineActionRequest & minimir.v1.EquipmentRefineActionRequest.$Shape} EquipmentRefineActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRefineActionRequest & minimir.v1.EquipmentRefineActionRequest.$Shape;
+
+            /**
+             * Decodes an EquipmentRefineActionRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRefineActionRequest & minimir.v1.EquipmentRefineActionRequest.$Shape} EquipmentRefineActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRefineActionRequest & minimir.v1.EquipmentRefineActionRequest.$Shape;
+
+            /**
+             * Verifies an EquipmentRefineActionRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRefineActionRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRefineActionRequest {
+
+            /** Properties of an EquipmentRefineActionRequest. */
+            interface $Properties {
+
+                /** EquipmentRefineActionRequest action */
+                action?: (number|null);
+
+                /** EquipmentRefineActionRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** EquipmentRefineActionRequest target */
+                target?: (minimir.v1.EquipmentRefineItemRef.$Properties|null);
+
+                /** EquipmentRefineActionRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentRefineActionRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** EquipmentRefineActionRequest pending_id */
+                pending_id?: (Uint8Array|null);
+
+                /** EquipmentRefineActionRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRefineActionRequest. */
+            type $Shape = minimir.v1.EquipmentRefineActionRequest.$Properties;
         }
     }
 }

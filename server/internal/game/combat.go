@@ -179,6 +179,7 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 	// a 保存由玩家发生时间等级取得的a。
 	a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
 	var equipment devconfig.EquipmentContributions // 确认的完整装备基础与各部位强化增量，只在最后取整。
+	useGearGrowth := f.EquipmentEnhancement != nil || f.EquipmentRefine != nil
 	// item 接收遍历已穿戴装备时当前的元素。
 	for _, item := range r.Role.Equipped {
 		if item.Slot == devconfig.CastingSupplySlot || f.EquipmentDurability != nil && item.Item.OriginalDurabilityU > 0 && item.Item.DurabilityU <= r.Wear.loss(item.Item, item.Slot) {
@@ -187,10 +188,19 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		// def 保存由道具取得的“def”。
 		def, _ := f.Item(item.Item.ItemID)
 		if f.RuleVersion >= 22 {
-			if rules := f.EquipmentEnhancement; rules != nil {
-				if !equipment.Add(def, rules.BonusBP(r.Role.EnhancementLevel(item.Slot))) {
+			if useGearGrowth {
+				if !equipment.Add(def, f.EquipmentEnhancement.BonusBP(r.Role.EnhancementLevel(item.Slot))) {
 					w.isolateRoom(r)
 					return devconfig.Fighter{}
+				}
+				if f.EquipmentRefine != nil {
+					// 已付候选留在右侧。只有左侧已经采纳的槽进入当前战斗。
+					for _, affix := range item.Item.Refine.Current {
+						if !equipment.AddRefine(affix.AttributeID, affix.ValueUnits) {
+							w.isolateRoom(r)
+							return devconfig.Fighter{}
+						}
+					}
 				}
 				continue
 			}
@@ -212,7 +222,7 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		a.MagicDefenceMin += def.MagicDefenceMinBonus
 		a.MagicDefenceMax += def.MagicDefenceMaxBonus
 	}
-	if f.EquipmentEnhancement != nil {
+	if useGearGrowth {
 		var valid bool
 		a, valid = equipment.Apply(a)
 		if !valid {

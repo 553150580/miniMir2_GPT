@@ -93,6 +93,9 @@ func CanTrade(item domain.Item, definition devconfig.Item) bool {
 	if item.SourceKind == equipmentRecycleOilSource {
 		return validEquipmentRecycleOil(item, definition)
 	}
+	if item.SourceKind == equipmentRecycleRefineSource {
+		return validEquipmentRecycleRefineStone(item, definition)
+	}
 	if item.OrePurity != 0 {
 		return false
 	}

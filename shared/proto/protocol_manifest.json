@@ -1428,6 +1428,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案5.3 原部位、扣石、成功与留级失败结算"
+    },
+    {
+      "value": 40058,
+      "name": "MsgC2SEquipmentRefineQuote",
+      "proto_message": "EquipmentRefineQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/4.7 原装备的洗炼石、锁槽和实际费用报价"
+    },
+    {
+      "value": 40059,
+      "name": "MsgS2CEquipmentRefineQuote",
+      "proto_message": "EquipmentRefineQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/4.7 原装备的洗炼石、锁槽和实际费用报价"
+    },
+    {
+      "value": 40060,
+      "name": "MsgC2SEquipmentRefineAction",
+      "proto_message": "EquipmentRefineActionRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/4.7 已付候选生成、覆盖、采纳和放弃"
     }
   ],
   "error_codes": [
@@ -1925,6 +1961,30 @@
       "display_zh": "选定强化石或角色等级不满足本次条件",
       "status": "draft",
       "source_ref": "最终策划案5.3",
+      "active_in_scope": true
+    },
+    {
+      "value": 3970,
+      "name": "CodeEquipmentRefineUnavailable",
+      "display_zh": "当前未开放装备洗炼",
+      "status": "draft",
+      "source_ref": "最终策划案4.4",
+      "active_in_scope": true
+    },
+    {
+      "value": 3971,
+      "name": "CodeEquipmentRefineChanged",
+      "display_zh": "原装备、洗炼报价或待选已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.4/4.7",
+      "active_in_scope": true
+    },
+    {
+      "value": 3972,
+      "name": "CodeEquipmentRefineInputs",
+      "display_zh": "洗炼石、金币、元宝或锁槽不满足本次条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.4/4.7",
       "active_in_scope": true
     }
   ]

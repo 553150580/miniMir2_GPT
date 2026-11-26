@@ -45,7 +45,11 @@ type ItemView struct {
 	// 装备取得时的原初始幸运，培养后仍保留原值。
 	InitialLuck uint32 `protobuf:"varint,15,opt,name=initial_luck,json=initialLuck,proto3" json:"initial_luck,omitempty"`
 	// 服务端校验的当前幸运，旧实例使用其原初始幸运。
-	CurrentLuck   uint32 `protobuf:"varint,16,opt,name=current_luck,json=currentLuck,proto3" json:"current_luck,omitempty"`
+	CurrentLuck uint32 `protobuf:"varint,16,opt,name=current_luck,json=currentLuck,proto3" json:"current_luck,omitempty"`
+	// 已采纳的词条跟随原装备，空槽保持缺省。
+	RefineAffixes []*EquipmentRefineAffix `protobuf:"bytes,17,rep,name=refine_affixes,json=refineAffixes,proto3" json:"refine_affixes,omitempty"`
+	// 已付费的最新待选结果只供原装备所有者观察和处理。
+	RefinePending *EquipmentRefinePending `protobuf:"bytes,18,opt,name=refine_pending,json=refinePending,proto3" json:"refine_pending,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -192,12 +196,156 @@ func (x *ItemView) GetCurrentLuck() uint32 {
 	return 0
 }
 
+func (x *ItemView) GetRefineAffixes() []*EquipmentRefineAffix {
+	if x != nil {
+		return x.RefineAffixes
+	}
+	return nil
+}
+
+func (x *ItemView) GetRefinePending() *EquipmentRefinePending {
+	if x != nil {
+		return x.RefinePending
+	}
+	return nil
+}
+
+// 词条归同一装备位置，开发候选以十分之一表示固定属性。
+type EquipmentRefineAffix struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slot          uint32                 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
+	AttributeId   uint32                 `protobuf:"varint,2,opt,name=attribute_id,json=attributeId,proto3" json:"attribute_id,omitempty"`
+	Tier          uint32                 `protobuf:"varint,3,opt,name=tier,proto3" json:"tier,omitempty"`
+	ValueUnits    int64                  `protobuf:"varint,4,opt,name=value_units,json=valueUnits,proto3" json:"value_units,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EquipmentRefineAffix) Reset() {
+	*x = EquipmentRefineAffix{}
+	mi := &file_item_view_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EquipmentRefineAffix) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EquipmentRefineAffix) ProtoMessage() {}
+
+func (x *EquipmentRefineAffix) ProtoReflect() protoreflect.Message {
+	mi := &file_item_view_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EquipmentRefineAffix.ProtoReflect.Descriptor instead.
+func (*EquipmentRefineAffix) Descriptor() ([]byte, []int) {
+	return file_item_view_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *EquipmentRefineAffix) GetSlot() uint32 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *EquipmentRefineAffix) GetAttributeId() uint32 {
+	if x != nil {
+		return x.AttributeId
+	}
+	return 0
+}
+
+func (x *EquipmentRefineAffix) GetTier() uint32 {
+	if x != nil {
+		return x.Tier
+	}
+	return 0
+}
+
+func (x *EquipmentRefineAffix) GetValueUnits() int64 {
+	if x != nil {
+		return x.ValueUnits
+	}
+	return 0
+}
+
+// 已付费待选不随报价到期失效，采纳或放弃都需要原编号。
+type EquipmentRefinePending struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	PendingId     []byte                  `protobuf:"bytes,1,opt,name=pending_id,json=pendingId,proto3" json:"pending_id,omitempty"`
+	Affixes       []*EquipmentRefineAffix `protobuf:"bytes,2,rep,name=affixes,proto3" json:"affixes,omitempty"`
+	LockedSlots   []uint32                `protobuf:"varint,3,rep,packed,name=locked_slots,json=lockedSlots,proto3" json:"locked_slots,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EquipmentRefinePending) Reset() {
+	*x = EquipmentRefinePending{}
+	mi := &file_item_view_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EquipmentRefinePending) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EquipmentRefinePending) ProtoMessage() {}
+
+func (x *EquipmentRefinePending) ProtoReflect() protoreflect.Message {
+	mi := &file_item_view_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EquipmentRefinePending.ProtoReflect.Descriptor instead.
+func (*EquipmentRefinePending) Descriptor() ([]byte, []int) {
+	return file_item_view_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *EquipmentRefinePending) GetPendingId() []byte {
+	if x != nil {
+		return x.PendingId
+	}
+	return nil
+}
+
+func (x *EquipmentRefinePending) GetAffixes() []*EquipmentRefineAffix {
+	if x != nil {
+		return x.Affixes
+	}
+	return nil
+}
+
+func (x *EquipmentRefinePending) GetLockedSlots() []uint32 {
+	if x != nil {
+		return x.LockedSlots
+	}
+	return nil
+}
+
 var File_item_view_proto protoreflect.FileDescriptor
 
 const file_item_view_proto_rawDesc = "" +
 	"\n" +
 	"\x0fitem_view.proto\x12\n" +
-	"minimir.v1\"\x96\x04\n" +
+	"minimir.v1\"\xaa\x05\n" +
 	"\bItemView\x12\x1f\n" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x17\n" +
@@ -218,7 +366,20 @@ const file_item_view_proto_rawDesc = "" +
 	"\n" +
 	"ore_purity\x18\x0e \x01(\rR\torePurity\x12!\n" +
 	"\finitial_luck\x18\x0f \x01(\rR\vinitialLuck\x12!\n" +
-	"\fcurrent_luck\x18\x10 \x01(\rR\vcurrentLuckB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\fcurrent_luck\x18\x10 \x01(\rR\vcurrentLuck\x12G\n" +
+	"\x0erefine_affixes\x18\x11 \x03(\v2 .minimir.v1.EquipmentRefineAffixR\rrefineAffixes\x12I\n" +
+	"\x0erefine_pending\x18\x12 \x01(\v2\".minimir.v1.EquipmentRefinePendingR\rrefinePending\"\x82\x01\n" +
+	"\x14EquipmentRefineAffix\x12\x12\n" +
+	"\x04slot\x18\x01 \x01(\rR\x04slot\x12!\n" +
+	"\fattribute_id\x18\x02 \x01(\rR\vattributeId\x12\x12\n" +
+	"\x04tier\x18\x03 \x01(\rR\x04tier\x12\x1f\n" +
+	"\vvalue_units\x18\x04 \x01(\x03R\n" +
+	"valueUnits\"\x96\x01\n" +
+	"\x16EquipmentRefinePending\x12\x1d\n" +
+	"\n" +
+	"pending_id\x18\x01 \x01(\fR\tpendingId\x12:\n" +
+	"\aaffixes\x18\x02 \x03(\v2 .minimir.v1.EquipmentRefineAffixR\aaffixes\x12!\n" +
+	"\flocked_slots\x18\x03 \x03(\rR\vlockedSlotsB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_item_view_proto_rawDescOnce sync.Once
@@ -232,16 +393,21 @@ func file_item_view_proto_rawDescGZIP() []byte {
 	return file_item_view_proto_rawDescData
 }
 
-var file_item_view_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_item_view_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_item_view_proto_goTypes = []any{
-	(*ItemView)(nil), // 0: minimir.v1.ItemView
+	(*ItemView)(nil),               // 0: minimir.v1.ItemView
+	(*EquipmentRefineAffix)(nil),   // 1: minimir.v1.EquipmentRefineAffix
+	(*EquipmentRefinePending)(nil), // 2: minimir.v1.EquipmentRefinePending
 }
 var file_item_view_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: minimir.v1.ItemView.refine_affixes:type_name -> minimir.v1.EquipmentRefineAffix
+	2, // 1: minimir.v1.ItemView.refine_pending:type_name -> minimir.v1.EquipmentRefinePending
+	1, // 2: minimir.v1.EquipmentRefinePending.affixes:type_name -> minimir.v1.EquipmentRefineAffix
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_item_view_proto_init() }
@@ -255,7 +421,7 @@ func file_item_view_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_item_view_proto_rawDesc), len(file_item_view_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

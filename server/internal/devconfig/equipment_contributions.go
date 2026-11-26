@@ -43,7 +43,9 @@ func applyEquipmentStats(a Fighter, values equipmentStats) (Fighter, bool) {
 // EquipmentContributions 按战斗部位汇总原整数值和所有强化的定点分量。
 type EquipmentContributions struct {
 	base   equipmentStats // 各部位在强化前的整数属性。
-	bonusU equipmentStats // 各部位强化后新增的属性基点，保留到应用阶段。
+	bonusU equipmentStats // 强化和已采纳词条的同类属性基点，保留到应用阶段。
+	hpU    int64          // 由已采纳词条提供的生命基点。
+	mpU    int64          // 由已采纳词条提供的魔法基点。
 }
 
 // Add 接纳一个有效穿戴模板；空部位、耐久耗尽及独立养成应在调用处过滤。
@@ -75,6 +77,43 @@ func (c *EquipmentContributions) Add(item Item, bonusBP uint32) bool {
 	return true
 }
 
+// AddRefine 将已采纳词条的十分之一单位纳入同一属性和取整点。左列和右列不能重复放大。
+func (c *EquipmentContributions) AddRefine(attribute uint32, units int64) bool {
+	if attribute == 0 && units == 0 {
+		return true // 历史装备没有词条。
+	}
+	value, valid := equipmentMultiply(units, equipmentBasis/10)
+	if !valid || value <= 0 {
+		return false
+	}
+	next := *c
+	var targets []*int64 // 原范围的两个端点同时增加，生命与魔法使用独立上限。
+	switch attribute {
+	case RefineAttributeAttack:
+		targets = []*int64{&next.bonusU[0], &next.bonusU[1]}
+	case RefineAttributeDefence:
+		targets = []*int64{&next.bonusU[7], &next.bonusU[8], &next.bonusU[9]}
+	case RefineAttributeMaxHP:
+		targets = []*int64{&next.hpU}
+	case RefineAttributeMaxMP:
+		targets = []*int64{&next.mpU}
+	case RefineAttributeMagic:
+		targets = []*int64{&next.bonusU[2], &next.bonusU[3]}
+	case RefineAttributeTao:
+		targets = []*int64{&next.bonusU[4], &next.bonusU[5]}
+	default:
+		return false
+	}
+	for _, target := range targets {
+		*target, valid = equipmentAdd(*target, value)
+		if !valid {
+			return false
+		}
+	}
+	*c = next
+	return true
+}
+
 // Apply 只在同一属性所有强化来源累加完毕后截断一次，原基础值继续按整数入账。
 func (c *EquipmentContributions) Apply(a Fighter) (Fighter, bool) {
 	values := c.base
@@ -84,6 +123,15 @@ func (c *EquipmentContributions) Apply(a Fighter) (Fighter, bool) {
 			return Fighter{}, false
 		}
 		values[index] = value
+	}
+	var valid bool
+	a.HP, valid = equipmentAdd(a.HP, c.hpU/equipmentBasis)
+	if !valid {
+		return Fighter{}, false
+	}
+	a.MP, valid = equipmentAdd(a.MP, c.mpU/equipmentBasis)
+	if !valid {
+		return Fighter{}, false
 	}
 	return applyEquipmentStats(a, values)
 }

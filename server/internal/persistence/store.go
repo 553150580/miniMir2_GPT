@@ -125,6 +125,7 @@ type Operation struct {
 	GoldMarket        *GoldMarketReceipt             `bson:"gold_market,omitempty"`            // 金币委托原操作回执。
 
 	EquipmentEnhancement *EquipmentEnhancementReceipt `bson:"equipment_enhancement,omitempty"` // 原部位的成功或失败及实际石头消费。
+	EquipmentRefine      *EquipmentRefineReceipt      `bson:"equipment_refine,omitempty"`      // 洗炼原装备、已付候选及确认动作。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -231,6 +232,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	if s.Cfg.Fixture.EquipmentEnhancement != nil {
 		indexes[enhancementQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
+	}
+	if s.Cfg.Fixture.EquipmentRefine != nil {
+		indexes[equipmentRefineQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {

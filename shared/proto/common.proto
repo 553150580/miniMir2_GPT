@@ -30,6 +30,34 @@ message OperationResult {
   RecycleOilReceipt recycle_oil = 14;
   WingReceipt wing = 15;
   EquipmentEnhancementReceipt equipment_enhancement = 16;
+  EquipmentRefineReceipt equipment_refine = 17;
+  RecycleRefineReceipt recycle_refine = 18;
+}
+// 洗炼确切消耗的原石堆，保留扣前版本、数量和绑定。
+message EquipmentRefineSpend {
+  ItemView item = 1;
+  int64 quantity = 2;
+}
+// 原洗炼流水的结果。生成有消费，采纳与放弃只移除对应待选。
+message EquipmentRefineReceipt {
+  uint32 action = 1;
+  ItemView target = 2;
+  bool equipped = 3;
+  bytes quote_id = 4;
+  bytes pending_id = 5;
+  repeated EquipmentRefineSpend stones = 6;
+  int64 gold = 7;
+  int64 bound_gold = 8;
+  int64 yuanbao_units = 9;
+  int64 bound_yuanbao_units = 10;
+}
+// 分解事务确认的洗炼石。未命中时仍可复核原装备，石字段缺省。
+message RecycleRefineReceipt {
+  repeated RecycleRefineRoll rolls = 1;
+}
+message RecycleRefineRoll {
+  bytes equipment_instance_id = 1;
+  ItemView stone = 2;
 }
 // 部位等级归角色所有，装备替换和卸下均不改变它。
 message EquipmentEnhancementSlot {

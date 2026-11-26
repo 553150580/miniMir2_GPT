@@ -159,6 +159,8 @@ type Item struct {
 	MaxStack int64 `json:"max_stack"`
 	// EquipmentRecycleMaterial 标识此物品可以作为装备分解的原材料产物。
 	EquipmentRecycleMaterial bool `json:"equipment_recycle_material,omitempty"`
+	// EquipmentRefineStone 标识独立的洗炼石，沿用其原分解来源核验。
+	EquipmentRefineStone bool `json:"equipment_refine_stone,omitempty"`
 	// DefenceMinBonus 记录防御最小加成，使用数值表示。
 	DefenceMinBonus int64 `json:"defence_min_bonus"`
 	// DefenceMaxBonus 记录防御最大加成，使用数值表示。
@@ -311,6 +313,8 @@ type Fixture struct {
 	Wings *WingConfig `json:"wings,omitempty"`
 	// EquipmentEnhancement 配置装备部位的强化石和逐级强化规则。
 	EquipmentEnhancement *EquipmentEnhancementConfig `json:"equipment_enhancement,omitempty"`
+	// EquipmentRefine 仅在显式装配的隔离候选中开启装备词条的洗炼与取石。
+	EquipmentRefine *EquipmentRefineConfig `json:"equipment_refine,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -629,6 +633,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateEquipmentRecycleOil(); err != nil {
+		return err
+	}
+	if err := f.validateEquipmentRefine(); err != nil {
 		return err
 	}
 	if err := f.validateWings(); err != nil {

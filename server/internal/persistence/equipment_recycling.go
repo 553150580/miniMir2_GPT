@@ -34,6 +34,8 @@ type EquipmentRecyclingReceipt struct {
 	Trigger uint32 `bson:"trigger"`
 	// OilRolls 保存此次实际手动分解中合格原件的逐件抽样和实际产物。
 	OilRolls []RecycleOilRoll `bson:"oil_rolls,omitempty"`
+	// RefineRolls 保存此次符合洗炼石来源条件的原件判定及确切成功产物。
+	RefineRolls []RecycleRefineRoll `bson:"refine_rolls,omitempty"`
 }
 
 // policySnapshot 复制回收策略及其名单切片，避免后续修改影响已确认回执。
@@ -50,6 +52,14 @@ type RecycleSkip struct {
 	InstanceID string `bson:"instance_id"`
 	// Reason 记录原因，使用文本表示。
 	Reason string `bson:"reason"`
+}
+
+// validEquipmentRecycleMaterialInstance 校验继承原装备身份的单份分解副产物的共同约束。
+func validEquipmentRecycleMaterialInstance(item domain.Item, definition devconfig.Item) bool {
+	return item.ItemID == definition.ID && !definition.IsEquipment && definition.Stackable && definition.MaxStack >= 1 && item.Quantity == 1 &&
+		item.Version > 0 && item.Version < math.MaxInt64 && lowerHex(item.ID, 16) && lowerHex(item.SourceID, 16) && item.ID != item.SourceID &&
+		item.Quality == 0 && item.OrePurity == 0 && item.InitialLuck == 0 && item.CurrentLuck == 0 &&
+		item.LuckOilToSix == 0 && item.LuckOilToNine == 0 && item.DurabilityU == 0 && item.MaxDurabilityU == 0 && item.OriginalDurabilityU == 0
 }
 
 // policyFromProto 将协议策略转换为领域模型，核查配置支持、阈值和名单范围。
@@ -203,7 +213,7 @@ func recycleExisting(r domain.Role, f devconfig.Fixture, receipt *EquipmentRecyc
 }
 
 // recycleManual 先核对全部原装备，再销毁装备并发放各自绑定的回收金币和分解产物。
-func recycleManual(r domain.Role, ids []string, f devconfig.Fixture, oil *recycleOilAttempt) (domain.Role, *EquipmentRecyclingReceipt, uint32, error) {
+func recycleManual(r domain.Role, ids []string, f devconfig.Fixture, attempt *equipmentRecycleAttempt) (domain.Role, *EquipmentRecyclingReceipt, uint32, error) {
 	if len(ids) == 0 || len(ids) > r.Capacity {
 		return r, nil, p.CodeInvalidArgument, nil
 	}
@@ -230,7 +240,7 @@ func recycleManual(r domain.Role, ids []string, f devconfig.Fixture, oil *recycl
 		if reason != "" {
 			return r, nil, p.CodeInvalidArgument, nil
 		}
-		if f.EquipmentRecycleOil != nil && item.DurabilityU <= 0 &&
+		if (f.EquipmentRecycleOil != nil || f.EquipmentRefine != nil) && item.DurabilityU <= 0 &&
 			item.MaxDurabilityU > 0 && item.OriginalDurabilityU >= item.MaxDurabilityU {
 			gold = 0 // 已有持久上限的原件在零或历史负值时明确破损，可销毁但不发金币或油。
 		}
@@ -245,7 +255,10 @@ func recycleManual(r domain.Role, ids []string, f devconfig.Fixture, oil *recycl
 			return r, nil, 0, err
 		}
 	}
-	if err := applyManualRecycleOil(r, &out, receipt, &f, oil); err != nil {
+	if err := applyManualRecycleOil(r, &out, receipt, &f, attempt); err != nil {
+		return r, nil, 0, err
+	}
+	if err := applyManualRecycleRefine(r, &out, receipt, &f, attempt); err != nil {
 		return r, nil, 0, err
 	}
 	return out, receipt, 0, nil

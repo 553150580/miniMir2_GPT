@@ -26,4 +26,23 @@ message ItemView {
   uint32 initial_luck = 15;
   // 服务端校验的当前幸运，旧实例使用其原初始幸运。
   uint32 current_luck = 16;
+  // 已采纳的词条跟随原装备，空槽保持缺省。
+  repeated EquipmentRefineAffix refine_affixes = 17;
+  // 已付费的最新待选结果只供原装备所有者观察和处理。
+  EquipmentRefinePending refine_pending = 18;
+}
+
+// 词条归同一装备位置，开发候选以十分之一表示固定属性。
+message EquipmentRefineAffix {
+  uint32 slot = 1;
+  uint32 attribute_id = 2;
+  uint32 tier = 3;
+  int64 value_units = 4;
+}
+
+// 已付费待选不随报价到期失效，采纳或放弃都需要原编号。
+message EquipmentRefinePending {
+  bytes pending_id = 1;
+  repeated EquipmentRefineAffix affixes = 2;
+  repeated uint32 locked_slots = 3;
 }

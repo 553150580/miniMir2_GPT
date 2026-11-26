@@ -14,6 +14,12 @@ assert(manifestPath.startsWith(work + path.sep), '选服验收清单必须在独
 const { baseUrl, entries, tasksCodex, bossChallenges } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(baseUrl);
 assert(base.protocol === 'http:' && base.hostname === '127.0.0.1' && base.port !== '18080', '仅允许独立回环试玩入口');
+const expectedGamePath = process.env.MINIMIR_SERVER_DIRECTORY_GAME_PATH;
+const expectedGameSha = process.env.MINIMIR_SERVER_DIRECTORY_GAME_SHA256;
+if (expectedGamePath || expectedGameSha) {
+    assert.match(expectedGamePath ?? '', /^assets\/main\/import\/[a-f0-9]{2}\/[a-f0-9]+\.[a-f0-9]{16}\.json$/u);
+    assert.match(expectedGameSha ?? '', /^[a-f0-9]{64}$/u);
+}
 assert.equal(entries.length, 4);
 assert.equal(new Set(entries.map(entry => entry.origin)).size, 4);
 assert.equal(new Set(entries.map(entry => entry.run)).size, 4);
@@ -64,6 +70,7 @@ async function main() {
         const connections = [];
         const createdOrigins = [];
         const ticketResponses = [];
+        const gameDownloads = [];
         let personalLeaves = 0;
         page.on('request', request => {
             if (new URL(request.url()).pathname !== '/account/rpc') return;
@@ -71,6 +78,14 @@ async function main() {
             if (payload) createdOrigins.push(pb.CreateRoleRequest.decode(payload).origin_server_id.toString());
         });
         page.on('response', response => {
+            const address = expectedGamePath && new URL(response.url());
+            if (address && response.status() === 200 && address.origin === base.origin
+                && address.pathname === '/' + expectedGamePath) {
+                // 证据来自 Cocos 实际读取的场景合包响应，缓存命中不替代原字节校验。
+                gameDownloads.push(response.body().then(body => ({
+                    path: expectedGamePath, sha256: crypto.createHash('sha256').update(body).digest('hex'),
+                })).catch(error => ({ error: error.message })));
+            }
             const request = response.request();
             if (new URL(request.url()).pathname !== '/account/rpc' || !accountPayload(request.postDataBuffer(), 10007)) return;
             // 只保留目标字段，票据原文不写进报告。
@@ -585,6 +600,14 @@ async function main() {
             }
         }
         assert.deepEqual(createdOrigins, entries.map(entry => entry.origin));
+        if (expectedGamePath) {
+            report.step = '核对实际下载的新 Game 场景合包';
+            const packs = await Promise.all(gameDownloads);
+            assert(packs.length > 0, '实际触屏没有下载预期版本的 Game 场景合包');
+            const expected = { path: expectedGamePath, sha256: expectedGameSha };
+            for (const pack of packs) assert.deepEqual(pack, expected);
+            report.gamePack = packs[0];
+        }
         assert.deepEqual(report.errors, []);
         delete report.step;
         report.passed = true;
