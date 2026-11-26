@@ -3,11 +3,9 @@ package persistence
 
 import (
 	"crypto/sha256"
-	"encoding/binary"
 	"encoding/hex"
 	"math"
 	"slices"
-	"strconv"
 	"time"
 
 	"minimir/internal/devconfig"
@@ -80,10 +78,10 @@ func sampleMiningOre(roleID, eventID string, layer uint32, fixture *devconfig.Fi
 		return nil, Fail(p.CodeOperationConflict, "矿层产出规则无效")
 	}
 	seed := "minimir:mining:v1:" + roleID + ":" + eventID
-	if miningDraw(seed+":success", miningPPM) >= rules.SuccessPPM {
+	if sourceDraw(seed+":success", miningPPM) >= rules.SuccessPPM {
 		return nil, nil
 	}
-	mineral := miningDraw(seed+":ore", 100)
+	mineral := sourceDraw(seed+":ore", 100)
 	var itemID uint32 // 按当前矿层分布选中的矿石定义。
 	for _, ore := range rules.Ores {
 		weight := ore.LayerWeights[layer-1]
@@ -97,13 +95,13 @@ func sampleMiningOre(roleID, eventID string, layer uint32, fixture *devconfig.Fi
 	if !exists || itemID == 0 {
 		return nil, Fail(p.CodeOperationConflict, "矿种权重未解析为有效矿石")
 	}
-	purityChoice := miningDraw(seed+":purity_band", miningPPM)
+	purityChoice := sourceDraw(seed+":purity_band", miningPPM)
 	for _, band := range rules.Purity {
 		if purityChoice < band.WeightPPM {
 			if band.Min == 0 || band.Max > 100 || band.Min > band.Max {
 				break
 			}
-			purity := band.Min + miningDraw(seed+":purity_value", band.Max-band.Min+1)
+			purity := band.Min + sourceDraw(seed+":purity_value", band.Max-band.Min+1)
 			digest := sha256.Sum256([]byte(seed + ":instance"))
 			return &domain.Item{ID: hex.EncodeToString(digest[:16]), ItemID: itemID, Quantity: 1, OrePurity: purity,
 				Version: 1, SourceKind: "mining", SourceID: eventID, Quality: def.DropQuality}, nil
@@ -111,19 +109,6 @@ func sampleMiningOre(roleID, eventID string, layer uint32, fixture *devconfig.Fi
 		purityChoice -= band.WeightPPM
 	}
 	return nil, Fail(p.CodeOperationConflict, "矿石纯度配置未解析为有效档位")
-}
-
-// miningDraw 使用拒绝抽样得到精确均匀整数，分域种子避免不同抽样步骤复用同一结果。
-func miningDraw(seed string, bound uint32) uint32 {
-	span := uint64(bound)
-	limit := uint64(math.MaxUint64) - uint64(math.MaxUint64)%span
-	for round := uint64(0); ; round++ {
-		digest := sha256.Sum256([]byte(seed + ":" + strconv.FormatUint(round, 10)))
-		n := binary.BigEndian.Uint64(digest[:8])
-		if n < limit {
-			return uint32(n % span)
-		}
-	}
 }
 
 // applyMiningAttempt 应用原判定的工具、离线时间及单块出矿结果。

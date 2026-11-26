@@ -27,6 +27,7 @@ type SettlementReceipt struct {
 	MapID         uint64                    `bson:"map_id,omitempty"`           // 击杀归属的原地图配置号。
 	DropPoolID    uint32                    `bson:"drop_pool_id,omitempty"`     // 击杀时使用的原掉落池号。
 	GrantedItem   bool                      `bson:"granted_item"`               // 本次原掉落是否进入角色背包。
+	LuckyDrop     *domain.Item              `bson:"lucky_drop,omitempty"`       // 实际发放或立即回收且命中初始幸运的完整原装备。
 	Recycling     EquipmentRecyclingReceipt `bson:"recycling"`                  // 回收的实例、保护跳过和金币结果。
 	Experience    *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"` // 经验转换、限制和迁移明细。
 	EquipmentWear []EquipmentWearReceipt    `bson:"equipment_wear,omitempty"`   // 本次扣除耐久对应的原装备实例。
@@ -130,6 +131,12 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 		next, details, err := applySettlement(r, effective, s.Cfg.Fixture)
 		if err != nil {
 			return err
+		}
+		if details.LuckyDrop != nil {
+			effective.Item = details.LuckyDrop
+			if choice != nil {
+				choice.receipt.Item = *effective.Item
+			}
 		}
 		if err = s.confirmOrdinaryEquipment(tc, choice, &details); err != nil {
 			return err
@@ -269,6 +276,7 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 			// gold 是可回收时的应发金币，reason 非空表示受保护或其他拒绝。
 			gold, reason := recyclePrice(out, *q.Item, f)
 			if reason == "" {
+				q.Item = settleDropInitialLuck(r.ID, q, &f, &details)
 				if err = creditRecycled(&out, &details.Recycling, *q.Item, gold); err != nil {
 					return r, details, err
 				}
@@ -279,6 +287,7 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 		}
 		if !recycled {
 			if len(out.Items) < out.Capacity {
+				q.Item = settleDropInitialLuck(r.ID, q, &f, &details)
 				out.Items = append(append([]domain.Item(nil), out.Items...), *q.Item)
 				details.GrantedItem = true
 			} else {

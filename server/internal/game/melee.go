@@ -6,6 +6,7 @@ import (
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	p "minimir/internal/protocol"
+	"slices"
 	"time"
 )
 
@@ -329,18 +330,34 @@ func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time
 	}
 	// base 保存由周期取得的基础值。
 	base := w.interval(stats.AttackMin, stats.AttackMax)
+	upper := base
+	if stats.LuckAttackPPM > 0 && w.e.Store.Cfg.Fixture.CombatLuck != nil {
+		upper = upperAttackBound(stats.AttackMin, stats.AttackMax)
+	}
 	// frontAmount 保存当前处理所用的前端数量，secondaryAmount 保存由整数“64”取得的次优先数量。
 	frontAmount, secondaryAmount := base, int64(0)
+	frontUpper, secondaryUpper := upper, int64(0)
 	// frontDefence 保存当前处理所用的前端防御。
 	frontDefence := defenceACAgility
 	if s.Behavior == "slaying" || s.Behavior == "flaming_sword" {
-		frontAmount = w.magicAmount(s, rank, base)
+		frontAmount, frontUpper = w.magicAmounts(s, rank, base, upper)
 	}
 	if s.Behavior == "flaming_sword" {
 		frontDefence = defenceAC
 	}
 	if len(secondary) > 0 {
-		secondaryAmount = w.magicAmount(s, rank, base)
+		secondaryAmount, secondaryUpper = w.magicAmounts(s, rank, base, upper)
+	}
+	// 原挥刀共用同一个基础攻击区间和幸运掷点，旁格各按自己的抵抗决定是否取上限。
+	luckRoll := luckMillion
+	if upper != base {
+		eligible := func(target *entity) bool {
+			return effectiveAttackLuck(stats.LuckAttackPPM, w.fighter(r, target).LuckResistancePPM) > 0
+		}
+		if front != nil && frontAmount != frontUpper && eligible(front) ||
+			secondaryAmount != secondaryUpper && slices.ContainsFunc(secondary, eligible) {
+			luckRoll = uint32(w.draw(int64(luckMillion)))
+		}
 	}
 	from.AttackSequence++
 	w.weaponWear(r, now)
@@ -360,11 +377,18 @@ func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time
 		r.Attacks = append(r.Attacks, a)
 	}
 	if front != nil {
+		if luckRoll < luckMillion {
+			frontAmount = (luckyDamage{attack: stats.LuckAttackPPM, roll: luckRoll, upper: frontUpper}).amount(frontAmount, w.fighter(r, front).LuckResistancePPM)
+		}
 		queue(front, frontAmount, frontDefence, w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS)
 	}
 	// target 接收遍历次优先时当前的元素。
 	for _, target := range secondary {
-		queue(target, secondaryAmount, defenceAgility, s.SecondaryImpactMS)
+		amount := secondaryAmount
+		if luckRoll < luckMillion {
+			amount = (luckyDamage{attack: stats.LuckAttackPPM, roll: luckRoll, upper: secondaryUpper}).amount(amount, w.fighter(r, target).LuckResistancePPM)
+		}
+		queue(target, amount, defenceAgility, s.SecondaryImpactMS)
 	}
 	// handle 保存由无符号整数“32”取得的实体句柄。
 	handle := uint32(0)

@@ -363,7 +363,11 @@ func statusesPB(e *entity, now time.Time) []*pb.EntityStatusState {
 func (w *worker) combatAttributesPB(r *room, e *entity) *pb.CombatAttributes {
 	// a 保存战斗单位返回的结果。
 	a := w.fighter(r, e)
-	return &pb.CombatAttributes{PhysicalAttackMin: a.AttackMin, PhysicalAttackMax: a.AttackMax, PhysicalDefenceMin: a.DefenceMin, PhysicalDefenceMax: a.DefenceMax,
+	result := &pb.CombatAttributes{PhysicalAttackMin: a.AttackMin, PhysicalAttackMax: a.AttackMax, PhysicalDefenceMin: a.DefenceMin, PhysicalDefenceMax: a.DefenceMax,
 		MagicDefenceMin: a.MagicDefenceMin, MagicDefenceMax: a.MagicDefenceMax, MagicAttackMin: a.MagicMin, MagicAttackMax: a.MagicMax,
 		SpiritAttackMin: a.TaoMin, SpiritAttackMax: a.TaoMax, Accuracy: a.Accuracy, Agility: a.Agility, DamageReductionPercent: uint32(statusReduction(e))}
+	if w.e.Store.Cfg.Fixture.CombatLuck != nil {
+		result.LuckEnabled, result.LuckAttackPpm, result.LuckResistancePpm = true, a.LuckAttackPPM, a.LuckResistancePPM
+	}
+	return result
 }

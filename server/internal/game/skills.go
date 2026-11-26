@@ -22,6 +22,7 @@ type pendingCast struct {
 	Due time.Time
 	// Amount 记录数量，使用数值表示。
 	Amount int64
+	Luck   luckyDamage // 原施法冻结的上限威力和掷点，原目标仍按抵抗裁剪。
 	// Caster 记录施法者，使用行动实体引用表示。
 	Caster actorRef
 	// ID 区分当前步骤指向的目标对象。
@@ -110,7 +111,15 @@ func (w *worker) physicalDamage(r *room, from, target *entity) int64 {
 	if w.draw(b.Agility+1) > a.Accuracy {
 		return 0
 	}
-	return statusDamage(target, w.interval(a.AttackMin, a.AttackMax), poisonArmour(target, w.interval(b.DefenceMin, b.DefenceMax)))
+	amount := w.interval(a.AttackMin, a.AttackMax)
+	if from.Kind == 1 && w.e.Store.Cfg.Fixture.CombatLuck != nil {
+		chance := effectiveAttackLuck(a.LuckAttackPPM, b.LuckResistancePPM)
+		upper := upperAttackBound(a.AttackMin, a.AttackMax)
+		if amount != upper && chance > 0 && (chance == luckMillion || w.draw(int64(luckMillion)) < int64(chance)) {
+			amount = upper
+		}
+	}
+	return statusDamage(target, amount, poisonArmour(target, w.interval(b.DefenceMin, b.DefenceMax)))
 }
 
 // magicDamage 返回魔法伤害供调用方使用。
@@ -127,11 +136,26 @@ func (w *worker) magicDamage(r *room, target *entity, amount int64) int64 {
 // Crystal MagicInfo.cs:180–211：基础区间、技能随机项、四分之一取偶舍入及倍率分开。
 // w 是调用该方法的房间执行器实例，s 记录技能，level 记录等级，使用数值表示，base 记录基础值，使用数值表示。
 func (w *worker) magicAmount(s devconfig.Skill, level uint32, base int64) int64 {
+	return s.SourceDamage(level, base, w.magicPower(s, level))
+}
+
+// magicAmounts 让普通威力及幸运上限复用一次技能随机项。
+func (w *worker) magicAmounts(s devconfig.Skill, level uint32, base, upper int64) (int64, int64) {
+	power := w.magicPower(s, level)
+	normal := s.SourceDamage(level, base, power)
+	if upper == base {
+		return normal, normal
+	}
+	return normal, s.SourceDamage(level, upper, power)
+}
+
+// magicPower 抽取共享技能随机项，普通区间和幸运上限应使用同一组值。
+func (w *worker) magicPower(s devconfig.Skill, level uint32) int64 {
 	// mpower 保存根据m能力值基础值与“draw”计算的“mpower”。
 	mpower := s.MPowerBase + w.draw(s.MPowerBonus)
 	// power 保存根据能力值基础值与“draw”计算的能力值。
 	power := s.PowerBase + w.draw(s.PowerBonus)
-	return s.SourceDamage(level, base, s.SourcePower(level, mpower, power))
+	return s.SourcePower(level, mpower, power)
 }
 
 // skillTarget 返回技能目标供调用方使用。

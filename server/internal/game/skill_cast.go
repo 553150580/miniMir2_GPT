@@ -36,6 +36,7 @@ type preparedCast struct {
 	Origin, Point                         devconfig.Point       // 原施法位置和选定地格，用于判定命中及观察。
 	Direction                             uint32                // 接受计划时冻结的施法方向。
 	Cost, Amount, DelayMS, BuffDurationMS int64                 // 待扣魔法值、效果量、命中延时与状态持续时间。
+	Luck                                  luckyDamage           // 原职业区间上限候选，只有实际受理时才掷幸运点。
 	Summon                                *summonPetPlan        // 需要新生或召回宠物时保留的专用计划。
 	ExecuteTarget                         bool                  // 圣言术已通过等级和概率判定，可安排原目标的延迟处决。
 	PoisonColor                           devconfig.PoisonColor // 由持久扣料同一原药粉实例判定的色别。
@@ -359,6 +360,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	}
 	// amount 保存由整数“64”取得的数量。
 	amount := int64(0)
+	var luck luckyDamage // 只有使用职业攻击区间的伤害分支可以准备幸运上限。
 	// duration 保存由整数“64”取得的持续时间。
 	duration := int64(0)
 	if handler.Teleport || handler.Summon || handler.TurnUndead || s.Behavior == devconfig.TrapHexagonBehavior || s.Behavior == "electric_shock" {
@@ -400,18 +402,19 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		}
 	} else if s.Behavior == "soul_fire_ball" || s.Behavior == "poisoning" {
 		// 两种道士攻击技能的原始威力来自道术，后续各按弹道与药粉结算。
-		amount = w.magicAmount(s, level, w.interval(stats.TaoMin, stats.TaoMax))
+		amount, luck = w.prepareSpellDamage(s, level, stats.TaoMin, stats.TaoMax, stats.LuckAttackPPM)
 	} else {
-		amount = w.magicAmount(s, level, w.interval(stats.MagicMin, stats.MagicMax))
+		amount, luck = w.prepareSpellDamage(s, level, stats.MagicMin, stats.MagicMax, stats.LuckAttackPPM)
 	}
 	if s.Behavior == "fire_wall" && fireWallLifetime(amount) == 0 {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if handler.UndeadBonus && target != nil && target.Monster != nil && target.Monster.Undead {
 		amount = amount * s.UndeadMultiplierPPM / 1000000
+		luck.upper = luck.upper * s.UndeadMultiplierPPM / 1000000
 	}
 	// plan 保存当前处理所用的计划。
-	plan := &preparedCast{Scene: r.Scene, Skill: s, Level: level, Caster: reference(r, &r.Player), Origin: r.Player.Pos, Point: point, Cost: cost, Amount: amount, DelayMS: delay, BuffDurationMS: duration, Direction: r.Player.Direction}
+	plan := &preparedCast{Scene: r.Scene, Skill: s, Level: level, Caster: reference(r, &r.Player), Origin: r.Player.Pos, Point: point, Cost: cost, Amount: amount, Luck: luck, DelayMS: delay, BuffDurationMS: duration, Direction: r.Player.Direction}
 	plan.Summon = summon
 	if target != nil {
 		plan.Target = reference(r, target)
@@ -468,7 +471,7 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 		InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level}
 	w.sendCombatObservation(r, p.MsgS2CCastAccepted, start)
 	// event 初始化用作事件的待确认施法。
-	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: start.CastId, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
+	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Luck: w.acceptCastLuck(r, plan), Caster: plan.Caster, ID: start.CastId, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
 	event.Summon = plan.Summon
 	event.PoisonColor = plan.PoisonColor
 	if s.Behavior == "hell_fire" {
@@ -626,7 +629,7 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 			}
 		} else {
 			// value 保存数量，用于当前步骤中的值。
-			value := c.Amount
+			value := w.damageWithLuck(r, target, c.Amount, c.Luck)
 			if c.Skill.Behavior == "thunder_storm" && (target.Monster != nil && !target.Monster.Undead || world.mirrorCombat != nil) {
 				value /= c.Skill.NonUndeadDivisor
 			}

@@ -75,6 +75,10 @@ type Fighter struct {
 	MagicResist int64 `json:"magic_resist"`
 	// MagicResistWeight 记录魔法“resist”权重，使用数值表示。
 	MagicResistWeight int64 `json:"magic_resist_weight"`
+	// LuckAttackPPM 是按当前有效穿戴汇总的幸运一击百万分率，随实际战斗快照保留。
+	LuckAttackPPM uint32 `json:"luck_attack_ppm,omitempty" bson:"luck_attack_ppm,omitempty"`
+	// LuckResistancePPM 是该目标的幸运一击抵抗百万分率，随实际战斗快照保留。
+	LuckResistancePPM uint32 `json:"luck_resistance_ppm,omitempty" bson:"luck_resistance_ppm,omitempty"`
 	// canPushExplicit 标记是否处于“can”推入显式状态。
 	canPushExplicit bool
 }
@@ -295,6 +299,8 @@ type Fixture struct {
 	SkillEconomy SkillEconomy `json:"skill_economy"`
 	// CombatTiming 记录战斗时序。
 	CombatTiming CombatTiming `json:"combat_timing"`
+	// CombatLuck 保存工作簿投影的幸运贡献和显式配置的目标抵抗。
+	CombatLuck *CombatLuckConfig `json:"combat_luck,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -601,6 +607,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateForge(); err != nil {
+		return err
+	}
+	if err := f.validateCombatLuck(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

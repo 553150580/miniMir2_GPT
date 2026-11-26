@@ -10,6 +10,7 @@ export interface CombatAttributes {
     physicalAttackMin: PotionInteger; physicalAttackMax: PotionInteger; physicalDefenceMin: PotionInteger; physicalDefenceMax: PotionInteger;
     magicDefenceMin: PotionInteger; magicDefenceMax: PotionInteger; magicAttackMin: PotionInteger; magicAttackMax: PotionInteger;
     spiritAttackMin: PotionInteger; spiritAttackMax: PotionInteger; accuracy: PotionInteger; agility: PotionInteger; damageReductionPercent: number;
+    luckAttackPpm?: number; luckResistancePpm?: number; luckEnabled?: boolean;
 }
 export interface CombatEntity {
     entityHandle: number; entityKind: number; definitionId?: number; life: PotionInteger;
@@ -46,9 +47,21 @@ export function statusLines(status: EntityStatusState, receivedAt: number, now: 
 }
 export function combatAttributeLines(value?: CombatAttributes | null): string[] {
     if (!value) return ['正在同步战斗属性'];
+    const luck = value.luckEnabled === true ? luckAttributeLines(value) : [];
     return [`物理攻击 ${value.physicalAttackMin}–${value.physicalAttackMax}`, `物理防御 ${value.physicalDefenceMin}–${value.physicalDefenceMax}`,
         `魔法防御 ${value.magicDefenceMin}–${value.magicDefenceMax}`, `魔法攻击 ${value.magicAttackMin}–${value.magicAttackMax}`,
-        `道术攻击 ${value.spiritAttackMin}–${value.spiritAttackMax}`, `准确 ${value.accuracy} · 敏捷 ${value.agility}`, `伤害减免 ${value.damageReductionPercent}%`];
+        `道术攻击 ${value.spiritAttackMin}–${value.spiritAttackMax}`, ...luck, `准确 ${value.accuracy} · 敏捷 ${value.agility}`, `伤害减免 ${value.damageReductionPercent}%`];
+}
+
+// 将服务器百万分率显示为百分比，保留可见分档差异和候选模式的零值。
+function luckAttributeLines(value: CombatAttributes): string[] {
+    const rows = [[value.luckAttackPpm ?? 0, '幸运一击'], [value.luckResistancePpm ?? 0, '幸运抵抗']] as const;
+    return rows.flatMap(([chance, label]) => {
+        if (chance === undefined || !Number.isInteger(chance) || chance < 0 || chance > 1_000_000) return [];
+        const whole = Math.floor(chance / 10_000);
+        const fraction = String(chance % 10_000).padStart(4, '0').replace(/0+$/, '');
+        return [`${label} ${whole}${fraction ? '.' + fraction : ''}%`];
+    });
 }
 // 详情列表的每项来自已保存模板。按字符切成短行，不缩小字号或生成另一套布局。
 export function detailLines(lines: readonly string[]): string[] {

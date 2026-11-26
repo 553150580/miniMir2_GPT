@@ -19,6 +19,7 @@ type fireWallField struct {
 	Scene, CastID uint64             // 用于当前观察过滤和识别事件来源。
 	SkillID       uint32             // 伤害事件携带的技能编号。
 	Amount        int64              // 施法受理时冻结的原始威力。
+	Luck          luckyDamage        // 原施法的共享幸运掷点只用于实际伤害，不改变地格寿命。
 	Expires       time.Time          // 到该时刻仍可命中，之后该场消失。
 	Cells         [5]devconfig.Point // 从中心开始保存逐格建立的有效地面位置。
 	Count         int                // Cells 中已实际建立的位置数量。
@@ -63,7 +64,7 @@ func (w *worker) addFireWall(world *worldState, cast pendingCast, now time.Time)
 		return nil
 	}
 	// field 记录第一次处理时刻起算的原场期限，独立于网络延迟与施法动作长度。
-	field := &fireWallField{Caster: cast.Caster, Scene: cast.Scene, CastID: cast.ID, SkillID: cast.Skill.ID, Amount: cast.Amount, Expires: now.Add(lifetime)}
+	field := &fireWallField{Caster: cast.Caster, Scene: cast.Scene, CastID: cast.ID, SkillID: cast.Skill.ID, Amount: cast.Amount, Luck: cast.Luck, Expires: now.Add(lifetime)}
 	// points 是来源的中心、北、东、南、西建立顺序。
 	points := [5]devconfig.Point{
 		cast.TargetPoint, stepPoint(cast.TargetPoint, 0, 1), stepPoint(cast.TargetPoint, 2, 1),
@@ -154,7 +155,7 @@ func (w *worker) fireWallHit(r *room, world *worldState, caster, target *entity,
 	// before 记录本次处理前的HP，伤害表现仅使用实际减少的生命值。
 	before := target.HP
 	// damage 是根据当前防御判定得到的伤害。
-	damage := w.magicDamage(r, target, field.Amount)
+	damage := w.magicDamage(r, target, w.damageWithLuck(r, target, field.Amount, field.Luck))
 	w.applyDamageInWorld(r, world, caster, target, damage, now, context)
 	// outcome 对应通用技能协议中的伤害成功或抵抗。
 	outcome := uint32(2)

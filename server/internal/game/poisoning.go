@@ -52,7 +52,7 @@ func poisonArmour(target *entity, armour int64) int64 {
 }
 
 // beginPoison 根据原道术结果和阶位生成一个状态。弱绿毒及更短红毒不能覆盖原状态。
-func beginPoison(world *worldState, target *entity, cast pendingCast) *poisonEffect {
+func beginPoison(world *worldState, target *entity, cast pendingCast, damageAmount int64) *poisonEffect {
 	if cast.PoisonColor != devconfig.PoisonGreen && cast.PoisonColor != devconfig.PoisonRed || cast.Amount < 0 {
 		return nil
 	}
@@ -64,7 +64,7 @@ func beginPoison(world *worldState, target *entity, cast pendingCast) *poisonEff
 	// effect 的离散次数与当前伤害强度独立；红毒只有降防。
 	effect := &poisonEffect{Color: cast.PoisonColor, TargetLife: target.Life, Remaining: cast.Amount*2 + rank*7}
 	if effect.Color == devconfig.PoisonGreen {
-		effect.Damage = cast.Amount/15 + rank
+		effect.Damage = damageAmount/15 + rank
 	}
 	if target.Poisons == nil {
 		target.Poisons = &monsterPoisons{}
@@ -107,7 +107,7 @@ func (w *worker) resolvePoisoning(r *room, world *worldState, caster *entity, ca
 		if caster != &r.Player || target.HP <= 0 {
 			return
 		}
-		effect = beginPoison(world, target, cast)
+		effect = beginPoison(world, target, cast, w.damageWithLuck(r, target, cast.Amount, cast.Luck))
 		if effect == nil {
 			return
 		}

@@ -166,7 +166,11 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 		}
 		return statusFighter(e, f.Pet)
 	}
-	return statusFighter(e, e.Monster.Fighter)
+	monster := e.Monster.Fighter
+	if rules := f.CombatLuck; rules != nil {
+		monster.LuckResistancePPM = rules.MonsterResistancePPM[e.Monster.ID]
+	}
+	return statusFighter(e, monster)
 }
 
 // basePlayerFighter 计算可用于挑战入场快照的已确认装备和被动技能属性。
@@ -214,6 +218,11 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 			return devconfig.Fighter{}
 		}
 		a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
+	}
+	if rules := f.CombatLuck; rules != nil {
+		// 真实角色目前没有翅膀培养实例，在线战斗和挑战快照均只使用实际生效装备。
+		a.LuckAttackPPM = equipmentLuck(r, f, 0)
+		a.LuckResistancePPM = rules.RoleResistancePPM[r.Role.Job]
 	}
 	return a
 }

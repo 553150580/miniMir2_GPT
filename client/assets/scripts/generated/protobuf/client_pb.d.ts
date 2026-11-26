@@ -6125,6 +6125,15 @@ export namespace minimir {
             /** CombatAttributes damage_reduction_percent. */
             damage_reduction_percent: number;
 
+            /** CombatAttributes luck_attack_ppm. */
+            luck_attack_ppm: number;
+
+            /** CombatAttributes luck_resistance_ppm. */
+            luck_resistance_ppm: number;
+
+            /** CombatAttributes luck_enabled. */
+            luck_enabled: boolean;
+
             /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @param [properties] Properties to set
@@ -6226,6 +6235,15 @@ export namespace minimir {
 
                 /** CombatAttributes damage_reduction_percent */
                 damage_reduction_percent?: (number|null);
+
+                /** CombatAttributes luck_attack_ppm */
+                luck_attack_ppm?: (number|null);
+
+                /** CombatAttributes luck_resistance_ppm */
+                luck_resistance_ppm?: (number|null);
+
+                /** CombatAttributes luck_enabled */
+                luck_enabled?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

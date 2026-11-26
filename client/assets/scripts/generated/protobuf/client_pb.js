@@ -15857,6 +15857,9 @@ $root.minimir = (function() {
              * @property {Long|null} [accuracy] CombatAttributes accuracy
              * @property {Long|null} [agility] CombatAttributes agility
              * @property {number|null} [damage_reduction_percent] CombatAttributes damage_reduction_percent
+             * @property {number|null} [luck_attack_ppm] CombatAttributes luck_attack_ppm
+             * @property {number|null} [luck_resistance_ppm] CombatAttributes luck_resistance_ppm
+             * @property {boolean|null} [luck_enabled] CombatAttributes luck_enabled
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -15993,6 +15996,30 @@ $root.minimir = (function() {
             CombatAttributes.prototype.damage_reduction_percent = 0;
 
             /**
+             * CombatAttributes luck_attack_ppm.
+             * @member {number} luck_attack_ppm
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.luck_attack_ppm = 0;
+
+            /**
+             * CombatAttributes luck_resistance_ppm.
+             * @member {number} luck_resistance_ppm
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.luck_resistance_ppm = 0;
+
+            /**
+             * CombatAttributes luck_enabled.
+             * @member {boolean} luck_enabled
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.luck_enabled = false;
+
+            /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CombatAttributes
@@ -16050,6 +16077,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 12, wireType 0 =*/96).int64(message.agility);
                 if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent") && message.damage_reduction_percent !== 0)
                     writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.damage_reduction_percent);
+                if (message.luck_attack_ppm != null && $Object.hasOwnProperty.call(message, "luck_attack_ppm") && message.luck_attack_ppm !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.luck_attack_ppm);
+                if (message.luck_resistance_ppm != null && $Object.hasOwnProperty.call(message, "luck_resistance_ppm") && message.luck_resistance_ppm !== 0)
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.luck_resistance_ppm);
+                if (message.luck_enabled != null && $Object.hasOwnProperty.call(message, "luck_enabled") && message.luck_enabled !== false)
+                    writer.uint32(/* id 16, wireType 0 =*/128).bool(message.luck_enabled);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -16224,6 +16257,33 @@ $root.minimir = (function() {
                                 delete message.damage_reduction_percent;
                             continue;
                         }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.luck_attack_ppm = value;
+                            else
+                                delete message.luck_attack_ppm;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.luck_resistance_ppm = value;
+                            else
+                                delete message.luck_resistance_ppm;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.luck_enabled = value;
+                            else
+                                delete message.luck_enabled;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -16311,6 +16371,15 @@ $root.minimir = (function() {
                 if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent"))
                     if (!$util.isInteger(message.damage_reduction_percent))
                         return "damage_reduction_percent: integer expected";
+                if (message.luck_attack_ppm != null && $Object.hasOwnProperty.call(message, "luck_attack_ppm"))
+                    if (!$util.isInteger(message.luck_attack_ppm))
+                        return "luck_attack_ppm: integer expected";
+                if (message.luck_resistance_ppm != null && $Object.hasOwnProperty.call(message, "luck_resistance_ppm"))
+                    if (!$util.isInteger(message.luck_resistance_ppm))
+                        return "luck_resistance_ppm: integer expected";
+                if (message.luck_enabled != null && $Object.hasOwnProperty.call(message, "luck_enabled"))
+                    if (typeof message.luck_enabled !== "boolean")
+                        return "luck_enabled: boolean expected";
                 return null;
             };
 

@@ -34,6 +34,7 @@ GROUP_PREFIXES = {
     'payments': ('Payment',),
     'mining': ('Mining',),
     'forge': ('Forge',),
+    'luck': ('Lucky',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -46,6 +47,7 @@ PAYMENT_PERSISTENCE_CASES = ('TestPaymentOrderAuthorityMongo', 'TestPaymentGrant
 MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSourceAndPurity', 'TestMiningAutoRecycleSettlementMongo')
 # 打造专项核对原报价和原材料、两个金币钱包及真实结算回执。
 FORGE_PERSISTENCE_CASES = ('TestForgeSettlementMongo',)
+LUCK_PERSISTENCE_CASES = ('TestLuckDropSettlementMongo',)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -80,6 +82,7 @@ def suites():
     groups['payments'].extend(PAYMENT_PERSISTENCE_CASES)
     groups['mining'].extend(MINING_PERSISTENCE_CASES)
     groups['forge'].extend(FORGE_PERSISTENCE_CASES)
+    groups['luck'].extend(LUCK_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -148,9 +151,27 @@ def run_batch(output, group, cases, timeout):
             environment['MINIMIR_FORGE_TEST_FIXTURE'] = str(fixture)
             for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('fixture', fixture), ('public', public)):
                 report[f'forge_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        if group == 'luck':
+            # 幸运验收沿同一隔离图纸、矿石和装备来源，抵抗只在本轮候选开启。
+            assembly = destination / 'luck-assembly.json'
+            mining_assembly = destination / 'mining-assembly.json'
+            forge_assembly = destination / 'forge-assembly.json'
+            fixture = destination / 'luck-fixture.json'
+            public = destination / 'luck-gameplay.json'
+            for kind, path in (('combat-luck', assembly), ('mining', mining_assembly), ('forge', forge_assembly)):
+                path.write_bytes((ROOT / f'tools/resources/testdata/{kind}-isolated.json').read_bytes())
+            luck_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_combat_luck.py'), '--assembly', str(assembly),
+                           '--mining-assembly', str(mining_assembly), '--forge-assembly', str(forge_assembly),
+                           '--fixture-out', str(fixture), '--public-out', str(public)]
+            subprocess.run(luck_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*luck_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_LUCK_TEST_FIXTURE'] = str(fixture)
+            for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('forge_assembly', forge_assembly),
+                                    ('fixture', fixture), ('public', public)):
+                report[f'luck_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group in ('market', 'payments', 'mining', 'forge'):
+        if group in ('market', 'payments', 'mining', 'forge', 'luck'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

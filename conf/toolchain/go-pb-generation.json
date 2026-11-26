@@ -14,7 +14,7 @@
     "personal_boss.proto": "e80ecbe52c86e2d2931fee7fa2c1a61321ef0b799603eeac7b4574bd67476180",
     "role_card.proto": "03d9c914dd24a78f9fbf6f7d8bf6d871095e21d9010a97abc535f2b0d8b981bb",
     "tasks_codex.proto": "2d72442ba3da69dcc5ff44813f7cecdf6a6089895d1cde50a53eb153f1728b4e",
-    "world.proto": "6fdd7861d93cab67613efd4a51194aae6d8dcbfabfc5f4d5a3502175fbe92144",
+    "world.proto": "585c901d3ce20e934ac6719697d15268d8a27d30587cca013e96dd4b3581fa06",
     "world_boss.proto": "4780f801334ee49b2e7c0b627ff58d8b78d69525acc5b4311ea12e8463ba9cdd"
   },
   "outputs": {
@@ -30,7 +30,7 @@
     "server/api/generated/minimirv1/personal_boss.pb.go": "0c83d70e71cfd659fa5bfb0309f16c5dc4aa4e2bda48b65d63503eb1d24503b0",
     "server/api/generated/minimirv1/role_card.pb.go": "e961d6c05805e3d4f5c083e851306c9e66bc159c3da92f76af7f5487294f7667",
     "server/api/generated/minimirv1/tasks_codex.pb.go": "c39b7d50ac84fa06d49967d45a0c895806ff3741d17998ff4851a1f7d2e8e5a2",
-    "server/api/generated/minimirv1/world.pb.go": "42a336a48862b5c69d6ff8f683d12e9705f89275eeb2555329095bceac4171cb",
+    "server/api/generated/minimirv1/world.pb.go": "e6d7bdf39ec3a6ac4ea825cf606f22255eb1861d8ec7eb618d992f95b573ab34",
     "server/api/generated/minimirv1/world_boss.pb.go": "d9482bafd6186c6f63e34a47c5e896af48a2b8c4bbb1409d950c892c64e6940e"
   },
   "business_implemented": false

@@ -189,6 +189,9 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			if name == "" {
 				name = field.Name
 			}
+			if kind == reflect.TypeOf(Fighter{}) && (field.Name == "LuckAttackPPM" || field.Name == "LuckResistancePPM") {
+				continue // 这两个值来自运行态投影，不能成为宠物基础模板字段。
+			}
 			known[name] = true
 			// value 保存从字段集合取出的值，exists 保存从字段集合取出的存在。
 			value, exists := fields[name]

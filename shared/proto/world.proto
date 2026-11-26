@@ -215,6 +215,11 @@ message CombatAttributes {
   int64 accuracy = 11;
   int64 agility = 12;
   uint32 damage_reduction_percent = 13;
+  // 服务端确认的装备幸运总贡献，已经封顶，尚未扣当前攻击目标的抵抗。
+  uint32 luck_attack_ppm = 14;
+  // 此实体作为目标时的幸运一击抵抗，单位仍为百万分率。
+  uint32 luck_resistance_ppm = 15;
+  bool luck_enabled = 16;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;

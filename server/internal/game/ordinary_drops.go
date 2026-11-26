@@ -103,6 +103,16 @@ func confirmedSettlementLoot(q persistence.Settlement, op persistence.Operation)
 		if op.Settlement != nil && !op.Settlement.GrantedItem {
 			return nil, true
 		}
+		if op.Settlement != nil && op.Settlement.LuckyDrop != nil {
+			actual := op.Settlement.LuckyDrop
+			if q.Item == nil || op.Kind != "settlement" || op.SourceSeq != q.SourceSeq ||
+				actual.InitialLuck < 1 || actual.InitialLuck > 3 || actual.ID != q.Item.ID || actual.ItemID != q.Item.ItemID ||
+				actual.Quality != q.Item.Quality || actual.Bound != q.Item.Bound || actual.Quantity != q.Item.Quantity ||
+				actual.SourceKind != q.Item.SourceKind || actual.SourceID != q.Item.SourceID {
+				return nil, false
+			}
+			return actual, true
+		}
 		return q.Item, true
 	}
 	if q.Item == nil || op.Kind != "settlement" || op.SourceSeq != q.SourceSeq || op.Settlement == nil || op.Settlement.OrdinaryEquipment == nil {
