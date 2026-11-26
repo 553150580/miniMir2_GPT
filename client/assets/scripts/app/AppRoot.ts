@@ -10,7 +10,7 @@ import { NavigationIntent } from '../input/NavigationIntent';
 import { TouchJoystick } from '../input/TouchJoystick';
 import { MapTouchNavigator } from '../input/MapTouchNavigator';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
-import { currentEntryIdentity, isCurrentEntry, operation, queryItemMarket, queryRoleCard, roleIdentity, session } from './GameSession';
+import { currentEntryIdentity, isCurrentEntry, operation, queryGoldMarket, queryItemMarket, queryRoleCard, roleIdentity, session } from './GameSession';
 import { accountIdentity, GameReconnect } from './GameReconnect';
 import { connectRoleEntry, isRoleAccountAuthenticationError } from './RoleEntry';
 import { ServerDirectory } from './ServerDirectory';
@@ -25,6 +25,8 @@ import { GameMessages } from './GameMessages';
 import { GameHosting } from './GameHosting';
 import { GameRoleCards } from './GameRoleCards';
 import { GameItemMarket } from './GameItemMarket';
+import { GameGoldMarket } from './GameGoldMarket';
+import { GoldMarketScope, GoldMarketSide, validateGoldMarketReceipt, type GoldMarketAction, type GoldMarketReceipt } from './GoldMarketProtocol';
 import { ItemMarketScope, validateItemMarketReceipt, type ItemMarketAction, type ItemMarketReceipt } from './ItemMarketProtocol';
 import { validateRoleCardDailyReceipt, validateRoleCardPurchaseReceipt, type RoleCardBuyRequest, type RoleCardDailyReceipt,
     type RoleCardDailyRequest, type RoleCardPurchaseReceipt } from './RoleCardProtocol';
@@ -103,6 +105,7 @@ export class AppRoot extends Component {
     private hosting?: GameHosting;
     private roleCards?: GameRoleCards;
     private itemMarket?: GameItemMarket;
+    private goldMarket?: GameGoldMarket;
     private skills?: GameSkills;
     private tasksCodex?: GameTasksCodex;
     private boss?: GameBoss;
@@ -597,6 +600,15 @@ export class AppRoot extends Component {
             }, { query: queryItemMarket, mutate: request => this.economic(40041, request), tap: () => this.tapSound?.(),
                 definition: id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id) });
         this.cleanups.push(() => this.itemMarket?.dispose());
+        this.goldMarket = new GameGoldMarket(this.find('UIMgr/Panels/Functions/Pages/Page2/GoldMarket'), this.find('UIMgr/Panels/GoldMarket'),
+            this.find('UIMgr/Panels/GoldMarketPlace'), this.find('UIMgr/Panels/GoldMarketDetail'), this.ui, this.popup, () => {
+                const identity = currentEntryIdentity(), { entry, role, wallet } = session;
+                if (this.disposed || this.attaching || this.leaving || session.travel.blocksInput || session.teleport.blocksInput ||
+                    !role || !session.ready || !identity || !isCurrentEntry(identity) || !wallet || ![1, 2].includes(entry.sceneKind)) return undefined;
+                return { scope: attachmentKey(identity), role: identity.role, ruleVersion: entry.resourceVersion,
+                    gold: wallet.gold, yuanbao: wallet.yuanbaoUnits, pending: this.economicBusy || this.unresolved };
+            }, { query: queryGoldMarket, mutate: request => this.economic(40044, request), tap: () => this.tapSound?.() });
+        this.cleanups.push(() => this.goldMarket?.dispose());
         this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
         const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
         const directory = new TownDirectory(this.find('UIMgr/Panels/TownDirectory'), row => this.selectTownDestination(row));
@@ -795,6 +807,20 @@ export class AppRoot extends Component {
         this.button(market + 'ListItem', () => this.itemMarket?.openListing());
         this.button('UIMgr/Panels/ItemMarketOrder/Action', () => this.itemMarket?.orderAction());
         this.button('UIMgr/Panels/ItemMarketListing/Submit', () => this.itemMarket?.submitListing());
+        this.button('UIMgr/Panels/Functions/Pages/Page2/GoldMarket', () => this.goldMarket?.open());
+        const goldMarket = 'UIMgr/Panels/GoldMarket/';
+        this.button(goldMarket + 'Tabs/Buy', () => this.goldMarket?.switchScope(GoldMarketScope.Buy));
+        this.button(goldMarket + 'Tabs/Sell', () => this.goldMarket?.switchScope(GoldMarketScope.Sell));
+        this.button(goldMarket + 'Tabs/Mine', () => this.goldMarket?.switchScope(GoldMarketScope.Mine));
+        this.button(goldMarket + 'Tabs/Escrow', () => this.goldMarket?.switchScope(GoldMarketScope.Escrow));
+        this.button(goldMarket + 'Previous', () => this.goldMarket?.pageBy(-1));
+        this.button(goldMarket + 'Next', () => this.goldMarket?.pageBy(1));
+        this.button(goldMarket + 'Refresh', () => this.goldMarket?.refresh());
+        this.button(goldMarket + 'Place', () => this.goldMarket?.openPlace());
+        this.button('UIMgr/Panels/GoldMarketPlace/Buy', () => this.goldMarket?.selectSide(GoldMarketSide.Buy));
+        this.button('UIMgr/Panels/GoldMarketPlace/Sell', () => this.goldMarket?.selectSide(GoldMarketSide.Sell));
+        this.button('UIMgr/Panels/GoldMarketPlace/Submit', () => this.goldMarket?.previewPlace());
+        this.button('UIMgr/Panels/GoldMarketDetail/Action', () => this.goldMarket?.acceptDetail());
         this.button('UIMgr/Panels/Inventory/Equip', () => this.changeEquipment(false));
         this.button('UIMgr/Panels/Inventory/Recycle', () => this.recycleSelectedInventory());
     }
@@ -802,7 +828,7 @@ export class AppRoot extends Component {
     private openGamePanel(panel: string): void {
         this.ui!.open(panel);
         if (panel === 'Hosting') { this.hosting?.open(); this.roleCards?.discover(); }
-        if (panel === 'Functions') this.itemMarket?.discover();
+        if (panel === 'Functions') { this.itemMarket?.discover(); this.goldMarket?.discover(); }
         this.refreshGame();
     }
 
@@ -810,6 +836,7 @@ export class AppRoot extends Component {
         if (this.disposed) return;
         this.roleCards?.sync();
         this.itemMarket?.sync();
+        this.goldMarket?.sync();
         this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
@@ -1396,6 +1423,7 @@ export class AppRoot extends Component {
         this.hosting?.refresh(session.hosting?.remainHostingSec);
         this.roleCards?.sync();
         this.itemMarket?.sync();
+        this.goldMarket?.sync();
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -2002,11 +2030,13 @@ export class AppRoot extends Component {
         if (result.pending) { this.unresolved = true; throw new Error('操作仍在处理中，请重新认证查询结果'); }
         let hostingReceipt: string | undefined, cardPurchase: RoleCardPurchaseReceipt | undefined, cardDaily: RoleCardDailyReceipt | undefined;
         let marketReceipt: ItemMarketReceipt | undefined;
+        let goldMarketReceipt: GoldMarketReceipt | undefined;
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
             if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
             if (pending.id === 40038) cardDaily = validateRoleCardDailyReceipt(result.roleCardDaily, pending.value as unknown as RoleCardDailyRequest);
             if (pending.id === 40041) marketReceipt = validateItemMarketReceipt(result.itemMarket, pending.value as unknown as ItemMarketAction);
+            if (pending.id === 40044) goldMarketReceipt = validateGoldMarketReceipt(result.goldMarket, pending.value as unknown as GoldMarketAction);
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2020,6 +2050,7 @@ export class AppRoot extends Component {
         if (cardPurchase) this.roleCards?.acceptPurchase(role, cardPurchase);
         if (cardDaily) this.roleCards?.acceptDaily(role, cardDaily);
         if (marketReceipt) this.itemMarket?.acceptReceipt(role, marketReceipt);
+        if (goldMarketReceipt) this.goldMarket?.acceptReceipt(role, goldMarketReceipt);
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
         this.status('操作已由服务端确认');
     }

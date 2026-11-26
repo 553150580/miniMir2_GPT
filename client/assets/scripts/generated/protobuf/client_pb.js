@@ -806,6 +806,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.RoleCardPurchaseReceipt.$Properties|null} [role_card_purchase] OperationResult role_card_purchase
              * @property {minimir.v1.RoleCardDailyReceipt.$Properties|null} [role_card_daily] OperationResult role_card_daily
              * @property {minimir.v1.ItemMarketReceipt.$Properties|null} [item_market] OperationResult item_market
+             * @property {minimir.v1.GoldMarketReceipt.$Properties|null} [gold_market] OperationResult gold_market
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -918,6 +919,14 @@ $root.minimir = (function() {
             OperationResult.prototype.item_market = null;
 
             /**
+             * OperationResult gold_market.
+             * @member {minimir.v1.GoldMarketReceipt.$Properties|null|undefined} gold_market
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.gold_market = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -969,6 +978,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.RoleCardDailyReceipt.encode(message.role_card_daily, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
                 if (message.item_market != null && $Object.hasOwnProperty.call(message, "item_market"))
                     $root.minimir.v1.ItemMarketReceipt.encode(message.item_market, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.gold_market != null && $Object.hasOwnProperty.call(message, "gold_market"))
+                    $root.minimir.v1.GoldMarketReceipt.encode(message.gold_market, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1101,6 +1112,12 @@ $root.minimir = (function() {
                             message.item_market = $root.minimir.v1.ItemMarketReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.item_market);
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.gold_market = $root.minimir.v1.GoldMarketReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.gold_market);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1189,6 +1206,11 @@ $root.minimir = (function() {
                     if (error)
                         return "item_market." + error;
                 }
+                if (message.gold_market != null && $Object.hasOwnProperty.call(message, "gold_market")) {
+                    var error = $root.minimir.v1.GoldMarketReceipt.verify(message.gold_market, _depth + 1);
+                    if (error)
+                        return "gold_market." + error;
+                }
                 return null;
             };
 
@@ -1207,6 +1229,544 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.GoldMarketReceipt = (function() {
+
+            /**
+             * Properties of a GoldMarketReceipt.
+             * @typedef {Object} minimir.v1.GoldMarketReceipt.$Properties
+             * @property {number|null} [action] GoldMarketReceipt action
+             * @property {Uint8Array|null} [order_id] GoldMarketReceipt order_id
+             * @property {Long|null} [order_version] GoldMarketReceipt order_version
+             * @property {number|null} [side] GoldMarketReceipt side
+             * @property {number|null} [state] GoldMarketReceipt state
+             * @property {Long|null} [quantity_lots] GoldMarketReceipt quantity_lots
+             * @property {Long|null} [filled_lots] GoldMarketReceipt filled_lots
+             * @property {Long|null} [remaining_lots] GoldMarketReceipt remaining_lots
+             * @property {Long|null} [unit_price_yuanbao_units] GoldMarketReceipt unit_price_yuanbao_units
+             * @property {Long|null} [gold_delta] GoldMarketReceipt gold_delta
+             * @property {Long|null} [yuanbao_delta_units] GoldMarketReceipt yuanbao_delta_units
+             * @property {Long|null} [seller_fee_yuanbao_units] GoldMarketReceipt seller_fee_yuanbao_units
+             * @property {Uint8Array|null} [escrow_id] GoldMarketReceipt escrow_id
+             * @property {Long|null} [escrow_version] GoldMarketReceipt escrow_version
+             * @property {Long|null} [expires_at_unix_ms] GoldMarketReceipt expires_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketReceipt.
+             * @memberof minimir.v1
+             * @interface IGoldMarketReceipt
+             * @augments minimir.v1.GoldMarketReceipt.$Properties
+             * @deprecated Use minimir.v1.GoldMarketReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketReceipt.
+             * @typedef {minimir.v1.GoldMarketReceipt.$Properties} minimir.v1.GoldMarketReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketReceipt.
+             * @constructor
+             * @param {minimir.v1.GoldMarketReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketReceipt action.
+             * @member {number} action
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.action = 0;
+
+            /**
+             * GoldMarketReceipt order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketReceipt order_version.
+             * @member {Long} order_version
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.order_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketReceipt side.
+             * @member {number} side
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.side = 0;
+
+            /**
+             * GoldMarketReceipt state.
+             * @member {number} state
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.state = 0;
+
+            /**
+             * GoldMarketReceipt quantity_lots.
+             * @member {Long} quantity_lots
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.quantity_lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt filled_lots.
+             * @member {Long} filled_lots
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.filled_lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt remaining_lots.
+             * @member {Long} remaining_lots
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.remaining_lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt gold_delta.
+             * @member {Long} gold_delta
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.gold_delta = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt yuanbao_delta_units.
+             * @member {Long} yuanbao_delta_units
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.yuanbao_delta_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt seller_fee_yuanbao_units.
+             * @member {Long} seller_fee_yuanbao_units
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.seller_fee_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketReceipt escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketReceipt escrow_version.
+             * @member {Long} escrow_version
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.escrow_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketReceipt expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @instance
+             */
+            GoldMarketReceipt.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new GoldMarketReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {minimir.v1.GoldMarketReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketReceipt} GoldMarketReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketReceipt.$Shape): minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape;
+             *   (properties?: minimir.v1.GoldMarketReceipt.$Properties): minimir.v1.GoldMarketReceipt;
+             * }}
+             */
+            GoldMarketReceipt.create = function(properties) {
+                return new GoldMarketReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketReceipt message. Does not implicitly {@link minimir.v1.GoldMarketReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {minimir.v1.GoldMarketReceipt.$Properties} message GoldMarketReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.order_id);
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version") && (typeof message.order_version === "object" ? message.order_version.low || message.order_version.high : message.order_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.order_version);
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side") && message.side !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.side);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.state);
+                if (message.quantity_lots != null && $Object.hasOwnProperty.call(message, "quantity_lots") && (typeof message.quantity_lots === "object" ? message.quantity_lots.low || message.quantity_lots.high : message.quantity_lots !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.quantity_lots);
+                if (message.filled_lots != null && $Object.hasOwnProperty.call(message, "filled_lots") && (typeof message.filled_lots === "object" ? message.filled_lots.low || message.filled_lots.high : message.filled_lots !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.filled_lots);
+                if (message.remaining_lots != null && $Object.hasOwnProperty.call(message, "remaining_lots") && (typeof message.remaining_lots === "object" ? message.remaining_lots.low || message.remaining_lots.high : message.remaining_lots !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.remaining_lots);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.unit_price_yuanbao_units);
+                if (message.gold_delta != null && $Object.hasOwnProperty.call(message, "gold_delta") && (typeof message.gold_delta === "object" ? message.gold_delta.low || message.gold_delta.high : message.gold_delta !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.gold_delta);
+                if (message.yuanbao_delta_units != null && $Object.hasOwnProperty.call(message, "yuanbao_delta_units") && (typeof message.yuanbao_delta_units === "object" ? message.yuanbao_delta_units.low || message.yuanbao_delta_units.high : message.yuanbao_delta_units !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.yuanbao_delta_units);
+                if (message.seller_fee_yuanbao_units != null && $Object.hasOwnProperty.call(message, "seller_fee_yuanbao_units") && (typeof message.seller_fee_yuanbao_units === "object" ? message.seller_fee_yuanbao_units.low || message.seller_fee_yuanbao_units.high : message.seller_fee_yuanbao_units !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.seller_fee_yuanbao_units);
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 13, wireType 2 =*/106).bytes(message.escrow_id);
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version") && (typeof message.escrow_version === "object" ? message.escrow_version.low || message.escrow_version.high : message.escrow_version !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint64(message.escrow_version);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).int64(message.expires_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketReceipt message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {minimir.v1.GoldMarketReceipt.$Properties} message GoldMarketReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape} GoldMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.order_version = value;
+                            else
+                                delete message.order_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.side = value;
+                            else
+                                delete message.side;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity_lots = value;
+                            else
+                                delete message.quantity_lots;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.filled_lots = value;
+                            else
+                                delete message.filled_lots;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.remaining_lots = value;
+                            else
+                                delete message.remaining_lots;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold_delta = value;
+                            else
+                                delete message.gold_delta;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_delta_units = value;
+                            else
+                                delete message.yuanbao_delta_units;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.seller_fee_yuanbao_units = value;
+                            else
+                                delete message.seller_fee_yuanbao_units;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.escrow_version = value;
+                            else
+                                delete message.escrow_version;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape} GoldMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketReceipt message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version"))
+                    if (!$util.isInteger(message.order_version) && !(message.order_version && $util.isInteger(message.order_version.low) && $util.isInteger(message.order_version.high)))
+                        return "order_version: integer|Long expected";
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side"))
+                    if (!$util.isInteger(message.side))
+                        return "side: integer expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.quantity_lots != null && $Object.hasOwnProperty.call(message, "quantity_lots"))
+                    if (!$util.isInteger(message.quantity_lots) && !(message.quantity_lots && $util.isInteger(message.quantity_lots.low) && $util.isInteger(message.quantity_lots.high)))
+                        return "quantity_lots: integer|Long expected";
+                if (message.filled_lots != null && $Object.hasOwnProperty.call(message, "filled_lots"))
+                    if (!$util.isInteger(message.filled_lots) && !(message.filled_lots && $util.isInteger(message.filled_lots.low) && $util.isInteger(message.filled_lots.high)))
+                        return "filled_lots: integer|Long expected";
+                if (message.remaining_lots != null && $Object.hasOwnProperty.call(message, "remaining_lots"))
+                    if (!$util.isInteger(message.remaining_lots) && !(message.remaining_lots && $util.isInteger(message.remaining_lots.low) && $util.isInteger(message.remaining_lots.high)))
+                        return "remaining_lots: integer|Long expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.gold_delta != null && $Object.hasOwnProperty.call(message, "gold_delta"))
+                    if (!$util.isInteger(message.gold_delta) && !(message.gold_delta && $util.isInteger(message.gold_delta.low) && $util.isInteger(message.gold_delta.high)))
+                        return "gold_delta: integer|Long expected";
+                if (message.yuanbao_delta_units != null && $Object.hasOwnProperty.call(message, "yuanbao_delta_units"))
+                    if (!$util.isInteger(message.yuanbao_delta_units) && !(message.yuanbao_delta_units && $util.isInteger(message.yuanbao_delta_units.low) && $util.isInteger(message.yuanbao_delta_units.high)))
+                        return "yuanbao_delta_units: integer|Long expected";
+                if (message.seller_fee_yuanbao_units != null && $Object.hasOwnProperty.call(message, "seller_fee_yuanbao_units"))
+                    if (!$util.isInteger(message.seller_fee_yuanbao_units) && !(message.seller_fee_yuanbao_units && $util.isInteger(message.seller_fee_yuanbao_units.low) && $util.isInteger(message.seller_fee_yuanbao_units.high)))
+                        return "seller_fee_yuanbao_units: integer|Long expected";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version"))
+                    if (!$util.isInteger(message.escrow_version) && !(message.escrow_version && $util.isInteger(message.escrow_version.low) && $util.isInteger(message.escrow_version.high)))
+                        return "escrow_version: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketReceipt";
+            };
+
+            return GoldMarketReceipt;
         })();
 
         v1.ItemMarketReceipt = (function() {
@@ -49818,6 +50378,2441 @@ $root.minimir = (function() {
             };
 
             return ItemMarketAction;
+        })();
+
+        v1.GoldMarketQuery = (function() {
+
+            /**
+             * Properties of a GoldMarketQuery.
+             * @typedef {Object} minimir.v1.GoldMarketQuery.$Properties
+             * @property {Long|null} [scene_epoch] GoldMarketQuery scene_epoch
+             * @property {number|null} [scope] GoldMarketQuery scope
+             * @property {number|null} [page_size] GoldMarketQuery page_size
+             * @property {Uint8Array|null} [cursor] GoldMarketQuery cursor
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketQuery.
+             * @memberof minimir.v1
+             * @interface IGoldMarketQuery
+             * @augments minimir.v1.GoldMarketQuery.$Properties
+             * @deprecated Use minimir.v1.GoldMarketQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketQuery.
+             * @typedef {minimir.v1.GoldMarketQuery.$Properties} minimir.v1.GoldMarketQuery.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketQuery.
+             * @constructor
+             * @param {minimir.v1.GoldMarketQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.GoldMarketQuery
+             * @instance
+             */
+            GoldMarketQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketQuery scope.
+             * @member {number} scope
+             * @memberof minimir.v1.GoldMarketQuery
+             * @instance
+             */
+            GoldMarketQuery.prototype.scope = 0;
+
+            /**
+             * GoldMarketQuery page_size.
+             * @member {number} page_size
+             * @memberof minimir.v1.GoldMarketQuery
+             * @instance
+             */
+            GoldMarketQuery.prototype.page_size = 0;
+
+            /**
+             * GoldMarketQuery cursor.
+             * @member {Uint8Array} cursor
+             * @memberof minimir.v1.GoldMarketQuery
+             * @instance
+             */
+            GoldMarketQuery.prototype.cursor = $util.newBuffer([]);
+
+            /**
+             * Creates a new GoldMarketQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {minimir.v1.GoldMarketQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketQuery} GoldMarketQuery instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketQuery.$Shape): minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape;
+             *   (properties?: minimir.v1.GoldMarketQuery.$Properties): minimir.v1.GoldMarketQuery;
+             * }}
+             */
+            GoldMarketQuery.create = function(properties) {
+                return new GoldMarketQuery(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketQuery message. Does not implicitly {@link minimir.v1.GoldMarketQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {minimir.v1.GoldMarketQuery.$Properties} message GoldMarketQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.scope);
+                if (message.page_size != null && $Object.hasOwnProperty.call(message, "page_size") && message.page_size !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.page_size);
+                if (message.cursor != null && $Object.hasOwnProperty.call(message, "cursor") && message.cursor.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.cursor);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketQuery message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {minimir.v1.GoldMarketQuery.$Properties} message GoldMarketQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape} GoldMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.page_size = value;
+                            else
+                                delete message.page_size;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.cursor = value;
+                            else
+                                delete message.cursor;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape} GoldMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketQuery message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.page_size != null && $Object.hasOwnProperty.call(message, "page_size"))
+                    if (!$util.isInteger(message.page_size))
+                        return "page_size: integer expected";
+                if (message.cursor != null && $Object.hasOwnProperty.call(message, "cursor"))
+                    if (!(message.cursor && typeof message.cursor.length === "number" || $util.isString(message.cursor)))
+                        return "cursor: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketQuery";
+            };
+
+            return GoldMarketQuery;
+        })();
+
+        v1.GoldMarketRulesView = (function() {
+
+            /**
+             * Properties of a GoldMarketRulesView.
+             * @typedef {Object} minimir.v1.GoldMarketRulesView.$Properties
+             * @property {Long|null} [rule_version] GoldMarketRulesView rule_version
+             * @property {string|null} [config_hash] GoldMarketRulesView config_hash
+             * @property {string|null} [terms_hash] GoldMarketRulesView terms_hash
+             * @property {Long|null} [reference_unit_price_yuanbao_units] GoldMarketRulesView reference_unit_price_yuanbao_units
+             * @property {Long|null} [min_unit_price_yuanbao_units] GoldMarketRulesView min_unit_price_yuanbao_units
+             * @property {Long|null} [max_unit_price_yuanbao_units] GoldMarketRulesView max_unit_price_yuanbao_units
+             * @property {Long|null} [price_step_yuanbao_units] GoldMarketRulesView price_step_yuanbao_units
+             * @property {Long|null} [gold_per_lot] GoldMarketRulesView gold_per_lot
+             * @property {number|null} [order_duration_seconds] GoldMarketRulesView order_duration_seconds
+             * @property {number|null} [seller_commission_bp] GoldMarketRulesView seller_commission_bp
+             * @property {number|null} [max_orders_per_side] GoldMarketRulesView max_orders_per_side
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketRulesView.
+             * @memberof minimir.v1
+             * @interface IGoldMarketRulesView
+             * @augments minimir.v1.GoldMarketRulesView.$Properties
+             * @deprecated Use minimir.v1.GoldMarketRulesView.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketRulesView.
+             * @typedef {minimir.v1.GoldMarketRulesView.$Properties} minimir.v1.GoldMarketRulesView.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketRulesView.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketRulesView.
+             * @constructor
+             * @param {minimir.v1.GoldMarketRulesView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketRulesView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketRulesView rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketRulesView config_hash.
+             * @member {string} config_hash
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.config_hash = "";
+
+            /**
+             * GoldMarketRulesView terms_hash.
+             * @member {string} terms_hash
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.terms_hash = "";
+
+            /**
+             * GoldMarketRulesView reference_unit_price_yuanbao_units.
+             * @member {Long} reference_unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.reference_unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketRulesView min_unit_price_yuanbao_units.
+             * @member {Long} min_unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.min_unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketRulesView max_unit_price_yuanbao_units.
+             * @member {Long} max_unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.max_unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketRulesView price_step_yuanbao_units.
+             * @member {Long} price_step_yuanbao_units
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.price_step_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketRulesView gold_per_lot.
+             * @member {Long} gold_per_lot
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.gold_per_lot = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketRulesView order_duration_seconds.
+             * @member {number} order_duration_seconds
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.order_duration_seconds = 0;
+
+            /**
+             * GoldMarketRulesView seller_commission_bp.
+             * @member {number} seller_commission_bp
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.seller_commission_bp = 0;
+
+            /**
+             * GoldMarketRulesView max_orders_per_side.
+             * @member {number} max_orders_per_side
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @instance
+             */
+            GoldMarketRulesView.prototype.max_orders_per_side = 0;
+
+            /**
+             * Creates a new GoldMarketRulesView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {minimir.v1.GoldMarketRulesView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketRulesView} GoldMarketRulesView instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketRulesView.$Shape): minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape;
+             *   (properties?: minimir.v1.GoldMarketRulesView.$Properties): minimir.v1.GoldMarketRulesView;
+             * }}
+             */
+            GoldMarketRulesView.create = function(properties) {
+                return new GoldMarketRulesView(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketRulesView message. Does not implicitly {@link minimir.v1.GoldMarketRulesView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {minimir.v1.GoldMarketRulesView.$Properties} message GoldMarketRulesView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketRulesView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.rule_version);
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash") && message.config_hash !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.config_hash);
+                if (message.terms_hash != null && $Object.hasOwnProperty.call(message, "terms_hash") && message.terms_hash !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.terms_hash);
+                if (message.reference_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "reference_unit_price_yuanbao_units") && (typeof message.reference_unit_price_yuanbao_units === "object" ? message.reference_unit_price_yuanbao_units.low || message.reference_unit_price_yuanbao_units.high : message.reference_unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.reference_unit_price_yuanbao_units);
+                if (message.min_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "min_unit_price_yuanbao_units") && (typeof message.min_unit_price_yuanbao_units === "object" ? message.min_unit_price_yuanbao_units.low || message.min_unit_price_yuanbao_units.high : message.min_unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.min_unit_price_yuanbao_units);
+                if (message.max_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "max_unit_price_yuanbao_units") && (typeof message.max_unit_price_yuanbao_units === "object" ? message.max_unit_price_yuanbao_units.low || message.max_unit_price_yuanbao_units.high : message.max_unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.max_unit_price_yuanbao_units);
+                if (message.price_step_yuanbao_units != null && $Object.hasOwnProperty.call(message, "price_step_yuanbao_units") && (typeof message.price_step_yuanbao_units === "object" ? message.price_step_yuanbao_units.low || message.price_step_yuanbao_units.high : message.price_step_yuanbao_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.price_step_yuanbao_units);
+                if (message.gold_per_lot != null && $Object.hasOwnProperty.call(message, "gold_per_lot") && (typeof message.gold_per_lot === "object" ? message.gold_per_lot.low || message.gold_per_lot.high : message.gold_per_lot !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.gold_per_lot);
+                if (message.order_duration_seconds != null && $Object.hasOwnProperty.call(message, "order_duration_seconds") && message.order_duration_seconds !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.order_duration_seconds);
+                if (message.seller_commission_bp != null && $Object.hasOwnProperty.call(message, "seller_commission_bp") && message.seller_commission_bp !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.seller_commission_bp);
+                if (message.max_orders_per_side != null && $Object.hasOwnProperty.call(message, "max_orders_per_side") && message.max_orders_per_side !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.max_orders_per_side);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketRulesView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketRulesView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {minimir.v1.GoldMarketRulesView.$Properties} message GoldMarketRulesView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketRulesView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketRulesView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape} GoldMarketRulesView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketRulesView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketRulesView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.config_hash = value;
+                            else
+                                delete message.config_hash;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.terms_hash = value;
+                            else
+                                delete message.terms_hash;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.reference_unit_price_yuanbao_units = value;
+                            else
+                                delete message.reference_unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.min_unit_price_yuanbao_units = value;
+                            else
+                                delete message.min_unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_unit_price_yuanbao_units = value;
+                            else
+                                delete message.max_unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.price_step_yuanbao_units = value;
+                            else
+                                delete message.price_step_yuanbao_units;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold_per_lot = value;
+                            else
+                                delete message.gold_per_lot;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.order_duration_seconds = value;
+                            else
+                                delete message.order_duration_seconds;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.seller_commission_bp = value;
+                            else
+                                delete message.seller_commission_bp;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.max_orders_per_side = value;
+                            else
+                                delete message.max_orders_per_side;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketRulesView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape} GoldMarketRulesView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketRulesView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketRulesView message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketRulesView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash"))
+                    if (!$util.isString(message.config_hash))
+                        return "config_hash: string expected";
+                if (message.terms_hash != null && $Object.hasOwnProperty.call(message, "terms_hash"))
+                    if (!$util.isString(message.terms_hash))
+                        return "terms_hash: string expected";
+                if (message.reference_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "reference_unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.reference_unit_price_yuanbao_units) && !(message.reference_unit_price_yuanbao_units && $util.isInteger(message.reference_unit_price_yuanbao_units.low) && $util.isInteger(message.reference_unit_price_yuanbao_units.high)))
+                        return "reference_unit_price_yuanbao_units: integer|Long expected";
+                if (message.min_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "min_unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.min_unit_price_yuanbao_units) && !(message.min_unit_price_yuanbao_units && $util.isInteger(message.min_unit_price_yuanbao_units.low) && $util.isInteger(message.min_unit_price_yuanbao_units.high)))
+                        return "min_unit_price_yuanbao_units: integer|Long expected";
+                if (message.max_unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "max_unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.max_unit_price_yuanbao_units) && !(message.max_unit_price_yuanbao_units && $util.isInteger(message.max_unit_price_yuanbao_units.low) && $util.isInteger(message.max_unit_price_yuanbao_units.high)))
+                        return "max_unit_price_yuanbao_units: integer|Long expected";
+                if (message.price_step_yuanbao_units != null && $Object.hasOwnProperty.call(message, "price_step_yuanbao_units"))
+                    if (!$util.isInteger(message.price_step_yuanbao_units) && !(message.price_step_yuanbao_units && $util.isInteger(message.price_step_yuanbao_units.low) && $util.isInteger(message.price_step_yuanbao_units.high)))
+                        return "price_step_yuanbao_units: integer|Long expected";
+                if (message.gold_per_lot != null && $Object.hasOwnProperty.call(message, "gold_per_lot"))
+                    if (!$util.isInteger(message.gold_per_lot) && !(message.gold_per_lot && $util.isInteger(message.gold_per_lot.low) && $util.isInteger(message.gold_per_lot.high)))
+                        return "gold_per_lot: integer|Long expected";
+                if (message.order_duration_seconds != null && $Object.hasOwnProperty.call(message, "order_duration_seconds"))
+                    if (!$util.isInteger(message.order_duration_seconds))
+                        return "order_duration_seconds: integer expected";
+                if (message.seller_commission_bp != null && $Object.hasOwnProperty.call(message, "seller_commission_bp"))
+                    if (!$util.isInteger(message.seller_commission_bp))
+                        return "seller_commission_bp: integer expected";
+                if (message.max_orders_per_side != null && $Object.hasOwnProperty.call(message, "max_orders_per_side"))
+                    if (!$util.isInteger(message.max_orders_per_side))
+                        return "max_orders_per_side: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketRulesView
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketRulesView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketRulesView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketRulesView";
+            };
+
+            return GoldMarketRulesView;
+        })();
+
+        v1.GoldMarketOrderView = (function() {
+
+            /**
+             * Properties of a GoldMarketOrderView.
+             * @typedef {Object} minimir.v1.GoldMarketOrderView.$Properties
+             * @property {Uint8Array|null} [order_id] GoldMarketOrderView order_id
+             * @property {Long|null} [version] GoldMarketOrderView version
+             * @property {number|null} [state] GoldMarketOrderView state
+             * @property {number|null} [side] GoldMarketOrderView side
+             * @property {Long|null} [unit_price_yuanbao_units] GoldMarketOrderView unit_price_yuanbao_units
+             * @property {Long|null} [remaining_lots] GoldMarketOrderView remaining_lots
+             * @property {Long|null} [initial_lots] GoldMarketOrderView initial_lots
+             * @property {Long|null} [expires_at_unix_ms] GoldMarketOrderView expires_at_unix_ms
+             * @property {Long|null} [created_at_unix_ms] GoldMarketOrderView created_at_unix_ms
+             * @property {boolean|null} [owned] GoldMarketOrderView owned
+             * @property {boolean|null} [same_account] GoldMarketOrderView same_account
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketOrderView.
+             * @memberof minimir.v1
+             * @interface IGoldMarketOrderView
+             * @augments minimir.v1.GoldMarketOrderView.$Properties
+             * @deprecated Use minimir.v1.GoldMarketOrderView.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketOrderView.
+             * @typedef {minimir.v1.GoldMarketOrderView.$Properties} minimir.v1.GoldMarketOrderView.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketOrderView.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketOrderView.
+             * @constructor
+             * @param {minimir.v1.GoldMarketOrderView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketOrderView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketOrderView order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketOrderView version.
+             * @member {Long} version
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketOrderView state.
+             * @member {number} state
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.state = 0;
+
+            /**
+             * GoldMarketOrderView side.
+             * @member {number} side
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.side = 0;
+
+            /**
+             * GoldMarketOrderView unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketOrderView remaining_lots.
+             * @member {Long} remaining_lots
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.remaining_lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketOrderView initial_lots.
+             * @member {Long} initial_lots
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.initial_lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketOrderView expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketOrderView created_at_unix_ms.
+             * @member {Long} created_at_unix_ms
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.created_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketOrderView owned.
+             * @member {boolean} owned
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.owned = false;
+
+            /**
+             * GoldMarketOrderView same_account.
+             * @member {boolean} same_account
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @instance
+             */
+            GoldMarketOrderView.prototype.same_account = false;
+
+            /**
+             * Creates a new GoldMarketOrderView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {minimir.v1.GoldMarketOrderView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketOrderView} GoldMarketOrderView instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketOrderView.$Shape): minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape;
+             *   (properties?: minimir.v1.GoldMarketOrderView.$Properties): minimir.v1.GoldMarketOrderView;
+             * }}
+             */
+            GoldMarketOrderView.create = function(properties) {
+                return new GoldMarketOrderView(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketOrderView message. Does not implicitly {@link minimir.v1.GoldMarketOrderView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {minimir.v1.GoldMarketOrderView.$Properties} message GoldMarketOrderView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketOrderView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.order_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.state);
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side") && message.side !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.side);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.unit_price_yuanbao_units);
+                if (message.remaining_lots != null && $Object.hasOwnProperty.call(message, "remaining_lots") && (typeof message.remaining_lots === "object" ? message.remaining_lots.low || message.remaining_lots.high : message.remaining_lots !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.remaining_lots);
+                if (message.initial_lots != null && $Object.hasOwnProperty.call(message, "initial_lots") && (typeof message.initial_lots === "object" ? message.initial_lots.low || message.initial_lots.high : message.initial_lots !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.initial_lots);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.expires_at_unix_ms);
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms") && (typeof message.created_at_unix_ms === "object" ? message.created_at_unix_ms.low || message.created_at_unix_ms.high : message.created_at_unix_ms !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.created_at_unix_ms);
+                if (message.owned != null && $Object.hasOwnProperty.call(message, "owned") && message.owned !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.owned);
+                if (message.same_account != null && $Object.hasOwnProperty.call(message, "same_account") && message.same_account !== false)
+                    writer.uint32(/* id 11, wireType 0 =*/88).bool(message.same_account);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketOrderView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketOrderView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {minimir.v1.GoldMarketOrderView.$Properties} message GoldMarketOrderView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketOrderView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketOrderView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape} GoldMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketOrderView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketOrderView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.side = value;
+                            else
+                                delete message.side;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.remaining_lots = value;
+                            else
+                                delete message.remaining_lots;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.initial_lots = value;
+                            else
+                                delete message.initial_lots;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.created_at_unix_ms = value;
+                            else
+                                delete message.created_at_unix_ms;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.owned = value;
+                            else
+                                delete message.owned;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.same_account = value;
+                            else
+                                delete message.same_account;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketOrderView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape} GoldMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketOrderView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketOrderView message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketOrderView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side"))
+                    if (!$util.isInteger(message.side))
+                        return "side: integer expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.remaining_lots != null && $Object.hasOwnProperty.call(message, "remaining_lots"))
+                    if (!$util.isInteger(message.remaining_lots) && !(message.remaining_lots && $util.isInteger(message.remaining_lots.low) && $util.isInteger(message.remaining_lots.high)))
+                        return "remaining_lots: integer|Long expected";
+                if (message.initial_lots != null && $Object.hasOwnProperty.call(message, "initial_lots"))
+                    if (!$util.isInteger(message.initial_lots) && !(message.initial_lots && $util.isInteger(message.initial_lots.low) && $util.isInteger(message.initial_lots.high)))
+                        return "initial_lots: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms"))
+                    if (!$util.isInteger(message.created_at_unix_ms) && !(message.created_at_unix_ms && $util.isInteger(message.created_at_unix_ms.low) && $util.isInteger(message.created_at_unix_ms.high)))
+                        return "created_at_unix_ms: integer|Long expected";
+                if (message.owned != null && $Object.hasOwnProperty.call(message, "owned"))
+                    if (typeof message.owned !== "boolean")
+                        return "owned: boolean expected";
+                if (message.same_account != null && $Object.hasOwnProperty.call(message, "same_account"))
+                    if (typeof message.same_account !== "boolean")
+                        return "same_account: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketOrderView
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketOrderView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketOrderView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketOrderView";
+            };
+
+            return GoldMarketOrderView;
+        })();
+
+        v1.GoldMarketEscrowView = (function() {
+
+            /**
+             * Properties of a GoldMarketEscrowView.
+             * @typedef {Object} minimir.v1.GoldMarketEscrowView.$Properties
+             * @property {Uint8Array|null} [escrow_id] GoldMarketEscrowView escrow_id
+             * @property {Uint8Array|null} [order_id] GoldMarketEscrowView order_id
+             * @property {Long|null} [version] GoldMarketEscrowView version
+             * @property {number|null} [kind] GoldMarketEscrowView kind
+             * @property {Long|null} [gold] GoldMarketEscrowView gold
+             * @property {Long|null} [yuanbao_units] GoldMarketEscrowView yuanbao_units
+             * @property {Long|null} [created_at_unix_ms] GoldMarketEscrowView created_at_unix_ms
+             * @property {number|null} [reason] GoldMarketEscrowView reason
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketEscrowView.
+             * @memberof minimir.v1
+             * @interface IGoldMarketEscrowView
+             * @augments minimir.v1.GoldMarketEscrowView.$Properties
+             * @deprecated Use minimir.v1.GoldMarketEscrowView.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketEscrowView.
+             * @typedef {minimir.v1.GoldMarketEscrowView.$Properties} minimir.v1.GoldMarketEscrowView.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketEscrowView.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketEscrowView.
+             * @constructor
+             * @param {minimir.v1.GoldMarketEscrowView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketEscrowView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketEscrowView escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketEscrowView order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketEscrowView version.
+             * @member {Long} version
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketEscrowView kind.
+             * @member {number} kind
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.kind = 0;
+
+            /**
+             * GoldMarketEscrowView gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketEscrowView yuanbao_units.
+             * @member {Long} yuanbao_units
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketEscrowView created_at_unix_ms.
+             * @member {Long} created_at_unix_ms
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.created_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketEscrowView reason.
+             * @member {number} reason
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @instance
+             */
+            GoldMarketEscrowView.prototype.reason = 0;
+
+            /**
+             * Creates a new GoldMarketEscrowView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {minimir.v1.GoldMarketEscrowView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketEscrowView} GoldMarketEscrowView instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketEscrowView.$Shape): minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape;
+             *   (properties?: minimir.v1.GoldMarketEscrowView.$Properties): minimir.v1.GoldMarketEscrowView;
+             * }}
+             */
+            GoldMarketEscrowView.create = function(properties) {
+                return new GoldMarketEscrowView(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketEscrowView message. Does not implicitly {@link minimir.v1.GoldMarketEscrowView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {minimir.v1.GoldMarketEscrowView.$Properties} message GoldMarketEscrowView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketEscrowView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.escrow_id);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.order_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.version);
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.kind);
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.gold);
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units") && (typeof message.yuanbao_units === "object" ? message.yuanbao_units.low || message.yuanbao_units.high : message.yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.yuanbao_units);
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms") && (typeof message.created_at_unix_ms === "object" ? message.created_at_unix_ms.low || message.created_at_unix_ms.high : message.created_at_unix_ms !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.created_at_unix_ms);
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason") && message.reason !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.reason);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketEscrowView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketEscrowView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {minimir.v1.GoldMarketEscrowView.$Properties} message GoldMarketEscrowView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketEscrowView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketEscrowView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape} GoldMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketEscrowView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketEscrowView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_units = value;
+                            else
+                                delete message.yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.created_at_unix_ms = value;
+                            else
+                                delete message.created_at_unix_ms;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.reason = value;
+                            else
+                                delete message.reason;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketEscrowView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape} GoldMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketEscrowView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketEscrowView message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketEscrowView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units"))
+                    if (!$util.isInteger(message.yuanbao_units) && !(message.yuanbao_units && $util.isInteger(message.yuanbao_units.low) && $util.isInteger(message.yuanbao_units.high)))
+                        return "yuanbao_units: integer|Long expected";
+                if (message.created_at_unix_ms != null && $Object.hasOwnProperty.call(message, "created_at_unix_ms"))
+                    if (!$util.isInteger(message.created_at_unix_ms) && !(message.created_at_unix_ms && $util.isInteger(message.created_at_unix_ms.low) && $util.isInteger(message.created_at_unix_ms.high)))
+                        return "created_at_unix_ms: integer|Long expected";
+                if (message.reason != null && $Object.hasOwnProperty.call(message, "reason"))
+                    if (!$util.isInteger(message.reason))
+                        return "reason: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketEscrowView
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketEscrowView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketEscrowView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketEscrowView";
+            };
+
+            return GoldMarketEscrowView;
+        })();
+
+        v1.GoldMarketState = (function() {
+
+            /**
+             * Properties of a GoldMarketState.
+             * @typedef {Object} minimir.v1.GoldMarketState.$Properties
+             * @property {Long|null} [scene_epoch] GoldMarketState scene_epoch
+             * @property {number|null} [scope] GoldMarketState scope
+             * @property {boolean|null} [enabled] GoldMarketState enabled
+             * @property {boolean|null} [can_trade] GoldMarketState can_trade
+             * @property {minimir.v1.GoldMarketRulesView.$Properties|null} [rules] GoldMarketState rules
+             * @property {Array.<minimir.v1.GoldMarketOrderView.$Properties>|null} [orders] GoldMarketState orders
+             * @property {Array.<minimir.v1.GoldMarketEscrowView.$Properties>|null} [escrows] GoldMarketState escrows
+             * @property {Uint8Array|null} [next_cursor] GoldMarketState next_cursor
+             * @property {number|null} [error_code] GoldMarketState error_code
+             * @property {Long|null} [role_revision] GoldMarketState role_revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketState.
+             * @memberof minimir.v1
+             * @interface IGoldMarketState
+             * @augments minimir.v1.GoldMarketState.$Properties
+             * @deprecated Use minimir.v1.GoldMarketState.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketState.
+             * @typedef {minimir.v1.GoldMarketState.$Properties} minimir.v1.GoldMarketState.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketState.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketState.
+             * @constructor
+             * @param {minimir.v1.GoldMarketState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketState = function (properties) {
+                this.orders = [];
+                this.escrows = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketState scope.
+             * @member {number} scope
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.scope = 0;
+
+            /**
+             * GoldMarketState enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.enabled = false;
+
+            /**
+             * GoldMarketState can_trade.
+             * @member {boolean} can_trade
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.can_trade = false;
+
+            /**
+             * GoldMarketState rules.
+             * @member {minimir.v1.GoldMarketRulesView.$Properties|null|undefined} rules
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.rules = null;
+
+            /**
+             * GoldMarketState orders.
+             * @member {Array.<minimir.v1.GoldMarketOrderView.$Properties>} orders
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.orders = $util.emptyArray;
+
+            /**
+             * GoldMarketState escrows.
+             * @member {Array.<minimir.v1.GoldMarketEscrowView.$Properties>} escrows
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.escrows = $util.emptyArray;
+
+            /**
+             * GoldMarketState next_cursor.
+             * @member {Uint8Array} next_cursor
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.next_cursor = $util.newBuffer([]);
+
+            /**
+             * GoldMarketState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.error_code = 0;
+
+            /**
+             * GoldMarketState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.GoldMarketState
+             * @instance
+             */
+            GoldMarketState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new GoldMarketState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {minimir.v1.GoldMarketState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketState} GoldMarketState instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketState.$Shape): minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape;
+             *   (properties?: minimir.v1.GoldMarketState.$Properties): minimir.v1.GoldMarketState;
+             * }}
+             */
+            GoldMarketState.create = function(properties) {
+                return new GoldMarketState(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketState message. Does not implicitly {@link minimir.v1.GoldMarketState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {minimir.v1.GoldMarketState.$Properties} message GoldMarketState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.scope);
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.enabled);
+                if (message.can_trade != null && $Object.hasOwnProperty.call(message, "can_trade") && message.can_trade !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.can_trade);
+                if (message.rules != null && $Object.hasOwnProperty.call(message, "rules"))
+                    $root.minimir.v1.GoldMarketRulesView.encode(message.rules, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.orders != null && message.orders.length)
+                    for (var i = 0; i < message.orders.length; ++i)
+                        $root.minimir.v1.GoldMarketOrderView.encode(message.orders[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.escrows != null && message.escrows.length)
+                    for (var i = 0; i < message.escrows.length; ++i)
+                        $root.minimir.v1.GoldMarketEscrowView.encode(message.escrows[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.next_cursor != null && $Object.hasOwnProperty.call(message, "next_cursor") && message.next_cursor.length)
+                    writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.next_cursor);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.error_code);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.role_revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketState message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {minimir.v1.GoldMarketState.$Properties} message GoldMarketState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape} GoldMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.can_trade = value;
+                            else
+                                delete message.can_trade;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.rules = $root.minimir.v1.GoldMarketRulesView.decode(reader, reader.size(), $undefined, _depth + 1, message.rules);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.orders && message.orders.length))
+                                message.orders = [];
+                            message.orders.push($root.minimir.v1.GoldMarketOrderView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.escrows && message.escrows.length))
+                                message.escrows = [];
+                            message.escrows.push($root.minimir.v1.GoldMarketEscrowView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.next_cursor = value;
+                            else
+                                delete message.next_cursor;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape} GoldMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketState message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.can_trade != null && $Object.hasOwnProperty.call(message, "can_trade"))
+                    if (typeof message.can_trade !== "boolean")
+                        return "can_trade: boolean expected";
+                if (message.rules != null && $Object.hasOwnProperty.call(message, "rules")) {
+                    var error = $root.minimir.v1.GoldMarketRulesView.verify(message.rules, _depth + 1);
+                    if (error)
+                        return "rules." + error;
+                }
+                if (message.orders != null && $Object.hasOwnProperty.call(message, "orders")) {
+                    if (!$Array.isArray(message.orders))
+                        return "orders: array expected";
+                    for (var i = 0; i < message.orders.length; ++i) {
+                        var error = $root.minimir.v1.GoldMarketOrderView.verify(message.orders[i], _depth + 1);
+                        if (error)
+                            return "orders." + error;
+                    }
+                }
+                if (message.escrows != null && $Object.hasOwnProperty.call(message, "escrows")) {
+                    if (!$Array.isArray(message.escrows))
+                        return "escrows: array expected";
+                    for (var i = 0; i < message.escrows.length; ++i) {
+                        var error = $root.minimir.v1.GoldMarketEscrowView.verify(message.escrows[i], _depth + 1);
+                        if (error)
+                            return "escrows." + error;
+                    }
+                }
+                if (message.next_cursor != null && $Object.hasOwnProperty.call(message, "next_cursor"))
+                    if (!(message.next_cursor && typeof message.next_cursor.length === "number" || $util.isString(message.next_cursor)))
+                        return "next_cursor: buffer expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketState
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketState";
+            };
+
+            return GoldMarketState;
+        })();
+
+        v1.GoldMarketAction = (function() {
+
+            /**
+             * Properties of a GoldMarketAction.
+             * @typedef {Object} minimir.v1.GoldMarketAction.$Properties
+             * @property {number|null} [action] GoldMarketAction action
+             * @property {number|null} [side] GoldMarketAction side
+             * @property {Long|null} [lots] GoldMarketAction lots
+             * @property {Long|null} [unit_price_yuanbao_units] GoldMarketAction unit_price_yuanbao_units
+             * @property {string|null} [terms_hash] GoldMarketAction terms_hash
+             * @property {number|null} [expected_duration_seconds] GoldMarketAction expected_duration_seconds
+             * @property {Uint8Array|null} [order_id] GoldMarketAction order_id
+             * @property {Long|null} [order_version] GoldMarketAction order_version
+             * @property {Uint8Array|null} [escrow_id] GoldMarketAction escrow_id
+             * @property {Long|null} [escrow_version] GoldMarketAction escrow_version
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] GoldMarketAction operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GoldMarketAction.
+             * @memberof minimir.v1
+             * @interface IGoldMarketAction
+             * @augments minimir.v1.GoldMarketAction.$Properties
+             * @deprecated Use minimir.v1.GoldMarketAction.$Properties instead.
+             */
+
+            /**
+             * Shape of a GoldMarketAction.
+             * @typedef {minimir.v1.GoldMarketAction.$Properties} minimir.v1.GoldMarketAction.$Shape
+             */
+
+            /**
+             * Constructs a new GoldMarketAction.
+             * @memberof minimir.v1
+             * @classdesc Represents a GoldMarketAction.
+             * @constructor
+             * @param {minimir.v1.GoldMarketAction.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GoldMarketAction = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GoldMarketAction action.
+             * @member {number} action
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.action = 0;
+
+            /**
+             * GoldMarketAction side.
+             * @member {number} side
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.side = 0;
+
+            /**
+             * GoldMarketAction lots.
+             * @member {Long} lots
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.lots = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketAction unit_price_yuanbao_units.
+             * @member {Long} unit_price_yuanbao_units
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.unit_price_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GoldMarketAction terms_hash.
+             * @member {string} terms_hash
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.terms_hash = "";
+
+            /**
+             * GoldMarketAction expected_duration_seconds.
+             * @member {number} expected_duration_seconds
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.expected_duration_seconds = 0;
+
+            /**
+             * GoldMarketAction order_id.
+             * @member {Uint8Array} order_id
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.order_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketAction order_version.
+             * @member {Long} order_version
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.order_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketAction escrow_id.
+             * @member {Uint8Array} escrow_id
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.escrow_id = $util.newBuffer([]);
+
+            /**
+             * GoldMarketAction escrow_version.
+             * @member {Long} escrow_version
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.escrow_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GoldMarketAction operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.GoldMarketAction
+             * @instance
+             */
+            GoldMarketAction.prototype.operation = null;
+
+            /**
+             * Creates a new GoldMarketAction instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {minimir.v1.GoldMarketAction.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GoldMarketAction} GoldMarketAction instance
+             * @type {{
+             *   (properties: minimir.v1.GoldMarketAction.$Shape): minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape;
+             *   (properties?: minimir.v1.GoldMarketAction.$Properties): minimir.v1.GoldMarketAction;
+             * }}
+             */
+            GoldMarketAction.create = function(properties) {
+                return new GoldMarketAction(properties);
+            };
+
+            /**
+             * Encodes the specified GoldMarketAction message. Does not implicitly {@link minimir.v1.GoldMarketAction.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {minimir.v1.GoldMarketAction.$Properties} message GoldMarketAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketAction.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side") && message.side !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.side);
+                if (message.lots != null && $Object.hasOwnProperty.call(message, "lots") && (typeof message.lots === "object" ? message.lots.low || message.lots.high : message.lots !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.lots);
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units") && (typeof message.unit_price_yuanbao_units === "object" ? message.unit_price_yuanbao_units.low || message.unit_price_yuanbao_units.high : message.unit_price_yuanbao_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.unit_price_yuanbao_units);
+                if (message.terms_hash != null && $Object.hasOwnProperty.call(message, "terms_hash") && message.terms_hash !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.terms_hash);
+                if (message.expected_duration_seconds != null && $Object.hasOwnProperty.call(message, "expected_duration_seconds") && message.expected_duration_seconds !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.expected_duration_seconds);
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id") && message.order_id.length)
+                    writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.order_id);
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version") && (typeof message.order_version === "object" ? message.order_version.low || message.order_version.high : message.order_version !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.order_version);
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id") && message.escrow_id.length)
+                    writer.uint32(/* id 9, wireType 2 =*/74).bytes(message.escrow_id);
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version") && (typeof message.escrow_version === "object" ? message.escrow_version.low || message.escrow_version.high : message.escrow_version !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.escrow_version);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GoldMarketAction message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketAction.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {minimir.v1.GoldMarketAction.$Properties} message GoldMarketAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GoldMarketAction.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GoldMarketAction message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape} GoldMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketAction.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GoldMarketAction();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.side = value;
+                            else
+                                delete message.side;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.lots = value;
+                            else
+                                delete message.lots;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_yuanbao_units = value;
+                            else
+                                delete message.unit_price_yuanbao_units;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.terms_hash = value;
+                            else
+                                delete message.terms_hash;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.expected_duration_seconds = value;
+                            else
+                                delete message.expected_duration_seconds;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.order_id = value;
+                            else
+                                delete message.order_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.order_version = value;
+                            else
+                                delete message.order_version;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.escrow_id = value;
+                            else
+                                delete message.escrow_id;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.escrow_version = value;
+                            else
+                                delete message.escrow_version;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GoldMarketAction message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape} GoldMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GoldMarketAction.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GoldMarketAction message.
+             * @function verify
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GoldMarketAction.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.side != null && $Object.hasOwnProperty.call(message, "side"))
+                    if (!$util.isInteger(message.side))
+                        return "side: integer expected";
+                if (message.lots != null && $Object.hasOwnProperty.call(message, "lots"))
+                    if (!$util.isInteger(message.lots) && !(message.lots && $util.isInteger(message.lots.low) && $util.isInteger(message.lots.high)))
+                        return "lots: integer|Long expected";
+                if (message.unit_price_yuanbao_units != null && $Object.hasOwnProperty.call(message, "unit_price_yuanbao_units"))
+                    if (!$util.isInteger(message.unit_price_yuanbao_units) && !(message.unit_price_yuanbao_units && $util.isInteger(message.unit_price_yuanbao_units.low) && $util.isInteger(message.unit_price_yuanbao_units.high)))
+                        return "unit_price_yuanbao_units: integer|Long expected";
+                if (message.terms_hash != null && $Object.hasOwnProperty.call(message, "terms_hash"))
+                    if (!$util.isString(message.terms_hash))
+                        return "terms_hash: string expected";
+                if (message.expected_duration_seconds != null && $Object.hasOwnProperty.call(message, "expected_duration_seconds"))
+                    if (!$util.isInteger(message.expected_duration_seconds))
+                        return "expected_duration_seconds: integer expected";
+                if (message.order_id != null && $Object.hasOwnProperty.call(message, "order_id"))
+                    if (!(message.order_id && typeof message.order_id.length === "number" || $util.isString(message.order_id)))
+                        return "order_id: buffer expected";
+                if (message.order_version != null && $Object.hasOwnProperty.call(message, "order_version"))
+                    if (!$util.isInteger(message.order_version) && !(message.order_version && $util.isInteger(message.order_version.low) && $util.isInteger(message.order_version.high)))
+                        return "order_version: integer|Long expected";
+                if (message.escrow_id != null && $Object.hasOwnProperty.call(message, "escrow_id"))
+                    if (!(message.escrow_id && typeof message.escrow_id.length === "number" || $util.isString(message.escrow_id)))
+                        return "escrow_id: buffer expected";
+                if (message.escrow_version != null && $Object.hasOwnProperty.call(message, "escrow_version"))
+                    if (!$util.isInteger(message.escrow_version) && !(message.escrow_version && $util.isInteger(message.escrow_version.low) && $util.isInteger(message.escrow_version.high)))
+                        return "escrow_version: integer|Long expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for GoldMarketAction
+             * @function getTypeUrl
+             * @memberof minimir.v1.GoldMarketAction
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GoldMarketAction.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GoldMarketAction";
+            };
+
+            return GoldMarketAction;
         })();
 
         return v1;

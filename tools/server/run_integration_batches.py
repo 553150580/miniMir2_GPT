@@ -30,7 +30,7 @@ GROUP_PREFIXES = {
     'skills': ('Combat', 'Displacement', 'PetRuntime', 'SkillAttackSlots', 'SkillLearning', 'SummonPet', 'Taoist', 'Teleport'),
     'bosses': ('PersonalBoss', 'SharedWorldBoss', 'Dungeon'),
     'mirror-arena': ('MirrorArena',),
-    'market': ('ItemMarket',),
+    'market': ('ItemMarket', 'GoldMarket'),
 }
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {

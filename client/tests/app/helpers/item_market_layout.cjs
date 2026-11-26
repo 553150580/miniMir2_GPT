@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 
 module.exports = function normalizeItemMarketLayout(scene) {
+    require('./gold_market_layout.cjs')(scene);
     for (const [parentId, parentName, childId, childName] of [
         [419, 'Page2', 2573, 'ItemMarket'], [253, 'Panels', 2580, 'ItemMarket'],
         [253, 'Panels', 2665, 'ItemMarketOrder'], [253, 'Panels', 2698, 'ItemMarketListing'],

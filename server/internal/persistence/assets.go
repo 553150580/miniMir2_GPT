@@ -58,6 +58,8 @@ type AssetRequest struct {
 	MirrorExchangeGate   uint32                         // 原普通场景是否允许一次新的兑换，重放先核对回执。
 	ItemMarket           *pb.ItemMarketAction           // 原确认页的道具市场命令。
 	ItemMarketGate       uint32                         // 只拒绝当前场景的新市场写入，不覆盖原有回执。
+	GoldMarket           *pb.GoldMarketAction           // 原金币委托、撤销或领取命令。
+	GoldMarketGate       uint32                         // 当前场景对首次金币委托写入的门禁。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -165,7 +167,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
-		if q.Kind == AssetMirrorArenaExchange || q.Kind == AssetBuyRoleCard || q.Kind == AssetClaimRoleCardDaily || q.Kind == AssetItemMarket {
+		if q.Kind == AssetMirrorArenaExchange || q.Kind == AssetBuyRoleCard || q.Kind == AssetClaimRoleCardDaily || q.Kind == AssetItemMarket || q.Kind == AssetGoldMarket {
 			// 普通收益可推进角色修订。此处经济命令另行复核原报价、角色资格与当前余额。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -198,6 +200,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var cardPurchase *RoleCardPurchaseReceipt          // 首次购卡的扣款和原有效期变更。
 		var cardDaily *RoleCardDailyReceipt                // 首次特权日领操作所确认的绑定元宝。
 		var itemMarket *ItemMarketReceipt                  // 原上架、冻结、成交或领回的永久回执。
+		var goldMarket *GoldMarketReceipt                  // 原金币委托、撤销或领取的永久回执。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetMirrorArenaExchange:
@@ -250,6 +253,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetItemMarket:
 			r, itemMarket, businessCode, e = s.applyItemMarket(tc, r, q.ItemMarket, q.ItemMarketGate)
+			if e != nil {
+				return e
+			}
+		case AssetGoldMarket:
+			r, goldMarket, businessCode, e = s.applyGoldMarket(tc, r, q.GoldMarket, q.GoldMarketGate)
 			if e != nil {
 				return e
 			}
@@ -355,6 +363,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.MirrorExchange = mirrorExchange
 		op.CardPurchase, op.CardDaily = cardPurchase, cardDaily
 		op.ItemMarket = itemMarket
+		op.GoldMarket = goldMarket
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -441,6 +450,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["config_hash"] = s.Cfg.Fixture.Hash
 			audit["origin_server_id"] = r.Origin
 		}
+		if goldMarket != nil {
+			audit["gold_market"] = goldMarket
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+			audit["origin_server_id"] = r.Origin
+		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
 		}
@@ -460,6 +475,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.RoleCardPurchase = receipt.CardPurchase.Proto()
 		result.RoleCardDaily = receipt.CardDaily.Proto()
 		result.ItemMarket = receipt.ItemMarket.Proto()
+		result.GoldMarket = receipt.GoldMarket.Proto()
 	}
 	return out, result, receipt, e
 }

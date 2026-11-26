@@ -93,7 +93,7 @@ type worker struct {
 	worldBossArenas    map[uint64]*worldBossArena  // 本分片唯一拥有的运行服共享首领场次。
 	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
 	mirrorSeasonJobs   []mirrorSeasonJob           // 分配给本分片的运行服赛季封账步骤。
-	itemMarketJobs     []itemMarketJob             // 分配给本分片的道具市场到期与退款步骤。
+	marketJobs         []marketJob                 // 分配给本分片的市场到期、退款及撮合步骤。
 
 	dungeonParties map[uint64]*dungeonPartyDirectory // 本分片拥有的运行服讨伐链招募目录。
 	dungeonArenas  map[string]*dungeonArena          // 本分片拥有的讨伐队伍独立战斗场。
@@ -260,7 +260,7 @@ func newEngine(ctx context.Context, s *persistence.Store, runs map[uint64]*persi
 		panic("城镇导航准入初始化失败：" + err.Error())
 	}
 	e.initializeMirrorSeasonJobs()
-	e.initializeItemMarketJobs()
+	e.initializeMarketJobs()
 	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
 		e.wg.Go(w.loop)
@@ -471,7 +471,7 @@ func (w *worker) loop() {
 			if !c.tick.IsZero() {
 				w.tickWorldBosses(c.tick)
 				w.tickMirrorSeasons(c.tick)
-				w.tickItemMarket(c.tick)
+				w.tickMarketJobs(c.tick)
 				w.tickDungeonParties(c.tick)
 				w.tickDungeonArenas(c.tick)
 				w.beginTownNavigationTick(c.tick)
@@ -739,6 +739,8 @@ func (w *worker) roomCommand(r *room, c command) {
 		w.queryRoleCards(r, c.frame, time.Now())
 	case p.MsgC2SItemMarketQuery:
 		w.queryItemMarket(r, c.frame)
+	case p.MsgC2SGoldMarketQuery:
+		w.queryGoldMarket(r, c.frame)
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
 	case p.MsgC2STaskCodexState:
@@ -821,7 +823,7 @@ func (w *worker) roomCommand(r *room, c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction:
 		w.asset(r, c.frame, c.at)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -1122,6 +1124,16 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: assetCommandFingerprint(f)}
 	switch f.ID {
+	case p.MsgC2SGoldMarketAction:
+		var request pb.GoldMarketAction
+		if proto.Unmarshal(f.Payload, &request) != nil || len(request.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.GoldMarket = persistence.AssetGoldMarket, request.Operation, &request
+		if m, known := w.currentMap(r); !known || m.SceneKindValue() != devconfig.SceneKindPersonal && m.SceneKindValue() != devconfig.SceneKindTown {
+			q.GoldMarketGate = p.CodeLineForbidden
+		}
 	case p.MsgC2SItemMarketAction:
 		var request pb.ItemMarketAction
 		if proto.Unmarshal(f.Payload, &request) != nil || len(request.ProtoReflect().GetUnknown()) != 0 {
@@ -1325,7 +1337,7 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction:
+	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction:
 		return true
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
 		return true
@@ -1339,6 +1351,11 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SGoldMarketAction:
+		var q pb.GoldMarketAction
+		if proto.Unmarshal(f.Payload, &q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SItemMarketAction:
 		var q pb.ItemMarketAction // 原操作编号用于拒绝、等待及恢复。
 		if proto.Unmarshal(f.Payload, &q) == nil {

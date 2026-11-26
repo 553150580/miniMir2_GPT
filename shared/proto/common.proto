@@ -22,6 +22,25 @@ message OperationResult {
   RoleCardPurchaseReceipt role_card_purchase = 8;
   RoleCardDailyReceipt role_card_daily = 9;
   ItemMarketReceipt item_market = 10;
+  GoldMarketReceipt gold_market = 11;
+}
+// 金币市场回执确认原委托、托管或撤单。挂单只确认首次冻结和活动委托，成交由撮合账本推进。
+message GoldMarketReceipt {
+  uint32 action = 1;
+  bytes order_id = 2;
+  uint64 order_version = 3;
+  uint32 side = 4;
+  uint32 state = 5;
+  int64 quantity_lots = 6;
+  int64 filled_lots = 7;
+  int64 remaining_lots = 8;
+  int64 unit_price_yuanbao_units = 9;
+  int64 gold_delta = 10;
+  int64 yuanbao_delta_units = 11;
+  int64 seller_fee_yuanbao_units = 12;
+  bytes escrow_id = 13;
+  uint64 escrow_version = 14;
+  int64 expires_at_unix_ms = 15;
 }
 // 道具市场永久回执引用实际订单、数量与角色非绑定元宝变化，保留首次确认结果。
 message ItemMarketReceipt {

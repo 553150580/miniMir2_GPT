@@ -24,6 +24,7 @@ import { WarehouseReceiptGuard } from './WarehouseModel';
 import type { WarehouseReceipt } from './WarehouseModel';
 import { validateRoleCardState, type RoleCardState } from './RoleCardProtocol';
 import { itemMarketPageSize, validateItemMarketState, type ItemMarketScope, type ItemMarketState } from './ItemMarketProtocol';
+import { goldMarketPageSize, validateGoldMarketState, type GoldMarketScope, type GoldMarketState } from './GoldMarketProtocol';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 const recycleModel = new EquipmentRecycleModel();
@@ -31,6 +32,7 @@ const experienceModel = new ExperienceGrantModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
 let confirmedCommand = Long.UONE;
 let localOperation: { id: string; connection: number; binding: string; role: string; scene: string; baseline: string; next: Long } | null = null;
+let marketRead: Promise<any> | null = null; // 两个市场共用服务端的角色只读预览槽。
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
 export const session = {
@@ -89,7 +91,7 @@ export const session = {
 session.connection.subscribe((packet: Packet) => {
     if (packet.error) {
         // 月卡能力探测只有打开托管时触发，明确拒绝由对应请求处理，不污染旧服状态栏。
-        if (![40035, 40036, 40039, 40040].includes(packet.id)) session.lastError = protocolErrorMessage(packet.id, packet.error);
+        if (![40035, 40036, 40039, 40040, 40042, 40043].includes(packet.id)) session.lastError = protocolErrorMessage(packet.id, packet.error);
     }
     else switch (packet.id) {
         case 20002:
@@ -316,13 +318,34 @@ export async function queryRoleCard(productId = 0): Promise<RoleCardState> {
 
 // 道具市场查询只应用于原角色的当前普通场景。分页令牌由服务端签发并原样使用。
 export async function queryItemMarket(scope: ItemMarketScope, cursor = new Uint8Array(0)): Promise<ItemMarketState> {
-    const identity = currentEntryIdentity();
-    if (!session.role || !session.ready || !identity || !isCurrentEntry(identity)) throw new Error('道具市场尚未同步');
-    const sceneEpoch: Long = session.entry.sceneEpoch;
-    const result = await session.connection.request(40039, { sceneEpoch, scope, pageSize: itemMarketPageSize, cursor });
-    if (!session.role || !session.ready || !isCurrentEntry(identity)) throw new Error('角色或地图已切换，请重新查看道具市场');
-    if (result?.errorCode) throw new ProtocolResponseError(40040, result.errorCode);
+    const { result, sceneEpoch } = await requestMarketPage(40039, itemMarketPageSize, scope, cursor, '道具市场');
     return validateItemMarketState(result, sceneEpoch, scope);
+}
+
+// 金币市场只应用当前角色附着的原条款和分页结果。
+export async function queryGoldMarket(scope: GoldMarketScope, cursor = new Uint8Array(0)): Promise<GoldMarketState> {
+    const { result, sceneEpoch } = await requestMarketPage(40042, goldMarketPageSize, scope, cursor, '金币市场');
+    return validateGoldMarketState(result, sceneEpoch, scope);
+}
+
+async function requestMarketPage(message: 40039 | 40042, pageSize: number, scope: number, cursor: Uint8Array, label: string): Promise<{ result: any; sceneEpoch: Long }> {
+    const identity = currentEntryIdentity();
+    if (!session.role || !session.ready || !identity || !isCurrentEntry(identity)) throw new Error(`${label}尚未同步`);
+    const sceneEpoch: Long = session.entry.sceneEpoch;
+    const current = (): boolean => !!session.role && session.ready && isCurrentEntry(identity);
+    const read = async (): Promise<any> => {
+        if (!current()) throw new Error(`角色或地图已切换，请重新查看${label}`);
+        return session.connection.request(message, { sceneEpoch, scope, pageSize, cursor });
+    };
+    // 打开原功能栏会同时发现两种市场，等上一读回包释放原角色槽再发下一读。
+    const queued = marketRead ? marketRead.then(read, read) : read();
+    marketRead = queued;
+    const finish = (): void => { if (marketRead === queued) marketRead = null; };
+    void queued.then(finish, finish);
+    const result = await queued;
+    if (!current()) throw new Error(`角色或地图已切换，请重新查看${label}`);
+    if (result?.errorCode) throw new ProtocolResponseError(message + 1, result.errorCode);
+    return { result, sceneEpoch };
 }
 
 function notify(): void { for (const update of Array.from(session.update)) { try { update(); } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); } } }

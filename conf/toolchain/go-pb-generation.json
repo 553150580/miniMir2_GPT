@@ -4,8 +4,9 @@
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
     "assets.proto": "b1508f2a19322c8bfd6d84e50af9a96198af326b781dc5a4f613175d9420a977",
-    "common.proto": "ac9552fff0996c088d6e0e3c0835b48cfd6b276b911eef97a367867e2e96f894",
+    "common.proto": "0afc869d7d675826d5122d53d18cd3fbfe58459e14e38d001eff667bdfc514d6",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
+    "gold_market.proto": "3e8fd27656f8c0dd6fbedbedc73977afc1ff98bb50b55f7d14f7e7e229674f78",
     "item_market.proto": "a0feaf6f6a8bc42685c0e4bafef46a030d2c637f4c8a2dd0ceb8e3ec4ae7286b",
     "mirror_arena.proto": "c227da59cb4afe8e27e539aeaf3f7aba1f05b518854dd7bed575322f36779478",
     "personal_boss.proto": "e80ecbe52c86e2d2931fee7fa2c1a61321ef0b799603eeac7b4574bd67476180",
@@ -17,8 +18,9 @@
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
     "server/api/generated/minimirv1/assets.pb.go": "cc135e352478b68117b95ea8d2b705d0b35a5d728f50b953664a458ce6e5a3cf",
-    "server/api/generated/minimirv1/common.pb.go": "4960b4ad9606bb5b89b5f1f2d3f50b23ee7f18f470b3d3951fb9351f6c41d867",
+    "server/api/generated/minimirv1/common.pb.go": "61fa4cd74b5eebbfdf316d49d394b12c14abf724c88b678747b6402ea711970d",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
+    "server/api/generated/minimirv1/gold_market.pb.go": "3fd8f62492d3e926744cea1aaf02da7b1b69950ef1002c5c573259b3b58258af",
     "server/api/generated/minimirv1/item_market.pb.go": "9158f2b804073a4987cbed5e0763629491e6eb21d27af0f684d0da48f9bb19fb",
     "server/api/generated/minimirv1/mirror_arena.pb.go": "9e3e8676f9b4bd1ef313e852bc3b50afdc6c9c3495ec90e3bd5519b636c6bf2f",
     "server/api/generated/minimirv1/personal_boss.pb.go": "0c83d70e71cfd659fa5bfb0309f16c5dc4aa4e2bda48b65d63503eb1d24503b0",

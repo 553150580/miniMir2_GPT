@@ -96,6 +96,27 @@ test('道具市场六个动作均按原报价版本、目标、数量和流水�
     }
 });
 
+test('金币挂单、撤单和领取在重连保留原上限条款、原期限、ID和流水', () => {
+    const op = pending().value.operation, version = Long.fromString('9007199254740993', true);
+    const original = { action: 1, side: 2, lots: Long.fromInt(2), unitPriceYuanbaoUnits: Long.fromString('9007199254740995'),
+        termsHash: '9'.repeat(64), expectedDurationSeconds: 300, operation: op };
+    for (const request of [original, { action: 2, orderId: id(4), orderVersion: version, operation: op },
+        { action: 3, escrowId: id(5), escrowVersion: version, operation: op }]) {
+        const storage = new MemoryStorage(), first = new PendingOperations(storage, key);
+        first.set('roleA', { id: 40044, value: request });
+        const restored = new PendingOperations(storage, key).get('roleA').value;
+        const encode = row => pb.GoldMarketAction.encode({ action: row.action, side: row.side, lots: row.lots,
+            unit_price_yuanbao_units: row.unitPriceYuanbaoUnits, terms_hash: row.termsHash, expected_duration_seconds: row.expectedDurationSeconds,
+            order_id: row.orderId, order_version: row.orderVersion, escrow_id: row.escrowId, escrow_version: row.escrowVersion,
+            operation: { op_id: row.operation.opId, command_seq: row.operation.commandSeq, expected_revision: row.operation.expectedRevision,
+                expected_rule_version: row.operation.expectedRuleVersion } }).finish();
+        assert.deepEqual(encode(restored), encode(request));
+    }
+    for (const modifications of [{ side: 0 }, { termsHash: 'short' }, { lots: Long.ONE.toUnsigned() }, { expectedDurationSeconds: 0 }, { escrowId: id(3) }]) {
+        assert.throws(() => new PendingOperations().set('roleA', { id: 40044, value: { ...original, ...modifications } }), { code: 'INVALID_OPERATION' });
+    }
+});
+
 function mirrorExchange() {
     return { id: 40034, value: {
         packCount: 7, expectedPrice: Long.fromString('9007199254740993', false),

@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -273,6 +273,26 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
             const price = longValue(item.unitPriceYuanbaoUnits, stored);
             if (price.unsigned || price.isNegative() || price.isZero()) return invalid('道具市场单价无效');
             payload.unitPriceYuanbaoUnits = price;
+        }
+    } else if (id === 40044) {
+        // 首笔金币委托保留原限价条款、期限和冻结数量。撤、领只接受各自的原身份与版本。
+        const action = uint32((input.value as ObjectValue | null)?.action);
+        if (action === 1) {
+            const item = record(input.value, ['action', 'side', 'lots', 'unitPriceYuanbaoUnits', 'termsHash', 'expectedDurationSeconds', 'operation']);
+            const side = uint32(item.side), expectedDurationSeconds = uint32(item.expectedDurationSeconds);
+            const lots = longValue(item.lots, stored), unitPriceYuanbaoUnits = longValue(item.unitPriceYuanbaoUnits, stored);
+            if (side !== 1 && side !== 2 || !expectedDurationSeconds || typeof item.termsHash !== 'string' || !/^[0-9a-f]{64}$/.test(item.termsHash) ||
+                lots.unsigned || lots.isNegative() || lots.isZero() || unitPriceYuanbaoUnits.unsigned || unitPriceYuanbaoUnits.isNegative() || unitPriceYuanbaoUnits.isZero()) {
+                return invalid('金币委托的原价量、限价条款或期限无效');
+            }
+            payload = { action, side, lots, unitPriceYuanbaoUnits, termsHash: item.termsHash, expectedDurationSeconds, operation: operation(item.operation, stored) };
+        } else {
+            if (action !== 2 && action !== 3) return invalid('金币市场动作无效');
+            const [idField, versionField] = action === 2 ? ['orderId', 'orderVersion'] : ['escrowId', 'escrowVersion'];
+            const item = record(input.value, ['action', idField, versionField, 'operation']);
+            const version = longValue(item[versionField], stored);
+            if (!version.unsigned || version.isZero()) return invalid('金币市场原版本无效');
+            payload = { action, [idField]: bytes16(item[idField], stored), [versionField]: version, operation: operation(item.operation, stored) };
         }
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);

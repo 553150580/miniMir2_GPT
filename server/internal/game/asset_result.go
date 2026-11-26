@@ -136,6 +136,9 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 	w.assets(r)
 	if err == nil && result.ErrorCode == 0 {
 		w.equipmentRecycleResult(r, receipt)
+		if receipt.GoldMarket != nil && receipt.GoldMarket.Action == 1 {
+			w.wakeGoldMarket(w.roomStore(r).Cfg.RunID)
+		}
 		if receipt.Warehouse != nil && (receipt.Warehouse.Scope != persistence.WarehouseShared || r.Role.PrivilegeUntil.After(time.Now())) {
 			// observed 保存由协议取得的观察到的。
 			if observed := receipt.Warehouse.Proto(r.Role, receipt); observed != nil {

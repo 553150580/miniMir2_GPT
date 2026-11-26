@@ -328,6 +328,8 @@ type Fixture struct {
 	RoleCards *RoleCardConfig `json:"role_cards,omitempty"`
 	// ItemMarket 包含已装配的道具竞购与共享佣金规则。历史配置缺省关闭。
 	ItemMarket *ItemMarketConfig `json:"item_market,omitempty"`
+	// GoldMarket 包含已装配的金币撮合规则，当前默认夹具省略并关闭。
+	GoldMarket *GoldMarketConfig `json:"gold_market,omitempty"`
 	// HostingTimePrices 仅包含显式发布的补时价格版本，缺省时关闭金币购时。
 	HostingTimePrices []HostingTimePriceVersion `json:"hosting_time_prices,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
@@ -581,6 +583,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateItemMarket(); err != nil {
+		return err
+	}
+	if err := f.validateGoldMarket(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

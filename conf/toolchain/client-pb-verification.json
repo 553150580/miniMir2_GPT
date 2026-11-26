@@ -4,12 +4,13 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 147,
+  "message_count": 154,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "GoldMarketReceipt",
     "ItemMarketReceipt",
     "MirrorArenaExchangeReceipt",
     "HostingQuoteResult",
@@ -152,10 +153,16 @@
     "ItemMarketOrderView",
     "ItemMarketEscrowView",
     "ItemMarketState",
-    "ItemMarketAction"
+    "ItemMarketAction",
+    "GoldMarketQuery",
+    "GoldMarketRulesView",
+    "GoldMarketOrderView",
+    "GoldMarketEscrowView",
+    "GoldMarketState",
+    "GoldMarketAction"
   ],
-  "int64_field_count": 356,
-  "int64_boundary_cases": 1212,
+  "int64_field_count": 389,
+  "int64_boundary_cases": 1334,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -192,6 +199,66 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "order_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "quantity_lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "filled_lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "remaining_lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "gold_delta",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "yuanbao_delta_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "seller_fee_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "escrow_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "ItemMarketReceipt",
@@ -2292,9 +2359,147 @@
       "field": "escrow_version",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "GoldMarketQuery",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "reference_unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "min_unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "max_unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "price_step_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketRulesView",
+      "field": "gold_per_lot",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "remaining_lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "initial_lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "created_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "created_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "lots",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "unit_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "order_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "escrow_version",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 59,
+  "bytes_field_count": 68,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2309,6 +2514,16 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketReceipt",
+      "field": "escrow_id",
       "repeated": false
     },
     {
@@ -2590,6 +2805,41 @@
       "message": "ItemMarketAction",
       "field": "escrow_id",
       "repeated": false
+    },
+    {
+      "message": "GoldMarketQuery",
+      "field": "cursor",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketOrderView",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "escrow_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketEscrowView",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketState",
+      "field": "next_cursor",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "order_id",
+      "repeated": false
+    },
+    {
+      "message": "GoldMarketAction",
+      "field": "escrow_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2598,7 +2848,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "ac9552fff0996c088d6e0e3c0835b48cfd6b276b911eef97a367867e2e96f894"
+      "sha256": "0afc869d7d675826d5122d53d18cd3fbfe58459e14e38d001eff667bdfc514d6"
     },
     {
       "path": "shared/proto/account.proto",
@@ -2639,18 +2889,22 @@
     {
       "path": "shared/proto/item_market.proto",
       "sha256": "a0feaf6f6a8bc42685c0e4bafef46a030d2c637f4c8a2dd0ceb8e3ec4ae7286b"
+    },
+    {
+      "path": "shared/proto/gold_market.proto",
+      "sha256": "3e8fd27656f8c0dd6fbedbedc73977afc1ff98bb50b55f7d14f7e7e229674f78"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "f0affd9ff6d8c3a3c0d15c9b8a977484b4b7fbd1aba6133e84cd6acbc1125770",
-      "bytes": 2600796
+      "sha256": "407e33405056d277bb8c5c30c88d5ca00d4dd86b106cd0a14cafd1c8b7350d34",
+      "bytes": 2764635
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "6490c589be1514bca84fafc0ad2b2b76d09d4dddf6724016031b8a5bd073cd54",
-      "bytes": 812062
+      "sha256": "ff9dc463623fd3283aa5960a257b53c7357b3e7524ba39d4e15787172540631c",
+      "bytes": 856254
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

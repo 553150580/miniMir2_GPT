@@ -5,13 +5,11 @@ import (
 	"context"
 	"crypto/rand"
 	"errors"
-	"slices"
 	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
-	p "minimir/internal/protocol"
 )
 
 // AdvanceItemMarket 尝试推进一个到期步骤。没有已到期工作时不写围栏。
@@ -73,51 +71,5 @@ func (s *Store) dueItemMarketOrder(ctx context.Context, phase uint32, deadline s
 
 // itemMarketSystemTx 使用真实运行服屏障和永久账号分组，完成无需在线会话的旧托管结算。
 func (s *Store) itemMarketSystemTx(ctx context.Context, accounts []string, fn func(context.Context) error) error {
-	if s.Cfg.RunID == 0 || s.Epoch <= 0 || s.runGuardSlots == nil {
-		return Fail(p.CodeRouteChanged, "道具市场当前运行服未取得结算授权")
-	}
-	ctx, stop := context.WithTimeout(ctx, transactionTimeout)
-	defer stop()
-	var groups []uint64
-	for _, account := range accounts {
-		if !lowerHex(account, 16) {
-			return Fail(p.CodeOperationConflict, "道具市场原结算账号无效")
-		}
-		groups = append(groups, runGuardGroup(account))
-	}
-	if len(groups) == 0 {
-		groups = append(groups, 0)
-	}
-	slices.Sort(groups)
-	groups = slices.Compact(groups)
-	for _, group := range groups {
-		slot, err := s.runGuardSlots.acquire(ctx, group)
-		if err != nil {
-			return Fail(p.CodeOperationPending, "道具市场原结算待查证")
-		}
-		defer func() { <-slot }()
-	}
-	return s.tx(ctx, func(tc context.Context) error {
-		writes := make([]mongo.ClientBulkWrite, 0, len(groups))
-		for _, group := range groups {
-			write, err := s.runFenceWrite(tc, group)
-			if err != nil {
-				return err
-			}
-			writes = append(writes, write)
-		}
-		result, err := s.Client.BulkWrite(tc, writes, options.ClientBulkWrite().SetVerboseResults(true))
-		if err != nil {
-			return transactionBulkWriteError(err)
-		}
-		if !result.Acknowledged {
-			return Fail(p.CodeOperationPending, "道具市场原结算未确认")
-		}
-		for index := range writes {
-			if result.UpdateResults[index].MatchedCount != 1 {
-				return Fail(p.CodeRouteChanged, "道具市场运行服写屏障失效")
-			}
-		}
-		return fn(tc)
-	})
+	return s.marketSystemTx(ctx, "道具市场", accounts, fn)
 }

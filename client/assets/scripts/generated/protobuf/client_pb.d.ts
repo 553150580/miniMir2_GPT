@@ -374,6 +374,9 @@ export namespace minimir {
             /** OperationResult item_market. */
             item_market?: (minimir.v1.ItemMarketReceipt.$Properties|null);
 
+            /** OperationResult gold_market. */
+            gold_market?: (minimir.v1.GoldMarketReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -467,12 +470,195 @@ export namespace minimir {
                 /** OperationResult item_market */
                 item_market?: (minimir.v1.ItemMarketReceipt.$Properties|null);
 
+                /** OperationResult gold_market */
+                gold_market?: (minimir.v1.GoldMarketReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketReceipt.
+         * @deprecated Use minimir.v1.GoldMarketReceipt.$Properties instead.
+         */
+        interface IGoldMarketReceipt extends minimir.v1.GoldMarketReceipt.$Properties {
+        }
+
+        /** Represents a GoldMarketReceipt. */
+        class GoldMarketReceipt {
+
+            /**
+             * Constructs a new GoldMarketReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketReceipt action. */
+            action: number;
+
+            /** GoldMarketReceipt order_id. */
+            order_id: Uint8Array;
+
+            /** GoldMarketReceipt order_version. */
+            order_version: Long;
+
+            /** GoldMarketReceipt side. */
+            side: number;
+
+            /** GoldMarketReceipt state. */
+            state: number;
+
+            /** GoldMarketReceipt quantity_lots. */
+            quantity_lots: Long;
+
+            /** GoldMarketReceipt filled_lots. */
+            filled_lots: Long;
+
+            /** GoldMarketReceipt remaining_lots. */
+            remaining_lots: Long;
+
+            /** GoldMarketReceipt unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** GoldMarketReceipt gold_delta. */
+            gold_delta: Long;
+
+            /** GoldMarketReceipt yuanbao_delta_units. */
+            yuanbao_delta_units: Long;
+
+            /** GoldMarketReceipt seller_fee_yuanbao_units. */
+            seller_fee_yuanbao_units: Long;
+
+            /** GoldMarketReceipt escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** GoldMarketReceipt escrow_version. */
+            escrow_version: Long;
+
+            /** GoldMarketReceipt expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /**
+             * Creates a new GoldMarketReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketReceipt instance
+             */
+            static create(properties: minimir.v1.GoldMarketReceipt.$Shape): minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape;
+            static create(properties?: minimir.v1.GoldMarketReceipt.$Properties): minimir.v1.GoldMarketReceipt;
+
+            /**
+             * Encodes the specified GoldMarketReceipt message. Does not implicitly {@link minimir.v1.GoldMarketReceipt.verify|verify} messages.
+             * @param message GoldMarketReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketReceipt message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketReceipt.verify|verify} messages.
+             * @param message GoldMarketReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape} GoldMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape;
+
+            /**
+             * Decodes a GoldMarketReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape} GoldMarketReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketReceipt & minimir.v1.GoldMarketReceipt.$Shape;
+
+            /**
+             * Verifies a GoldMarketReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketReceipt {
+
+            /** Properties of a GoldMarketReceipt. */
+            interface $Properties {
+
+                /** GoldMarketReceipt action */
+                action?: (number|null);
+
+                /** GoldMarketReceipt order_id */
+                order_id?: (Uint8Array|null);
+
+                /** GoldMarketReceipt order_version */
+                order_version?: (Long|null);
+
+                /** GoldMarketReceipt side */
+                side?: (number|null);
+
+                /** GoldMarketReceipt state */
+                state?: (number|null);
+
+                /** GoldMarketReceipt quantity_lots */
+                quantity_lots?: (Long|null);
+
+                /** GoldMarketReceipt filled_lots */
+                filled_lots?: (Long|null);
+
+                /** GoldMarketReceipt remaining_lots */
+                remaining_lots?: (Long|null);
+
+                /** GoldMarketReceipt unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketReceipt gold_delta */
+                gold_delta?: (Long|null);
+
+                /** GoldMarketReceipt yuanbao_delta_units */
+                yuanbao_delta_units?: (Long|null);
+
+                /** GoldMarketReceipt seller_fee_yuanbao_units */
+                seller_fee_yuanbao_units?: (Long|null);
+
+                /** GoldMarketReceipt escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** GoldMarketReceipt escrow_version */
+                escrow_version?: (Long|null);
+
+                /** GoldMarketReceipt expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketReceipt. */
+            type $Shape = minimir.v1.GoldMarketReceipt.$Properties;
         }
 
         /**
@@ -18743,6 +18929,876 @@ export namespace minimir {
 
             /** Shape of an ItemMarketAction. */
             type $Shape = minimir.v1.ItemMarketAction.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketQuery.
+         * @deprecated Use minimir.v1.GoldMarketQuery.$Properties instead.
+         */
+        interface IGoldMarketQuery extends minimir.v1.GoldMarketQuery.$Properties {
+        }
+
+        /** Represents a GoldMarketQuery. */
+        class GoldMarketQuery {
+
+            /**
+             * Constructs a new GoldMarketQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /** GoldMarketQuery scope. */
+            scope: number;
+
+            /** GoldMarketQuery page_size. */
+            page_size: number;
+
+            /** GoldMarketQuery cursor. */
+            cursor: Uint8Array;
+
+            /**
+             * Creates a new GoldMarketQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketQuery instance
+             */
+            static create(properties: minimir.v1.GoldMarketQuery.$Shape): minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape;
+            static create(properties?: minimir.v1.GoldMarketQuery.$Properties): minimir.v1.GoldMarketQuery;
+
+            /**
+             * Encodes the specified GoldMarketQuery message. Does not implicitly {@link minimir.v1.GoldMarketQuery.verify|verify} messages.
+             * @param message GoldMarketQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketQuery message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketQuery.verify|verify} messages.
+             * @param message GoldMarketQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape} GoldMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape;
+
+            /**
+             * Decodes a GoldMarketQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape} GoldMarketQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketQuery & minimir.v1.GoldMarketQuery.$Shape;
+
+            /**
+             * Verifies a GoldMarketQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketQuery {
+
+            /** Properties of a GoldMarketQuery. */
+            interface $Properties {
+
+                /** GoldMarketQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** GoldMarketQuery scope */
+                scope?: (number|null);
+
+                /** GoldMarketQuery page_size */
+                page_size?: (number|null);
+
+                /** GoldMarketQuery cursor */
+                cursor?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketQuery. */
+            type $Shape = minimir.v1.GoldMarketQuery.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketRulesView.
+         * @deprecated Use minimir.v1.GoldMarketRulesView.$Properties instead.
+         */
+        interface IGoldMarketRulesView extends minimir.v1.GoldMarketRulesView.$Properties {
+        }
+
+        /** Represents a GoldMarketRulesView. */
+        class GoldMarketRulesView {
+
+            /**
+             * Constructs a new GoldMarketRulesView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketRulesView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketRulesView rule_version. */
+            rule_version: Long;
+
+            /** GoldMarketRulesView config_hash. */
+            config_hash: string;
+
+            /** GoldMarketRulesView terms_hash. */
+            terms_hash: string;
+
+            /** GoldMarketRulesView reference_unit_price_yuanbao_units. */
+            reference_unit_price_yuanbao_units: Long;
+
+            /** GoldMarketRulesView min_unit_price_yuanbao_units. */
+            min_unit_price_yuanbao_units: Long;
+
+            /** GoldMarketRulesView max_unit_price_yuanbao_units. */
+            max_unit_price_yuanbao_units: Long;
+
+            /** GoldMarketRulesView price_step_yuanbao_units. */
+            price_step_yuanbao_units: Long;
+
+            /** GoldMarketRulesView gold_per_lot. */
+            gold_per_lot: Long;
+
+            /** GoldMarketRulesView order_duration_seconds. */
+            order_duration_seconds: number;
+
+            /** GoldMarketRulesView seller_commission_bp. */
+            seller_commission_bp: number;
+
+            /** GoldMarketRulesView max_orders_per_side. */
+            max_orders_per_side: number;
+
+            /**
+             * Creates a new GoldMarketRulesView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketRulesView instance
+             */
+            static create(properties: minimir.v1.GoldMarketRulesView.$Shape): minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape;
+            static create(properties?: minimir.v1.GoldMarketRulesView.$Properties): minimir.v1.GoldMarketRulesView;
+
+            /**
+             * Encodes the specified GoldMarketRulesView message. Does not implicitly {@link minimir.v1.GoldMarketRulesView.verify|verify} messages.
+             * @param message GoldMarketRulesView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketRulesView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketRulesView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketRulesView.verify|verify} messages.
+             * @param message GoldMarketRulesView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketRulesView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketRulesView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape} GoldMarketRulesView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape;
+
+            /**
+             * Decodes a GoldMarketRulesView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape} GoldMarketRulesView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketRulesView & minimir.v1.GoldMarketRulesView.$Shape;
+
+            /**
+             * Verifies a GoldMarketRulesView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketRulesView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketRulesView {
+
+            /** Properties of a GoldMarketRulesView. */
+            interface $Properties {
+
+                /** GoldMarketRulesView rule_version */
+                rule_version?: (Long|null);
+
+                /** GoldMarketRulesView config_hash */
+                config_hash?: (string|null);
+
+                /** GoldMarketRulesView terms_hash */
+                terms_hash?: (string|null);
+
+                /** GoldMarketRulesView reference_unit_price_yuanbao_units */
+                reference_unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketRulesView min_unit_price_yuanbao_units */
+                min_unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketRulesView max_unit_price_yuanbao_units */
+                max_unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketRulesView price_step_yuanbao_units */
+                price_step_yuanbao_units?: (Long|null);
+
+                /** GoldMarketRulesView gold_per_lot */
+                gold_per_lot?: (Long|null);
+
+                /** GoldMarketRulesView order_duration_seconds */
+                order_duration_seconds?: (number|null);
+
+                /** GoldMarketRulesView seller_commission_bp */
+                seller_commission_bp?: (number|null);
+
+                /** GoldMarketRulesView max_orders_per_side */
+                max_orders_per_side?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketRulesView. */
+            type $Shape = minimir.v1.GoldMarketRulesView.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketOrderView.
+         * @deprecated Use minimir.v1.GoldMarketOrderView.$Properties instead.
+         */
+        interface IGoldMarketOrderView extends minimir.v1.GoldMarketOrderView.$Properties {
+        }
+
+        /** Represents a GoldMarketOrderView. */
+        class GoldMarketOrderView {
+
+            /**
+             * Constructs a new GoldMarketOrderView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketOrderView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketOrderView order_id. */
+            order_id: Uint8Array;
+
+            /** GoldMarketOrderView version. */
+            version: Long;
+
+            /** GoldMarketOrderView state. */
+            state: number;
+
+            /** GoldMarketOrderView side. */
+            side: number;
+
+            /** GoldMarketOrderView unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** GoldMarketOrderView remaining_lots. */
+            remaining_lots: Long;
+
+            /** GoldMarketOrderView initial_lots. */
+            initial_lots: Long;
+
+            /** GoldMarketOrderView expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** GoldMarketOrderView created_at_unix_ms. */
+            created_at_unix_ms: Long;
+
+            /** GoldMarketOrderView owned. */
+            owned: boolean;
+
+            /** GoldMarketOrderView same_account. */
+            same_account: boolean;
+
+            /**
+             * Creates a new GoldMarketOrderView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketOrderView instance
+             */
+            static create(properties: minimir.v1.GoldMarketOrderView.$Shape): minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape;
+            static create(properties?: minimir.v1.GoldMarketOrderView.$Properties): minimir.v1.GoldMarketOrderView;
+
+            /**
+             * Encodes the specified GoldMarketOrderView message. Does not implicitly {@link minimir.v1.GoldMarketOrderView.verify|verify} messages.
+             * @param message GoldMarketOrderView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketOrderView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketOrderView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketOrderView.verify|verify} messages.
+             * @param message GoldMarketOrderView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketOrderView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketOrderView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape} GoldMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape;
+
+            /**
+             * Decodes a GoldMarketOrderView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape} GoldMarketOrderView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketOrderView & minimir.v1.GoldMarketOrderView.$Shape;
+
+            /**
+             * Verifies a GoldMarketOrderView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketOrderView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketOrderView {
+
+            /** Properties of a GoldMarketOrderView. */
+            interface $Properties {
+
+                /** GoldMarketOrderView order_id */
+                order_id?: (Uint8Array|null);
+
+                /** GoldMarketOrderView version */
+                version?: (Long|null);
+
+                /** GoldMarketOrderView state */
+                state?: (number|null);
+
+                /** GoldMarketOrderView side */
+                side?: (number|null);
+
+                /** GoldMarketOrderView unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketOrderView remaining_lots */
+                remaining_lots?: (Long|null);
+
+                /** GoldMarketOrderView initial_lots */
+                initial_lots?: (Long|null);
+
+                /** GoldMarketOrderView expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** GoldMarketOrderView created_at_unix_ms */
+                created_at_unix_ms?: (Long|null);
+
+                /** GoldMarketOrderView owned */
+                owned?: (boolean|null);
+
+                /** GoldMarketOrderView same_account */
+                same_account?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketOrderView. */
+            type $Shape = minimir.v1.GoldMarketOrderView.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketEscrowView.
+         * @deprecated Use minimir.v1.GoldMarketEscrowView.$Properties instead.
+         */
+        interface IGoldMarketEscrowView extends minimir.v1.GoldMarketEscrowView.$Properties {
+        }
+
+        /** Represents a GoldMarketEscrowView. */
+        class GoldMarketEscrowView {
+
+            /**
+             * Constructs a new GoldMarketEscrowView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketEscrowView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketEscrowView escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** GoldMarketEscrowView order_id. */
+            order_id: Uint8Array;
+
+            /** GoldMarketEscrowView version. */
+            version: Long;
+
+            /** GoldMarketEscrowView kind. */
+            kind: number;
+
+            /** GoldMarketEscrowView gold. */
+            gold: Long;
+
+            /** GoldMarketEscrowView yuanbao_units. */
+            yuanbao_units: Long;
+
+            /** GoldMarketEscrowView created_at_unix_ms. */
+            created_at_unix_ms: Long;
+
+            /** GoldMarketEscrowView reason. */
+            reason: number;
+
+            /**
+             * Creates a new GoldMarketEscrowView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketEscrowView instance
+             */
+            static create(properties: minimir.v1.GoldMarketEscrowView.$Shape): minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape;
+            static create(properties?: minimir.v1.GoldMarketEscrowView.$Properties): minimir.v1.GoldMarketEscrowView;
+
+            /**
+             * Encodes the specified GoldMarketEscrowView message. Does not implicitly {@link minimir.v1.GoldMarketEscrowView.verify|verify} messages.
+             * @param message GoldMarketEscrowView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketEscrowView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketEscrowView message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketEscrowView.verify|verify} messages.
+             * @param message GoldMarketEscrowView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketEscrowView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketEscrowView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape} GoldMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape;
+
+            /**
+             * Decodes a GoldMarketEscrowView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape} GoldMarketEscrowView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketEscrowView & minimir.v1.GoldMarketEscrowView.$Shape;
+
+            /**
+             * Verifies a GoldMarketEscrowView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketEscrowView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketEscrowView {
+
+            /** Properties of a GoldMarketEscrowView. */
+            interface $Properties {
+
+                /** GoldMarketEscrowView escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** GoldMarketEscrowView order_id */
+                order_id?: (Uint8Array|null);
+
+                /** GoldMarketEscrowView version */
+                version?: (Long|null);
+
+                /** GoldMarketEscrowView kind */
+                kind?: (number|null);
+
+                /** GoldMarketEscrowView gold */
+                gold?: (Long|null);
+
+                /** GoldMarketEscrowView yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** GoldMarketEscrowView created_at_unix_ms */
+                created_at_unix_ms?: (Long|null);
+
+                /** GoldMarketEscrowView reason */
+                reason?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketEscrowView. */
+            type $Shape = minimir.v1.GoldMarketEscrowView.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketState.
+         * @deprecated Use minimir.v1.GoldMarketState.$Properties instead.
+         */
+        interface IGoldMarketState extends minimir.v1.GoldMarketState.$Properties {
+        }
+
+        /** Represents a GoldMarketState. */
+        class GoldMarketState {
+
+            /**
+             * Constructs a new GoldMarketState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketState scene_epoch. */
+            scene_epoch: Long;
+
+            /** GoldMarketState scope. */
+            scope: number;
+
+            /** GoldMarketState enabled. */
+            enabled: boolean;
+
+            /** GoldMarketState can_trade. */
+            can_trade: boolean;
+
+            /** GoldMarketState rules. */
+            rules?: (minimir.v1.GoldMarketRulesView.$Properties|null);
+
+            /** GoldMarketState orders. */
+            orders: minimir.v1.GoldMarketOrderView.$Properties[];
+
+            /** GoldMarketState escrows. */
+            escrows: minimir.v1.GoldMarketEscrowView.$Properties[];
+
+            /** GoldMarketState next_cursor. */
+            next_cursor: Uint8Array;
+
+            /** GoldMarketState error_code. */
+            error_code: number;
+
+            /** GoldMarketState role_revision. */
+            role_revision: Long;
+
+            /**
+             * Creates a new GoldMarketState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketState instance
+             */
+            static create(properties: minimir.v1.GoldMarketState.$Shape): minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape;
+            static create(properties?: minimir.v1.GoldMarketState.$Properties): minimir.v1.GoldMarketState;
+
+            /**
+             * Encodes the specified GoldMarketState message. Does not implicitly {@link minimir.v1.GoldMarketState.verify|verify} messages.
+             * @param message GoldMarketState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketState message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketState.verify|verify} messages.
+             * @param message GoldMarketState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape} GoldMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape;
+
+            /**
+             * Decodes a GoldMarketState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape} GoldMarketState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketState & minimir.v1.GoldMarketState.$Shape;
+
+            /**
+             * Verifies a GoldMarketState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketState {
+
+            /** Properties of a GoldMarketState. */
+            interface $Properties {
+
+                /** GoldMarketState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** GoldMarketState scope */
+                scope?: (number|null);
+
+                /** GoldMarketState enabled */
+                enabled?: (boolean|null);
+
+                /** GoldMarketState can_trade */
+                can_trade?: (boolean|null);
+
+                /** GoldMarketState rules */
+                rules?: (minimir.v1.GoldMarketRulesView.$Properties|null);
+
+                /** GoldMarketState orders */
+                orders?: (minimir.v1.GoldMarketOrderView.$Properties[]|null);
+
+                /** GoldMarketState escrows */
+                escrows?: (minimir.v1.GoldMarketEscrowView.$Properties[]|null);
+
+                /** GoldMarketState next_cursor */
+                next_cursor?: (Uint8Array|null);
+
+                /** GoldMarketState error_code */
+                error_code?: (number|null);
+
+                /** GoldMarketState role_revision */
+                role_revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketState. */
+            type $Shape = minimir.v1.GoldMarketState.$Properties;
+        }
+
+        /**
+         * Properties of a GoldMarketAction.
+         * @deprecated Use minimir.v1.GoldMarketAction.$Properties instead.
+         */
+        interface IGoldMarketAction extends minimir.v1.GoldMarketAction.$Properties {
+        }
+
+        /** Represents a GoldMarketAction. */
+        class GoldMarketAction {
+
+            /**
+             * Constructs a new GoldMarketAction.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GoldMarketAction.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GoldMarketAction action. */
+            action: number;
+
+            /** GoldMarketAction side. */
+            side: number;
+
+            /** GoldMarketAction lots. */
+            lots: Long;
+
+            /** GoldMarketAction unit_price_yuanbao_units. */
+            unit_price_yuanbao_units: Long;
+
+            /** GoldMarketAction terms_hash. */
+            terms_hash: string;
+
+            /** GoldMarketAction expected_duration_seconds. */
+            expected_duration_seconds: number;
+
+            /** GoldMarketAction order_id. */
+            order_id: Uint8Array;
+
+            /** GoldMarketAction order_version. */
+            order_version: Long;
+
+            /** GoldMarketAction escrow_id. */
+            escrow_id: Uint8Array;
+
+            /** GoldMarketAction escrow_version. */
+            escrow_version: Long;
+
+            /** GoldMarketAction operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new GoldMarketAction instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GoldMarketAction instance
+             */
+            static create(properties: minimir.v1.GoldMarketAction.$Shape): minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape;
+            static create(properties?: minimir.v1.GoldMarketAction.$Properties): minimir.v1.GoldMarketAction;
+
+            /**
+             * Encodes the specified GoldMarketAction message. Does not implicitly {@link minimir.v1.GoldMarketAction.verify|verify} messages.
+             * @param message GoldMarketAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GoldMarketAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GoldMarketAction message, length delimited. Does not implicitly {@link minimir.v1.GoldMarketAction.verify|verify} messages.
+             * @param message GoldMarketAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GoldMarketAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GoldMarketAction message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape} GoldMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape;
+
+            /**
+             * Decodes a GoldMarketAction message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape} GoldMarketAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GoldMarketAction & minimir.v1.GoldMarketAction.$Shape;
+
+            /**
+             * Verifies a GoldMarketAction message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GoldMarketAction
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GoldMarketAction {
+
+            /** Properties of a GoldMarketAction. */
+            interface $Properties {
+
+                /** GoldMarketAction action */
+                action?: (number|null);
+
+                /** GoldMarketAction side */
+                side?: (number|null);
+
+                /** GoldMarketAction lots */
+                lots?: (Long|null);
+
+                /** GoldMarketAction unit_price_yuanbao_units */
+                unit_price_yuanbao_units?: (Long|null);
+
+                /** GoldMarketAction terms_hash */
+                terms_hash?: (string|null);
+
+                /** GoldMarketAction expected_duration_seconds */
+                expected_duration_seconds?: (number|null);
+
+                /** GoldMarketAction order_id */
+                order_id?: (Uint8Array|null);
+
+                /** GoldMarketAction order_version */
+                order_version?: (Long|null);
+
+                /** GoldMarketAction escrow_id */
+                escrow_id?: (Uint8Array|null);
+
+                /** GoldMarketAction escrow_version */
+                escrow_version?: (Long|null);
+
+                /** GoldMarketAction operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GoldMarketAction. */
+            type $Shape = minimir.v1.GoldMarketAction.$Properties;
         }
     }
 }

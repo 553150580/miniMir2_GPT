@@ -1,10 +1,8 @@
-// 本文件向原角色附着返回市场页面，并为各运行服推进已经到期的托管资产。
+// 本文件向原角色附着返回道具市场和金币市场分页。
 package game
 
 import (
-	"log/slog"
 	"math"
-	"time"
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
@@ -20,6 +18,27 @@ func (w *worker) queryItemMarket(r *room, frame wire.Frame) {
 		w.failure(r, frame, p.CodeInvalidArgument)
 		return
 	}
+	store, auth := w.roomStore(r), r.Auth
+	w.submitMarketQuery(r, frame, p.MsgS2CItemMarketState, func() (proto.Message, error) {
+		return store.QueryItemMarket(w.e.ctx, auth, &q)
+	})
+}
+
+// queryGoldMarket 和道具市场共用同一原角色读槽。
+func (w *worker) queryGoldMarket(r *room, frame wire.Frame) {
+	var q pb.GoldMarketQuery
+	if proto.Unmarshal(frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || len(q.ProtoReflect().GetUnknown()) != 0 {
+		w.failure(r, frame, p.CodeInvalidArgument)
+		return
+	}
+	store, auth := w.roomStore(r), r.Auth
+	w.submitMarketQuery(r, frame, p.MsgS2CGoldMarketState, func() (proto.Message, error) {
+		return store.QueryGoldMarket(w.e.ctx, auth, &q)
+	})
+}
+
+// submitMarketQuery 只向发起查询的原连接和场景交付结果。
+func (w *worker) submitMarketQuery(r *room, frame wire.Frame, response uint16, read func() (proto.Message, error)) {
 	if r.PreviewInFlight || r.PreviewGeneration == math.MaxUint64 {
 		w.failure(r, frame, p.CodeOperationPending)
 		return
@@ -27,11 +46,10 @@ func (w *worker) queryItemMarket(r *room, frame wire.Frame) {
 	r.PreviewGeneration++
 	r.PreviewInFlight = true
 	binding := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
-	store := w.roomStore(r)
 	if !w.submit(job{target: w, run: func() func(*worker) {
-		state, err := store.QueryItemMarket(w.e.ctx, binding.auth, &q)
+		state, err := read()
 		return func(owner *worker) {
-			owner.finishItemMarketQuery(binding, frame, state, err)
+			owner.finishMarketQuery(binding, frame, response, state, err)
 		}
 	}}) {
 		r.PreviewInFlight = false
@@ -39,7 +57,7 @@ func (w *worker) queryItemMarket(r *room, frame wire.Frame) {
 	}
 }
 
-func (w *worker) finishItemMarketQuery(binding skillPreviewBinding, frame wire.Frame, state *pb.ItemMarketState, err error) {
+func (w *worker) finishMarketQuery(binding skillPreviewBinding, frame wire.Frame, response uint16, state proto.Message, err error) {
 	r := binding.room
 	if r.PreviewGeneration != binding.generation || !r.PreviewInFlight {
 		return
@@ -53,58 +71,9 @@ func (w *worker) finishItemMarketQuery(binding skillPreviewBinding, frame wire.F
 		w.failure(r, frame, persistence.Code(err))
 		return
 	}
-	if state == nil || len(wire.Encode(wire.Message(p.MsgS2CItemMarketState, frame.Request, binding.conn.Binding(), state))) > wire.MaxFrame {
+	if state == nil || !state.ProtoReflect().IsValid() || len(wire.Encode(wire.Message(response, frame.Request, binding.conn.Binding(), state))) > wire.MaxFrame {
 		w.failure(r, frame, p.CodeServerBusy)
 		return
 	}
-	w.send(r, p.MsgS2CItemMarketState, frame.Request, state)
-}
-
-type itemMarketJob struct {
-	store    *persistence.Store // 原运行服的租约、配置和写入屏障。
-	next     time.Time          // 下次投递时间，由运行服分片持有。
-	inFlight bool               // 同运行服最多一个到期步骤在途。
-	retired  bool               // 运行服已换代时停止投递。
-}
-
-func (e *Engine) initializeItemMarketJobs() {
-	for run, store := range e.runStores {
-		owner := e.workers[run%uint64(len(e.workers))]
-		owner.itemMarketJobs = append(owner.itemMarketJobs, itemMarketJob{store: store})
-	}
-}
-
-// tickItemMarket 用原数据库队列推进少量工作，让入场和角色结算有机会执行。
-func (w *worker) tickItemMarket(now time.Time) {
-	if w.e.stopped.Load() {
-		return
-	}
-	for i := range w.itemMarketJobs {
-		state := &w.itemMarketJobs[i]
-		if state.inFlight || state.retired || now.Before(state.next) {
-			continue
-		}
-		state.next = now.Add(time.Second)
-		state.inFlight = w.submit(job{target: w, run: func() func(*worker) {
-			more, err := state.store.AdvanceItemMarket(w.e.ctx, time.Now())
-			return func(*worker) {
-				state.inFlight = false
-				pause := 2 * time.Second
-				if more {
-					pause = 200 * time.Millisecond
-				} else if state.store.Cfg.Fixture.ItemMarket == nil {
-					pause = 15 * time.Second // 已关闭新单的旧账仍能继续清偿。
-				}
-				if err != nil {
-					code := persistence.Code(err)
-					state.retired = code == p.CodeRouteChanged
-					pause = 5 * time.Second
-					if !w.e.stopped.Load() {
-						slog.Warn("道具市场到期步骤待确认", "run", state.store.Cfg.RunID, "code", code, "error", err)
-					}
-				}
-				state.next = time.Now().Add(pause)
-			}
-		}})
-	}
+	w.send(r, response, frame.Request, state)
 }

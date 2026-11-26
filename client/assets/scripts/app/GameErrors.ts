@@ -36,6 +36,9 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (messageId === 40041 && errorCode === CodeOperationConflict) return '原订单、物品或托管已变化，请刷新';
     if (messageId === 40041 && errorCode === CodeEquipmentBagFull) return '背包空间不足，原物品或托管保留';
     if (messageId === 40041 && errorCode === CodeLineForbidden) return '当前角色或订单条件不允许此市场操作';
+    if (messageId === 40044 && errorCode === CodeVendorFunds) return '原非绑定金币或元宝余额不足';
+    if (messageId === 40044 && errorCode === CodeOperationConflict) return '原限价、委托或托管已变化，请刷新';
+    if (messageId === 40044 && errorCode === CodeLineForbidden) return '当前角色或市场条件不允许此操作';
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
     if (errorCode === CodeWarehouseFull) return '背包或仓库没有空位，原物品保持原处';
     if (errorCode === CodeWarehouseChanged) return '原仓库、物品或版本已变化，请重新查询';

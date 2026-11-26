@@ -101,6 +101,9 @@ const (
 	MsgC2SItemMarketQuery uint16 = 40039
 	MsgS2CItemMarketState uint16 = 40040
 	MsgC2SItemMarketAction uint16 = 40041
+	MsgC2SGoldMarketQuery uint16 = 40042
+	MsgS2CGoldMarketState uint16 = 40043
+	MsgC2SGoldMarketAction uint16 = 40044
 )
 
 const (

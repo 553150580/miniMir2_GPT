@@ -1,0 +1,84 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 范围 1 公开买单、2 公开卖单、3 我的委托、4 交易托管仓。
+message GoldMarketQuery {
+  uint64 scene_epoch = 1;
+  uint32 scope = 2;
+  uint32 page_size = 3;
+  bytes cursor = 4;
+}
+
+// 条款摘要覆盖实际参考价、上下界和运行规则。缺少审核条款时不返回新单规则。
+message GoldMarketRulesView {
+  uint64 rule_version = 1;
+  string config_hash = 2;
+  string terms_hash = 3;
+  int64 reference_unit_price_yuanbao_units = 4;
+  int64 min_unit_price_yuanbao_units = 5;
+  int64 max_unit_price_yuanbao_units = 6;
+  int64 price_step_yuanbao_units = 7;
+  int64 gold_per_lot = 8;
+  uint32 order_duration_seconds = 9;
+  uint32 seller_commission_bp = 10;
+  uint32 max_orders_per_side = 11;
+}
+
+// 方向 1 买单、2 卖单；阶段 1 活动、2 成交、3 撤销、4 到期。
+message GoldMarketOrderView {
+  bytes order_id = 1;
+  uint64 version = 2;
+  uint32 state = 3;
+  uint32 side = 4;
+  int64 unit_price_yuanbao_units = 5;
+  int64 remaining_lots = 6;
+  int64 initial_lots = 7;
+  int64 expires_at_unix_ms = 8;
+  int64 created_at_unix_ms = 9;
+  bool owned = 10;
+  bool same_account = 11;
+}
+
+// 托管类型 1 买入金币、2 卖方实收、3 买单元宝退款、4 卖单金币返还。
+// 原因 1 成交、2 价格改善、3 撤单、4 到期。
+message GoldMarketEscrowView {
+  bytes escrow_id = 1;
+  bytes order_id = 2;
+  uint64 version = 3;
+  uint32 kind = 4;
+  int64 gold = 5;
+  int64 yuanbao_units = 6;
+  int64 created_at_unix_ms = 7;
+  uint32 reason = 8;
+}
+
+message GoldMarketState {
+  uint64 scene_epoch = 1;
+  uint32 scope = 2;
+  bool enabled = 3;
+  bool can_trade = 4;
+  GoldMarketRulesView rules = 5;
+  repeated GoldMarketOrderView orders = 6;
+  repeated GoldMarketEscrowView escrows = 7;
+  bytes next_cursor = 8;
+  uint32 error_code = 9;
+  uint64 role_revision = 10;
+}
+
+// 动作 1 挂单、2 撤单、3 领取。挂单确认提交原手数、单价、条款和期限，撤、领只用原身份与版本。
+message GoldMarketAction {
+  uint32 action = 1;
+  uint32 side = 2;
+  int64 lots = 3;
+  int64 unit_price_yuanbao_units = 4;
+  string terms_hash = 5;
+  uint32 expected_duration_seconds = 6;
+  bytes order_id = 7;
+  uint64 order_version = 8;
+  bytes escrow_id = 9;
+  uint64 escrow_version = 10;
+  OperationContext operation = 11;
+}
