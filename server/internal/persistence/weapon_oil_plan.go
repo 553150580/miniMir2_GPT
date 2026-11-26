@@ -86,6 +86,9 @@ func selectWeaponOil(items []domain.Item, definition devconfig.Item, allowBound 
 			item.MaxDurabilityU != 0 || item.OriginalDurabilityU != 0 {
 			continue
 		}
+		if item.SourceKind == equipmentRecycleOilSource && !validEquipmentRecycleOil(item, definition) {
+			continue
+		}
 		if chosen.ID == "" || item.Bound && !chosen.Bound || item.Bound == chosen.Bound && item.ID < chosen.ID {
 			chosen = item
 		}

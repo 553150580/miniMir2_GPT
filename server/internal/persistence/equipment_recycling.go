@@ -32,6 +32,8 @@ type EquipmentRecyclingReceipt struct {
 	Skipped []RecycleSkip `bson:"skipped,omitempty"`
 	// Trigger 记录触发条件，使用数值表示。
 	Trigger uint32 `bson:"trigger"`
+	// OilRolls 保存此次实际手动分解中合格原件的逐件抽样和实际产物。
+	OilRolls []RecycleOilRoll `bson:"oil_rolls,omitempty"`
 }
 
 // policySnapshot 复制回收策略及其名单切片，避免后续修改影响已确认回执。
@@ -200,47 +202,51 @@ func recycleExisting(r domain.Role, f devconfig.Fixture, receipt *EquipmentRecyc
 	return out, nil
 }
 
-// recycleManual 核验手选实例列表，在全部可处理时扣除物品并返回回收余额变化。
-// r 记录角色，ids 记录标识集合，使用文本列表表示，f 记录开发测试配置。
-func recycleManual(r domain.Role, ids []string, f devconfig.Fixture) (domain.Role, *EquipmentRecyclingReceipt, uint32, error) {
-	// receipt 保存当前处理所用的回执。
-	receipt := &EquipmentRecyclingReceipt{PolicyRevision: r.AutoRecycle.Revision, Trigger: 3}
+// recycleManual 先核对全部原装备，再销毁装备并发放各自绑定的回收金币和分解产物。
+func recycleManual(r domain.Role, ids []string, f devconfig.Fixture, oil *recycleOilAttempt) (domain.Role, *EquipmentRecyclingReceipt, uint32, error) {
 	if len(ids) == 0 || len(ids) > r.Capacity {
-		return r, receipt, p.CodeInvalidArgument, nil
+		return r, nil, p.CodeInvalidArgument, nil
 	}
-	// wanted 初始化用作期望状态的按文本索引的布尔状态映射。
-	wanted := map[string]bool{}
-	// id 接收遍历标识集合时当前的元素。
+	wanted := make(map[string]bool, len(ids)) // 首次处理每个原实例，缺失或重复均拒绝整笔分解。
 	for _, id := range ids {
 		if len(domain.Bytes(id)) != 16 || wanted[id] {
-			return r, receipt, p.CodeInvalidArgument, nil
+			return r, nil, p.CodeInvalidArgument, nil
 		}
 		wanted[id] = true
 	}
-	// out 保存当前处理所用的输出。
+	type input struct {
+		item domain.Item // 通过原实例、持有情况和回收保护检查的装备。
+		gold int64       // 按原规则确认的该件金币。
+	}
+	planned := make([]input, 0, len(ids)) // 全部确认后才创建审核回执，不记录被拒绝操作的部分销毁。
 	out := r
 	out.Items = make([]domain.Item, 0, len(r.Items))
-	// count 规定数量的初始取值。
-	count := 0
-	// item 接收遍历道具集合时当前的元素。
 	for _, item := range r.Items {
 		if !wanted[item.ID] {
 			out.Items = append(out.Items, item)
 			continue
 		}
-		count++
-		// gold 保存由回收“price”取得的金币，reason 保存由回收“price”取得的原因。
 		gold, reason := recyclePrice(r, item, f)
 		if reason != "" {
-			return r, receipt, p.CodeInvalidArgument, nil
+			return r, nil, p.CodeInvalidArgument, nil
 		}
-		// err 接收入账“recycled”过程中可能产生的错误，供后续失败分支处理。
-		if err := creditRecycled(&out, receipt, item, gold); err != nil {
-			return r, receipt, 0, err
+		if f.EquipmentRecycleOil != nil && item.DurabilityU <= 0 &&
+			item.MaxDurabilityU > 0 && item.OriginalDurabilityU >= item.MaxDurabilityU {
+			gold = 0 // 已有持久上限的原件在零或历史负值时明确破损，可销毁但不发金币或油。
+		}
+		planned = append(planned, input{item: item, gold: gold})
+	}
+	if len(planned) != len(wanted) {
+		return r, nil, p.CodeInvalidArgument, nil
+	}
+	receipt := &EquipmentRecyclingReceipt{PolicyRevision: r.AutoRecycle.Revision, Trigger: 3}
+	for _, plan := range planned {
+		if err := creditRecycled(&out, receipt, plan.item, plan.gold); err != nil {
+			return r, nil, 0, err
 		}
 	}
-	if count != len(wanted) {
-		return r, receipt, p.CodeInvalidArgument, nil
+	if err := applyManualRecycleOil(r, &out, receipt, &f, oil); err != nil {
+		return r, nil, 0, err
 	}
 	return out, receipt, 0, nil
 }

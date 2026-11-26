@@ -54,6 +54,8 @@ import type { ForgeReceipt, ForgeSnapshot } from './ForgeModel';
 import { GameWeaponOil } from './GameWeaponOil';
 import { weaponOilItemId, weaponOilReceipt } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
+import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
+import type { RecycleOilRoll } from './EquipmentRecycleOilModel';
 import { inventoryItemActionView } from './InventoryItemActions';
 import { GameRoleEquipment } from './GameRoleEquipment';
 import { npcShopForRole, npcShopSnapshot } from './NpcShopCatalog';
@@ -1508,7 +1510,8 @@ export class AppRoot extends Component {
             const oil = definition?.kind === 'equipment' && definition.equip_slot === 0 ? this.weaponOilSnapshot() : null;
             return inventoryItemActionView({ item, definition, ready: !blockedReason, blockedReason, equipment: this.equipmentSnapshot(),
                 assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0',
-                miningReason: mining?.toolBlock, forgeReason: forgeSnapshot?.blocked ? '目前不能使用此图纸' : '' }, {
+                miningReason: mining?.toolBlock, forgeReason: forgeSnapshot?.blocked ? '目前不能使用此图纸' : '',
+                recycleOil: this.currentRecycleOilRule() }, {
                 equip: selected(() => this.changeEquipment(false)), recycle: selected(() => this.recycleSelectedInventory()),
                 lock: selected(() => this.setItemLock()), usePotion: () => this.usePotion(item.itemId, new Uint8Array(item.instanceId)),
                 learn: () => this.learnSkill(skill, new Uint8Array(item.instanceId)),
@@ -1667,6 +1670,11 @@ export class AppRoot extends Component {
             items: session.inventory?.items ?? [], equipped: session.inventory?.equipped ?? [], definitions: this.world?.gameplay.items ?? [], recycling: this.world?.gameplay.equipment_recycling };
     }
 
+    private currentRecycleOilRule() {
+        const gameplay = this.world?.gameplay;
+        return gameplay?.equipment_recycle_oil ? equipmentRecycleOilRule(gameplay.equipment_recycle_oil, gameplay.luck_oil) : undefined;
+    }
+
     private async recycleSelectedInventory(): Promise<void> {
         this.ensureNotLeaving();
         const captured = this.selectedItem, scope = currentEntryIdentity(), revision = session.inventory?.revision.toString();
@@ -1676,12 +1684,43 @@ export class AppRoot extends Component {
         if (definition?.kind !== 'equipment') throw new Error('该物品不能分解');
         const protectedReason = manualRecycleBlockReason(captured);
         if (protectedReason) throw new Error(protectedReason);
-        if (!await this.popup!.confirm('Confirm', `分解${definition.name}？分解所得继承装备绑定状态。`)) return;
+        const rule = this.currentRecycleOilRule();
+        const message = rule ? equipmentRecycleOilConfirmation(definition.name, captured, rule) : `分解${definition.name}？分解所得继承装备绑定状态。`;
+        if (!await this.popup!.confirm('Confirm', message)) return;
         if (this.disposed) return;
         const current = session.inventory?.items.find((row: any) => recycleItemKey(row.instanceId) === recycleItemKey(captured.instanceId));
         if (!isCurrentEntry(scope) || session.inventory?.revision.toString() !== revision || !current || current.version.toString() !== captured.version.toString()
             || manualRecycleBlockReason(current)) throw new Error('装备或保护状态已变化，请重新确认');
         await this.economic(40002, { itemInstanceIds: [new Uint8Array(current.instanceId)] });
+    }
+
+    // 结果只显示已经确认的判定。点击产物前仍观察服务端库存，不从回执直接增加物品。
+    private showRecycleOilResult(identity: AttachmentIdentity, rolls: readonly RecycleOilRoll[], recovering: boolean): void {
+        const summary = recycleOilResultSummary(rolls);
+        if (!this.itemActions || !this.ui || (!recovering && this.ui.top?.name !== 'Inventory') ||
+            (this.popup?.top && this.popup.top.name !== 'ItemActions')) {
+            this.status(summary);
+            return;
+        }
+        const oils = rolls.flatMap(row => row.oil ? [row.oil] : []);
+        const findOil = (id: Uint8Array) => session.inventory?.items.find((item: { instanceId: Uint8Array }) =>
+            recycleItemKey(item.instanceId) === recycleItemKey(id));
+        const openOil = (id: Uint8Array): void => {
+            const current = findOil(id);
+            if (!isCurrentEntry(identity) || !current) return;
+            this.ui!.open('Inventory');
+            this.selectedItem = current;
+            this.refreshInventoryContext();
+            this.openInventoryItemActions(id);
+        };
+        this.itemActions.open(() => {
+            if (this.disposed || !isCurrentEntry(identity)) return null;
+            return { title: '装备分解结果', lines: [...(rolls.length > 1 ? [summary] : []), ...recycleOilResultLines(rolls)],
+                actions: oils.length === 1 ? [{ label: '查看祝福油', enabled: !!findOil(oils[0].instanceId), run: () => openOil(oils[0].instanceId) }] : [],
+                options: oils.length > 1 ? oils.map(item => ({ key: recycleItemKey(item.instanceId),
+                    label: `查看${item.bound ? '绑定' : '非绑定'}油 ${recycleItemKey(item.instanceId).slice(-8)}`,
+                    enabled: !!findOil(item.instanceId), choose: () => openOil(item.instanceId) })) : undefined };
+        });
     }
     private async saveAutoRecycle(applyExisting: boolean): Promise<void> {
         this.ensureNotLeaving();
@@ -2133,8 +2172,13 @@ export class AppRoot extends Component {
         let goldMarketReceipt: GoldMarketReceipt | undefined;
         let forged: ForgeReceipt | undefined;
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
+        let recycleOil: readonly RecycleOilRoll[] = [];
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
+            if (pending.id === 40002 && result.recycleOil != null) {
+                const oilItemId = recovering ? undefined : this.currentRecycleOilRule()?.oilItemId;
+                recycleOil = validateRecycleOilReceipt(pending.value.itemInstanceIds as Uint8Array[], result.recycleOil, oilItemId);
+            }
             if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
             if (pending.id === 40038) cardDaily = validateRoleCardDailyReceipt(result.roleCardDaily, pending.value as unknown as RoleCardDailyRequest);
             if (pending.id === 40041) marketReceipt = validateItemMarketReceipt(result.itemMarket, pending.value as unknown as ItemMarketAction);
@@ -2169,6 +2213,10 @@ export class AppRoot extends Component {
         if (oiled) {
             this.weaponOil?.accept(role, oiled.request, oiled.result);
             this.status(`祝福油已结算，原武器幸运+${equipmentCurrentLuck(oiled.result.weapon)}`);
+            return;
+        }
+        if (recycleOil.length) {
+            this.showRecycleOilResult(identity, recycleOil, recovering);
             return;
         }
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();

@@ -90,6 +90,9 @@ func CanTrade(item domain.Item, definition devconfig.Item) bool {
 		// 保留单块的原纯度。非绑定矿石可申请上架，任意纯度都适用同一交易规则。
 		return validSingleMiningOre(item, definition)
 	}
+	if item.SourceKind == equipmentRecycleOilSource {
+		return validEquipmentRecycleOil(item, definition)
+	}
 	if item.OrePurity != 0 {
 		return false
 	}

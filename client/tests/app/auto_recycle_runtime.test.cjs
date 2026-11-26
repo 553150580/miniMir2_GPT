@@ -22,7 +22,7 @@ async function fixture(){
  const inventory={revision:Long.fromString('9007199254740994',true),items:[item(1),item(2),item(3)],equipped:[],autoRecycle:model.defaultAutoRecycle()};deliver(40003,0,inventory);
  const storage=new Storage(),key='qa.recycle';s.pending=new PendingOperations(storage,key);
  const cc={_decorator:decorators,Component:class{},Toggle,EditBox,Label,Button,Node:{EventType:{TOUCH_END:'touch-end'}}};
- const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='../input/NavigationIntent'?require('../../../.work/ui-tests/input/NavigationIntent.js'):id==='./MapAttachmentCoordinator'?compiled('MapAttachmentCoordinator'):id==='./MapTravelModel'?compiled('MapTravelModel'):{});
+ const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='../input/NavigationIntent'?require('../../../.work/ui-tests/input/NavigationIntent.js'):['./MapAttachmentCoordinator','./MapTravelModel','./EquipmentRecycleOilModel'].includes(id)?compiled(id.slice(2)):{});
  const {GameAutoRecycle}=load('client/assets/scripts/app/GameAutoRecycle.ts',id=>id==='cc'?cc:id==='long'?Long:{});
  const widgets=new Map(),widget=name=>{if(!widgets.has(name))widgets.set(name,{isChecked:false,string:'',interactable:true,enabled:true,setIsCheckedWithoutNotify(value){this.isChecked=value;}});return widgets.get(name);};
  const panel={getChildByPath(name){return{getComponent(){return widget(name);}};}};
@@ -69,4 +69,75 @@ test('journal严格形状与uint64原样往返；不能持久化额外坐标/价
  const value={policy,applyExisting:false,operation};ledger.set('role',{id:40016,value});assert.equal(new PendingOperations(storage,'strict').get('role').value.policy.revision.toString(),Long.MAX_UNSIGNED_VALUE.toString());
  for(const changed of [{...value,x:1},{...value,policy:{...policy,qualityIds:[0,0]}},{...value,policy:{...policy,revision:1}}])assert.throws(()=>new PendingOperations().set('role',{id:40016,value:changed}));
  assert.throws(()=>new PendingOperations().set('role',{id:40017,value:{itemInstanceId:new Uint8Array(16),itemVersion:Long.UZERO,locked:true,operation}}));
+});
+
+test('分解油从原背包按钮进入，声明概率后沿40002落盘，实际油到账后才能打开原件', async () => {
+ const f = await fixture();
+ try {
+  const id = value => new Uint8Array(16).fill(value);
+  f.app.world.gameplay.equipment_recycle_oil = { denominator: 30 };
+  f.app.world.gameplay.luck_oil = { item_id: 900021 };
+  const original = { ...f.s.inventory.items[1], initialLuck: 3, currentLuck: 3,
+   durabilityU: Long.UONE, maxDurabilityU: Long.UONE, originalDurabilityU: Long.UONE };
+  f.s.inventory.items[1] = original;
+  f.app.selectedItem = original;
+  let text, opened, detailId, adjusted = 0, views = 0;
+  f.app.popup.confirm = async (_kind, message) => { text = message; return true; };
+  f.app.ui = { top: { name: 'Inventory' }, open(name) { assert.equal(name, 'Inventory'); } };
+  f.app.itemActions = { open(read) { ++views; opened = read; } };
+  f.app.refreshInventoryContext = () => { ++adjusted; };
+  f.app.openInventoryItemActions = instanceId => { detailId = instanceId; };
+  const oil = { instanceId: id(17), itemId: 900021, quantity: Long.ONE, version: Long.UONE, bound: true,
+   sourceKind: 'equipment_recycle', sourceId: '02'.repeat(16) };
+  let final;
+  f.socket.onPacket = packet => {
+   if (packet.id !== 40002) return;
+   const persisted = new PendingOperations(f.storage, f.key).get(f.h.roleIdentity());
+   assert.deepEqual(persisted.value.itemInstanceIds, [id(2)]);
+   final = { opId: packet.value.operation.opId, commandSeq: packet.value.operation.commandSeq,
+    recycleOil: { rolls: [{ equipmentInstanceId: id(2), luck: 3, oil }] } };
+   f.deliver(40005, packet.seq, final);
+  };
+  await f.click('UIMgr/Panels/Inventory/Recycle');
+  assert.match(text, /当前幸运\+3 · 绑定\n分解出油概率 10%/);
+  assert.equal(views, 1);
+  assert.equal(f.s.pending.get(f.h.roleIdentity()), null);
+  assert.match(opened().lines.join('\n'), /获得1瓶绑定祝福油\n来源 装备分解/);
+  assert.equal(opened().actions[0].enabled, false);
+  f.deliver(40003, 0, { ...f.s.inventory, revision: f.s.inventory.revision.add(1), items: [oil] });
+  assert.equal(opened().actions[0].enabled, true);
+  opened().actions[0].run();
+  assert.deepEqual(detailId, oil.instanceId);
+  assert.equal(adjusted, 1);
+  assert.equal(f.app.selectedItem.sourceId, oil.sourceId);
+  f.deliver(40005, 0, final);
+  await f.app.submitPending(true);
+  assert.equal(views, 1, '重发的永久回执没有第二个结果窗');
+ } finally { f.close(); }
+});
+
+test('损坏装备的旧完成回执无油提示，串单回执保留Pending等待原结果', async () => {
+ const f = await fixture();
+ try {
+  f.app.world.gameplay.equipment_recycle_oil = { denominator: 30 };
+  f.app.world.gameplay.luck_oil = { item_id: 900021 };
+  Object.assign(f.app.selectedItem, { initialLuck: 3, currentLuck: 3,
+   durabilityU: Long.UZERO, maxDurabilityU: Long.UONE, originalDurabilityU: Long.UONE });
+  let text, views = 0;
+  f.app.popup.confirm = async (_kind, message) => { text = message; return true; };
+  f.app.ui = { top: { name: 'Inventory' } };
+  f.app.itemActions = { open() { ++views; } };
+  successful(f);
+  await f.click('UIMgr/Panels/Inventory/Recycle');
+  assert.match(text, /破损分解金币 0\n破损装备不判定祝福油/);
+  assert.equal(views, 0);
+  f.socket.onPacket = packet => {
+   if (packet.id !== 40002) return;
+   f.deliver(40005, packet.seq, { opId: packet.value.operation.opId, commandSeq: packet.value.operation.commandSeq,
+    recycleOil: { rolls: [{ equipmentInstanceId: new Uint8Array(16).fill(11), luck: 3 }] } });
+  };
+  await assert.rejects(f.click('UIMgr/Panels/Inventory/Recycle'), /保留原请求等待核对/);
+  assert.equal(f.s.pending.get(f.h.roleIdentity()).id, 40002);
+  assert.equal(views, 0);
+ } finally { f.close(); }
 });

@@ -46,7 +46,7 @@ export function assetId(value: Uint8Array): string {
 }
 export function sourceName(value: string | undefined): string {
     return ({ npc_shop: 'NPC书店', initial: '开发初始补给', initial_grant: '开发初始补给', monster_drop: '怪物掉落', skill_recycle: '拆书所得',
-        mining: '挖矿所得', personal_boss: '个人首领奖励', forge_craft: '图纸打造' } as Record<string, string>)[value ?? ''] ?? '未知来源';
+        mining: '挖矿所得', personal_boss: '个人首领奖励', forge_craft: '图纸打造', equipment_recycle: '装备分解' } as Record<string, string>)[value ?? ''] ?? '未知来源';
 }
 function frozenItem(item: SkillAssetItem): FrozenItem {
     return { id: assetId(item.instanceId), itemId: item.itemId, version: assetInteger(item.version).toString(), quantity: assetInteger(item.quantity).toString(),

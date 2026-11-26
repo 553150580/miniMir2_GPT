@@ -809,6 +809,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.GoldMarketReceipt.$Properties|null} [gold_market] OperationResult gold_market
              * @property {minimir.v1.ForgeReceipt.$Properties|null} [forge] OperationResult forge
              * @property {minimir.v1.WeaponOilReceipt.$Properties|null} [weapon_oil] OperationResult weapon_oil
+             * @property {minimir.v1.RecycleOilReceipt.$Properties|null} [recycle_oil] OperationResult recycle_oil
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -945,6 +946,14 @@ $root.minimir = (function() {
             OperationResult.prototype.weapon_oil = null;
 
             /**
+             * OperationResult recycle_oil.
+             * @member {minimir.v1.RecycleOilReceipt.$Properties|null|undefined} recycle_oil
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.recycle_oil = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1002,6 +1011,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.ForgeReceipt.encode(message.forge, writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
                 if (message.weapon_oil != null && $Object.hasOwnProperty.call(message, "weapon_oil"))
                     $root.minimir.v1.WeaponOilReceipt.encode(message.weapon_oil, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
+                if (message.recycle_oil != null && $Object.hasOwnProperty.call(message, "recycle_oil"))
+                    $root.minimir.v1.RecycleOilReceipt.encode(message.recycle_oil, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1152,6 +1163,12 @@ $root.minimir = (function() {
                             message.weapon_oil = $root.minimir.v1.WeaponOilReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon_oil);
                             continue;
                         }
+                    case 14: {
+                            if (wireType !== 2)
+                                break;
+                            message.recycle_oil = $root.minimir.v1.RecycleOilReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.recycle_oil);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1255,6 +1272,11 @@ $root.minimir = (function() {
                     if (error)
                         return "weapon_oil." + error;
                 }
+                if (message.recycle_oil != null && $Object.hasOwnProperty.call(message, "recycle_oil")) {
+                    var error = $root.minimir.v1.RecycleOilReceipt.verify(message.recycle_oil, _depth + 1);
+                    if (error)
+                        return "recycle_oil." + error;
+                }
                 return null;
             };
 
@@ -1273,6 +1295,490 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.RecycleOilReceipt = (function() {
+
+            /**
+             * Properties of a RecycleOilReceipt.
+             * @typedef {Object} minimir.v1.RecycleOilReceipt.$Properties
+             * @property {Array.<minimir.v1.RecycleOilRoll.$Properties>|null} [rolls] RecycleOilReceipt rolls
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RecycleOilReceipt.
+             * @memberof minimir.v1
+             * @interface IRecycleOilReceipt
+             * @augments minimir.v1.RecycleOilReceipt.$Properties
+             * @deprecated Use minimir.v1.RecycleOilReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a RecycleOilReceipt.
+             * @typedef {minimir.v1.RecycleOilReceipt.$Properties} minimir.v1.RecycleOilReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new RecycleOilReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a RecycleOilReceipt.
+             * @constructor
+             * @param {minimir.v1.RecycleOilReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RecycleOilReceipt = function (properties) {
+                this.rolls = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RecycleOilReceipt rolls.
+             * @member {Array.<minimir.v1.RecycleOilRoll.$Properties>} rolls
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @instance
+             */
+            RecycleOilReceipt.prototype.rolls = $util.emptyArray;
+
+            /**
+             * Creates a new RecycleOilReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {minimir.v1.RecycleOilReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RecycleOilReceipt} RecycleOilReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.RecycleOilReceipt.$Shape): minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape;
+             *   (properties?: minimir.v1.RecycleOilReceipt.$Properties): minimir.v1.RecycleOilReceipt;
+             * }}
+             */
+            RecycleOilReceipt.create = function(properties) {
+                return new RecycleOilReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified RecycleOilReceipt message. Does not implicitly {@link minimir.v1.RecycleOilReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {minimir.v1.RecycleOilReceipt.$Properties} message RecycleOilReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RecycleOilReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.rolls != null && message.rolls.length)
+                    for (var i = 0; i < message.rolls.length; ++i)
+                        $root.minimir.v1.RecycleOilRoll.encode(message.rolls[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RecycleOilReceipt message, length delimited. Does not implicitly {@link minimir.v1.RecycleOilReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {minimir.v1.RecycleOilReceipt.$Properties} message RecycleOilReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RecycleOilReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RecycleOilReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape} RecycleOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RecycleOilReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RecycleOilReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.rolls && message.rolls.length))
+                                message.rolls = [];
+                            message.rolls.push($root.minimir.v1.RecycleOilRoll.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RecycleOilReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape} RecycleOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RecycleOilReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RecycleOilReceipt message.
+             * @function verify
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RecycleOilReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.rolls != null && $Object.hasOwnProperty.call(message, "rolls")) {
+                    if (!$Array.isArray(message.rolls))
+                        return "rolls: array expected";
+                    for (var i = 0; i < message.rolls.length; ++i) {
+                        var error = $root.minimir.v1.RecycleOilRoll.verify(message.rolls[i], _depth + 1);
+                        if (error)
+                            return "rolls." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for RecycleOilReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.RecycleOilReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RecycleOilReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RecycleOilReceipt";
+            };
+
+            return RecycleOilReceipt;
+        })();
+
+        v1.RecycleOilRoll = (function() {
+
+            /**
+             * Properties of a RecycleOilRoll.
+             * @typedef {Object} minimir.v1.RecycleOilRoll.$Properties
+             * @property {Uint8Array|null} [equipment_instance_id] RecycleOilRoll equipment_instance_id
+             * @property {number|null} [luck] RecycleOilRoll luck
+             * @property {minimir.v1.ItemView.$Properties|null} [oil] RecycleOilRoll oil
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RecycleOilRoll.
+             * @memberof minimir.v1
+             * @interface IRecycleOilRoll
+             * @augments minimir.v1.RecycleOilRoll.$Properties
+             * @deprecated Use minimir.v1.RecycleOilRoll.$Properties instead.
+             */
+
+            /**
+             * Shape of a RecycleOilRoll.
+             * @typedef {minimir.v1.RecycleOilRoll.$Properties} minimir.v1.RecycleOilRoll.$Shape
+             */
+
+            /**
+             * Constructs a new RecycleOilRoll.
+             * @memberof minimir.v1
+             * @classdesc Represents a RecycleOilRoll.
+             * @constructor
+             * @param {minimir.v1.RecycleOilRoll.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RecycleOilRoll = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RecycleOilRoll equipment_instance_id.
+             * @member {Uint8Array} equipment_instance_id
+             * @memberof minimir.v1.RecycleOilRoll
+             * @instance
+             */
+            RecycleOilRoll.prototype.equipment_instance_id = $util.newBuffer([]);
+
+            /**
+             * RecycleOilRoll luck.
+             * @member {number} luck
+             * @memberof minimir.v1.RecycleOilRoll
+             * @instance
+             */
+            RecycleOilRoll.prototype.luck = 0;
+
+            /**
+             * RecycleOilRoll oil.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} oil
+             * @memberof minimir.v1.RecycleOilRoll
+             * @instance
+             */
+            RecycleOilRoll.prototype.oil = null;
+
+            /**
+             * Creates a new RecycleOilRoll instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {minimir.v1.RecycleOilRoll.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RecycleOilRoll} RecycleOilRoll instance
+             * @type {{
+             *   (properties: minimir.v1.RecycleOilRoll.$Shape): minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape;
+             *   (properties?: minimir.v1.RecycleOilRoll.$Properties): minimir.v1.RecycleOilRoll;
+             * }}
+             */
+            RecycleOilRoll.create = function(properties) {
+                return new RecycleOilRoll(properties);
+            };
+
+            /**
+             * Encodes the specified RecycleOilRoll message. Does not implicitly {@link minimir.v1.RecycleOilRoll.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {minimir.v1.RecycleOilRoll.$Properties} message RecycleOilRoll message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RecycleOilRoll.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.equipment_instance_id != null && $Object.hasOwnProperty.call(message, "equipment_instance_id") && message.equipment_instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.equipment_instance_id);
+                if (message.luck != null && $Object.hasOwnProperty.call(message, "luck") && message.luck !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.luck);
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil"))
+                    $root.minimir.v1.ItemView.encode(message.oil, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RecycleOilRoll message, length delimited. Does not implicitly {@link minimir.v1.RecycleOilRoll.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {minimir.v1.RecycleOilRoll.$Properties} message RecycleOilRoll message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RecycleOilRoll.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RecycleOilRoll message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape} RecycleOilRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RecycleOilRoll.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RecycleOilRoll();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.equipment_instance_id = value;
+                            else
+                                delete message.equipment_instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.luck = value;
+                            else
+                                delete message.luck;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.oil = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.oil);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RecycleOilRoll message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape} RecycleOilRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RecycleOilRoll.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RecycleOilRoll message.
+             * @function verify
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RecycleOilRoll.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.equipment_instance_id != null && $Object.hasOwnProperty.call(message, "equipment_instance_id"))
+                    if (!(message.equipment_instance_id && typeof message.equipment_instance_id.length === "number" || $util.isString(message.equipment_instance_id)))
+                        return "equipment_instance_id: buffer expected";
+                if (message.luck != null && $Object.hasOwnProperty.call(message, "luck"))
+                    if (!$util.isInteger(message.luck))
+                        return "luck: integer expected";
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.oil, _depth + 1);
+                    if (error)
+                        return "oil." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for RecycleOilRoll
+             * @function getTypeUrl
+             * @memberof minimir.v1.RecycleOilRoll
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RecycleOilRoll.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RecycleOilRoll";
+            };
+
+            return RecycleOilRoll;
         })();
 
         v1.WeaponOilReceipt = (function() {

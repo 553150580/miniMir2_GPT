@@ -155,7 +155,7 @@ func TestAutoRecycleFiltersRetainStrongProtectedAndUnknownOriginals(t *testing.T
 				t.Fatal("保留原因未记录", receipt)
 			}
 			// code 保存由回收手动输入取得的结果码，err 接收回收手动输入过程中可能产生的错误，供后续失败分支处理。
-			if _, _, code, err := recycleManual(r, []string{r.Items[0].ID}, f); tc.wantReason != "" && (code == 0 || err != nil) {
+			if _, _, code, err := recycleManual(r, []string{r.Items[0].ID}, f, nil); tc.wantReason != "" && (code == 0 || err != nil) {
 				t.Fatal("手动绕过同一强保护核", code, err)
 			}
 		})
@@ -232,7 +232,7 @@ func TestItemLockUsesExactInstanceVersionAndProtectsManualRecycle(t *testing.T) 
 		t.Fatal(out, code)
 	}
 	// code 保存由回收手动输入取得的结果码。
-	if _, _, code, _ := recycleManual(out, []string{item.ID}, f); code == 0 {
+	if _, _, code, _ := recycleManual(out, []string{item.ID}, f, nil); code == 0 {
 		t.Fatal("锁定原件被手动回收")
 	}
 	// code 保存由设置道具锁定取得的结果码。

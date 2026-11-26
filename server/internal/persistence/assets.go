@@ -140,6 +140,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	} else if q.Kind == AssetAutoUsePotion {
 		return out, result, receipt, Fail(p.CodeInvalidArgument, "自动用药缺少来源流水")
 	}
+	oil := recycleOilAttempt{operationID: opID} // 懒取种子，已有回执不抽样，事务驱动重试沿用同一份。
 	// e 保存整个事务的执行错误，tc 将回调里的所有数据库操作纳入同一次事务。
 	e := s.guardedTx(ctx, a, func(tc context.Context) error {
 		receipt = Operation{}
@@ -252,7 +253,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		case "equip":
 			r, equipment, businessCode = equipEquipment(r, q, s.Cfg.Fixture)
 		case "recycle":
-			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture)
+			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture, &oil)
 			if e != nil {
 				return e
 			}
@@ -532,6 +533,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.GoldMarket = receipt.GoldMarket.Proto()
 		result.Forge = receipt.Forge.Proto()
 		result.WeaponOil = receipt.WeaponOil.Proto()
+		result.RecycleOil = receipt.Recycling.oilProto()
 	}
 	return out, result, receipt, e
 }

@@ -2,7 +2,9 @@ import type { ItemAction, ItemActionView } from './GameItemActions';
 import { manualRecycleBlockReason } from './AutoRecycleModel';
 import type { RecycleItem } from './AutoRecycleModel';
 import { equipmentActionReason, equipmentDetailLines } from './EquipmentModel';
-import type { EquipmentDefinition, EquipmentSnapshot } from './EquipmentModel';
+import type { EquipmentDefinition, EquipmentItem, EquipmentSnapshot } from './EquipmentModel';
+import { equipmentRecycleOilLines } from './EquipmentRecycleOilModel';
+import type { EquipmentRecycleOilRule } from './EquipmentRecycleOilModel';
 import { canRecycleBook, pageMergeGroup, sourceName } from './SkillAssetsModel';
 import type { SkillAssetDefinition, SkillAssetItem, SkillAssetsSnapshot } from './SkillAssetsModel';
 import type { SkillRow } from './SkillModel';
@@ -12,7 +14,8 @@ import type { MiningItem } from './MiningModel';
 
 interface InventoryActionDefinition extends EquipmentDefinition, SkillAssetDefinition { readonly use_enabled?: boolean; }
 interface InventoryActionInput {
-    readonly item: SkillAssetItem & RecycleItem & Pick<MiningItem, 'orePurity' | 'durabilityU' | 'maxDurabilityU'>;
+    readonly item: SkillAssetItem & RecycleItem & Pick<MiningItem, 'orePurity' | 'durabilityU' | 'maxDurabilityU'> &
+        Pick<EquipmentItem, 'originalDurabilityU' | 'initialLuck' | 'currentLuck'>;
     readonly definition: InventoryActionDefinition | undefined;
     readonly ready: boolean;
     readonly blockedReason: string;
@@ -23,6 +26,7 @@ interface InventoryActionInput {
     readonly playerAlive: boolean;
     readonly miningReason?: string;
     readonly forgeReason?: string;
+    readonly recycleOil?: EquipmentRecycleOilRule;
 }
 interface InventoryActions {
     equip(): Promise<void>;
@@ -39,7 +43,9 @@ interface InventoryActions {
 // 使用当前角色与背包数据生成操作；处理器由上层绑定同一个原实例。
 export function inventoryItemActionView(input: InventoryActionInput, handlers: InventoryActions): ItemActionView {
     const { item, definition, equipment, assets, supply, skill } = input;
-    const lines = definition?.kind === 'equipment' ? equipmentDetailLines(definition, item, equipment.level, equipment.job, false)
+    const lines = definition?.kind === 'equipment' ?
+        [...(input.recycleOil ? equipmentRecycleOilLines(input.recycleOil, item, manualRecycleBlockReason(item)) : []),
+            ...equipmentDetailLines(definition, item, equipment.level, equipment.job, false)]
         : [`数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品', `来源 ${sourceName(item.sourceKind)}`, `品质 ${item.quality ?? 0}`];
     const actions: ItemAction[] = [];
     const add = (label: string, run: () => void | Promise<void>, reason?: string | null): void => {

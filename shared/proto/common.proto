@@ -27,6 +27,17 @@ message OperationResult {
   GoldMarketReceipt gold_market = 11;
   ForgeReceipt forge = 12;
   WeaponOilReceipt weapon_oil = 13;
+  RecycleOilReceipt recycle_oil = 14;
+}
+// 手动分解原件时的已确认祝福油判定。未命中的原件保留抽样记录。
+message RecycleOilReceipt {
+  repeated RecycleOilRoll rolls = 1;
+}
+message RecycleOilRoll {
+  bytes equipment_instance_id = 1;
+  uint32 luck = 2;
+  // 仅在命中时返回已发放的一瓶原油，不暴露随机值。
+  ItemView oil = 3;
 }
 // 只在实际扣除一瓶祝福油后出现。失败与回退也返回原武器及消耗前的原油堆。
 message WeaponOilReceipt {

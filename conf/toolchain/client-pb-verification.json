@@ -4,12 +4,14 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 164,
+  "message_count": 166,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "RecycleOilReceipt",
+    "RecycleOilRoll",
     "WeaponOilReceipt",
     "ForgeOutput",
     "ForgeReceipt",
@@ -2629,7 +2631,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 75,
+  "bytes_field_count": 76,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2644,6 +2646,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "RecycleOilRoll",
+      "field": "equipment_instance_id",
       "repeated": false
     },
     {
@@ -3013,7 +3020,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "54a888fdebb55eb2030bac72376929743353999631bccf6daf4cded0e6448022"
+      "sha256": "e241f9fc67ba446d426f76bf0a2fdd21e5cafb241bab30b7671da9277a206db3"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3071,13 +3078,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "d60d104430c5c0613cef5547be7807d0a07c904c6a5844e716535221269a50d9",
-      "bytes": 3022443
+      "sha256": "6ee6e1673f47c50dbae49688389fb9c6c65194ec07ce7ae00cb1f749e0f4107b",
+      "bytes": 3047208
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "32270eff953a4155521ce116085151050eae2fbaa86377fdf7c079a66ffbfd5b",
-      "bytes": 935048
+      "sha256": "487637aefc8626978afccf206da3d3e0fd4e7e8f15415ff41f273029681e31f3",
+      "bytes": 944672
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

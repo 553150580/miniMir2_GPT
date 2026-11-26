@@ -383,6 +383,9 @@ export namespace minimir {
             /** OperationResult weapon_oil. */
             weapon_oil?: (minimir.v1.WeaponOilReceipt.$Properties|null);
 
+            /** OperationResult recycle_oil. */
+            recycle_oil?: (minimir.v1.RecycleOilReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -485,12 +488,219 @@ export namespace minimir {
                 /** OperationResult weapon_oil */
                 weapon_oil?: (minimir.v1.WeaponOilReceipt.$Properties|null);
 
+                /** OperationResult recycle_oil */
+                recycle_oil?: (minimir.v1.RecycleOilReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a RecycleOilReceipt.
+         * @deprecated Use minimir.v1.RecycleOilReceipt.$Properties instead.
+         */
+        interface IRecycleOilReceipt extends minimir.v1.RecycleOilReceipt.$Properties {
+        }
+
+        /** Represents a RecycleOilReceipt. */
+        class RecycleOilReceipt {
+
+            /**
+             * Constructs a new RecycleOilReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RecycleOilReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RecycleOilReceipt rolls. */
+            rolls: minimir.v1.RecycleOilRoll.$Properties[];
+
+            /**
+             * Creates a new RecycleOilReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RecycleOilReceipt instance
+             */
+            static create(properties: minimir.v1.RecycleOilReceipt.$Shape): minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape;
+            static create(properties?: minimir.v1.RecycleOilReceipt.$Properties): minimir.v1.RecycleOilReceipt;
+
+            /**
+             * Encodes the specified RecycleOilReceipt message. Does not implicitly {@link minimir.v1.RecycleOilReceipt.verify|verify} messages.
+             * @param message RecycleOilReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RecycleOilReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RecycleOilReceipt message, length delimited. Does not implicitly {@link minimir.v1.RecycleOilReceipt.verify|verify} messages.
+             * @param message RecycleOilReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RecycleOilReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RecycleOilReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape} RecycleOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape;
+
+            /**
+             * Decodes a RecycleOilReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape} RecycleOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RecycleOilReceipt & minimir.v1.RecycleOilReceipt.$Shape;
+
+            /**
+             * Verifies a RecycleOilReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RecycleOilReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RecycleOilReceipt {
+
+            /** Properties of a RecycleOilReceipt. */
+            interface $Properties {
+
+                /** RecycleOilReceipt rolls */
+                rolls?: (minimir.v1.RecycleOilRoll.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RecycleOilReceipt. */
+            type $Shape = minimir.v1.RecycleOilReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RecycleOilRoll.
+         * @deprecated Use minimir.v1.RecycleOilRoll.$Properties instead.
+         */
+        interface IRecycleOilRoll extends minimir.v1.RecycleOilRoll.$Properties {
+        }
+
+        /** Represents a RecycleOilRoll. */
+        class RecycleOilRoll {
+
+            /**
+             * Constructs a new RecycleOilRoll.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RecycleOilRoll.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RecycleOilRoll equipment_instance_id. */
+            equipment_instance_id: Uint8Array;
+
+            /** RecycleOilRoll luck. */
+            luck: number;
+
+            /** RecycleOilRoll oil. */
+            oil?: (minimir.v1.ItemView.$Properties|null);
+
+            /**
+             * Creates a new RecycleOilRoll instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RecycleOilRoll instance
+             */
+            static create(properties: minimir.v1.RecycleOilRoll.$Shape): minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape;
+            static create(properties?: minimir.v1.RecycleOilRoll.$Properties): minimir.v1.RecycleOilRoll;
+
+            /**
+             * Encodes the specified RecycleOilRoll message. Does not implicitly {@link minimir.v1.RecycleOilRoll.verify|verify} messages.
+             * @param message RecycleOilRoll message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RecycleOilRoll.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RecycleOilRoll message, length delimited. Does not implicitly {@link minimir.v1.RecycleOilRoll.verify|verify} messages.
+             * @param message RecycleOilRoll message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RecycleOilRoll.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RecycleOilRoll message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape} RecycleOilRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape;
+
+            /**
+             * Decodes a RecycleOilRoll message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape} RecycleOilRoll
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RecycleOilRoll & minimir.v1.RecycleOilRoll.$Shape;
+
+            /**
+             * Verifies a RecycleOilRoll message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RecycleOilRoll
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RecycleOilRoll {
+
+            /** Properties of a RecycleOilRoll. */
+            interface $Properties {
+
+                /** RecycleOilRoll equipment_instance_id */
+                equipment_instance_id?: (Uint8Array|null);
+
+                /** RecycleOilRoll luck */
+                luck?: (number|null);
+
+                /** RecycleOilRoll oil */
+                oil?: (minimir.v1.ItemView.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RecycleOilRoll. */
+            type $Shape = minimir.v1.RecycleOilRoll.$Properties;
         }
 
         /**

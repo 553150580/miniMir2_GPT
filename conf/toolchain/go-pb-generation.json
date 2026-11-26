@@ -4,7 +4,7 @@
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
     "assets.proto": "7ee1ced78ec752ac549317e3af368b068af636db9380ccdfafcb65ae1d76770c",
-    "common.proto": "54a888fdebb55eb2030bac72376929743353999631bccf6daf4cded0e6448022",
+    "common.proto": "e241f9fc67ba446d426f76bf0a2fdd21e5cafb241bab30b7671da9277a206db3",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
     "forge.proto": "26fb2b0586a7268396be69f43daecd1929781534f3d2a70a390a1da8fc53430d",
     "gold_market.proto": "3e8fd27656f8c0dd6fbedbedc73977afc1ff98bb50b55f7d14f7e7e229674f78",
@@ -22,7 +22,7 @@
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
     "server/api/generated/minimirv1/assets.pb.go": "b8431a2bda057d8f2be7c08bca1fd30ea0e5c2deaf233330ff04af033ea6da48",
-    "server/api/generated/minimirv1/common.pb.go": "44d90aa39bbda741cef67358b24c7837b2260a6dc3fe2e6c1415fb6e9e486a5c",
+    "server/api/generated/minimirv1/common.pb.go": "b0e0fdfaa256d437b44f1c3b65b94f9fd7232124eb24a07f931f7f2891238877",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
     "server/api/generated/minimirv1/forge.pb.go": "ae55e8fe14b5d51c77f812e48df157e0fdaca7c3f9c731c5894af40d6c835578",
     "server/api/generated/minimirv1/gold_market.pb.go": "3fd8f62492d3e926744cea1aaf02da7b1b69950ef1002c5c573259b3b58258af",

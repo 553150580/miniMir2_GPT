@@ -157,6 +157,8 @@ type Item struct {
 	DropQuality uint32 `json:"drop_quality"`
 	// MaxStack 记录最大堆叠，使用数值表示。
 	MaxStack int64 `json:"max_stack"`
+	// EquipmentRecycleMaterial 标识此物品可以作为装备分解的原材料产物。
+	EquipmentRecycleMaterial bool `json:"equipment_recycle_material,omitempty"`
 	// DefenceMinBonus 记录防御最小加成，使用数值表示。
 	DefenceMinBonus int64 `json:"defence_min_bonus"`
 	// DefenceMaxBonus 记录防御最大加成，使用数值表示。
@@ -303,6 +305,8 @@ type Fixture struct {
 	CombatLuck *CombatLuckConfig `json:"combat_luck,omitempty"`
 	// LuckOil 保存武器祝福油规则。旧规则缺省时不开放培养。
 	LuckOil *LuckOilConfig `json:"luck_oil,omitempty"`
+	// EquipmentRecycleOil 是显式装配的手动分解出油候选。
+	EquipmentRecycleOil *EquipmentRecycleOilConfig `json:"equipment_recycle_oil,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -615,6 +619,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateLuckOil(); err != nil {
+		return err
+	}
+	if err := f.validateEquipmentRecycleOil(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {
