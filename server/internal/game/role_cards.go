@@ -94,15 +94,20 @@ func (r *room) acceptRoleCardReceipt(next domain.Role, op persistence.Operation,
 	if receipt == nil || next.Revision <= r.Role.Revision || next.Revision != op.Revision {
 		return now
 	}
-	if receipt.Quote.Kind == devconfig.RoleCardKindHosting {
-		if earliest := r.earliestHostingCardEvent(receipt.EffectiveAt); earliest.Before(receipt.EffectiveAt) {
+	return r.observeRoleCardChange(receipt.Quote.Kind, receipt.PreviousSince, receipt.PreviousUntil, receipt.EffectiveAt, now)
+}
+
+// observeRoleCardChange 保留卡期变更前尚未处理的命中资格，游戏内购买和核验后的现金卡共用。
+func (r *room) observeRoleCardChange(kind uint32, previousSince, previousUntil, effectiveAt, now time.Time) time.Time {
+	if kind == devconfig.RoleCardKindHosting {
+		if earliest := r.earliestHostingCardEvent(effectiveAt); earliest.Before(effectiveAt) {
 			r.hostingCardHistory = append(r.hostingCardHistory, hostingCardChange{
-				at: receipt.EffectiveAt, since: receipt.PreviousSince, until: receipt.PreviousUntil,
+				at: effectiveAt, since: previousSince, until: previousUntil,
 			})
 		}
 		return now
 	}
-	return receipt.EffectiveAt
+	return effectiveAt
 }
 
 // roleCardTime 以协议零值标记从未激活。

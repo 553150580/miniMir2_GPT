@@ -115,6 +115,7 @@ type Operation struct {
 	MirrorExchange    *MirrorExchangeReceipt         `bson:"mirror_arena_exchange,omitempty"`  // 首次换取绑定羽毛确认的扣分与实例。
 	CardPurchase      *RoleCardPurchaseReceipt       `bson:"role_card_purchase,omitempty"`     // 首次游戏内购卡的扣款和有效期。
 	CardDaily         *RoleCardDailyReceipt          `bson:"role_card_daily,omitempty"`        // 首次特权按上海运营日领取的绑元。
+	PaymentGrant      *PaymentGrantReceipt           `bson:"payment_grant,omitempty"`          // 渠道成功支付对应的唯一原角色投放或现金卡权益。
 	ItemMarket        *ItemMarketReceipt             `bson:"item_market,omitempty"`            // 市场唯一资产操作原回执。
 	GoldMarket        *GoldMarketReceipt             `bson:"gold_market,omitempty"`            // 金币委托原操作回执。
 }
@@ -209,6 +210,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		dungeonCollection:         dungeonIndexes(),
 		dungeonRewardCollection:   externalChallengeRewardIndexes(),
 		roleCardPeriodCollection:  roleCardPeriodIndexes(),
+		paymentOrderCollection:    paymentOrderIndexes(),
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {

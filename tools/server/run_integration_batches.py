@@ -31,12 +31,15 @@ GROUP_PREFIXES = {
     'bosses': ('PersonalBoss', 'SharedWorldBoss', 'Dungeon'),
     'mirror-arena': ('MirrorArena',),
     'market': ('ItemMarket', 'GoldMarket'),
+    'payments': ('Payment',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
     'TestItemMarketBackgroundMongo', 'TestGoldMarketBackgroundPriorityMongo', 'TestGoldMarketBackgroundExpiryMongo',
     'TestMarketMergeAssetsMongo', 'TestMarketMergePlanAuthorityMongo', 'TestMarketMergeWriteFenceMongo',
 )
+# 支付另验订单归属和幂等履约，测试组使用与现金卡工作簿一致的隔离运行配置。
+PAYMENT_PERSISTENCE_CASES = ('TestPaymentOrderAuthorityMongo', 'TestPaymentGrantMongo')
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -68,6 +71,7 @@ def suites():
             raise ValueError(f'联机用例 {name} 需要明确的单个验收分组')
         groups[match[0]].append(name)
     groups['market'].extend(MARKET_PERSISTENCE_CASES)
+    groups['payments'].extend(PAYMENT_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -100,9 +104,16 @@ def run_batch(output, group, cases, timeout):
         )
         environment.pop('MINIMIR_SERVER_DIRECTORY_WEB_ROOT', None)
         environment.pop('MINIMIR_WORLD_BOSS_BROWSER_WEB_ROOT', None)
+        if group == 'payments':
+            fixture = destination / 'cash-cards-fixture.json'
+            cash_export = [sys.executable, str(ROOT / 'tools/resources/prepare_payment_cash_cards.py'), '--fixture-out', str(fixture)]
+            subprocess.run(cash_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*cash_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_CASH_CARD_TEST_FIXTURE'] = str(fixture)
+            report['payment_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group == 'market':
+        if group in ('market', 'payments'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

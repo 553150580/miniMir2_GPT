@@ -3,7 +3,6 @@ package persistence
 
 import (
 	"context"
-	"math"
 	"time"
 
 	pb "minimir/api/generated/minimirv1"
@@ -123,19 +122,9 @@ func applyRoleCardPurchase(r domain.Role, f *devconfig.Fixture, trusted *RoleCar
 	if code != 0 {
 		return r, nil, code
 	}
-	since, until := now, now
-	if quote.PreviousUntil.After(now) {
-		since, until = quote.PreviousSince, quote.PreviousUntil
-	}
-	length := time.Duration(quote.Days) * 24 * time.Hour
-	if until.UnixMilli() > math.MaxInt64-length.Milliseconds() {
+	r, since, until, err := extendRoleCardPeriod(r, quote.Kind, quote.Days, now)
+	if err != nil {
 		return r, nil, p.CodeInvalidArgument
-	}
-	until = until.Add(length)
-	if quote.Kind == devconfig.RoleCardKindPrivilege {
-		r.PrivilegeSince, r.PrivilegeUntil = since, until
-	} else {
-		r.HostingCardSince, r.HostingCardUntil = since, until
 	}
 	r.Wallet.Yuanbao -= quote.PriceYuanbaoUnits
 	original := *trusted

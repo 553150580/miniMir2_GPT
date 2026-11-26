@@ -94,6 +94,8 @@ type worker struct {
 	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
 	mirrorSeasonJobs   []mirrorSeasonJob           // 分配给本分片的运行服赛季封账步骤。
 	marketJobs         []marketJob                 // 分配给本分片的市场到期、退款及撮合步骤。
+	paymentJobs        []paymentJob                // 每个获准运行服独立扫描已核验的原支付。
+	paymentDispatches  map[string]*paymentDispatch // 保留原角色正在履约或待确认的支付单。
 
 	dungeonParties map[uint64]*dungeonPartyDirectory // 本分片拥有的运行服讨伐链招募目录。
 	dungeonArenas  map[string]*dungeonArena          // 本分片拥有的讨伐队伍独立战斗场。
@@ -223,6 +225,7 @@ type room struct {
 	hostingQuote         *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
 	roleCardQuote        *persistence.RoleCardQuote        // 当前附着为当前场景签发的双月卡报价。
 	hostingCardHistory   []hostingCardChange               // 尚可能被在途命中引用的原托管卡期。
+	pendingPaymentID     string                            // 当前房间等候确认的系统支付原单。
 	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
 	dungeonStart         *dungeonStartAttempt              // 本原角色正在等待的整队开战确认。
 	dungeonMatch         *dungeonAttachment                // 原角色观察或健康续接的同一讨伐场。
@@ -261,6 +264,7 @@ func newEngine(ctx context.Context, s *persistence.Store, runs map[uint64]*persi
 	}
 	e.initializeMirrorSeasonJobs()
 	e.initializeMarketJobs()
+	e.initializePaymentJobs()
 	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
 		e.wg.Go(w.loop)
@@ -472,6 +476,7 @@ func (w *worker) loop() {
 				w.tickWorldBosses(c.tick)
 				w.tickMirrorSeasons(c.tick)
 				w.tickMarketJobs(c.tick)
+				w.tickPaymentJobs(c.tick)
 				w.tickDungeonParties(c.tick)
 				w.tickDungeonArenas(c.tick)
 				w.beginTownNavigationTick(c.tick)
@@ -518,6 +523,9 @@ func (w *worker) command(c command) {
 			return
 		}
 		if !c.conn.Alive() {
+			return
+		}
+		if w.deferEntryForPayment(c) {
 			return
 		}
 		if r != nil && r.worldBossObservation != nil {

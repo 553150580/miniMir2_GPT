@@ -342,7 +342,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return e
 		}
 		if cardPurchase != nil {
-			if e = s.insertRoleCardPeriod(tc, r, opID, cardPurchase); e != nil {
+			if e = s.insertRoleCardPeriod(tc, r, opID, cardPurchase.Quote.Kind, cardPurchase.EffectiveAt,
+				cardPurchase.PreviousSince, cardPurchase.PreviousUntil); e != nil {
 				return e
 			}
 		}

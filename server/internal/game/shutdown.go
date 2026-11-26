@@ -34,6 +34,7 @@ func (e *Engine) DrainSettlements(ctx context.Context) error {
 		}
 		// now 记录本次处理开始时的时间。
 		now := time.Now()
+		status.pending = w.drainPaymentDispatches(now)
 		// r 接收遍历房间集合时当前的元素。
 		for _, r := range w.rooms {
 			// 首领战斗帧已暂停。此前裁决的终态可能仍在等待原入场或资产事务释放操作槽。
