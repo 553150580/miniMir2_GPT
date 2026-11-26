@@ -164,10 +164,13 @@ func buildVendorSale(r domain.Role, f *devconfig.Fixture, shop *devconfig.NPCSho
 		}
 		// item 保存由“initialize”道具耐久取得的道具。
 		item := InitializeItemDurability(original, f)
-		// unit 保存由“sell”“price”取得的单位。
-		unit := shop.SellPrice(item.ItemID)
-		if unit <= 0 || item.Version <= 0 || item.Version == math.MaxInt64 || uint64(item.Version) != q.ItemVersion ||
+		if item.Version <= 0 || item.Version == math.MaxInt64 || uint64(item.Version) != q.ItemVersion ||
 			item.Quantity < q.Quantity || item.Locked || equipmentOccupied(item) {
+			break
+		}
+		// unit 是本店按原实例计算的每件收购价，矿石已依单块纯度结算。
+		unit := vendorSaleUnitPrice(f, shop, item)
+		if unit <= 0 {
 			break
 		}
 		if item.OriginalDurabilityU != 0 {

@@ -4,6 +4,11 @@ export type VendorInteger = Parameters<typeof assetInteger>[0];
 export type VendorMode = 1 | 2 | 3;
 export type VendorAction = 1 | 2 | 3 | 4;
 
+interface VendorMineral {
+    readonly purity: number;
+    readonly bound: boolean;
+}
+
 export interface VendorRow {
     readonly key: string;
     readonly itemId: number;
@@ -15,6 +20,7 @@ export interface VendorRow {
     readonly quantityStep?: VendorInteger;
     readonly instanceId?: Uint8Array;
     readonly itemVersion?: VendorInteger;
+    readonly mineral?: VendorMineral;
     readonly repairActions?: readonly (3 | 4)[];
     readonly disabledReason?: string;
 }
@@ -38,6 +44,7 @@ export interface VendorSelection {
     readonly offerId?: number;
     readonly instanceId?: Uint8Array;
     readonly itemVersion?: VendorInteger;
+    readonly mineral?: VendorMineral;
     readonly quantity: bigint;
     readonly action: VendorAction;
 }
@@ -79,7 +86,7 @@ export function vendorSelection(snapshot: VendorSnapshot | undefined, mode: Vend
     if (action !== 1 && (!row.instanceId || row.instanceId.length !== 16 || row.itemVersion === undefined || assetInteger(row.itemVersion) < 1n)) return undefined;
     return { shopKey: snapshot.shopKey, scope: snapshot.scope, key: row.key, itemId: row.itemId, quantity, action,
         ...(row.offerId !== undefined && { offerId: row.offerId }), ...(row.instanceId && { instanceId: new Uint8Array(row.instanceId) }),
-        ...(row.itemVersion !== undefined && { itemVersion: assetInteger(row.itemVersion) }) };
+        ...(row.itemVersion !== undefined && { itemVersion: assetInteger(row.itemVersion) }), ...(row.mineral && { mineral: { ...row.mineral } }) };
 }
 
 function optionalInstanceId(value: Uint8Array | undefined): string {
@@ -90,6 +97,7 @@ export function sameVendorSelection(previous: VendorSelection, current: VendorSe
     return !!current && current.scope === previous.scope && current.shopKey === previous.shopKey && current.key === previous.key
         && current.itemId === previous.itemId && current.offerId === previous.offerId && current.action === previous.action && current.quantity === previous.quantity
         && current.itemVersion?.toString() === previous.itemVersion?.toString()
+        && current.mineral?.purity === previous.mineral?.purity && current.mineral?.bound === previous.mineral?.bound
         && optionalInstanceId(current.instanceId) === optionalInstanceId(previous.instanceId);
 }
 
@@ -100,16 +108,23 @@ export function vendorQuoteText(name: string, selection: VendorSelection, quote:
     if (quote.action !== selection.action || quote.itemId !== selection.itemId || (selection.action === 1 && quote.offerId !== selection.offerId)
         || assetInteger(quote.quantity) !== selection.quantity
         || optionalInstanceId(quote.instanceId) !== optionalInstanceId(selection.instanceId) || assetInteger(quote.npcId) < 1n) {
-        throw new Error('报价与原商品或装备不一致，请重新报价');
+        throw new Error('报价与原物品不一致，请重新报价');
     }
     const funds = [[quote.boundGold, '绑定金币'], [quote.gold, '金币'], [quote.boundIngot, '绑定元宝'], [quote.ingot, '元宝']] as const;
     const money = funds.filter(([value]) => assetInteger(value) > 0n)
         .map(([value, label]) => `${label}${label.endsWith('元宝') ? yuanbaoText(value) : assetInteger(value)}`);
     const price = assetInteger(quote.price);
     if (!money.length && price > 0n) throw new Error('报价缺少钱包明细，请重新报价');
+    if (selection.mineral) {
+        const amount = assetInteger(selection.mineral.bound ? quote.boundGold : quote.gold);
+        if (quote.bound !== selection.mineral.bound || money.length !== 1 || amount === 0n || amount !== price) {
+            throw new Error('矿石报价的钱包类型或金额不一致，请重新报价');
+        }
+    }
     const lines = [`${titles[selection.action]} ${name} ×${selection.quantity}`,
         `${selection.action === 2 ? '获得' : '费用'} ${money.length ? money.join('、') : '0'}`];
     if (typeof quote.bound === 'boolean' && selection.action < 3) lines.push(quote.bound ? '物品绑定' : '物品非绑定');
+    if (selection.mineral) lines.push(`纯度 ${selection.mineral.purity}`);
     if (selection.action >= 3) {
         const [before, max, original, after, repairedMax] = [
             quote.durabilityU, quote.maxDurabilityU, quote.originalDurabilityU, quote.repairedDurabilityU, quote.repairedMaxDurabilityU,

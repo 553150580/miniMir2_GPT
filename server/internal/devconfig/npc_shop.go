@@ -26,6 +26,8 @@ type NPCShop struct {
 	Offers []SkillShop `json:"offers"`
 	// SellPrices 记录“sell”“prices”，使用NPC“sell”“price”列表表示。
 	SellPrices []NPCSellPrice `json:"sell_prices"`
+	// MineralBuyback 按原矿石实例的纯度收购，仅在商店明确配置时开放。
+	MineralBuyback []NPCMineralBuyback `json:"mineral_buyback,omitempty"`
 	// CanRepair 标记是否处于“can”修理状态。
 	CanRepair bool `json:"can_repair"`
 }
@@ -104,7 +106,7 @@ func (f *Fixture) validateNPCShops() error {
 	// shop 接收遍历NPC商店集合时当前的元素。
 	for _, shop := range f.NPCShops {
 		if strings.TrimSpace(shop.Key) == "" || keys[shop.Key] || len(shop.Roles) == 0 ||
-			(len(shop.Offers) == 0 && len(shop.SellPrices) == 0 && !shop.CanRepair) {
+			(len(shop.Offers) == 0 && len(shop.SellPrices) == 0 && len(shop.MineralBuyback) == 0 && !shop.CanRepair) {
 			return errors.New("城镇商店须配置唯一标识和有效服务")
 		}
 		keys[shop.Key] = true
@@ -140,6 +142,9 @@ func (f *Fixture) validateNPCShops() error {
 				}
 			}
 			sellItems[price.ItemID] = true
+		}
+		if err := f.validateMineralBuyback(shop); err != nil {
+			return err
 		}
 	}
 	return nil

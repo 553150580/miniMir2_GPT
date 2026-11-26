@@ -17,6 +17,12 @@ import (
 
 const miningPPM = 1_000_000 // 挖矿成功与纯度档采用百万分比。
 
+// validSingleMiningOre 验证有原挖矿来源及有效纯度的单块矿石。归属、绑定和操作占用由各入口校验。
+func validSingleMiningOre(item domain.Item, definition devconfig.Item) bool {
+	return item.SourceKind == "mining" && lowerHex(item.SourceID, 16) && !definition.IsEquipment && !definition.Stackable &&
+		item.Quantity == 1 && item.OrePurity >= 1 && item.OrePurity <= 100
+}
+
 // validateMiningAttempt 核对楼层、等级、满包、完整时间间隔与离线托管余额。
 func validateMiningAttempt(role domain.Role, fixture *devconfig.Fixture, q MiningAttemptRequest) (*devconfig.MiningLayer, time.Duration, error) {
 	layer, ok := fixture.MiningLayer(q.MapID)

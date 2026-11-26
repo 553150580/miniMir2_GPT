@@ -133,6 +133,46 @@ test('NPC采购只显示通用和本职业，仍能出售旧的其他职业物�
     assert.deepEqual(npcShopSnapshot(shop, 'entry', inventory, true, definitions, false, 2).buy.map(row => row.itemId), [82, 83]);
 });
 
+test('NPC按原矿逐块显示纯度和钱包，确认采用服务端报价', () => {
+    const { npcShopSnapshot } = load('client/assets/scripts/app/NpcShopCatalog.ts', id => ({
+        './EquipmentModel': require('../../../.work/ui-tests/app/EquipmentModel.js'),
+        './LevelGrowthModel': require('../../../.work/ui-tests/app/LevelGrowthModel.js'),
+        './MiningModel': require('../../../.work/ui-tests/app/MiningModel.js'), './SkillAssetsModel': skillAssets,
+    })[id] ?? {});
+    const copper = { itemId: 91, quantity: 1, version, bound: true, sourceKind: 'mining', sourceId: 'a'.repeat(32) };
+    const ore = (id, purity, fields) => ({ ...copper, orePurity: purity, instanceId: new Uint8Array(16).fill(id), ...fields });
+    const inventory = { level: 20, equipped: [], items: [
+        ore(1, 3), ore(2, 4, { bound: false }), ore(3, 1), ore(4, 5, { locked: true }),
+        ore(5, 101), ore(6, 5, { sourceId: '旧来源' }), ore(7, 5, { quantity: 2 }), ore(8, 5, { itemId: 92 }),
+        ore(9, 23, { itemId: 93, bound: false }),
+    ] };
+    const definitions = [[91, '铜矿'], [92, '黑铁矿'], [93, '金矿']].map(([item_id, name]) => ({ item_id, name, kind: 'mining_ore' }));
+    const shop = { key: 'grocery', roles: ['grocery'], can_repair: false, offers: [], sell_prices: [{ item_id: 92, price_gold: 400 }],
+        mineral_buyback: [{ item_id: 91, numerator: 1, denominator: 2, rounding: 'floor_per_ore' },
+            { item_id: 93, numerator: 2, denominator: 1, rounding: 'exact' }] };
+    const stock = npcShopSnapshot(shop, 'entry', inventory, true, definitions, false, 0);
+    const [odd, even, zero, locked, gold] = stock.sell;
+    assert.equal(stock.sell.length, 5);
+    assert.deepEqual(stock.sell.map(row => row.detail), ['纯度 3 · 1绑定金币/块', '纯度 4 · 2金币/块',
+        '纯度 1 · 0绑定金币/块', '纯度 5 · 2绑定金币/块', '纯度 23 · 46金币/块']);
+    assert.deepEqual(odd.itemDetails, ['绑定物品', '来源 挖矿所得']);
+    assert.match(zero.disabledReason, /无收购价/);
+    assert.match(locked.disabledReason, /锁定/);
+    assert.equal(model.vendorSelection(stock, 2, zero, 2, 1n), undefined);
+    assert.equal(model.vendorSelection(stock, 2, even, 2, 2n), undefined);
+    assert.equal(npcShopSnapshot({ ...shop, mineral_buyback: undefined }, 'entry', inventory, true, definitions, false, 0).sell.length, 0);
+
+    const selection = model.vendorSelection(stock, 2, odd, 2, 1n);
+    const proceeds = { ...quote, action: 2, offerId: 0, itemId: copper.itemId, instanceId: odd.instanceId,
+        quantity: 1, price: '7', boundGold: '7', gold: '0' };
+    assert.equal(model.vendorQuoteText(odd.name, selection, proceeds), '出售 铜矿 ×1\n获得 绑定金币7\n物品绑定\n纯度 3');
+    assert.throws(() => model.vendorQuoteText(odd.name, selection, { ...proceeds, boundGold: '0', gold: '7' }), /钱包类型/);
+    assert.equal(model.sameVendorSelection(selection, { ...selection, mineral: { purity: 5, bound: true } }), false);
+    const goldSelection = model.vendorSelection(stock, 2, gold, 2, 1n);
+    const unbound = { ...proceeds, itemId: gold.itemId, instanceId: gold.instanceId, bound: false, price: '46', boundGold: '0', gold: '46' };
+    assert.match(model.vendorQuoteText(gold.name, goldSelection, unbound), /获得 金币46\n物品非绑定\n纯度 23/);
+});
+
 test('触击商店条目仅打开详情，报价确认和真实提交仍使用原商品', async () => {
     const list = new List(), saved = new SavedNode(panel, list), detailList = new List(), detail = new SavedNode(detailPanel, detailList);
     list.node = saved.getChildByName('ItemsList'); detailList.node = detail.getChildByName('List');

@@ -107,6 +107,29 @@ def compile_ores(rows, mappings):
     return ores, items
 
 
+def compile_mineral_buyback(rows, item_ids, selection, shop_keys):
+    """装配只选收购商店和矿种，价格与整数取整策略始终读取候选原表。"""
+    if type(selection) is not dict or not selection.keys() <= shop_keys:
+        raise ValueError('矿石收购只能装配到已有 NPC 商店')
+    source_by_key = {row['ore_key']: row for row in rows}
+    buyback = {}
+    for shop, selected in selection.items():
+        if (type(selected) is not list or not selected or any(type(key) is not str or key not in item_ids for key in selected)
+                or len(set(selected)) != len(selected)):
+            raise ValueError('每个收购商店须明确选择至少一种已装配且不重复的矿石')
+        prices = []
+        for key in selected:
+            source = source_by_key[key]
+            numerator = integer(source['price_gold_numerator'], 2**32 - 1, '矿石收购价分子')
+            denominator = integer(source['price_gold_denominator'], 2**32 - 1, '矿石收购价分母')
+            rounding = source['integer_rounding_rule']
+            if rounding not in ('floor_per_ore', 'exact') or (rounding == 'exact' and denominator != 1):
+                raise ValueError('矿石收购价须逐块向下取整，或使用分母为1的精确整数')
+            prices.append({'item_id': item_ids[key], 'numerator': numerator, 'denominator': denominator, 'rounding': rounding})
+        buyback[shop] = prices
+    return buyback
+
+
 def assemble_floor(row, public, styles):
     """校验实际地板清单和原风格引用，同时固定隔离矿区的独立坐标。"""
     geo = row['map']
@@ -150,7 +173,9 @@ def project(fixture, public, tables, assembly):
     if (not all(base.get('development_only') is True and base.get('runtime_ready') is False for base in (fixture, public))
             or fixture.get('rule_version') != public.get('rule_version') or 'mining' in fixture or 'mining' in public):
         raise ValueError('矿区候选须源于同版本且缺省关闭的开发夹具与公开资源')
-    fields(assembly, {'layers', 'ore_item_ids'}, '隔离挖矿组装')
+    required_assembly = {'layers', 'ore_item_ids'}
+    if type(assembly) is not dict or not required_assembly <= assembly.keys() <= required_assembly | {'mineral_buyback'}:
+        raise ValueError('隔离挖矿组装字段不完整或包含额外业务参数')
     timing, levels, bands = compile_rules(tables)
     ores, items = compile_ores(tables[TABLE_ORES], assembly['ore_item_ids'])
     if type(assembly['layers']) is not list or not 1 <= len(assembly['layers']) <= 2:
@@ -188,14 +213,21 @@ def project(fixture, public, tables, assembly):
     new_ids = {item_id for item_id, _, _ in items}
     if len(new_ids) != len(items) or new_ids & {i['id'] for i in fixture['items']} or new_ids & {i['item_id'] for i in public['items']}:
         raise ValueError('隔离工具或矿石与已有物品编号重叠')
-    if fixture['npc_shops'] != public['npc_shops'] or not offers.keys() <= {shop['key'] for shop in fixture['npc_shops']}:
+    shop_keys = {shop['key'] for shop in fixture['npc_shops']}
+    if (fixture['npc_shops'] != public['npc_shops'] or not offers.keys() <= shop_keys
+            or any('mineral_buyback' in shop for shop in fixture['npc_shops'])):
         raise ValueError('找不到隔离锄头商店或原服务端与公开商店配置不一致')
+    buyback = compile_mineral_buyback(tables[TABLE_ORES], assembly['ore_item_ids'], assembly.get('mineral_buyback', {}), shop_keys)
     shops = []
     for shop in fixture['npc_shops']:
-        combined = [*shop['offers'], *offers.get(shop['key'], [])]
+        key = shop['key']
+        combined = [*shop['offers'], *offers.get(key, [])]
         if len({o['id'] for o in combined}) != len(combined):
             raise ValueError('隔离锄头的商品编号与原商店重复')
-        shops.append({**shop, 'offers': combined})
+        entry = {**shop, 'offers': combined}
+        if key in buyback:
+            entry['mineral_buyback'] = buyback[key]
+        shops.append(entry)
     server = {**fixture, 'mining': {**timing, 'layers': sorted(layers, key=lambda r: r['layer']), 'ores': ores, 'purity': bands,
                                      'tools': sorted(tools, key=lambda r: r['layer'])}, 'npc_shops': shops,
               'items': [*fixture['items'], *({'id': i, 'name': n, 'max_stack': 1} for i, n, _ in items)]}

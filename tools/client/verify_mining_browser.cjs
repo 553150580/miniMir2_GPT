@@ -1,4 +1,4 @@
-// 用真实 Creator 保存界面触屏验证隔离矿图、开停、矿石纯度和默认关闭。
+// 用真实 Creator 保存界面触屏验证隔离矿图、矿石纯度、NPC 收购和默认关闭。
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -11,6 +11,8 @@ const directory = safe + 'UIMgr/Panels/TownDirectory';
 const details = safe + 'PopupView/Panels/StatusDetails';
 const inventory = safe + 'UIMgr/Panels/Inventory';
 const itemDetails = safe + 'PopupView/Panels/ItemActions';
+const confirm = safe + 'PopupView/Panels/Confirm';
+const shop = safe + 'UIMgr/Panels/NpcShop';
 const action = safe + 'MapViewport/Actions/Auto';
 const hex = bytes => Buffer.from(bytes).toString('hex');
 const uiLabel = (page, nodePath) => page.evaluate(nodePath => cc.find(nodePath)?.getComponent(cc.Label)?.string, nodePath);
@@ -41,6 +43,15 @@ function observe(page, report) {
                 const value = pb.MapTravelPrepare.decode(frame.body);
                 report.destinations.push({ map: value.target_map_id.toString(), destination: value.destination });
             }
+            if (frame?.id === 40024) {
+                const value = pb.VendorQuoteRequest.decode(frame.body);
+                report.quoteRequests.push({ request: frame.request, npc: value.npc_id.toString(), action: value.action,
+                    instance: hex(value.instance_id), version: value.item_version.toString(), quantity: value.quantity.toString() });
+            }
+            if (frame?.id === 40026) {
+                const value = pb.VendorCommitRequest.decode(frame.body);
+                report.saleCommits.push({ request: frame.request, quote: hex(value.quote_id), op: hex(value.operation.op_id), npc: value.npc_id.toString() });
+            }
         });
         socket.on('framereceived', ({ payload }) => {
             const frame = packet(payload);
@@ -48,6 +59,16 @@ function observe(page, report) {
             if (frame?.id === 20002) {
                 const entry = pb.EnterLineResult.decode(frame.body);
                 report.transitions.push({ scene: entry.scene_epoch.toString(), map: entry.room_id.toString(), kind: entry.scene_kind, binding: frame.binding });
+            }
+            if (frame?.id === 40025) {
+                const value = pb.VendorQuoteResult.decode(frame.body);
+                report.quotes.push({ request: frame.request, quote: hex(value.quote_id), instance: hex(value.instance_id), item: value.item_id,
+                    action: value.action, quantity: value.item_quantity.toString(), bound: value.bound, gold: value.gold.toString(),
+                    boundGold: value.bound_gold.toString(), ingot: value.ingot.toString(), boundIngot: value.bound_ingot.toString() });
+            }
+            if (frame?.id === 40005) {
+                const value = pb.OperationResult.decode(frame.body);
+                report.operationResults.push({ request: frame.request, op: hex(value.op_id), error: value.error_code, pending: value.pending });
             }
         });
     });
@@ -73,21 +94,23 @@ async function backdrop(page, panel) {
     await wait(page, target => !cc.find(target)?.activeInHierarchy, panel);
 }
 
-async function visibleInventoryItem(page, instance) {
-    const point = await wait(page, ({ inventory, instance }) => {
-        const list = cc.find(inventory + '/List')?.getComponent('List');
+async function visibleItem(page, listPath, instance) {
+    const point = await wait(page, ({ listPath, instance }) => {
+        const list = cc.find(listPath)?.getComponent('List');
         if (!list) return null;
         const hex = item => Array.from(item.instanceId, value => value.toString(16).padStart(2, '0')).join('');
         const size = cc.view.getVisibleSize(), canvas = document.querySelector('canvas').getBoundingClientRect();
         for (const [index, row] of list.rows) {
-            if (!row.activeInHierarchy || !list.items[index] || hex(list.items[index]) !== instance) continue;
+            if (!row.activeInHierarchy || !list.items[index]?.instanceId || hex(list.items[index]) !== instance) continue;
             const rect = row._uiProps.uiTransformComp.getBoundingBoxToWorld();
             return { x: canvas.left + (rect.x + rect.width / 2) * canvas.width / size.width,
-                y: canvas.top + (size.height - rect.y - rect.height / 2) * canvas.height / size.height };
+                y: canvas.top + (size.height - rect.y - rect.height / 2) * canvas.height / size.height,
+                text: row.getChildByName('Text')?.getComponent(cc.Label)?.string };
         }
         return null;
-    }, { inventory, instance });
+    }, { listPath, instance });
     await page.touchscreen.tap(point.x, point.y);
+    return point.text;
 }
 
 async function liveMining(page, session, predicate, timeout = 20000) {
@@ -158,7 +181,7 @@ async function verifyMine(page, session, report) {
     await backdrop(page, details);
     await touch(page, safe + 'BottomHUD/Footer/Inventory');
     await wait(page, target => !!cc.find(target)?.activeInHierarchy, inventory);
-    await visibleInventoryItem(page, report.ore.instance);
+    await visibleItem(page, inventory + '/List', report.ore.instance);
     await wait(page, target => !!cc.find(target)?.activeInHierarchy, itemDetails);
     report.item = await page.evaluate(itemDetails => cc.find(itemDetails + '/List').getComponent('List').items, itemDetails);
     assert(report.item.some(row => row.includes('纯度 ' + report.ore.purity)) && report.item.includes('来源 挖矿所得'));
@@ -185,10 +208,139 @@ async function verifyMine(page, session, report) {
     await page.screenshot({ path: path.join(output, '05-returned.png') });
 }
 
+// 城镇接近和打开商店都派发真实触摸，只读取地形、NPC 原画像素与可视窗口来计算触点。
+async function townTouchPoint(page, town, mode) {
+    return wait(page, ({ town, mode }) => {
+        const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
+        const npc = world?.townNpcs.find(view => view.npc.id === String(town.npc));
+        if (!npc || !world.isMapReady) return null;
+        const box = document.querySelector('canvas').getBoundingClientRect(), size = cc.view.getVisibleSize();
+        const bounds = world.viewport._uiProps.uiTransformComp.getBoundingBoxToWorld();
+        const entityRects = Array.from(world.visuals.values()).flatMap(visual => visual.body.map(sprite =>
+            sprite.node._uiProps.uiTransformComp?.getBoundingBoxToWorld()).filter(Boolean));
+        const inside = (point, rect, margin = 0) => point.x >= rect.x + margin && point.x <= rect.x + rect.width - margin
+            && point.y >= rect.y + margin && point.y <= rect.y + rect.height - margin;
+        const css = point => ({ x: box.left + point.x * box.width / size.width, y: box.top + (size.height - point.y) * box.height / size.height });
+        const groundTransform = world.world._uiProps.uiTransformComp;
+        const opacity = (layer, x, y) => layer.frames.every(key => {
+            const definition = world.manifest.frames[key];
+            const left = definition.offset_x - 24, top = 16 - definition.offset_y;
+            const mask = world.manifest.townNpcHitMasks?.[key];
+            const column = Math.floor(x - left), row = Math.floor(top - y);
+            if (column < 1 || row < 1 || column >= definition.width - 1 || row >= definition.height - 1) return false;
+            if (!mask) return true;
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+                const pixel = (row + dy) * definition.width + column + dx;
+                if (!(mask[pixel >> 3] & (1 << (pixel & 7)))) return false;
+            }
+            return true;
+        });
+        if (mode === 'npc') {
+            for (let y = 24; y <= 54; y += 2) for (const x of [0, 2, -2, 5, -5, 8, -8]) {
+                if (!npc.layers.some(layer => opacity(layer, x, y))) continue;
+                const foot = world.projection.project(npc.npc.position.x, npc.npc.position.y);
+                const point = groundTransform.convertToWorldSpaceAR(new cc.Vec3(foot.x + x, foot.y + y));
+                if (inside(point, bounds, 8) && !entityRects.some(rect => inside(point, rect))) return css(point);
+            }
+            return null;
+        }
+        const npcRects = world.townNpcs.flatMap(view => view.layers.map(layer =>
+            layer.sprite.node._uiProps.uiTransformComp.getBoundingBoxToWorld()));
+        for (const target of town.approach) for (const [dx, dy] of [[0, 0], [-.3, -.3], [.3, -.3], [-.3, .3], [.3, .3]]) {
+            const local = world.projection.project(target.x + dx, target.y + dy);
+            const point = groundTransform.convertToWorldSpaceAR(new cc.Vec3(local.x, local.y));
+            const tile = world.screenToGrid(point);
+            if (tile?.x === target.x && tile.y === target.y && inside(point, bounds, 8) &&
+                !entityRects.concat(npcRects).some(rect => inside(point, rect))) return { ...css(point), target };
+        }
+        return null;
+    }, { town, mode }).catch(error => { throw new Error('等待城镇触摸点 ' + mode + '：' + error.message); });
+}
+
+async function observedWallet(page, session) {
+    return wait(page, session => {
+        const { wallet, inventory } = session;
+        if (!wallet || !inventory || !wallet.revision.equals(inventory.revision)) return null;
+        return { gold: wallet.gold.toString(), boundGold: wallet.boundGold.toString(),
+            ingot: wallet.yuanbaoUnits.toString(), boundIngot: wallet.boundYuanbaoUnits.toString() };
+    }, session);
+}
+
+async function sellOre(page, session, report, ore, supplied) {
+    const rate = expected.town.rates.find(row => row.item_id === ore.item);
+    const amount = rate && BigInt(ore.purity) * BigInt(rate.numerator) / BigInt(rate.denominator);
+    assert(amount > 0n, '测试矿石须在本店收购范围且可获得正收入');
+    const before = await observedWallet(page, session);
+    const shownCurrency = ore.bound ? '绑定金币' : '金币';
+    const row = await visibleItem(page, shop + '/ItemsList', ore.instance);
+    assert(row.includes(`纯度 ${ore.purity}`) && row.includes(`${amount}${shownCurrency}/块`));
+    await label(page, itemDetails + '/Action1/Label', '出售');
+    await touch(page, itemDetails + '/Action1');
+    await label(page, confirm + '/Title', '出售确认');
+    const message = await uiLabel(page, confirm + '/Message');
+    assert(message.includes(`获得 ${shownCurrency}${amount}`) && message.includes(`纯度 ${ore.purity}`));
+    const request = report.quoteRequests.find(row => row.instance === ore.instance);
+    const quote = report.quotes.find(row => row.request === request?.request);
+    assert(request?.action === 2 && request.npc === String(expected.town.npc) && request.quantity === '1' && request.version === '1');
+    assert(quote?.instance === ore.instance && quote.item === ore.item && quote.action === 2 && quote.quantity === '1' && quote.bound === ore.bound);
+    assert.equal(quote.gold, ore.bound ? '0' : amount.toString());
+    assert.equal(quote.boundGold, ore.bound ? amount.toString() : '0');
+    assert(quote.ingot === '0' && quote.boundIngot === '0');
+    await page.screenshot({ path: path.join(output, ore.bound ? '06-bound-ore-quote.png' : '07-unbound-ore-quote.png') });
+    await touch(page, confirm + '/ConfirmButton');
+    const wanted = { ...before, [ore.bound ? 'boundGold' : 'gold']: (BigInt(before[ore.bound ? 'boundGold' : 'gold']) + amount).toString() };
+    await wait(page, ({ session, instance, wanted }) => {
+        const { wallet, inventory } = session;
+        const hex = bytes => Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
+        return wallet && inventory && wallet.revision.equals(inventory.revision) && !inventory.items.some(item => hex(item.instanceId) === instance) &&
+            wallet.gold.toString() === wanted.gold && wallet.boundGold.toString() === wanted.boundGold &&
+            wallet.yuanbaoUnits.toString() === wanted.ingot && wallet.boundYuanbaoUnits.toString() === wanted.boundIngot;
+    }, { session, instance: ore.instance, wanted });
+    const commit = report.saleCommits.find(row => row.quote === quote.quote);
+    const result = report.operationResults.find(row => row.request === commit?.request);
+    assert(commit?.npc === String(expected.town.npc) && result?.op === commit.op && result.error === 0 && !result.pending);
+    report.sales.push({ ...ore, supplied, price: amount.toString(), quote: quote.quote, op: commit.op, row, message, before, after: wanted });
+    if (await page.evaluate(panel => !!cc.find(panel)?.activeInHierarchy, itemDetails)) await backdrop(page, itemDetails);
+}
+
+async function verifyOreBuyback(page, session, report) {
+    const { town } = expected;
+    await openMap(page);
+    const region = await wait(page, ({ directory, map }) => cc.find(directory + '/RegionList')?.getComponent('List')?.items
+        .find(row => row.maps.some(item => item.mapId === map))?.label, { directory, map: String(town.map) });
+    await touch(page, directory + '/RegionList/View/Content', region);
+    const destination = await wait(page, ({ directory, map }) => cc.find(directory + '/MapList')?.getComponent('List')?.items
+        .find(row => row.mapId === map)?.label, { directory, map: String(town.map) });
+    await touch(page, directory + '/MapList/View/Content', destination);
+    report.town = await currentMap(page, session, town.map, 2);
+    assert.equal(report.town.binding, report.mine.binding);
+    // 绕开角色和 NPC 身体，先点击可通行的邻格，再从当前原画身体打开商店。
+    const approach = await townTouchPoint(page, town, 'ground');
+    report.town.approach = approach;
+    await page.touchscreen.tap(approach.x, approach.y);
+    await wait(page, ({ session, target }) => {
+        const player = session.baseline?.entities.find(entity => entity.entityHandle === session.entry.playerHandle);
+        return player?.position.x === target.x && player.position.y === target.y && session.baseline.navigationState?.status === 2;
+    }, { session, target: approach.target });
+    const npc = await townTouchPoint(page, town, 'npc');
+    report.town.touch = npc;
+    await page.touchscreen.tap(npc.x, npc.y);
+    await label(page, shop + '/Title', town.name);
+    await touch(page, shop + '/Tabs/Sell');
+    // 正常优先出售实际挖出的原件。若碰到黑铁或零价铜，使用明确隔离前态的绑定铜完成窗口覆盖。
+    const rate = town.rates.find(row => row.item_id === report.ore.item);
+    const sellMined = rate && report.ore.purity * rate.numerator >= rate.denominator;
+    await sellOre(page, session, report, sellMined ? report.ore : town.fallback, !sellMined);
+    await sellOre(page, session, report, town.unbound, true);
+    assert.equal(report.quotes.length, 2);
+    assert.equal(report.saleCommits.length, 2);
+}
+
 async function main() {
     const report = { passed: false, enabled: expected.enabled, clientBundleSha256: expected.clientBundleSha256,
         fixtureSha256: expected.fixtureSha256, viewport: { width: 390, height: 844 }, sockets: 0,
-        pageErrors: [], commands: [], destinations: [], states: [], transitions: [] };
+        pageErrors: [], commands: [], destinations: [], states: [], transitions: [],
+        quotes: [], quoteRequests: [], saleCommits: [], operationResults: [], sales: [] };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
     const context = await browser.newContext({ viewport: report.viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
@@ -205,12 +357,15 @@ async function main() {
             await wait(page, session => session.hosting?.autoBattleEnabled === false, session);
         }
         await openMap(page);
-        if (expected.enabled) await verifyMine(page, session, report);
-        else {
+        if (expected.enabled) {
+            await verifyMine(page, session, report);
+            await verifyOreBuyback(page, session, report);
+        } else {
             report.regions = await page.evaluate(directory => cc.find(directory + '/RegionList').getComponent('List').items.map(row => row.label), directory);
             assert(report.regions.length > 0 && !report.regions.some(row => row.includes('矿区')));
             assert.equal(report.commands.length, 0);
             assert.equal(report.states.length, 0);
+            assert.deepEqual(report.quoteRequests, []);
             await page.screenshot({ path: path.join(output, '01-default-no-mine.png') });
         }
         assert.equal(report.sockets, 1);

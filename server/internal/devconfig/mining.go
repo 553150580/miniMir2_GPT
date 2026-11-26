@@ -196,7 +196,7 @@ func (f *Fixture) validateMiningItems(layers map[uint32]bool) error {
 	return f.validateMiningShops(items)
 }
 
-// validateMiningShops 确保隔离锄头可经原角色金钱报价获得，矿石不会进入通用 NPC 回收。
+// validateMiningShops 确保锄头可按金币报价获得，矿石只可走指定的纯度报价。
 func (f *Fixture) validateMiningShops(items map[uint32]bool) error {
 	offers := make(map[uint32]bool, len(f.Mining.Tools))
 	for _, shop := range f.NPCShops {

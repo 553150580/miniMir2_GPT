@@ -31,12 +31,45 @@ class TestPrepareMining(unittest.TestCase):
         old_shop = next(s for s in self.server['npc_shops'] if s['key'] == 'grocery')
         experimental = next(s for s in server['npc_shops'] if s['key'] == 'grocery')
         self.assertEqual(experimental['sell_prices'], old_shop['sell_prices'])
+        self.assertEqual(experimental['mineral_buyback'], [
+            {'item_id': 910001, 'numerator': 1, 'denominator': 2, 'rounding': 'floor_per_ore'},
+            {'item_id': 910002, 'numerator': 1, 'denominator': 1, 'rounding': 'exact'},
+            {'item_id': 910003, 'numerator': 2, 'denominator': 1, 'rounding': 'exact'},
+        ])
+        self.assertEqual([s['key'] for s in server['npc_shops'] if 'mineral_buyback' in s], ['grocery'])
+        self.assertEqual(server['npc_shops'], client['npc_shops'])
+        self.assertFalse(any('mineral_buyback' in shop for shop in self.server['npc_shops']))
         self.assertEqual([(o['item_id'], o['price_units']) for o in experimental['offers'][-2:]], [(910011, 50), (910012, 80)])
         self.assertEqual([(t['item_id'], t['durability_u']) for t in rules['tools']], [(910011, 12), (910012, 16)])
         self.assertEqual(client['map_catalog'][:-2], self.client['map_catalog'])
         self.assertEqual(server['items'][:-6], self.server['items'])
         self.assertFalse(server['_source_evidence']['mining']['default_enabled'])
         self.assertNotIn('mining', self.server)
+
+    def test_buyback_selects_shops_and_ores_without_replacing_workbook_prices(self):
+        assembly = copy.deepcopy(self.assembly)
+        assembly.pop('mineral_buyback')
+        legacy, _ = mining.project(self.server, self.client, self.tables, assembly)
+        self.assertFalse(any('mineral_buyback' in shop for shop in legacy['npc_shops']))
+        tables = copy.deepcopy(self.tables)
+        next(row for row in tables[mining.TABLE_ORES] if row['ore_key'] == 'black_iron')['price_gold_numerator'] = 5
+        assembly['mineral_buyback'] = {'grocery': ['black_iron']}
+        server, client = mining.project(self.server, self.client, tables, assembly)
+        expected = [{'item_id': 910004, 'numerator': 5, 'denominator': 1, 'rounding': 'exact'}]
+        self.assertEqual(next(s for s in server['npc_shops'] if s['key'] == 'grocery')['mineral_buyback'], expected)
+        self.assertEqual(server['npc_shops'], client['npc_shops'])
+
+    def test_buyback_rejects_unknown_duplicate_or_overridden_prices(self):
+        for selection in (None, [], {'none': ['copper']}, {'grocery': []}, {'grocery': ['copper', 'copper']},
+                          {'grocery': ['pickaxe']}, {'grocery': [{'ore': 'copper', 'numerator': 10}]}):
+            with self.subTest(selection=selection), self.assertRaises(ValueError):
+                mining.project(self.server, self.client, self.tables, {**self.assembly, 'mineral_buyback': selection})
+        for key, invalid in (('price_gold_numerator', False), ('price_gold_numerator', 2**32),
+                             ('price_gold_denominator', 0), ('price_gold_denominator', 2), ('integer_rounding_rule', 'nearest')):
+            tables = copy.deepcopy(self.tables)
+            next(row for row in tables[mining.TABLE_ORES] if row['ore_key'] == 'iron')[key] = invalid
+            with self.subTest(key=key, invalid=invalid), self.assertRaises(ValueError):
+                mining.project(self.server, self.client, tables, self.assembly)
 
     def test_respects_explicit_geometry_and_item_mappings(self):
         for location, key, invalid in ((('map',), 'width', 14), (('map',), 'id', 1), (('map',), 'resource_key', '../../maps'),
