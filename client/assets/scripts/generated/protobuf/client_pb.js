@@ -2723,6 +2723,7 @@ $root.minimir = (function() {
              * @property {boolean|null} [guaranteed] WeaponOilReceipt guaranteed
              * @property {number|null} [pity_used] WeaponOilReceipt pity_used
              * @property {number|null} [pity_after] WeaponOilReceipt pity_after
+             * @property {minimir.v1.WingState.$Properties|null} [wing] WeaponOilReceipt wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -2827,6 +2828,14 @@ $root.minimir = (function() {
             WeaponOilReceipt.prototype.pity_after = 0;
 
             /**
+             * WeaponOilReceipt wing.
+             * @member {minimir.v1.WingState.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.wing = null;
+
+            /**
              * Creates a new WeaponOilReceipt instance using the specified properties.
              * @function create
              * @memberof minimir.v1.WeaponOilReceipt
@@ -2876,6 +2885,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.pity_used);
                 if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after") && message.pity_after !== 0)
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.pity_after);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -3008,6 +3019,12 @@ $root.minimir = (function() {
                                 delete message.pity_after;
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -3087,6 +3104,11 @@ $root.minimir = (function() {
                 if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after"))
                     if (!$util.isInteger(message.pity_after))
                         return "pity_after: integer expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
                 return null;
             };
 
@@ -58132,6 +58154,245 @@ $root.minimir = (function() {
             return WeaponOilItemRef;
         })();
 
+        v1.WingOilRef = (function() {
+
+            /**
+             * Properties of a WingOilRef.
+             * @typedef {Object} minimir.v1.WingOilRef.$Properties
+             * @property {Uint8Array|null} [wing_id] WingOilRef wing_id
+             * @property {Long|null} [version] WingOilRef version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WingOilRef.
+             * @memberof minimir.v1
+             * @interface IWingOilRef
+             * @augments minimir.v1.WingOilRef.$Properties
+             * @deprecated Use minimir.v1.WingOilRef.$Properties instead.
+             */
+
+            /**
+             * Shape of a WingOilRef.
+             * @typedef {minimir.v1.WingOilRef.$Properties} minimir.v1.WingOilRef.$Shape
+             */
+
+            /**
+             * Constructs a new WingOilRef.
+             * @memberof minimir.v1
+             * @classdesc Represents a WingOilRef.
+             * @constructor
+             * @param {minimir.v1.WingOilRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WingOilRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WingOilRef wing_id.
+             * @member {Uint8Array} wing_id
+             * @memberof minimir.v1.WingOilRef
+             * @instance
+             */
+            WingOilRef.prototype.wing_id = $util.newBuffer([]);
+
+            /**
+             * WingOilRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.WingOilRef
+             * @instance
+             */
+            WingOilRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new WingOilRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {minimir.v1.WingOilRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WingOilRef} WingOilRef instance
+             * @type {{
+             *   (properties: minimir.v1.WingOilRef.$Shape): minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape;
+             *   (properties?: minimir.v1.WingOilRef.$Properties): minimir.v1.WingOilRef;
+             * }}
+             */
+            WingOilRef.create = function(properties) {
+                return new WingOilRef(properties);
+            };
+
+            /**
+             * Encodes the specified WingOilRef message. Does not implicitly {@link minimir.v1.WingOilRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {minimir.v1.WingOilRef.$Properties} message WingOilRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingOilRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id") && message.wing_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.wing_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WingOilRef message, length delimited. Does not implicitly {@link minimir.v1.WingOilRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {minimir.v1.WingOilRef.$Properties} message WingOilRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WingOilRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WingOilRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape} WingOilRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingOilRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WingOilRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.wing_id = value;
+                            else
+                                delete message.wing_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WingOilRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape} WingOilRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WingOilRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WingOilRef message.
+             * @function verify
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WingOilRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.wing_id != null && $Object.hasOwnProperty.call(message, "wing_id"))
+                    if (!(message.wing_id && typeof message.wing_id.length === "number" || $util.isString(message.wing_id)))
+                        return "wing_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WingOilRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.WingOilRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WingOilRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WingOilRef";
+            };
+
+            return WingOilRef;
+        })();
+
         v1.WeaponOilQuoteRequest = (function() {
 
             /**
@@ -58141,6 +58402,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.WeaponOilItemRef.$Properties|null} [weapon] WeaponOilQuoteRequest weapon
              * @property {boolean|null} [allow_bound] WeaponOilQuoteRequest allow_bound
              * @property {Uint8Array|null} [ui_session_id] WeaponOilQuoteRequest ui_session_id
+             * @property {minimir.v1.WingOilRef.$Properties|null} [wing] WeaponOilQuoteRequest wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -58205,6 +58467,14 @@ $root.minimir = (function() {
             WeaponOilQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
 
             /**
+             * WeaponOilQuoteRequest wing.
+             * @member {minimir.v1.WingOilRef.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @instance
+             */
+            WeaponOilQuoteRequest.prototype.wing = null;
+
+            /**
              * Creates a new WeaponOilQuoteRequest instance using the specified properties.
              * @function create
              * @memberof minimir.v1.WeaponOilQuoteRequest
@@ -58244,6 +58514,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 3, wireType 0 =*/24).bool(message.allow_bound);
                 if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
                     writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.ui_session_id);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingOilRef.encode(message.wing, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -58334,6 +58606,12 @@ $root.minimir = (function() {
                                 delete message.ui_session_id;
                             continue;
                         }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingOilRef.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -58396,6 +58674,11 @@ $root.minimir = (function() {
                 if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
                     if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
                         return "ui_session_id: buffer expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingOilRef.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
                 return null;
             };
 
@@ -58438,6 +58721,7 @@ $root.minimir = (function() {
              * @property {Long|null} [expires_at_unix_ms] WeaponOilQuote expires_at_unix_ms
              * @property {Long|null} [role_revision] WeaponOilQuote role_revision
              * @property {Uint8Array|null} [ui_session_id] WeaponOilQuote ui_session_id
+             * @property {minimir.v1.WingState.$Properties|null} [wing] WeaponOilQuote wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -58606,6 +58890,14 @@ $root.minimir = (function() {
             WeaponOilQuote.prototype.ui_session_id = $util.newBuffer([]);
 
             /**
+             * WeaponOilQuote wing.
+             * @member {minimir.v1.WingState.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.wing = null;
+
+            /**
              * Creates a new WeaponOilQuote instance using the specified properties.
              * @function create
              * @memberof minimir.v1.WeaponOilQuote
@@ -58671,6 +58963,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 16, wireType 0 =*/128).uint64(message.role_revision);
                 if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
                     writer.uint32(/* id 17, wireType 2 =*/138).bytes(message.ui_session_id);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 18, wireType 2 =*/146).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -58875,6 +59169,12 @@ $root.minimir = (function() {
                                 delete message.ui_session_id;
                             continue;
                         }
+                    case 18: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -58978,6 +59278,11 @@ $root.minimir = (function() {
                 if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
                     if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
                         return "ui_session_id: buffer expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
                 return null;
             };
 
@@ -59008,6 +59313,7 @@ $root.minimir = (function() {
              * @property {Uint8Array|null} [ui_session_id] WeaponOilCommitRequest ui_session_id
              * @property {minimir.v1.WeaponOilItemRef.$Properties|null} [weapon] WeaponOilCommitRequest weapon
              * @property {boolean|null} [allow_bound] WeaponOilCommitRequest allow_bound
+             * @property {minimir.v1.WingOilRef.$Properties|null} [wing] WeaponOilCommitRequest wing
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -59080,6 +59386,14 @@ $root.minimir = (function() {
             WeaponOilCommitRequest.prototype.allow_bound = false;
 
             /**
+             * WeaponOilCommitRequest wing.
+             * @member {minimir.v1.WingOilRef.$Properties|null|undefined} wing
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.wing = null;
+
+            /**
              * Creates a new WeaponOilCommitRequest instance using the specified properties.
              * @function create
              * @memberof minimir.v1.WeaponOilCommitRequest
@@ -59121,6 +59435,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.WeaponOilItemRef.encode(message.weapon, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
                 if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.allow_bound);
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
+                    $root.minimir.v1.WingOilRef.encode(message.wing, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -59217,6 +59533,12 @@ $root.minimir = (function() {
                                 delete message.allow_bound;
                             continue;
                         }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.wing = $root.minimir.v1.WingOilRef.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -59284,6 +59606,11 @@ $root.minimir = (function() {
                 if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
                     if (typeof message.allow_bound !== "boolean")
                         return "allow_bound: boolean expected";
+                if (message.wing != null && $Object.hasOwnProperty.call(message, "wing")) {
+                    var error = $root.minimir.v1.WingOilRef.verify(message.wing, _depth + 1);
+                    if (error)
+                        return "wing." + error;
+                }
                 return null;
             };
 

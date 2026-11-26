@@ -30,6 +30,7 @@ export interface WingSnapshot {
     readonly wing: WingState | null;
     readonly inventory: readonly EquipmentItem[];
     readonly blocked: boolean;
+    readonly allowLuckOil?: boolean;
 }
 
 export interface WingFeatherRef {

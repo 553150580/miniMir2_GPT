@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 169,
+  "message_count": 178,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -174,10 +174,19 @@
     "ForgeItemRef",
     "ForgeQuoteRequest",
     "ForgeQuote",
-    "ForgeCommitRequest"
+    "ForgeCommitRequest",
+    "WeaponOilItemRef",
+    "WingOilRef",
+    "WeaponOilQuoteRequest",
+    "WeaponOilQuote",
+    "WeaponOilCommitRequest",
+    "WingFeatherRef",
+    "WingQuoteRequest",
+    "WingQuote",
+    "WingActionRequest"
   ],
-  "int64_field_count": 411,
-  "int64_boundary_cases": 1409,
+  "int64_field_count": 425,
+  "int64_boundary_cases": 1452,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -2644,9 +2653,93 @@
       "field": "role_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "WeaponOilItemRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingOilRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WeaponOilQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WeaponOilQuote",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WeaponOilQuote",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WeaponOilQuote",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingFeatherRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingFeatherRef",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WingQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingQuoteRequest",
+      "field": "wing_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingQuote",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingQuote",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingQuote",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WingActionRequest",
+      "field": "wing_version",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 78,
+  "bytes_field_count": 93,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -3037,6 +3130,81 @@
       "message": "ForgeCommitRequest",
       "field": "quote_id",
       "repeated": false
+    },
+    {
+      "message": "WeaponOilItemRef",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "WingOilRef",
+      "field": "wing_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilQuoteRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilQuote",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilCommitRequest",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilCommitRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WingFeatherRef",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "WingQuoteRequest",
+      "field": "wing_id",
+      "repeated": false
+    },
+    {
+      "message": "WingQuoteRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WingQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "WingQuote",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WingActionRequest",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "WingActionRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "WingActionRequest",
+      "field": "wing_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -3045,7 +3213,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "18a53423f72f122117ff670f8b4170a04c87b53a5558f56c10ac017203836d61"
+      "sha256": "97bbe7ce758533b63e950f9beea00cb25a1a910cc1bdd13c729810ccaedb3851"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3098,18 +3266,26 @@
     {
       "path": "shared/proto/forge.proto",
       "sha256": "26fb2b0586a7268396be69f43daecd1929781534f3d2a70a390a1da8fc53430d"
+    },
+    {
+      "path": "shared/proto/weapon_oil.proto",
+      "sha256": "be7f6a1fffdbcb2440c508ea4b46b7173b22713d7656b599794cb9beb511f7da"
+    },
+    {
+      "path": "shared/proto/wings.proto",
+      "sha256": "18f6b18d7aa929011e661387cc5030bf934fdfe4c8983c56f756cc3cb608a3ae"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "276c5cb737796323565677a3c1715efcc9a92d829e7fc24646332d5fac6c523d",
-      "bytes": 3166612
+      "sha256": "4856f8cdbc15e14785c390eb59fb17c8ae90e955ccb774003f34e3d97d82a0bb",
+      "bytes": 3182778
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "665bef0f50414f2dbb47182e5f882496df8939e994c10c034ee319fd857c3fa1",
-      "bytes": 981966
+      "sha256": "c2932dfc5c23f778c287bb3fbd0583d60a11f52c1ecf52cf1bf98ca3e3df90f4",
+      "bytes": 987208
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

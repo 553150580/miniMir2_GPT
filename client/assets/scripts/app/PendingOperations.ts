@@ -313,14 +313,20 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['quoteId', 'operation']);
         payload = { quoteId: bytes16(item.quoteId, stored), operation: operation(item.operation, stored) };
     } else if (id === 40051) {
-        // 重连只能复核已提交的原报价、原界面会话、原武器位置和绑定授权。
-        const item = record(input.value, ['quoteId', 'uiSessionId', 'weapon', 'allowBound', 'operation']);
-        const weapon = record(item.weapon, ['instanceId', 'version', 'equipped']);
-        const version = longValue(weapon.version, stored);
-        if (typeof item.allowBound !== 'boolean' || typeof weapon.equipped !== 'boolean' || !version.unsigned ||
-            version.isZero() || BigInt(version.toString()) >= 0x7fffffffffffffffn) return invalid('祝福油需要原武器位置、版本及明确授权');
+        // 保持旧武器请求原形状。新翅膀记录只保存原翼实例，不补武器、已穿戴位或新操作。
+        const object = input.value as ObjectValue | null;
+        const targetName = object && Object.prototype.hasOwnProperty.call(object, 'wing') ? 'wing' : 'weapon';
+        const item = record(object, ['quoteId', 'uiSessionId', targetName, 'allowBound', 'operation']);
+        const target = record(item[targetName], targetName === 'wing' ? ['wingId', 'version'] : ['instanceId', 'version', 'equipped']);
+        const version = longValue(target.version, stored);
+        if (typeof item.allowBound !== 'boolean' || !version.unsigned || version.isZero() || BigInt(version.toString()) >= 0x7fffffffffffffffn) {
+            return invalid('祝福油需要原对象版本及明确授权');
+        }
+        if (targetName === 'weapon' && typeof target.equipped !== 'boolean') return invalid('祝福油需要原武器位置');
+        const ref = targetName === 'wing' ? { wingId: bytes16(target.wingId, stored), version } :
+            { instanceId: bytes16(target.instanceId, stored), version, equipped: target.equipped };
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
-            weapon: { instanceId: bytes16(weapon.instanceId, stored), version, equipped: weapon.equipped }, allowBound: item.allowBound,
+            [targetName]: ref, allowBound: item.allowBound,
             operation: operation(item.operation, stored) };
     } else if (id === 40054) {
         // 翅膀成长只按原报价重查，外观只重查原实例、版本及明确的显隐。

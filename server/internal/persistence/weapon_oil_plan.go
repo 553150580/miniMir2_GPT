@@ -1,4 +1,4 @@
-// 本文件选择原武器、原材料和用油条款，并把已确认的一瓶用油计划应用到角色资产。
+// 本文件核对原培养对象、原油堆和用油条款，并将已确认的一瓶用油纳入角色资产。
 package persistence
 
 import (
@@ -12,24 +12,25 @@ import (
 )
 
 const (
-	weaponOilMaxLuck = 9         // 武器用油的最高幸运档位。
+	weaponOilMaxLuck = 9         // 武器和翅膀用油的最高幸运档位。
 	weaponOilPPM     = 1_000_000 // 一个完整概率区间的百万分单位。
 )
 
 // weaponOilPlan 冻结确认窗显示的全部资产和条款。随机值不属于公开条款。
 type weaponOilPlan struct {
-	Weapon      domain.Item `bson:"weapon"`       // 原武器完整实例，确认时必须逐字段相符。
-	Oil         domain.Item `bson:"oil"`          // 游戏服选出的原油堆，确认时不能更换。
-	Equipped    bool        `bson:"equipped"`     // true 表示原武器来自穿戴槽，否则来自背包。
-	AllowBound  bool        `bson:"allow_bound"`  // 本次报价显式采用的绑定材料授权。
-	BeforeLuck  uint32      `bson:"before_luck"`  // 报价时的当前幸运，兼容初始幸运物品。
-	SuccessLuck uint32      `bson:"success_luck"` // 本瓶成功后的幸运。
-	FailureLuck uint32      `bson:"failure_luck"` // 本瓶失败时保持或退回的幸运。
-	SuccessPPM  uint32      `bson:"success_ppm"`  // 已考虑原保底进度的本瓶实际成功率。
-	PityUsed    uint32      `bson:"pity_used"`    // 本瓶投入前所属段的累计瓶数，无硬保底时为零。
-	PityAfter   uint32      `bson:"pity_after"`   // 本段达到后，下瓶起必成的门槛。
-	Guaranteed  bool        `bson:"guaranteed"`   // 是否由历史累计触发本瓶硬保底。
-	OutputBound bool        `bson:"output_bound"` // 当次实际原油或原武器为绑定时，结果绑定。
+	Weapon      domain.Item       `bson:"weapon"`         // 原武器完整实例，培养翅膀时为空值。
+	Wing        *domain.WingState `bson:"wing,omitempty"` // 培养前自己的原翅膀，培养武器时为空。
+	Oil         domain.Item       `bson:"oil"`            // 游戏服选出的原油堆，确认时不能更换。
+	Equipped    bool              `bson:"equipped"`       // 武器是否在穿戴槽，翅膀固定为 false。
+	AllowBound  bool              `bson:"allow_bound"`    // 本次报价显式采用的绑定材料授权。
+	BeforeLuck  uint32            `bson:"before_luck"`    // 报价时的当前幸运，兼容初始幸运物品。
+	SuccessLuck uint32            `bson:"success_luck"`   // 本瓶成功后的幸运。
+	FailureLuck uint32            `bson:"failure_luck"`   // 本瓶失败时保持或退回的幸运。
+	SuccessPPM  uint32            `bson:"success_ppm"`    // 已考虑原保底进度的本瓶实际成功率。
+	PityUsed    uint32            `bson:"pity_used"`      // 本瓶投入前所属段的累计瓶数，无硬保底时为零。
+	PityAfter   uint32            `bson:"pity_after"`     // 本段达到后，下瓶起必成的门槛。
+	Guaranteed  bool              `bson:"guaranteed"`     // 是否由历史累计触发本瓶硬保底。
+	OutputBound bool              `bson:"output_bound"`   // 翅膀始终专属，武器继承原武器及原油的绑定。
 }
 
 // validWeaponOilRef 过滤缺失、溢出和未来版本的原装备引用。
@@ -38,9 +39,14 @@ func validWeaponOilRef(ref *pb.WeaponOilItemRef) bool {
 		len(ref.ProtoReflect().GetUnknown()) == 0
 }
 
-// validWeaponOilQuoteRequest 核对原场景、原武器引用和当前功能界面的身份。
+// validOilTargetRef 确认客户端恰好选择一个类型明确且形状完整的原对象。
+func validOilTargetRef(weapon *pb.WeaponOilItemRef, wing *pb.WingOilRef) bool {
+	return wing == nil && validWeaponOilRef(weapon) || weapon == nil && validWingOilRef(wing)
+}
+
+// validWeaponOilQuoteRequest 核对原场景、原对象引用和当前功能界面的身份。
 func validWeaponOilQuoteRequest(q *pb.WeaponOilQuoteRequest) bool {
-	return q != nil && q.SceneEpoch != 0 && len(q.UiSessionId) == 16 && validWeaponOilRef(q.Weapon) &&
+	return q != nil && q.SceneEpoch != 0 && len(q.UiSessionId) == 16 && validOilTargetRef(q.Weapon, q.Wing) &&
 		len(q.ProtoReflect().GetUnknown()) == 0
 }
 
@@ -109,23 +115,41 @@ func buildWeaponOilPlan(role domain.Role, fixture *devconfig.Fixture, q *pb.Weap
 	if !exists || definition.IsEquipment || !definition.Stackable || definition.MaxStack < 1 {
 		return weaponOilPlan{}, p.CodeWeaponOilUnavailable
 	}
-	weapon, ownsWeapon := weaponOilTarget(role, fixture, q.Weapon)
+	plan := weaponOilPlan{AllowBound: q.AllowBound}
+	var initialLuck, usedToSix, usedToNine uint32 // 只读取原对象自己的幸运与各段累计。
+	if q.Wing != nil {
+		if !wingOilEnabled(fixture) {
+			return weaponOilPlan{}, p.CodeWeaponOilUnavailable
+		}
+		wing, ownsWing := wingOilTarget(role, fixture.Wings, q.Wing)
+		if !ownsWing {
+			return weaponOilPlan{}, p.CodeWeaponOilInputs
+		}
+		plan.Wing, plan.BeforeLuck, plan.OutputBound = wing, wing.Luck, true
+		usedToSix, usedToNine = wing.OilToSix, wing.OilToNine
+	} else {
+		weapon, ownsWeapon := weaponOilTarget(role, fixture, q.Weapon)
+		if !ownsWeapon {
+			return weaponOilPlan{}, p.CodeWeaponOilInputs
+		}
+		plan.Weapon, plan.Equipped, plan.BeforeLuck, plan.OutputBound = weapon, q.Weapon.Equipped, weapon.EffectiveLuck(), weapon.Bound
+		initialLuck, usedToSix, usedToNine = weapon.InitialLuck, weapon.LuckOilToSix, weapon.LuckOilToNine
+	}
 	oil, ownsOil := selectWeaponOil(role.Items, definition, q.AllowBound)
-	if !ownsWeapon || !ownsOil {
+	if !ownsOil {
 		return weaponOilPlan{}, p.CodeWeaponOilInputs
 	}
-	luck := weapon.EffectiveLuck()
+	luck := plan.BeforeLuck
 	step := rules.Steps[luck]
-	if step.SuccessPPM > weaponOilPPM || step.FailureLuck > luck || step.FailureLuck < weapon.InitialLuck {
+	if step.SuccessPPM > weaponOilPPM || step.FailureLuck > luck || step.FailureLuck < initialLuck {
 		return weaponOilPlan{}, p.CodeWeaponOilUnavailable
 	}
-	plan := weaponOilPlan{Weapon: weapon, Oil: oil, Equipped: q.Weapon.Equipped, AllowBound: q.AllowBound,
-		BeforeLuck: luck, SuccessLuck: luck + 1, FailureLuck: step.FailureLuck, SuccessPPM: step.SuccessPPM,
-		PityAfter: step.PityAfter, OutputBound: weapon.Bound || oil.Bound}
+	plan.Oil, plan.OutputBound = oil, plan.OutputBound || oil.Bound
+	plan.SuccessLuck, plan.FailureLuck, plan.SuccessPPM, plan.PityAfter = luck+1, step.FailureLuck, step.SuccessPPM, step.PityAfter
 	if step.PityAfter != 0 {
-		plan.PityUsed = weapon.LuckOilToSix
+		plan.PityUsed = usedToSix
 		if luck >= 6 {
-			plan.PityUsed = weapon.LuckOilToNine
+			plan.PityUsed = usedToNine
 		}
 		if plan.PityUsed == math.MaxUint32 {
 			return weaponOilPlan{}, p.CodeWeaponOilInputs
@@ -139,43 +163,27 @@ func buildWeaponOilPlan(role domain.Role, fixture *devconfig.Fixture, q *pb.Weap
 	return plan, 0
 }
 
-// applyWeaponOilPlan 仅应用已经逐字段确认的计划，保留同一武器和剩余油堆的永久身份。
+// applyWeaponOilPlan 应用已逐字段确认的计划，原对象、原油堆及其永久身份都保持可追溯。
 func applyWeaponOilPlan(role domain.Role, quote weaponOilStoredQuote) (domain.Role, WeaponOilResultReceipt) {
 	plan := quote.Plan
-	weapon, oil := plan.Weapon, plan.Oil
+	oil := plan.Oil
 	success := quote.Roll < plan.SuccessPPM
-	weapon.CurrentLuck = plan.FailureLuck
+	luck := plan.FailureLuck
 	if success {
-		weapon.CurrentLuck = plan.SuccessLuck
+		luck = plan.SuccessLuck
 	}
-	weapon.Bound = plan.OutputBound
-	weapon.Version++
 	used := plan.PityUsed
 	if plan.PityAfter != 0 {
 		used++
-		if plan.BeforeLuck < 6 {
-			weapon.LuckOilToSix = used
-		} else {
-			weapon.LuckOilToNine = used
-		}
 	}
 	result := WeaponOilResultReceipt{QuoteID: quote.ID, Scene: quote.Scene, UISession: quote.UISession, Rule: quote.Rule,
-		Config: quote.Config, Plan: plan, Weapon: weapon, Success: success, PityUsed: used, OilConsumed: 1}
-	if plan.Equipped {
-		role.Equipped = slices.Clone(role.Equipped)
-		for index, entry := range role.Equipped {
-			if entry.Item.ID == weapon.ID {
-				role.Equipped[index].Item = weapon
-				break
-			}
-		}
-	}
-	role.Items = slices.Clone(role.Items)
-	for index, item := range role.Items {
-		if item.ID == weapon.ID {
-			role.Items[index] = weapon
-			break
-		}
+		Config: quote.Config, Plan: plan, Success: success, PityUsed: used, OilConsumed: 1}
+	role.Items = slices.Clone(role.Items) // 武器替换和扣油都只修改本次角色副本。
+	if plan.Wing != nil {
+		wing := nextWingOilState(plan, luck, used)
+		role.Wing, result.Wing = &wing, &wing
+	} else {
+		role, result.Weapon = applyOilToWeapon(role, plan, luck, used)
 	}
 	for index, item := range role.Items {
 		if item.ID != oil.ID {
@@ -192,4 +200,34 @@ func applyWeaponOilPlan(role domain.Role, quote weaponOilStoredQuote) (domain.Ro
 		break
 	}
 	return role, result
+}
+
+// applyOilToWeapon 保持原武器的背包或穿戴位置、耐久、来源及初始幸运。
+func applyOilToWeapon(role domain.Role, plan weaponOilPlan, luck, used uint32) (domain.Role, domain.Item) {
+	weapon := plan.Weapon
+	weapon.CurrentLuck, weapon.Bound, weapon.Version = luck, plan.OutputBound, weapon.Version+1
+	if plan.PityAfter != 0 {
+		if plan.BeforeLuck < 6 {
+			weapon.LuckOilToSix = used
+		} else {
+			weapon.LuckOilToNine = used
+		}
+	}
+	if plan.Equipped {
+		role.Equipped = slices.Clone(role.Equipped)
+		for index, entry := range role.Equipped {
+			if entry.Item.ID == weapon.ID {
+				role.Equipped[index].Item = weapon
+				break
+			}
+		}
+	} else {
+		for index, item := range role.Items {
+			if item.ID == weapon.ID {
+				role.Items[index] = weapon
+				break
+			}
+		}
+	}
+	return role, weapon
 }

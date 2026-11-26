@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"math/big"
+	"reflect"
 	"strconv"
 	"time"
 
@@ -47,27 +48,32 @@ type weaponOilStoredQuote struct {
 
 // WeaponOilResultReceipt 保存一次已经实际耗油的结果，失败和回退同样为已受理事实。
 type WeaponOilResultReceipt struct {
-	QuoteID      string        `bson:"quote_id"`                // 原报价编号。
-	Scene        string        `bson:"scene_epoch"`             // 首次操作的场景代次。
-	UISession    string        `bson:"ui_session_id"`           // 玩家授权原绑定投入的界面会话。
-	Rule         uint64        `bson:"rule_version"`            // 原操作的规则版本。
-	Config       string        `bson:"config_hash"`             // 原操作采用的不可变配置信息。
-	Plan         weaponOilPlan `bson:"plan"`                    // 原武器、油堆、绑定及完整确认条款。
-	Weapon       domain.Item   `bson:"weapon"`                  // 实际结算后的同一武器，保留两个阶段进度。
-	OilRemainder *domain.Item  `bson:"oil_remainder,omitempty"` // 仅扣一瓶后的同一油堆，原堆耗完时为空。
-	OilConsumed  int64         `bson:"oil_consumed"`            // 原物品实际扣除的数量，固定为一瓶。
-	Success      bool          `bson:"success"`                 // 本瓶是否将当前幸运提升一级。
-	PityUsed     uint32        `bson:"pity_used"`               // 已计入当前瓶后，原所属阶段的累计瓶数。
+	QuoteID      string            `bson:"quote_id"`                // 原报价编号。
+	Scene        string            `bson:"scene_epoch"`             // 首次操作的场景代次。
+	UISession    string            `bson:"ui_session_id"`           // 玩家授权原绑定投入的界面会话。
+	Rule         uint64            `bson:"rule_version"`            // 原操作的规则版本。
+	Config       string            `bson:"config_hash"`             // 原操作采用的不可变配置信息。
+	Plan         weaponOilPlan     `bson:"plan"`                    // 原培养对象、油堆、绑定及完整确认条款。
+	Weapon       domain.Item       `bson:"weapon"`                  // 武器用油后的原件，翅膀培养时为空值。
+	Wing         *domain.WingState `bson:"wing,omitempty"`          // 实际培养后的同一专属翅膀，保留两个阶段进度。
+	OilRemainder *domain.Item      `bson:"oil_remainder,omitempty"` // 仅扣一瓶后的同一油堆，原堆耗完时为空。
+	OilConsumed  int64             `bson:"oil_consumed"`            // 原物品实际扣除的数量，固定为一瓶。
+	Success      bool              `bson:"success"`                 // 本瓶是否将当前幸运提升一级。
+	PityUsed     uint32            `bson:"pity_used"`               // 已计入当前瓶后，原所属阶段的累计瓶数。
 }
 
-// Proto 只公开原油堆、原武器结果和已确认的幸运变化，隐藏抽样值和内部围栏。
+// Proto 只公开实际的原对象、原油堆及确认的幸运变化，隐藏抽样和内部围栏。
 func (r *WeaponOilResultReceipt) Proto() *pb.WeaponOilReceipt {
 	if r == nil {
 		return nil
 	}
-	return &pb.WeaponOilReceipt{QuoteId: domain.Bytes(r.QuoteID), Weapon: r.Weapon.Proto(), Oil: r.Plan.Oil.Proto(),
+	result := &pb.WeaponOilReceipt{QuoteId: domain.Bytes(r.QuoteID), Wing: r.Wing.Proto(), Oil: r.Plan.Oil.Proto(),
 		Equipped: r.Plan.Equipped, BeforeLuck: r.Plan.BeforeLuck, Success: r.Success, Guaranteed: r.Plan.Guaranteed,
 		PityUsed: r.PityUsed, PityAfter: r.Plan.PityAfter}
+	if r.Wing == nil {
+		result.Weapon = r.Weapon.Proto()
+	}
+	return result
 }
 
 // PreviewWeaponOil 经过当前角色的运行服和账号围栏后，保存一份可以重核的短期用油报价。
@@ -77,7 +83,10 @@ func (s *Store) PreviewWeaponOil(ctx context.Context, a Auth, q *pb.WeaponOilQuo
 		return nil, Fail(p.CodeWeaponOilUnavailable, "本规则未开放武器祝福油")
 	}
 	if !validWeaponOilQuoteRequest(q) {
-		return nil, Fail(p.CodeInvalidArgument, "用油报价缺少原武器、原场景或界面会话")
+		return nil, Fail(p.CodeInvalidArgument, "用油报价缺少唯一原培养对象、原场景或界面会话")
+	}
+	if q.Wing != nil && !wingOilEnabled(fixture) {
+		return nil, Fail(p.CodeWeaponOilUnavailable, "本规则未开放翅膀用油")
 	}
 	payload, err := proto.Marshal(q)
 	if err != nil {
@@ -105,7 +114,7 @@ func (s *Store) PreviewWeaponOil(ctx context.Context, a Auth, q *pb.WeaponOilQuo
 		}
 		plan, code := buildWeaponOilPlan(role, fixture, q)
 		if code != 0 {
-			return Fail(code, "不满足原武器或实际祝福油的投入条件")
+			return Fail(code, "不满足原培养对象或实际祝福油的投入条件")
 		}
 		quote.Revision, quote.Plan = role.Revision, plan
 		_, err = s.DB.Collection(weaponOilQuoteCollection).ReplaceOne(tc, bson.M{"_id": role.ID}, quote, options.Replace().SetUpsert(true))
@@ -120,25 +129,29 @@ func (s *Store) PreviewWeaponOil(ctx context.Context, a Auth, q *pb.WeaponOilQuo
 // public 使用冻结条款明确显示原油堆、当前和可能的幸运、绑定结果以及保底。
 func (q weaponOilStoredQuote) public(scene uint64) *pb.WeaponOilQuote {
 	plan := q.Plan
-	return &pb.WeaponOilQuote{QuoteId: domain.Bytes(q.ID), SceneEpoch: scene, UiSessionId: domain.Bytes(q.UISession), Weapon: plan.Weapon.Proto(),
+	result := &pb.WeaponOilQuote{QuoteId: domain.Bytes(q.ID), SceneEpoch: scene, UiSessionId: domain.Bytes(q.UISession), Wing: plan.Wing.Proto(),
 		Oil: plan.Oil.Proto(), Equipped: plan.Equipped, AllowBound: plan.AllowBound, CurrentLuck: plan.BeforeLuck,
 		SuccessLuck: plan.SuccessLuck, FailureLuck: plan.FailureLuck, SuccessPpm: plan.SuccessPPM, PityUsed: plan.PityUsed,
 		PityAfter: plan.PityAfter, Guaranteed: plan.Guaranteed, OutputBound: plan.OutputBound,
 		ExpiresAtUnixMs: uint64(q.Expires.UnixMilli()), RoleRevision: uint64(q.Revision)}
+	if plan.Wing == nil {
+		result.Weapon = plan.Weapon.Proto()
+	}
+	return result
 }
 
 // commitWeaponOil 只处理首次提交。已有回执由资产入口优先读取，不能再次扣原油。
 func (s *Store) commitWeaponOil(ctx context.Context, a Auth, role domain.Role, q AssetRequest) (domain.Role, uint32, *WeaponOilResultReceipt, error) {
 	input := q.WeaponOilCommit
 	if input == nil || !proto.Equal(input.Operation, q.Context) || len(input.QuoteId) != 16 || len(input.UiSessionId) != 16 ||
-		!validWeaponOilRef(input.Weapon) || len(input.ProtoReflect().GetUnknown()) != 0 {
+		!validOilTargetRef(input.Weapon, input.Wing) || len(input.ProtoReflect().GetUnknown()) != 0 {
 		return role, p.CodeInvalidArgument, nil, nil
 	}
 	if q.WeaponOilGate != 0 {
 		return role, q.WeaponOilGate, nil, nil
 	}
 	fixture := &s.Cfg.Fixture
-	if fixture.LuckOil == nil {
+	if fixture.LuckOil == nil || input.Wing != nil && !wingOilEnabled(fixture) {
 		return role, p.CodeWeaponOilUnavailable, nil, nil
 	}
 	filter := bson.M{"_id": role.ID, "quote_id": domain.Hex(input.QuoteId)}
@@ -160,11 +173,12 @@ func (s *Store) commitWeaponOil(ctx context.Context, a Auth, role domain.Role, q
 	}
 	var request pb.WeaponOilQuoteRequest
 	if proto.Unmarshal(quote.Request, &request) != nil || request.SceneEpoch != q.SceneEpoch ||
-		input.AllowBound != request.AllowBound || domain.Hex(request.UiSessionId) != quote.UISession || !proto.Equal(input.Weapon, request.Weapon) {
+		input.AllowBound != request.AllowBound || domain.Hex(request.UiSessionId) != quote.UISession ||
+		!proto.Equal(input.Weapon, request.Weapon) || !proto.Equal(input.Wing, request.Wing) {
 		return role, p.CodeWeaponOilQuoteChanged, nil, nil
 	}
 	plan, code := buildWeaponOilPlan(role, fixture, &request)
-	if code != 0 || plan != quote.Plan {
+	if code != 0 || !reflect.DeepEqual(plan, quote.Plan) {
 		return role, p.CodeWeaponOilQuoteChanged, nil, nil
 	}
 	deleted, err := collection.DeleteOne(ctx, filter)
@@ -175,5 +189,13 @@ func (s *Store) commitWeaponOil(ctx context.Context, a Auth, role domain.Role, q
 		return role, p.CodeWeaponOilQuoteChanged, nil, nil
 	}
 	out, result := applyWeaponOilPlan(role, quote)
+	if result.Wing != nil {
+		if !validRoleWing(result.Wing, role.ID, fixture.Wings) {
+			return role, 0, nil, Fail(p.CodeOperationConflict, "翅膀用油结果的身份或状态无效")
+		}
+		if err = s.writeRoleWing(ctx, plan.Wing, *result.Wing); err != nil {
+			return role, 0, nil, err
+		}
+	}
 	return out, 0, &result, nil
 }

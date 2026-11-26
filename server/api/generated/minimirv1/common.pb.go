@@ -681,16 +681,18 @@ func (x *RecycleOilRoll) GetOil() *ItemView {
 
 // 只在实际扣除一瓶祝福油后出现。失败与回退也返回原武器及消耗前的原油堆。
 type WeaponOilReceipt struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QuoteId       []byte                 `protobuf:"bytes,1,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
-	Weapon        *ItemView              `protobuf:"bytes,2,opt,name=weapon,proto3" json:"weapon,omitempty"`
-	Oil           *ItemView              `protobuf:"bytes,3,opt,name=oil,proto3" json:"oil,omitempty"`
-	Equipped      bool                   `protobuf:"varint,4,opt,name=equipped,proto3" json:"equipped,omitempty"`
-	BeforeLuck    uint32                 `protobuf:"varint,5,opt,name=before_luck,json=beforeLuck,proto3" json:"before_luck,omitempty"`
-	Success       bool                   `protobuf:"varint,6,opt,name=success,proto3" json:"success,omitempty"`
-	Guaranteed    bool                   `protobuf:"varint,7,opt,name=guaranteed,proto3" json:"guaranteed,omitempty"`
-	PityUsed      uint32                 `protobuf:"varint,8,opt,name=pity_used,json=pityUsed,proto3" json:"pity_used,omitempty"`
-	PityAfter     uint32                 `protobuf:"varint,9,opt,name=pity_after,json=pityAfter,proto3" json:"pity_after,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	QuoteId    []byte                 `protobuf:"bytes,1,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
+	Weapon     *ItemView              `protobuf:"bytes,2,opt,name=weapon,proto3" json:"weapon,omitempty"`
+	Oil        *ItemView              `protobuf:"bytes,3,opt,name=oil,proto3" json:"oil,omitempty"`
+	Equipped   bool                   `protobuf:"varint,4,opt,name=equipped,proto3" json:"equipped,omitempty"`
+	BeforeLuck uint32                 `protobuf:"varint,5,opt,name=before_luck,json=beforeLuck,proto3" json:"before_luck,omitempty"`
+	Success    bool                   `protobuf:"varint,6,opt,name=success,proto3" json:"success,omitempty"`
+	Guaranteed bool                   `protobuf:"varint,7,opt,name=guaranteed,proto3" json:"guaranteed,omitempty"`
+	PityUsed   uint32                 `protobuf:"varint,8,opt,name=pity_used,json=pityUsed,proto3" json:"pity_used,omitempty"`
+	PityAfter  uint32                 `protobuf:"varint,9,opt,name=pity_after,json=pityAfter,proto3" json:"pity_after,omitempty"`
+	// 操作翅膀时返回同一原实例，武器字段缺省。
+	Wing          *WingState `protobuf:"bytes,10,opt,name=wing,proto3" json:"wing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -786,6 +788,13 @@ func (x *WeaponOilReceipt) GetPityAfter() uint32 {
 		return x.PityAfter
 	}
 	return 0
+}
+
+func (x *WeaponOilReceipt) GetWing() *WingState {
+	if x != nil {
+		return x.Wing
+	}
+	return nil
 }
 
 // 首次创建的装备身份和原绑定状态，原回执重放时保持不变。
@@ -2084,7 +2093,7 @@ const file_common_proto_rawDesc = "" +
 	"\x0eRecycleOilRoll\x122\n" +
 	"\x15equipment_instance_id\x18\x01 \x01(\fR\x13equipmentInstanceId\x12\x12\n" +
 	"\x04luck\x18\x02 \x01(\rR\x04luck\x12&\n" +
-	"\x03oil\x18\x03 \x01(\v2\x14.minimir.v1.ItemViewR\x03oil\"\xb6\x02\n" +
+	"\x03oil\x18\x03 \x01(\v2\x14.minimir.v1.ItemViewR\x03oil\"\xe1\x02\n" +
 	"\x10WeaponOilReceipt\x12\x19\n" +
 	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12,\n" +
 	"\x06weapon\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x06weapon\x12&\n" +
@@ -2098,7 +2107,9 @@ const file_common_proto_rawDesc = "" +
 	"guaranteed\x12\x1b\n" +
 	"\tpity_used\x18\b \x01(\rR\bpityUsed\x12\x1d\n" +
 	"\n" +
-	"pity_after\x18\t \x01(\rR\tpityAfter\"\x9a\x01\n" +
+	"pity_after\x18\t \x01(\rR\tpityAfter\x12)\n" +
+	"\x04wing\x18\n" +
+	" \x01(\v2\x15.minimir.v1.WingStateR\x04wing\"\x9a\x01\n" +
 	"\vForgeOutput\x12\x1f\n" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x17\n" +
@@ -2272,15 +2283,16 @@ var file_common_proto_depIdxs = []int32{
 	25, // 14: minimir.v1.RecycleOilRoll.oil:type_name -> minimir.v1.ItemView
 	25, // 15: minimir.v1.WeaponOilReceipt.weapon:type_name -> minimir.v1.ItemView
 	25, // 16: minimir.v1.WeaponOilReceipt.oil:type_name -> minimir.v1.ItemView
-	10, // 17: minimir.v1.ForgeReceipt.output:type_name -> minimir.v1.ForgeOutput
-	15, // 18: minimir.v1.HostingPurchaseReceipt.quote:type_name -> minimir.v1.HostingQuoteResult
-	17, // 19: minimir.v1.RoleCardQuoteView.product:type_name -> minimir.v1.RoleCardProductView
-	18, // 20: minimir.v1.RoleCardPurchaseReceipt.quote:type_name -> minimir.v1.RoleCardQuoteView
-	21, // [21:21] is the sub-list for method output_type
-	21, // [21:21] is the sub-list for method input_type
-	21, // [21:21] is the sub-list for extension type_name
-	21, // [21:21] is the sub-list for extension extendee
-	0,  // [0:21] is the sub-list for field type_name
+	4,  // 17: minimir.v1.WeaponOilReceipt.wing:type_name -> minimir.v1.WingState
+	10, // 18: minimir.v1.ForgeReceipt.output:type_name -> minimir.v1.ForgeOutput
+	15, // 19: minimir.v1.HostingPurchaseReceipt.quote:type_name -> minimir.v1.HostingQuoteResult
+	17, // 20: minimir.v1.RoleCardQuoteView.product:type_name -> minimir.v1.RoleCardProductView
+	18, // 21: minimir.v1.RoleCardPurchaseReceipt.quote:type_name -> minimir.v1.RoleCardQuoteView
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_common_proto_init() }

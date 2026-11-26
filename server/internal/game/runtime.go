@@ -1176,7 +1176,7 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 		q.Kind, q.Context, q.WeaponOilCommit = persistence.AssetWeaponOilCommit, request.Operation, request
 		q.SceneEpoch, q.WeaponOilAcceptedAt = r.Scene, acceptedAt
 		// 首次用油的门禁交给持久层，已结算操作仍先按原编号重放。
-		if historicalGrowthOperation(r, request.Operation) || !w.weaponOilAvailable(r) {
+		if historicalGrowthOperation(r, request.Operation) || !w.luckOilAvailable(r, request.Wing) {
 			q.WeaponOilGate = p.CodeWeaponOilUnavailable
 		}
 	case p.MsgC2SForgeCommit:

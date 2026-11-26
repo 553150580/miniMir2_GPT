@@ -11,10 +11,11 @@ import (
 
 // WingConfig 保存已确认的阶数结构，以及有实际费用条目的可开放阶段。
 type WingConfig struct {
-	FeatherItemID   uint32           `json:"feather_item_id"`  // 实际由背包消费的原羽毛。
-	MaxRank         uint32           `json:"max_rank"`         // 玩法规定的最高阶。
-	AppearanceTiers []uint32         `json:"appearance_tiers"` // 到达对应阶时自动解锁的外观。
-	Ranks           []WingRankConfig `json:"ranks"`            // 从激活开始连续开放，缺失阶段不能报价。
+	FeatherItemID   uint32           `json:"feather_item_id"`          // 实际由背包消费的原羽毛。
+	MaxRank         uint32           `json:"max_rank"`                 // 玩法规定的最高阶。
+	AppearanceTiers []uint32         `json:"appearance_tiers"`         // 到达对应阶时自动解锁的外观。
+	Ranks           []WingRankConfig `json:"ranks"`                    // 从激活开始连续开放，缺失阶段不能报价。
+	AllowLuckOil    bool             `json:"allow_luck_oil,omitempty"` // 显式开放独立翅膀用油。
 }
 
 // WingRankConfig 表示到达某个目标阶段所需的羽毛数量。
@@ -40,6 +41,9 @@ func (f *Fixture) validateWings() error {
 	if f.CombatLuck == nil || wings.MaxRank == 0 || len(wings.Ranks) == 0 || uint64(len(wings.Ranks)) > uint64(wings.MaxRank) ||
 		len(wings.AppearanceTiers) == 0 || wings.AppearanceTiers[0] != 1 {
 		return errors.New("翅膀需接入幸运规则，并从一阶起提供连续费用与初始外观")
+	}
+	if wings.AllowLuckOil && f.LuckOil == nil {
+		return errors.New("翅膀用油须与武器共享已校验的祝福油规则")
 	}
 	for index, tier := range wings.AppearanceTiers {
 		if tier > wings.MaxRank || (index > 0 && tier <= wings.AppearanceTiers[index-1]) {

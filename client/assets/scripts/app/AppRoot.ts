@@ -55,7 +55,7 @@ import { GameWeaponOil } from './GameWeaponOil';
 import { GameWings } from './GameWings';
 import { validateWingReceipt, wingRules, wingSlotLabel } from './WingModel';
 import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
-import { weaponOilItemId, weaponOilReceipt } from './WeaponOilModel';
+import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
 import type { RecycleOilRoll } from './EquipmentRecycleOilModel';
@@ -79,7 +79,7 @@ import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
 import { inventoryCapacityText } from './InventoryDisplay';
 import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
-import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentCurrentLuck, equipmentDetailLines, equipmentDurabilityText, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
+import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentDurabilityText, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
@@ -534,7 +534,8 @@ export class AppRoot extends Component {
         this.wings = new GameWings({ snapshot: () => this.wingSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
-            quote: request => session.connection.request(40052, request), submit: request => this.economic(40054, request) });
+            quote: request => session.connection.request(40052, request), submit: request => this.economic(40054, request),
+            openLuck: wing => this.weaponOil!.open({ wingId: wing.wingId }) });
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1557,10 +1558,11 @@ export class AppRoot extends Component {
             (parent !== 'Role' && parent !== 'Inventory') || !oilItemId || !Array.isArray(gameplay?.items)) return null;
         const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
         const role = roleIdentity();
-        const blocked = !this.canSendInput() || !player || player.hp.isZero() || entry.sceneKind === 4 || entry.sceneKind === 5 ||
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || (entry.sceneKind >= 3 && entry.sceneKind !== miningSceneKind) ||
             this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
         return { scope: `${attachmentKey(identity)}:${parent}`, role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision,
-            items: inventory.items, equipped: inventory.equipped, catalog: gameplay.items, oilItemId, blocked };
+            items: inventory.items, equipped: inventory.equipped, catalog: gameplay.items, oilItemId, blocked,
+            wing: inventory.wing, wingContributionPpm: gameplay.wings ? wingOilContributions(gameplay.wings) : undefined };
     }
 
     private currentWingRules() {
@@ -1576,7 +1578,8 @@ export class AppRoot extends Component {
         const blocked = !this.canSendInput() || !player || player.hp.isZero() || (entry.sceneKind >= 3 && entry.sceneKind !== miningSceneKind) ||
             this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
         return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, rules,
-            wing: inventory.wing ?? null, inventory: inventory.items, blocked };
+            wing: inventory.wing ?? null, inventory: inventory.items, blocked,
+            allowLuckOil: !!inventory.wing && !!weaponOilItemId(this.world?.gameplay.luck_oil) && !!wingOilContributions(this.world?.gameplay.wings) };
     }
 
     private selectEquippedSlot(slot: number): void {
@@ -2247,7 +2250,7 @@ export class AppRoot extends Component {
         }
         if (oiled) {
             this.weaponOil?.accept(role, oiled.request, oiled.result);
-            this.status(`祝福油已结算，原武器幸运+${equipmentCurrentLuck(oiled.result.weapon)}`);
+            this.status(`祝福油已结算，原${oiled.result.wing ? '翅膀' : '武器'}幸运+${weaponOilReceiptLuck(oiled.result)}`);
             return;
         }
         if (wing) {

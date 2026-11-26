@@ -37,7 +37,8 @@ GROUP_PREFIXES = {
     'luck': ('Lucky',),
     'weapon-oil': ('WeaponOil',),
     'recycle-oil': ('RecycleOil',),
-    'wing': ('Wing',),
+    'wing': ('WingWorldBoss',),
+    'wing-oil': ('WingOil',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -54,6 +55,7 @@ LUCK_PERSISTENCE_CASES = ('TestLuckDropSettlementMongo',)
 WEAPON_OIL_PERSISTENCE_CASES = ('TestWeaponOilSettlementMongo',)
 RECYCLE_OIL_PERSISTENCE_CASES = ('TestRecycleOilSettlementMongo',)
 WING_PERSISTENCE_CASES = ('TestWingSettlementMongo',)
+WING_OIL_PERSISTENCE_CASES = ('TestWingOilSettlementMongo',)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -92,6 +94,7 @@ def suites():
     groups['weapon-oil'].extend(WEAPON_OIL_PERSISTENCE_CASES)
     groups['recycle-oil'].extend(RECYCLE_OIL_PERSISTENCE_CASES)
     groups['wing'].extend(WING_PERSISTENCE_CASES)
+    groups['wing-oil'].extend(WING_OIL_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -178,7 +181,7 @@ def run_batch(output, group, cases, timeout):
             for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('forge_assembly', forge_assembly),
                                     ('fixture', fixture), ('public', public)):
                 report[f'luck_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        if group in ('weapon-oil', 'recycle-oil', 'wing'):
+        if group in ('weapon-oil', 'recycle-oil', 'wing', 'wing-oil'):
             # 隔离原武器培养规则及原三项前置配置，便于同源重放全部材料。
             export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_luck_oil.py')]
             for arg, source in (('assembly', 'luck-oil'), ('luck-assembly', 'combat-luck'),
@@ -194,7 +197,7 @@ def run_batch(output, group, cases, timeout):
             environment['MINIMIR_LUCK_OIL_TEST_FIXTURE'] = str(fixture)
             report['weapon_oil_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
             report['weapon_oil_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()
-            if group in ('recycle-oil', 'wing'):
+            if group in ('recycle-oil', 'wing', 'wing-oil'):
                 # 手动分解在同一候选上使用表格投影的准确分母。
                 recycle_fixture = destination / 'recycle-oil-fixture.json'
                 recycle_public = destination / 'recycle-oil-gameplay.json'
@@ -206,7 +209,7 @@ def run_batch(output, group, cases, timeout):
                 environment['MINIMIR_RECYCLE_OIL_TEST_FIXTURE'] = str(recycle_fixture)
                 report['recycle_oil_fixture_sha256'] = hashlib.sha256(recycle_fixture.read_bytes()).hexdigest()
                 report['recycle_oil_public_sha256'] = hashlib.sha256(recycle_public.read_bytes()).hexdigest()
-                if group == 'wing':
+                if group in ('wing', 'wing-oil'):
                     # 翅膀沿原世界首领模板真实发奖；唯一工作簿和隔离费用一起固定。
                     wing_assembly = destination / 'wings-assembly.json'
                     wing_assembly.write_bytes((ROOT / 'tools/resources/testdata/wings-isolated.json').read_bytes())
@@ -221,9 +224,21 @@ def run_batch(output, group, cases, timeout):
                     report['wing_assembly_sha256'] = hashlib.sha256(wing_assembly.read_bytes()).hexdigest()
                     report['wing_fixture_sha256'] = hashlib.sha256(wing_fixture.read_bytes()).hexdigest()
                     report['wing_public_sha256'] = hashlib.sha256(wing_public.read_bytes()).hexdigest()
+                    if group == 'wing-oil':
+                        # 复用同一翅膀前态规则，仅在独立候选授权该对象使用原祝福油。
+                        wing_oil_fixture = destination / 'wing-oil-fixture.json'
+                        wing_oil_public = destination / 'wing-oil-gameplay.json'
+                        wing_oil_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_wing_oil.py'),
+                                           '--wing-fixture', str(wing_fixture), '--wing-public', str(wing_public),
+                                           '--fixture-out', str(wing_oil_fixture), '--public-out', str(wing_oil_public)]
+                        subprocess.run(wing_oil_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+                        subprocess.run([*wing_oil_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+                        environment['MINIMIR_WING_OIL_TEST_FIXTURE'] = str(wing_oil_fixture)
+                        report['wing_oil_fixture_sha256'] = hashlib.sha256(wing_oil_fixture.read_bytes()).hexdigest()
+                        report['wing_oil_public_sha256'] = hashlib.sha256(wing_oil_public.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing'):
+        if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

@@ -74,6 +74,8 @@ message WeaponOilReceipt {
   bool guaranteed = 7;
   uint32 pity_used = 8;
   uint32 pity_after = 9;
+  // 操作翅膀时返回同一原实例，武器字段缺省。
+  WingState wing = 10;
 }
 // 首次创建的装备身份和原绑定状态，原回执重放时保持不变。
 message ForgeOutput {

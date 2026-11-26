@@ -82,20 +82,75 @@ func (x *WeaponOilItemRef) GetEquipped() bool {
 	return false
 }
 
+// 已激活翅膀独立于装备和背包，以原实例身份和版本引用。
+type WingOilRef struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WingId        []byte                 `protobuf:"bytes,1,opt,name=wing_id,json=wingId,proto3" json:"wing_id,omitempty"`
+	Version       uint64                 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WingOilRef) Reset() {
+	*x = WingOilRef{}
+	mi := &file_weapon_oil_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WingOilRef) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WingOilRef) ProtoMessage() {}
+
+func (x *WingOilRef) ProtoReflect() protoreflect.Message {
+	mi := &file_weapon_oil_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WingOilRef.ProtoReflect.Descriptor instead.
+func (*WingOilRef) Descriptor() ([]byte, []int) {
+	return file_weapon_oil_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *WingOilRef) GetWingId() []byte {
+	if x != nil {
+		return x.WingId
+	}
+	return nil
+}
+
+func (x *WingOilRef) GetVersion() uint64 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
 // 当前界面会话独立于连接和场景；每次重新打开由客户端创建新身份。
 type WeaponOilQuoteRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
-	Weapon        *WeaponOilItemRef      `protobuf:"bytes,2,opt,name=weapon,proto3" json:"weapon,omitempty"`
-	AllowBound    bool                   `protobuf:"varint,3,opt,name=allow_bound,json=allowBound,proto3" json:"allow_bound,omitempty"`
-	UiSessionId   []byte                 `protobuf:"bytes,4,opt,name=ui_session_id,json=uiSessionId,proto3" json:"ui_session_id,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch  uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	Weapon      *WeaponOilItemRef      `protobuf:"bytes,2,opt,name=weapon,proto3" json:"weapon,omitempty"`
+	AllowBound  bool                   `protobuf:"varint,3,opt,name=allow_bound,json=allowBound,proto3" json:"allow_bound,omitempty"`
+	UiSessionId []byte                 `protobuf:"bytes,4,opt,name=ui_session_id,json=uiSessionId,proto3" json:"ui_session_id,omitempty"`
+	// 原武器与原翅膀恰选其一。
+	Wing          *WingOilRef `protobuf:"bytes,5,opt,name=wing,proto3" json:"wing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WeaponOilQuoteRequest) Reset() {
 	*x = WeaponOilQuoteRequest{}
-	mi := &file_weapon_oil_proto_msgTypes[1]
+	mi := &file_weapon_oil_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -107,7 +162,7 @@ func (x *WeaponOilQuoteRequest) String() string {
 func (*WeaponOilQuoteRequest) ProtoMessage() {}
 
 func (x *WeaponOilQuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_weapon_oil_proto_msgTypes[1]
+	mi := &file_weapon_oil_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -120,7 +175,7 @@ func (x *WeaponOilQuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeaponOilQuoteRequest.ProtoReflect.Descriptor instead.
 func (*WeaponOilQuoteRequest) Descriptor() ([]byte, []int) {
-	return file_weapon_oil_proto_rawDescGZIP(), []int{1}
+	return file_weapon_oil_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *WeaponOilQuoteRequest) GetSceneEpoch() uint64 {
@@ -151,6 +206,13 @@ func (x *WeaponOilQuoteRequest) GetUiSessionId() []byte {
 	return nil
 }
 
+func (x *WeaponOilQuoteRequest) GetWing() *WingOilRef {
+	if x != nil {
+		return x.Wing
+	}
+	return nil
+}
+
 // 报价列出这次实际消耗的原堆、成功回退和生效后的最终绑定。
 type WeaponOilQuote struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
@@ -172,13 +234,15 @@ type WeaponOilQuote struct {
 	ExpiresAtUnixMs uint64 `protobuf:"varint,15,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
 	RoleRevision    uint64 `protobuf:"varint,16,opt,name=role_revision,json=roleRevision,proto3" json:"role_revision,omitempty"`
 	UiSessionId     []byte `protobuf:"bytes,17,opt,name=ui_session_id,json=uiSessionId,proto3" json:"ui_session_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 翅膀报价带原翅膀状态，不占武器字段。
+	Wing          *WingState `protobuf:"bytes,18,opt,name=wing,proto3" json:"wing,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WeaponOilQuote) Reset() {
 	*x = WeaponOilQuote{}
-	mi := &file_weapon_oil_proto_msgTypes[2]
+	mi := &file_weapon_oil_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -190,7 +254,7 @@ func (x *WeaponOilQuote) String() string {
 func (*WeaponOilQuote) ProtoMessage() {}
 
 func (x *WeaponOilQuote) ProtoReflect() protoreflect.Message {
-	mi := &file_weapon_oil_proto_msgTypes[2]
+	mi := &file_weapon_oil_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -203,7 +267,7 @@ func (x *WeaponOilQuote) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeaponOilQuote.ProtoReflect.Descriptor instead.
 func (*WeaponOilQuote) Descriptor() ([]byte, []int) {
-	return file_weapon_oil_proto_rawDescGZIP(), []int{2}
+	return file_weapon_oil_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *WeaponOilQuote) GetQuoteId() []byte {
@@ -325,6 +389,13 @@ func (x *WeaponOilQuote) GetUiSessionId() []byte {
 	return nil
 }
 
+func (x *WeaponOilQuote) GetWing() *WingState {
+	if x != nil {
+		return x.Wing
+	}
+	return nil
+}
+
 // 核对原报价和原武器，结算只采用服务端持有的材料、规则与随机值。
 type WeaponOilCommitRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -333,13 +404,14 @@ type WeaponOilCommitRequest struct {
 	UiSessionId   []byte                 `protobuf:"bytes,3,opt,name=ui_session_id,json=uiSessionId,proto3" json:"ui_session_id,omitempty"`
 	Weapon        *WeaponOilItemRef      `protobuf:"bytes,4,opt,name=weapon,proto3" json:"weapon,omitempty"`
 	AllowBound    bool                   `protobuf:"varint,5,opt,name=allow_bound,json=allowBound,proto3" json:"allow_bound,omitempty"`
+	Wing          *WingOilRef            `protobuf:"bytes,6,opt,name=wing,proto3" json:"wing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WeaponOilCommitRequest) Reset() {
 	*x = WeaponOilCommitRequest{}
-	mi := &file_weapon_oil_proto_msgTypes[3]
+	mi := &file_weapon_oil_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -351,7 +423,7 @@ func (x *WeaponOilCommitRequest) String() string {
 func (*WeaponOilCommitRequest) ProtoMessage() {}
 
 func (x *WeaponOilCommitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_weapon_oil_proto_msgTypes[3]
+	mi := &file_weapon_oil_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -364,7 +436,7 @@ func (x *WeaponOilCommitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeaponOilCommitRequest.ProtoReflect.Descriptor instead.
 func (*WeaponOilCommitRequest) Descriptor() ([]byte, []int) {
-	return file_weapon_oil_proto_rawDescGZIP(), []int{3}
+	return file_weapon_oil_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *WeaponOilCommitRequest) GetQuoteId() []byte {
@@ -402,6 +474,13 @@ func (x *WeaponOilCommitRequest) GetAllowBound() bool {
 	return false
 }
 
+func (x *WeaponOilCommitRequest) GetWing() *WingOilRef {
+	if x != nil {
+		return x.Wing
+	}
+	return nil
+}
+
 var File_weapon_oil_proto protoreflect.FileDescriptor
 
 const file_weapon_oil_proto_rawDesc = "" +
@@ -412,14 +491,19 @@ const file_weapon_oil_proto_rawDesc = "" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\x04R\aversion\x12\x1a\n" +
-	"\bequipped\x18\x03 \x01(\bR\bequipped\"\xb3\x01\n" +
+	"\bequipped\x18\x03 \x01(\bR\bequipped\"?\n" +
+	"\n" +
+	"WingOilRef\x12\x17\n" +
+	"\awing_id\x18\x01 \x01(\fR\x06wingId\x12\x18\n" +
+	"\aversion\x18\x02 \x01(\x04R\aversion\"\xdf\x01\n" +
 	"\x15WeaponOilQuoteRequest\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x124\n" +
 	"\x06weapon\x18\x02 \x01(\v2\x1c.minimir.v1.WeaponOilItemRefR\x06weapon\x12\x1f\n" +
 	"\vallow_bound\x18\x03 \x01(\bR\n" +
 	"allowBound\x12\"\n" +
-	"\rui_session_id\x18\x04 \x01(\fR\vuiSessionId\"\xde\x04\n" +
+	"\rui_session_id\x18\x04 \x01(\fR\vuiSessionId\x12*\n" +
+	"\x04wing\x18\x05 \x01(\v2\x16.minimir.v1.WingOilRefR\x04wing\"\x89\x05\n" +
 	"\x0eWeaponOilQuote\x12\x19\n" +
 	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12\x1f\n" +
 	"\vscene_epoch\x18\x02 \x01(\x04R\n" +
@@ -444,14 +528,16 @@ const file_weapon_oil_proto_rawDesc = "" +
 	"\foutput_bound\x18\x0e \x01(\bR\voutputBound\x12+\n" +
 	"\x12expires_at_unix_ms\x18\x0f \x01(\x04R\x0fexpiresAtUnixMs\x12#\n" +
 	"\rrole_revision\x18\x10 \x01(\x04R\froleRevision\x12\"\n" +
-	"\rui_session_id\x18\x11 \x01(\fR\vuiSessionId\"\xea\x01\n" +
+	"\rui_session_id\x18\x11 \x01(\fR\vuiSessionId\x12)\n" +
+	"\x04wing\x18\x12 \x01(\v2\x15.minimir.v1.WingStateR\x04wing\"\x96\x02\n" +
 	"\x16WeaponOilCommitRequest\x12\x19\n" +
 	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12\"\n" +
 	"\rui_session_id\x18\x03 \x01(\fR\vuiSessionId\x124\n" +
 	"\x06weapon\x18\x04 \x01(\v2\x1c.minimir.v1.WeaponOilItemRefR\x06weapon\x12\x1f\n" +
 	"\vallow_bound\x18\x05 \x01(\bR\n" +
-	"allowBoundB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"allowBound\x12*\n" +
+	"\x04wing\x18\x06 \x01(\v2\x16.minimir.v1.WingOilRefR\x04wingB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_weapon_oil_proto_rawDescOnce sync.Once
@@ -465,26 +551,31 @@ func file_weapon_oil_proto_rawDescGZIP() []byte {
 	return file_weapon_oil_proto_rawDescData
 }
 
-var file_weapon_oil_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_weapon_oil_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_weapon_oil_proto_goTypes = []any{
 	(*WeaponOilItemRef)(nil),       // 0: minimir.v1.WeaponOilItemRef
-	(*WeaponOilQuoteRequest)(nil),  // 1: minimir.v1.WeaponOilQuoteRequest
-	(*WeaponOilQuote)(nil),         // 2: minimir.v1.WeaponOilQuote
-	(*WeaponOilCommitRequest)(nil), // 3: minimir.v1.WeaponOilCommitRequest
-	(*ItemView)(nil),               // 4: minimir.v1.ItemView
-	(*OperationContext)(nil),       // 5: minimir.v1.OperationContext
+	(*WingOilRef)(nil),             // 1: minimir.v1.WingOilRef
+	(*WeaponOilQuoteRequest)(nil),  // 2: minimir.v1.WeaponOilQuoteRequest
+	(*WeaponOilQuote)(nil),         // 3: minimir.v1.WeaponOilQuote
+	(*WeaponOilCommitRequest)(nil), // 4: minimir.v1.WeaponOilCommitRequest
+	(*ItemView)(nil),               // 5: minimir.v1.ItemView
+	(*WingState)(nil),              // 6: minimir.v1.WingState
+	(*OperationContext)(nil),       // 7: minimir.v1.OperationContext
 }
 var file_weapon_oil_proto_depIdxs = []int32{
 	0, // 0: minimir.v1.WeaponOilQuoteRequest.weapon:type_name -> minimir.v1.WeaponOilItemRef
-	4, // 1: minimir.v1.WeaponOilQuote.weapon:type_name -> minimir.v1.ItemView
-	4, // 2: minimir.v1.WeaponOilQuote.oil:type_name -> minimir.v1.ItemView
-	5, // 3: minimir.v1.WeaponOilCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	0, // 4: minimir.v1.WeaponOilCommitRequest.weapon:type_name -> minimir.v1.WeaponOilItemRef
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	1, // 1: minimir.v1.WeaponOilQuoteRequest.wing:type_name -> minimir.v1.WingOilRef
+	5, // 2: minimir.v1.WeaponOilQuote.weapon:type_name -> minimir.v1.ItemView
+	5, // 3: minimir.v1.WeaponOilQuote.oil:type_name -> minimir.v1.ItemView
+	6, // 4: minimir.v1.WeaponOilQuote.wing:type_name -> minimir.v1.WingState
+	7, // 5: minimir.v1.WeaponOilCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	0, // 6: minimir.v1.WeaponOilCommitRequest.weapon:type_name -> minimir.v1.WeaponOilItemRef
+	1, // 7: minimir.v1.WeaponOilCommitRequest.wing:type_name -> minimir.v1.WingOilRef
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_weapon_oil_proto_init() }
@@ -500,7 +591,7 @@ func file_weapon_oil_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_weapon_oil_proto_rawDesc), len(file_weapon_oil_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

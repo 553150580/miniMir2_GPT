@@ -17,6 +17,7 @@ interface WingCommands {
     confirm(title: string, message: string, action?: string): Promise<boolean>;
     quote(request: WingQuoteRequest): Promise<WingQuote>;
     submit(request: WingActionRequest): Promise<void>;
+    openLuck?(wing: WingState): void;
 }
 
 interface Review { readonly request: WingQuoteRequest; readonly quote: WingQuote; }
@@ -80,9 +81,14 @@ export class GameWings {
         const lines = [...wingStateLines(snapshot.wing), ...(cost ? [
             `${snapshot.wing ? '下一阶' : '激活'}消耗 ${cost}根羽毛`, '激活和升阶必成',
         ] : [(snapshot.wing?.rank ?? 0) >= snapshot.rules.maxRank ? '翅膀已满阶' : '下一阶羽毛费用待开放'])];
+        const wing = snapshot.wing;
         return { title: '翅膀', lines, actions: [
             { label: snapshot.wing ? '翅膀升阶' : '激活翅膀', enabled: !!cost && !snapshot.blocked, run: () => this.showPage(view, 'materials') },
             ...(snapshot.wing ? [{ label: '外观设置', enabled: !snapshot.blocked, run: () => this.showPage(view, 'appearance') }] : []),
+            ...(wing && snapshot.allowLuckOil && this.commands.openLuck ? [{ label: '祝福油培养', enabled: !snapshot.blocked, run: () => {
+                const current = this.active(view)?.wing;
+                if (current && sameVersion(wing, current)) this.commands.openLuck?.(current);
+            } }] : []),
         ] };
     }
 

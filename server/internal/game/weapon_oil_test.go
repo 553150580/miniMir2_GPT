@@ -97,6 +97,53 @@ func TestWeaponOilStaleQuoteAndDisabledReplayUseDistinctGates(t *testing.T) {
 	}
 }
 
+// TestWingOilDoesNotUseWeaponWearOrOpeningPermission 确认同协议的两个目标各自受理，翅膀不刷新原武器磨损。
+func TestWingOilDoesNotUseWeaponWearOrOpeningPermission(t *testing.T) {
+	w, r, conn, request := weaponOilRoom(t)
+	fixture := &w.e.Store.Cfg.Fixture
+	fixture.Wings = &devconfig.WingConfig{}
+	ref := &pb.WingOilRef{WingId: domain.Bytes(domain.ID()), Version: 2}
+	quote := &pb.WeaponOilQuoteRequest{SceneEpoch: r.Scene, Weapon: request.Weapon, Wing: ref, UiSessionId: request.UiSessionId}
+	frame := wire.Message(p.MsgC2SWeaponOilQuote, 1, conn.Binding(), quote)
+	w.roomCommand(r, command{role: r.Role.ID, conn: conn, frame: frame})
+	if len(conn.frames) != 1 || conn.frames[0].Error != p.CodeInvalidArgument {
+		t.Fatal("同一报价不可同时指定武器和翅膀")
+	}
+	request.Wing = ref
+	if _, valid := readWeaponOilCommit(wire.Message(p.MsgC2SWeaponOilCommit, 2, conn.Binding(), request)); valid {
+		t.Fatal("提交时亦不可同时指定两个目标")
+	}
+	quote.Weapon = nil
+	frame = wire.Message(p.MsgC2SWeaponOilQuote, 3, conn.Binding(), quote)
+	w.roomCommand(r, command{role: r.Role.ID, conn: conn, frame: frame})
+	if len(conn.frames) != 2 || conn.frames[1].Error != p.CodeWeaponOilUnavailable || r.PreviewInFlight || !w.luckOilAvailable(r, nil) {
+		t.Fatal("翅膀未开放用油时应只拦翅膀，普通武器仍可培养")
+	}
+	request.Weapon = nil
+	fixture.Wings.AllowLuckOil = true
+	now := time.Unix(1800000000, 0)
+	frame = wire.Message(p.MsgC2SWeaponOilCommit, 4, conn.Binding(), request)
+	w.roomCommand(r, command{role: r.Role.ID, conn: conn, frame: frame, at: now})
+	if !r.Pending || r.PendingRetry == nil || r.PendingOperationID != domain.Hex(request.Operation.OpId) ||
+		len(r.Waiting) != 0 || len(r.Wear.open) != 1 || len(conn.frames) != 2 {
+		t.Fatal("翅膀首次用油错走穿戴武器耐久路径")
+	}
+}
+
+// TestWingOilHistoricalReceiptPassesClosedGrowthGate 确保重连后的旧用油仍先核对同一经济回执。
+func TestWingOilHistoricalReceiptPassesClosedGrowthGate(t *testing.T) {
+	w, r, conn, request := weaponOilRoom(t)
+	w.e.Store.Cfg.Fixture.Wings = &devconfig.WingConfig{}
+	request.Weapon, request.Wing = nil, &pb.WingOilRef{WingId: domain.Bytes(domain.ID()), Version: 2}
+	request.Operation.CommandSeq = uint64(r.Role.EconomicSeq)
+	r.dungeonStart = &dungeonStartAttempt{}
+	frame := wire.Message(p.MsgC2SWeaponOilCommit, 10, conn.Binding(), request)
+	w.command(command{role: r.Role.ID, conn: conn, frame: frame, at: time.Unix(1800000000, 0)})
+	if !r.Pending || r.PendingRetry == nil || r.PendingOperationID != domain.Hex(request.Operation.OpId) || len(r.Wear.open) != 1 || len(conn.frames) != 0 {
+		t.Fatal("关翼油或挑战待进入状态不能拦截旧用油的原回执")
+	}
+}
+
 // TestWeaponOilConfirmedWornLuckIsImmediatelyVisible 确认后原穿戴武器的幸运同步到背包基线与战斗属性。
 func TestWeaponOilConfirmedWornLuckIsImmediatelyVisible(t *testing.T) {
 	w, r, conn, request := weaponOilRoom(t)

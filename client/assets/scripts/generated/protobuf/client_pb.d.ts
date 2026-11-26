@@ -1109,6 +1109,9 @@ export namespace minimir {
             /** WeaponOilReceipt pity_after. */
             pity_after: number;
 
+            /** WeaponOilReceipt wing. */
+            wing?: (minimir.v1.WingState.$Properties|null);
+
             /**
              * Creates a new WeaponOilReceipt instance using the specified properties.
              * @param [properties] Properties to set
@@ -1198,6 +1201,9 @@ export namespace minimir {
 
                 /** WeaponOilReceipt pity_after */
                 pity_after?: (number|null);
+
+                /** WeaponOilReceipt wing */
+                wing?: (minimir.v1.WingState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -21818,6 +21824,108 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a WingOilRef.
+         * @deprecated Use minimir.v1.WingOilRef.$Properties instead.
+         */
+        interface IWingOilRef extends minimir.v1.WingOilRef.$Properties {
+        }
+
+        /** Represents a WingOilRef. */
+        class WingOilRef {
+
+            /**
+             * Constructs a new WingOilRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WingOilRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WingOilRef wing_id. */
+            wing_id: Uint8Array;
+
+            /** WingOilRef version. */
+            version: Long;
+
+            /**
+             * Creates a new WingOilRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WingOilRef instance
+             */
+            static create(properties: minimir.v1.WingOilRef.$Shape): minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape;
+            static create(properties?: minimir.v1.WingOilRef.$Properties): minimir.v1.WingOilRef;
+
+            /**
+             * Encodes the specified WingOilRef message. Does not implicitly {@link minimir.v1.WingOilRef.verify|verify} messages.
+             * @param message WingOilRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WingOilRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WingOilRef message, length delimited. Does not implicitly {@link minimir.v1.WingOilRef.verify|verify} messages.
+             * @param message WingOilRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WingOilRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WingOilRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape} WingOilRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape;
+
+            /**
+             * Decodes a WingOilRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape} WingOilRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WingOilRef & minimir.v1.WingOilRef.$Shape;
+
+            /**
+             * Verifies a WingOilRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WingOilRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WingOilRef {
+
+            /** Properties of a WingOilRef. */
+            interface $Properties {
+
+                /** WingOilRef wing_id */
+                wing_id?: (Uint8Array|null);
+
+                /** WingOilRef version */
+                version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WingOilRef. */
+            type $Shape = minimir.v1.WingOilRef.$Properties;
+        }
+
+        /**
          * Properties of a WeaponOilQuoteRequest.
          * @deprecated Use minimir.v1.WeaponOilQuoteRequest.$Properties instead.
          */
@@ -21847,6 +21955,9 @@ export namespace minimir {
 
             /** WeaponOilQuoteRequest ui_session_id. */
             ui_session_id: Uint8Array;
+
+            /** WeaponOilQuoteRequest wing. */
+            wing?: (minimir.v1.WingOilRef.$Properties|null);
 
             /**
              * Creates a new WeaponOilQuoteRequest instance using the specified properties.
@@ -21922,6 +22033,9 @@ export namespace minimir {
 
                 /** WeaponOilQuoteRequest ui_session_id */
                 ui_session_id?: (Uint8Array|null);
+
+                /** WeaponOilQuoteRequest wing */
+                wing?: (minimir.v1.WingOilRef.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -22000,6 +22114,9 @@ export namespace minimir {
 
             /** WeaponOilQuote ui_session_id. */
             ui_session_id: Uint8Array;
+
+            /** WeaponOilQuote wing. */
+            wing?: (minimir.v1.WingState.$Properties|null);
 
             /**
              * Creates a new WeaponOilQuote instance using the specified properties.
@@ -22115,6 +22232,9 @@ export namespace minimir {
                 /** WeaponOilQuote ui_session_id */
                 ui_session_id?: (Uint8Array|null);
 
+                /** WeaponOilQuote wing */
+                wing?: (minimir.v1.WingState.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -22156,6 +22276,9 @@ export namespace minimir {
 
             /** WeaponOilCommitRequest allow_bound. */
             allow_bound: boolean;
+
+            /** WeaponOilCommitRequest wing. */
+            wing?: (minimir.v1.WingOilRef.$Properties|null);
 
             /**
              * Creates a new WeaponOilCommitRequest instance using the specified properties.
@@ -22234,6 +22357,9 @@ export namespace minimir {
 
                 /** WeaponOilCommitRequest allow_bound */
                 allow_bound?: (boolean|null);
+
+                /** WeaponOilCommitRequest wing */
+                wing?: (minimir.v1.WingOilRef.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

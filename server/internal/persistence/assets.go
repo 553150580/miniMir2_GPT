@@ -53,7 +53,7 @@ type AssetRequest struct {
 	ForgeGate        uint32                  // 当前场景对首次打造写入的门禁，原回执优先。
 	ForgeAcceptedAt  time.Time               `json:"-"` // 实际收到打造确认请求的时刻，在同一任务的重试中保持。
 
-	WeaponOilCommit     *pb.WeaponOilCommitRequest // 武器祝福油的原确认报价、实例和界面会话。
+	WeaponOilCommit     *pb.WeaponOilCommitRequest // 武器或翅膀用油的原确认报价、实例和界面会话。
 	WeaponOilGate       uint32                     // 房间只对首次用油生效的门禁码。
 	WeaponOilAcceptedAt time.Time                  `json:"-"` // 房间收到原用油确认的时刻，在排队和重试中保持。
 	WingAction          *pb.WingActionRequest      // 角色确认的原翅膀升阶或外观请求。
@@ -215,7 +215,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		// vendor 保存实际成交的商人买卖或修理结果。
 		var vendor *VendorReceipt
 		var forge *ForgeResultReceipt                      // 真成功或真失败时的原打造事实。
-		var weaponOil *WeaponOilResultReceipt              // 一瓶原油的实际扣除、原武器和确定结果。
+		var weaponOil *WeaponOilResultReceipt              // 一瓶原油的实际扣除和原培养对象结果。
 		var wing *WingActionReceipt                        // 原翅膀的新状态和确切羽毛消费。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。

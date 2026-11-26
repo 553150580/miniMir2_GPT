@@ -1,4 +1,4 @@
-// 本文件在当前房间受理武器用油报价和提交，保护穿戴武器尚未入库的磨损。
+// 本文件在当前房间受理武器和翅膀用油，保护穿戴武器尚未入库的磨损。
 package game
 
 import (
@@ -14,9 +14,13 @@ import (
 	"minimir/internal/wire"
 )
 
-// weaponOilAvailable 校验新报价和首次用油是否属于当前可操作的角色身体。
-func (w *worker) weaponOilAvailable(r *room) bool {
-	return r.Ready && r.Player.HP > 0 && r.bossBattle == nil && w.roomStore(r).Cfg.Fixture.LuckOil != nil
+// luckOilAvailable 只给当前可操作的角色身体开放新用油，并独立检查翅膀开关。
+func (w *worker) luckOilAvailable(r *room, wing *pb.WingOilRef) bool {
+	if !r.Ready || r.Player.HP <= 0 || r.bossBattle != nil {
+		return false
+	}
+	fixture := &w.roomStore(r).Cfg.Fixture
+	return fixture.LuckOil != nil && (wing == nil || fixture.Wings != nil && fixture.Wings.AllowLuckOil)
 }
 
 // validWeaponOilRef 在进入预览或等待队列之前限制武器实例编号与版本。
@@ -25,15 +29,24 @@ func validWeaponOilRef(ref *pb.WeaponOilItemRef) bool {
 		len(ref.ProtoReflect().GetUnknown()) == 0
 }
 
+// validLuckOilTarget 只允许一件原武器或一件已激活翅膀，其实际归属由持久层确认。
+func validLuckOilTarget(weapon *pb.WeaponOilItemRef, wing *pb.WingOilRef) bool {
+	if wing == nil {
+		return validWeaponOilRef(weapon)
+	}
+	return weapon == nil && validWingReference(wing.WingId, wing.Version, false) &&
+		len(wing.ProtoReflect().GetUnknown()) == 0
+}
+
 // weaponOilPreview 使用角色既有的只读预览槽，回调仍须属于原连接和场景。
 func (w *worker) weaponOilPreview(r *room, frame wire.Frame) {
 	var request pb.WeaponOilQuoteRequest
 	if proto.Unmarshal(frame.Payload, &request) != nil || request.SceneEpoch == 0 || request.SceneEpoch != r.Scene ||
-		len(request.UiSessionId) != 16 || !validWeaponOilRef(request.Weapon) || len(request.ProtoReflect().GetUnknown()) != 0 {
+		len(request.UiSessionId) != 16 || !validLuckOilTarget(request.Weapon, request.Wing) || len(request.ProtoReflect().GetUnknown()) != 0 {
 		w.failure(r, frame, p.CodeInvalidArgument)
 		return
 	}
-	if !w.weaponOilAvailable(r) {
+	if !w.luckOilAvailable(r, request.Wing) {
 		w.failure(r, frame, p.CodeWeaponOilUnavailable)
 		return
 	}
@@ -51,7 +64,7 @@ func (w *worker) weaponOilPreview(r *room, frame wire.Frame) {
 			if !owner.claimPreview(binding) {
 				return
 			}
-			if !owner.weaponOilAvailable(r) {
+			if !owner.luckOilAvailable(r, request.Wing) {
 				owner.failure(r, frame, p.CodeWeaponOilUnavailable)
 				return
 			}
@@ -68,18 +81,18 @@ func (w *worker) weaponOilPreview(r *room, frame wire.Frame) {
 	}
 }
 
-// readWeaponOilCommit 解析同一条原确认消息，提交仍由存储对拍报价中的武器、界面和绑定授权。
+// readWeaponOilCommit 解析原确认消息，提交仍由存储对拍原目标、界面和绑定授权。
 func readWeaponOilCommit(frame wire.Frame) (*pb.WeaponOilCommitRequest, bool) {
 	var request pb.WeaponOilCommitRequest
 	valid := proto.Unmarshal(frame.Payload, &request) == nil && len(request.QuoteId) == 16 &&
-		len(request.UiSessionId) == 16 && validWeaponOilRef(request.Weapon) && len(request.ProtoReflect().GetUnknown()) == 0
+		len(request.UiSessionId) == 16 && validLuckOilTarget(request.Weapon, request.Wing) && len(request.ProtoReflect().GetUnknown()) == 0
 	return &request, valid
 }
 
 // weaponOilWearPending 只检查首次确认所指的穿戴武器。背包物品和原操作重放无需等待这笔磨损。
 func weaponOilWearPending(r *room, request *pb.WeaponOilCommitRequest) bool {
 	op, weapon := request.Operation, request.Weapon
-	if !weapon.Equipped || op == nil || len(op.OpId) != 16 || r.Role.EconomicSeq == math.MaxInt64 ||
+	if weapon == nil || !weapon.Equipped || op == nil || len(op.OpId) != 16 || r.Role.EconomicSeq == math.MaxInt64 ||
 		op.CommandSeq != uint64(r.Role.EconomicSeq+1) || op.ExpectedRevision == 0 || op.ExpectedRevision > uint64(r.Role.Revision) {
 		return false
 	}
@@ -94,7 +107,7 @@ func weaponOilWearPending(r *room, request *pb.WeaponOilCommitRequest) bool {
 
 // deferWeaponOilCommit 先落库同一版本已经产生的耐久事实，再把原提交交给权威版本核验。
 func (w *worker) deferWeaponOilCommit(r *room, c command, now time.Time) bool {
-	if c.frame.ID != p.MsgC2SWeaponOilCommit || r.Pending || len(r.Wear.open) == 0 || !w.weaponOilAvailable(r) {
+	if c.frame.ID != p.MsgC2SWeaponOilCommit || r.Pending || len(r.Wear.open) == 0 || !w.luckOilAvailable(r, nil) {
 		return false
 	}
 	request, valid := readWeaponOilCommit(c.frame)

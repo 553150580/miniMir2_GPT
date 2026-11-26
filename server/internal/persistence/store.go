@@ -110,7 +110,7 @@ type Operation struct {
 	Warehouse         *WarehouseReceipt              `bson:"warehouse,omitempty"`              // 仓库资产、页号与版本变化。
 	Vendor            *VendorReceipt                 `bson:"npc_trade,omitempty"`              // NPC 买卖或修理的原成交参数和结果。
 	Forge             *ForgeResultReceipt            `bson:"forge,omitempty"`                  // 图纸打造的原投入、结果及成品。
-	WeaponOil         *WeaponOilResultReceipt        `bson:"weapon_oil,omitempty"`             // 武器祝福油原投入、回退、保底以及同一武器的变更。
+	WeaponOil         *WeaponOilResultReceipt        `bson:"weapon_oil,omitempty"`             // 祝福油原投入、回退、保底以及同一培养对象的变更。
 	Wing              *WingActionReceipt             `bson:"wing,omitempty"`                   // 原翅膀的激活、升阶或外观事务。
 	TaskCodex         *TaskCodexClaimReceipt         `bson:"tasks_codex_claim,omitempty"`      // 原任务或图鉴领取确认的定义及绑定奖励。
 	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
