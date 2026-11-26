@@ -4,12 +4,14 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 157,
+  "message_count": 163,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "ForgeOutput",
+    "ForgeReceipt",
     "GoldMarketReceipt",
     "ItemMarketReceipt",
     "MirrorArenaExchangeReceipt",
@@ -162,10 +164,14 @@
     "GoldMarketAction",
     "MiningIntent",
     "SetMiningAutoRecycleRequest",
-    "MiningState"
+    "MiningState",
+    "ForgeItemRef",
+    "ForgeQuoteRequest",
+    "ForgeQuote",
+    "ForgeCommitRequest"
   ],
-  "int64_field_count": 400,
-  "int64_boundary_cases": 1371,
+  "int64_field_count": 409,
+  "int64_boundary_cases": 1402,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -202,6 +208,18 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "ForgeReceipt",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ForgeReceipt",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "GoldMarketReceipt",
@@ -2566,9 +2584,51 @@
       "field": "last_recycle_bound_gold",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "ForgeItemRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ForgeQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 69,
+  "bytes_field_count": 74,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2583,6 +2643,16 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "ForgeOutput",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "ForgeReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -2914,6 +2984,21 @@
       "message": "MiningIntent",
       "field": "tool_instance_id",
       "repeated": false
+    },
+    {
+      "message": "ForgeItemRef",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "ForgeQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "ForgeCommitRequest",
+      "field": "quote_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2922,7 +3007,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "0afc869d7d675826d5122d53d18cd3fbfe58459e14e38d001eff667bdfc514d6"
+      "sha256": "aa0dfffab131da7725283e58ad7f809b59e082be5e59366d984d4453627ce9f8"
     },
     {
       "path": "shared/proto/account.proto",
@@ -2934,7 +3019,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "5313d60cec99b9e2d4d13dfdbbeeac8c60d0e082fe1f4be9a01dbbd0f6491f39"
+      "sha256": "ec1152f3a2a98b7e3e685d3f5b6a26d639c3d2361bf12d6f2083cbcf104cc17c"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -2971,18 +3056,22 @@
     {
       "path": "shared/proto/mining.proto",
       "sha256": "27dfe1f10caf190535d55893498d2f96e8bd003464537a9afa6cb1d7b032c309"
+    },
+    {
+      "path": "shared/proto/forge.proto",
+      "sha256": "26fb2b0586a7268396be69f43daecd1929781534f3d2a70a390a1da8fc53430d"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "9382b5090b9cb235396ed462609cb15a7c2f4bccf8f75f112e693b203097cd4f",
-      "bytes": 2824296
+      "sha256": "7a04ec0b6b037e3c0b9dd6a903514df4c7b505d5f01d0f3fc4c4dc4905ea58c8",
+      "bytes": 2922672
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "2b79327291b2d68397edc423603db9cb26fa0516d86b286cdde3834d01251f38",
-      "bytes": 873547
+      "sha256": "4ccbfa4a857ff16f5228e6d7b0b99b8371058002f9824fc09c4c0b5baa1d64a8",
+      "bytes": 904936
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

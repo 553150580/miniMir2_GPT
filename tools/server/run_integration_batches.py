@@ -33,6 +33,7 @@ GROUP_PREFIXES = {
     'market': ('ItemMarket', 'GoldMarket'),
     'payments': ('Payment',),
     'mining': ('Mining',),
+    'forge': ('Forge',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -43,6 +44,8 @@ MARKET_PERSISTENCE_CASES = (
 PAYMENT_PERSISTENCE_CASES = ('TestPaymentOrderAuthorityMongo', 'TestPaymentGrantMongo')
 # 挖矿联机与原矿来源、扣费、工具耐久共享同一份隔离投影。
 MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSourceAndPurity', 'TestMiningAutoRecycleSettlementMongo')
+# 打造专项核对原报价和原材料、两个金币钱包及真实结算回执。
+FORGE_PERSISTENCE_CASES = ('TestForgeSettlementMongo',)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -76,6 +79,7 @@ def suites():
     groups['market'].extend(MARKET_PERSISTENCE_CASES)
     groups['payments'].extend(PAYMENT_PERSISTENCE_CASES)
     groups['mining'].extend(MINING_PERSISTENCE_CASES)
+    groups['forge'].extend(FORGE_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -129,9 +133,24 @@ def run_batch(output, group, cases, timeout):
             report['mining_assembly_sha256'] = hashlib.sha256(assembly.read_bytes()).hexdigest()
             report['mining_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
             report['mining_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()
+        if group == 'forge':
+            # 同一候选串联黑铁矿来源、首领图纸与成品配方，禁止引用试玩数据库。
+            assembly = destination / 'forge-assembly.json'
+            mining_assembly = destination / 'mining-assembly.json'
+            fixture = destination / 'forge-fixture.json'
+            public = destination / 'forge-gameplay.json'
+            assembly.write_bytes((ROOT / 'tools/resources/testdata/forge-isolated.json').read_bytes())
+            mining_assembly.write_bytes((ROOT / 'tools/resources/testdata/mining-isolated.json').read_bytes())
+            forge_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_forge.py'), '--assembly', str(assembly),
+                            '--mining-assembly', str(mining_assembly), '--fixture-out', str(fixture), '--public-out', str(public)]
+            subprocess.run(forge_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*forge_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_FORGE_TEST_FIXTURE'] = str(fixture)
+            for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('fixture', fixture), ('public', public)):
+                report[f'forge_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group in ('market', 'payments', 'mining'):
+        if group in ('market', 'payments', 'mining', 'forge'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

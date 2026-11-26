@@ -48,6 +48,9 @@ import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
 import { GameNpcShop } from './GameNpcShop';
 import { GameItemActions } from './GameItemActions';
+import { GameForge } from './GameForge';
+import { forgeReceipt, forgeRecipeFor } from './ForgeModel';
+import type { ForgeReceipt, ForgeSnapshot } from './ForgeModel';
 import { inventoryItemActionView } from './InventoryItemActions';
 import { GameRoleEquipment } from './GameRoleEquipment';
 import { npcShopForRole, npcShopSnapshot } from './NpcShopCatalog';
@@ -122,6 +125,7 @@ export class AppRoot extends Component {
     private townDirectory?: TownDirectory;
     private combatStatus?: GameCombatStatus;
     private itemActions?: GameItemActions;
+    private forge?: GameForge;
     private roleEquipment?: GameRoleEquipment;
     private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
@@ -508,6 +512,10 @@ export class AppRoot extends Component {
         });
         this.cleanups.push(() => this.mining?.dispose());
         this.itemActions = new GameItemActions(safe, this.popup, error => this.error(error));
+        this.forge = new GameForge({ snapshot: () => this.forgeSnapshot(), open: read => this.itemActions!.open(read),
+            current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
+            confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
+            quote: request => session.connection.request(40046, request), submit: quoteId => this.economic(40048, { quoteId }) });
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1487,16 +1495,31 @@ export class AppRoot extends Component {
             const selected = (act: () => Promise<void>) => (): Promise<void> => { this.selectedItem = item; return act(); };
             const player = definition?.kind === 'potion' ? this.potionSnapshot().player : null;
             const mining = session.entry?.sceneKind === miningSceneKind ? this.mining : undefined;
+            const forge = this.forge, forgeSnapshot = definition?.kind === 'forge_blueprint' ? this.forgeSnapshot() : null;
+            const recipe = forgeSnapshot && forgeRecipeFor(forgeSnapshot, item.itemId);
             return inventoryItemActionView({ item, definition, ready: !blockedReason, blockedReason, equipment: this.equipmentSnapshot(),
                 assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0',
-                miningReason: mining?.toolBlock }, {
+                miningReason: mining?.toolBlock, forgeReason: forgeSnapshot?.blocked ? '目前不能使用此图纸' : '' }, {
                 equip: selected(() => this.changeEquipment(false)), recycle: selected(() => this.recycleSelectedInventory()),
                 lock: selected(() => this.setItemLock()), usePotion: () => this.usePotion(item.itemId, new Uint8Array(item.instanceId)),
                 learn: () => this.learnSkill(skill, new Uint8Array(item.instanceId)),
                 recycleBook: () => this.previewPreparedSkillAsset(prepareBookRecycle(this.skillAssetsSnapshot(), item)),
                 mine: mining ? () => mining.useTool(new Uint8Array(item.instanceId)) : undefined,
+                forge: forge && recipe ? () => forge.open(item) : undefined,
             });
         });
+    }
+
+    private forgeSnapshot(): ForgeSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, gameplay = this.world?.gameplay;
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || this.ui?.top?.name !== 'Inventory' ||
+            !Array.isArray(gameplay?.forge_recipes) || !Array.isArray(gameplay?.items)) return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const blocked = !session.ready || this.attaching || this.leaving || !this.isWorldCurrent() || session.travel.blocksInput ||
+            session.teleport.blocksInput || !player || player.hp.isZero() || entry.sceneKind === 4 || entry.sceneKind === 5 ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(roleIdentity());
+        return { scope: attachmentKey(identity), role: roleIdentity(), sceneEpoch: entry.sceneEpoch, revision: inventory.revision,
+            items: inventory.items, catalog: gameplay.items, recipes: gameplay.forge_recipes, blocked };
     }
 
     private selectEquippedSlot(slot: number): void {
@@ -2071,12 +2094,17 @@ export class AppRoot extends Component {
         let hostingReceipt: string | undefined, cardPurchase: RoleCardPurchaseReceipt | undefined, cardDaily: RoleCardDailyReceipt | undefined;
         let marketReceipt: ItemMarketReceipt | undefined;
         let goldMarketReceipt: GoldMarketReceipt | undefined;
+        let forged: ForgeReceipt | undefined;
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
             if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
             if (pending.id === 40038) cardDaily = validateRoleCardDailyReceipt(result.roleCardDaily, pending.value as unknown as RoleCardDailyRequest);
             if (pending.id === 40041) marketReceipt = validateItemMarketReceipt(result.itemMarket, pending.value as unknown as ItemMarketAction);
             if (pending.id === 40044) goldMarketReceipt = validateGoldMarketReceipt(result.goldMarket, pending.value as unknown as GoldMarketAction);
+            if (pending.id === 40048) {
+                const quoteId = pending.value.quoteId as Uint8Array;
+                forged = this.forge?.reconcile(quoteId, result.forge) ?? forgeReceipt(quoteId, result.forge);
+            }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2091,6 +2119,11 @@ export class AppRoot extends Component {
         if (cardDaily) this.roleCards?.acceptDaily(role, cardDaily);
         if (marketReceipt) this.itemMarket?.acceptReceipt(role, marketReceipt);
         if (goldMarketReceipt) this.goldMarket?.acceptReceipt(role, goldMarketReceipt);
+        if (forged) {
+            this.forge?.accept(role, forged);
+            this.status(forged.success ? '打造成功，装备已入包' : '打造未成功，原图纸已保留');
+            return;
+        }
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
         this.status('操作已由服务端确认');
     }

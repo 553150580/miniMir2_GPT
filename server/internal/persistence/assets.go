@@ -49,6 +49,9 @@ type AssetRequest struct {
 	Warehouse        *pb.WarehouseAction     // 仓库动作的完整协议参数。
 	Vendor           *pb.VendorCommitRequest // NPC 买卖或修理的报价提交参数。
 	VendorShop       string                  // 房间根据 NPC 与当前地图确定的商店身份。
+	ForgeCommit      *pb.ForgeCommitRequest  // 图纸打造的原确认报价编号。
+	ForgeGate        uint32                  // 当前场景对首次打造写入的门禁，原回执优先。
+	ForgeAcceptedAt  time.Time               `json:"-"` // 实际收到打造确认请求的时刻，在同一任务的重试中保持。
 
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
@@ -107,6 +110,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			hostingClaimAt = time.Now()
 		}
 		hostingClaimAt = hostingClaimAt.UTC().Truncate(time.Millisecond)
+	}
+	if q.Kind == AssetForgeCommit && q.ForgeAcceptedAt.IsZero() {
+		q.ForgeAcceptedAt = time.Now()
 	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
@@ -169,7 +175,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -194,6 +200,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var warehouse *WarehouseReceipt
 		// vendor 保存实际成交的商人买卖或修理结果。
 		var vendor *VendorReceipt
+		var forge *ForgeResultReceipt                      // 真成功或真失败时的原打造事实。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -212,6 +219,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetVendor:
 			r, businessCode, vendor, e = s.commitVendor(tc, a, r, q)
+			if e != nil {
+				return e
+			}
+		case AssetForgeCommit:
+			r, businessCode, forge, e = s.commitForge(tc, a, r, q, opID)
 			if e != nil {
 				return e
 			}
@@ -329,6 +341,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			equipment = nil
 			warehouse = nil
 			vendor = nil
+			forge = nil
 			taskCodex = nil
 		} else {
 			r = advanceAssetTasks(r, &s.Cfg.Fixture, q.Kind, recycling, taskEventAt)
@@ -358,6 +371,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Equipment = cloneEquipmentReceipt(equipment)
 		op.Warehouse = cloneWarehouseReceipt(warehouse)
 		op.Vendor = vendor
+		op.Forge = forge
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -403,6 +417,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["npc_trade"] = vendor
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
+		}
+		if forge != nil {
+			audit["forge"] = forge
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
 			audit["casting_use"] = casting
@@ -490,6 +510,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.RoleCardDaily = receipt.CardDaily.Proto()
 		result.ItemMarket = receipt.ItemMarket.Proto()
 		result.GoldMarket = receipt.GoldMarket.Proto()
+		result.Forge = receipt.Forge.Proto()
 	}
 	return out, result, receipt, e
 }

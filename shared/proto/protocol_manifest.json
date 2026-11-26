@@ -1284,6 +1284,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.25 独立矿石自动回收设置"
+    },
+    {
+      "value": 40046,
+      "name": "MsgC2SForgeQuote",
+      "proto_message": "ForgeQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.7/4.25 图纸打造的实际投入预览"
+    },
+    {
+      "value": 40047,
+      "name": "MsgS2CForgeQuote",
+      "proto_message": "ForgeQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.7/4.25 图纸打造的实际投入预览"
+    },
+    {
+      "value": 40048,
+      "name": "MsgC2SForgeCommit",
+      "proto_message": "ForgeCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.7/4.25 图纸打造的原报价与结果"
     }
   ],
   "error_codes": [
@@ -1685,6 +1721,30 @@
       "display_zh": "镜像兑换积分不足",
       "status": "draft",
       "source_ref": "最终策划案4.19",
+      "active_in_scope": true
+    },
+    {
+      "value": 3950,
+      "name": "CodeForgeUnavailable",
+      "display_zh": "当前不可打造",
+      "status": "draft",
+      "source_ref": "最终策划案4.25",
+      "active_in_scope": true
+    },
+    {
+      "value": 3951,
+      "name": "CodeForgeQuoteChanged",
+      "display_zh": "打造报价或投入已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.7/4.25",
+      "active_in_scope": true
+    },
+    {
+      "value": 3952,
+      "name": "CodeForgeInputs",
+      "display_zh": "图纸、黑铁矿或绑定权限不满足本次打造条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.7/4.25",
       "active_in_scope": true
     }
   ]

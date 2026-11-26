@@ -807,6 +807,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.RoleCardDailyReceipt.$Properties|null} [role_card_daily] OperationResult role_card_daily
              * @property {minimir.v1.ItemMarketReceipt.$Properties|null} [item_market] OperationResult item_market
              * @property {minimir.v1.GoldMarketReceipt.$Properties|null} [gold_market] OperationResult gold_market
+             * @property {minimir.v1.ForgeReceipt.$Properties|null} [forge] OperationResult forge
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -927,6 +928,14 @@ $root.minimir = (function() {
             OperationResult.prototype.gold_market = null;
 
             /**
+             * OperationResult forge.
+             * @member {minimir.v1.ForgeReceipt.$Properties|null|undefined} forge
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.forge = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -980,6 +989,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.ItemMarketReceipt.encode(message.item_market, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
                 if (message.gold_market != null && $Object.hasOwnProperty.call(message, "gold_market"))
                     $root.minimir.v1.GoldMarketReceipt.encode(message.gold_market, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.forge != null && $Object.hasOwnProperty.call(message, "forge"))
+                    $root.minimir.v1.ForgeReceipt.encode(message.forge, writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1118,6 +1129,12 @@ $root.minimir = (function() {
                             message.gold_market = $root.minimir.v1.GoldMarketReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.gold_market);
                             continue;
                         }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            message.forge = $root.minimir.v1.ForgeReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.forge);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1211,6 +1228,11 @@ $root.minimir = (function() {
                     if (error)
                         return "gold_market." + error;
                 }
+                if (message.forge != null && $Object.hasOwnProperty.call(message, "forge")) {
+                    var error = $root.minimir.v1.ForgeReceipt.verify(message.forge, _depth + 1);
+                    if (error)
+                        return "forge." + error;
+                }
                 return null;
             };
 
@@ -1229,6 +1251,621 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.ForgeOutput = (function() {
+
+            /**
+             * Properties of a ForgeOutput.
+             * @typedef {Object} minimir.v1.ForgeOutput.$Properties
+             * @property {Uint8Array|null} [instance_id] ForgeOutput instance_id
+             * @property {number|null} [item_id] ForgeOutput item_id
+             * @property {boolean|null} [bound] ForgeOutput bound
+             * @property {number|null} [quality] ForgeOutput quality
+             * @property {number|null} [initial_luck] ForgeOutput initial_luck
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeOutput.
+             * @memberof minimir.v1
+             * @interface IForgeOutput
+             * @augments minimir.v1.ForgeOutput.$Properties
+             * @deprecated Use minimir.v1.ForgeOutput.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeOutput.
+             * @typedef {minimir.v1.ForgeOutput.$Properties} minimir.v1.ForgeOutput.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeOutput.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeOutput.
+             * @constructor
+             * @param {minimir.v1.ForgeOutput.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeOutput = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeOutput instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.ForgeOutput
+             * @instance
+             */
+            ForgeOutput.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * ForgeOutput item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.ForgeOutput
+             * @instance
+             */
+            ForgeOutput.prototype.item_id = 0;
+
+            /**
+             * ForgeOutput bound.
+             * @member {boolean} bound
+             * @memberof minimir.v1.ForgeOutput
+             * @instance
+             */
+            ForgeOutput.prototype.bound = false;
+
+            /**
+             * ForgeOutput quality.
+             * @member {number} quality
+             * @memberof minimir.v1.ForgeOutput
+             * @instance
+             */
+            ForgeOutput.prototype.quality = 0;
+
+            /**
+             * ForgeOutput initial_luck.
+             * @member {number} initial_luck
+             * @memberof minimir.v1.ForgeOutput
+             * @instance
+             */
+            ForgeOutput.prototype.initial_luck = 0;
+
+            /**
+             * Creates a new ForgeOutput instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {minimir.v1.ForgeOutput.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeOutput} ForgeOutput instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeOutput.$Shape): minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape;
+             *   (properties?: minimir.v1.ForgeOutput.$Properties): minimir.v1.ForgeOutput;
+             * }}
+             */
+            ForgeOutput.create = function(properties) {
+                return new ForgeOutput(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeOutput message. Does not implicitly {@link minimir.v1.ForgeOutput.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {minimir.v1.ForgeOutput.$Properties} message ForgeOutput message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeOutput.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound") && message.bound !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.bound);
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.quality);
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck") && message.initial_luck !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.initial_luck);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeOutput message, length delimited. Does not implicitly {@link minimir.v1.ForgeOutput.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {minimir.v1.ForgeOutput.$Properties} message ForgeOutput message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeOutput.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeOutput message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape} ForgeOutput
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeOutput.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeOutput();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.bound = value;
+                            else
+                                delete message.bound;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.quality = value;
+                            else
+                                delete message.quality;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.initial_luck = value;
+                            else
+                                delete message.initial_luck;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeOutput message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape} ForgeOutput
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeOutput.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeOutput message.
+             * @function verify
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeOutput.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound"))
+                    if (typeof message.bound !== "boolean")
+                        return "bound: boolean expected";
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
+                    if (!$util.isInteger(message.quality))
+                        return "quality: integer expected";
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck"))
+                    if (!$util.isInteger(message.initial_luck))
+                        return "initial_luck: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeOutput
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeOutput
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeOutput.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeOutput";
+            };
+
+            return ForgeOutput;
+        })();
+
+        v1.ForgeReceipt = (function() {
+
+            /**
+             * Properties of a ForgeReceipt.
+             * @typedef {Object} minimir.v1.ForgeReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] ForgeReceipt quote_id
+             * @property {boolean|null} [success] ForgeReceipt success
+             * @property {minimir.v1.ForgeOutput.$Properties|null} [output] ForgeReceipt output
+             * @property {Long|null} [gold] ForgeReceipt gold
+             * @property {Long|null} [bound_gold] ForgeReceipt bound_gold
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeReceipt.
+             * @memberof minimir.v1
+             * @interface IForgeReceipt
+             * @augments minimir.v1.ForgeReceipt.$Properties
+             * @deprecated Use minimir.v1.ForgeReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeReceipt.
+             * @typedef {minimir.v1.ForgeReceipt.$Properties} minimir.v1.ForgeReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeReceipt.
+             * @constructor
+             * @param {minimir.v1.ForgeReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.ForgeReceipt
+             * @instance
+             */
+            ForgeReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * ForgeReceipt success.
+             * @member {boolean} success
+             * @memberof minimir.v1.ForgeReceipt
+             * @instance
+             */
+            ForgeReceipt.prototype.success = false;
+
+            /**
+             * ForgeReceipt output.
+             * @member {minimir.v1.ForgeOutput.$Properties|null|undefined} output
+             * @memberof minimir.v1.ForgeReceipt
+             * @instance
+             */
+            ForgeReceipt.prototype.output = null;
+
+            /**
+             * ForgeReceipt gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.ForgeReceipt
+             * @instance
+             */
+            ForgeReceipt.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ForgeReceipt bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.ForgeReceipt
+             * @instance
+             */
+            ForgeReceipt.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new ForgeReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {minimir.v1.ForgeReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeReceipt} ForgeReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeReceipt.$Shape): minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape;
+             *   (properties?: minimir.v1.ForgeReceipt.$Properties): minimir.v1.ForgeReceipt;
+             * }}
+             */
+            ForgeReceipt.create = function(properties) {
+                return new ForgeReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeReceipt message. Does not implicitly {@link minimir.v1.ForgeReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {minimir.v1.ForgeReceipt.$Properties} message ForgeReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success") && message.success !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.success);
+                if (message.output != null && $Object.hasOwnProperty.call(message, "output"))
+                    $root.minimir.v1.ForgeOutput.encode(message.output, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.bound_gold);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeReceipt message, length delimited. Does not implicitly {@link minimir.v1.ForgeReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {minimir.v1.ForgeReceipt.$Properties} message ForgeReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape} ForgeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.success = value;
+                            else
+                                delete message.success;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.output = $root.minimir.v1.ForgeOutput.decode(reader, reader.size(), $undefined, _depth + 1, message.output);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape} ForgeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeReceipt message.
+             * @function verify
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success"))
+                    if (typeof message.success !== "boolean")
+                        return "success: boolean expected";
+                if (message.output != null && $Object.hasOwnProperty.call(message, "output")) {
+                    var error = $root.minimir.v1.ForgeOutput.verify(message.output, _depth + 1);
+                    if (error)
+                        return "output." + error;
+                }
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeReceipt";
+            };
+
+            return ForgeReceipt;
         })();
 
         v1.GoldMarketReceipt = (function() {
@@ -21895,6 +22532,7 @@ $root.minimir = (function() {
              * @property {Long|null} [max_durability_u] ItemView max_durability_u
              * @property {Long|null} [original_durability_u] ItemView original_durability_u
              * @property {number|null} [ore_purity] ItemView ore_purity
+             * @property {number|null} [initial_luck] ItemView initial_luck
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -22039,6 +22677,14 @@ $root.minimir = (function() {
             ItemView.prototype.ore_purity = 0;
 
             /**
+             * ItemView initial_luck.
+             * @member {number} initial_luck
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.initial_luck = 0;
+
+            /**
              * Creates a new ItemView instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ItemView
@@ -22098,6 +22744,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.original_durability_u);
                 if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity") && message.ore_purity !== 0)
                     writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.ore_purity);
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck") && message.initial_luck !== 0)
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.initial_luck);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -22281,6 +22929,15 @@ $root.minimir = (function() {
                                 delete message.ore_purity;
                             continue;
                         }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.initial_luck = value;
+                            else
+                                delete message.initial_luck;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -22371,6 +23028,9 @@ $root.minimir = (function() {
                 if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity"))
                     if (!$util.isInteger(message.ore_purity))
                         return "ore_purity: integer expected";
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck"))
+                    if (!$util.isInteger(message.initial_luck))
+                        return "initial_luck: integer expected";
                 return null;
             };
 
@@ -53928,6 +54588,1318 @@ $root.minimir = (function() {
             };
 
             return MiningState;
+        })();
+
+        v1.ForgeItemRef = (function() {
+
+            /**
+             * Properties of a ForgeItemRef.
+             * @typedef {Object} minimir.v1.ForgeItemRef.$Properties
+             * @property {Uint8Array|null} [instance_id] ForgeItemRef instance_id
+             * @property {Long|null} [version] ForgeItemRef version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeItemRef.
+             * @memberof minimir.v1
+             * @interface IForgeItemRef
+             * @augments minimir.v1.ForgeItemRef.$Properties
+             * @deprecated Use minimir.v1.ForgeItemRef.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeItemRef.
+             * @typedef {minimir.v1.ForgeItemRef.$Properties} minimir.v1.ForgeItemRef.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeItemRef.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeItemRef.
+             * @constructor
+             * @param {minimir.v1.ForgeItemRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeItemRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeItemRef instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.ForgeItemRef
+             * @instance
+             */
+            ForgeItemRef.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * ForgeItemRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.ForgeItemRef
+             * @instance
+             */
+            ForgeItemRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new ForgeItemRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {minimir.v1.ForgeItemRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeItemRef} ForgeItemRef instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeItemRef.$Shape): minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape;
+             *   (properties?: minimir.v1.ForgeItemRef.$Properties): minimir.v1.ForgeItemRef;
+             * }}
+             */
+            ForgeItemRef.create = function(properties) {
+                return new ForgeItemRef(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeItemRef message. Does not implicitly {@link minimir.v1.ForgeItemRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {minimir.v1.ForgeItemRef.$Properties} message ForgeItemRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeItemRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeItemRef message, length delimited. Does not implicitly {@link minimir.v1.ForgeItemRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {minimir.v1.ForgeItemRef.$Properties} message ForgeItemRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeItemRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeItemRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape} ForgeItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeItemRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeItemRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeItemRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape} ForgeItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeItemRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeItemRef message.
+             * @function verify
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeItemRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeItemRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeItemRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeItemRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeItemRef";
+            };
+
+            return ForgeItemRef;
+        })();
+
+        v1.ForgeQuoteRequest = (function() {
+
+            /**
+             * Properties of a ForgeQuoteRequest.
+             * @typedef {Object} minimir.v1.ForgeQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] ForgeQuoteRequest scene_epoch
+             * @property {minimir.v1.ForgeItemRef.$Properties|null} [blueprint] ForgeQuoteRequest blueprint
+             * @property {Array.<minimir.v1.ForgeItemRef.$Properties>|null} [ores] ForgeQuoteRequest ores
+             * @property {boolean|null} [allow_bound] ForgeQuoteRequest allow_bound
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IForgeQuoteRequest
+             * @augments minimir.v1.ForgeQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.ForgeQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeQuoteRequest.
+             * @typedef {minimir.v1.ForgeQuoteRequest.$Properties} minimir.v1.ForgeQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.ForgeQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeQuoteRequest = function (properties) {
+                this.ores = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @instance
+             */
+            ForgeQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ForgeQuoteRequest blueprint.
+             * @member {minimir.v1.ForgeItemRef.$Properties|null|undefined} blueprint
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @instance
+             */
+            ForgeQuoteRequest.prototype.blueprint = null;
+
+            /**
+             * ForgeQuoteRequest ores.
+             * @member {Array.<minimir.v1.ForgeItemRef.$Properties>} ores
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @instance
+             */
+            ForgeQuoteRequest.prototype.ores = $util.emptyArray;
+
+            /**
+             * ForgeQuoteRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @instance
+             */
+            ForgeQuoteRequest.prototype.allow_bound = false;
+
+            /**
+             * Creates a new ForgeQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {minimir.v1.ForgeQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeQuoteRequest} ForgeQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeQuoteRequest.$Shape): minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.ForgeQuoteRequest.$Properties): minimir.v1.ForgeQuoteRequest;
+             * }}
+             */
+            ForgeQuoteRequest.create = function(properties) {
+                return new ForgeQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeQuoteRequest message. Does not implicitly {@link minimir.v1.ForgeQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {minimir.v1.ForgeQuoteRequest.$Properties} message ForgeQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.blueprint != null && $Object.hasOwnProperty.call(message, "blueprint"))
+                    $root.minimir.v1.ForgeItemRef.encode(message.blueprint, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.ores != null && message.ores.length)
+                    for (var i = 0; i < message.ores.length; ++i)
+                        $root.minimir.v1.ForgeItemRef.encode(message.ores[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.allow_bound);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.ForgeQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {minimir.v1.ForgeQuoteRequest.$Properties} message ForgeQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape} ForgeQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.blueprint = $root.minimir.v1.ForgeItemRef.decode(reader, reader.size(), $undefined, _depth + 1, message.blueprint);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.ores && message.ores.length))
+                                message.ores = [];
+                            message.ores.push($root.minimir.v1.ForgeItemRef.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape} ForgeQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.blueprint != null && $Object.hasOwnProperty.call(message, "blueprint")) {
+                    var error = $root.minimir.v1.ForgeItemRef.verify(message.blueprint, _depth + 1);
+                    if (error)
+                        return "blueprint." + error;
+                }
+                if (message.ores != null && $Object.hasOwnProperty.call(message, "ores")) {
+                    if (!$Array.isArray(message.ores))
+                        return "ores: array expected";
+                    for (var i = 0; i < message.ores.length; ++i) {
+                        var error = $root.minimir.v1.ForgeItemRef.verify(message.ores[i], _depth + 1);
+                        if (error)
+                            return "ores." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeQuoteRequest";
+            };
+
+            return ForgeQuoteRequest;
+        })();
+
+        v1.ForgeQuote = (function() {
+
+            /**
+             * Properties of a ForgeQuote.
+             * @typedef {Object} minimir.v1.ForgeQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] ForgeQuote quote_id
+             * @property {Long|null} [scene_epoch] ForgeQuote scene_epoch
+             * @property {minimir.v1.ItemView.$Properties|null} [blueprint] ForgeQuote blueprint
+             * @property {Array.<minimir.v1.ItemView.$Properties>|null} [ores] ForgeQuote ores
+             * @property {boolean|null} [allow_bound] ForgeQuote allow_bound
+             * @property {number|null} [output_item_id] ForgeQuote output_item_id
+             * @property {number|null} [quality] ForgeQuote quality
+             * @property {number|null} [required_level] ForgeQuote required_level
+             * @property {number|null} [slot] ForgeQuote slot
+             * @property {number|null} [success_ppm] ForgeQuote success_ppm
+             * @property {Long|null} [gold] ForgeQuote gold
+             * @property {Long|null} [bound_gold] ForgeQuote bound_gold
+             * @property {boolean|null} [output_bound] ForgeQuote output_bound
+             * @property {Long|null} [expires_at_unix_ms] ForgeQuote expires_at_unix_ms
+             * @property {Long|null} [role_revision] ForgeQuote role_revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeQuote.
+             * @memberof minimir.v1
+             * @interface IForgeQuote
+             * @augments minimir.v1.ForgeQuote.$Properties
+             * @deprecated Use minimir.v1.ForgeQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeQuote.
+             * @typedef {minimir.v1.ForgeQuote.$Properties} minimir.v1.ForgeQuote.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeQuote.
+             * @constructor
+             * @param {minimir.v1.ForgeQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeQuote = function (properties) {
+                this.ores = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * ForgeQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ForgeQuote blueprint.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} blueprint
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.blueprint = null;
+
+            /**
+             * ForgeQuote ores.
+             * @member {Array.<minimir.v1.ItemView.$Properties>} ores
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.ores = $util.emptyArray;
+
+            /**
+             * ForgeQuote allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.allow_bound = false;
+
+            /**
+             * ForgeQuote output_item_id.
+             * @member {number} output_item_id
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.output_item_id = 0;
+
+            /**
+             * ForgeQuote quality.
+             * @member {number} quality
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.quality = 0;
+
+            /**
+             * ForgeQuote required_level.
+             * @member {number} required_level
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.required_level = 0;
+
+            /**
+             * ForgeQuote slot.
+             * @member {number} slot
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.slot = 0;
+
+            /**
+             * ForgeQuote success_ppm.
+             * @member {number} success_ppm
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.success_ppm = 0;
+
+            /**
+             * ForgeQuote gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ForgeQuote bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ForgeQuote output_bound.
+             * @member {boolean} output_bound
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.output_bound = false;
+
+            /**
+             * ForgeQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ForgeQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.ForgeQuote
+             * @instance
+             */
+            ForgeQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new ForgeQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {minimir.v1.ForgeQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeQuote} ForgeQuote instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeQuote.$Shape): minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape;
+             *   (properties?: minimir.v1.ForgeQuote.$Properties): minimir.v1.ForgeQuote;
+             * }}
+             */
+            ForgeQuote.create = function(properties) {
+                return new ForgeQuote(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeQuote message. Does not implicitly {@link minimir.v1.ForgeQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {minimir.v1.ForgeQuote.$Properties} message ForgeQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.blueprint != null && $Object.hasOwnProperty.call(message, "blueprint"))
+                    $root.minimir.v1.ItemView.encode(message.blueprint, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.ores != null && message.ores.length)
+                    for (var i = 0; i < message.ores.length; ++i)
+                        $root.minimir.v1.ItemView.encode(message.ores[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.allow_bound);
+                if (message.output_item_id != null && $Object.hasOwnProperty.call(message, "output_item_id") && message.output_item_id !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.output_item_id);
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.quality);
+                if (message.required_level != null && $Object.hasOwnProperty.call(message, "required_level") && message.required_level !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.required_level);
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.slot);
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm") && message.success_ppm !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.success_ppm);
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.bound_gold);
+                if (message.output_bound != null && $Object.hasOwnProperty.call(message, "output_bound") && message.output_bound !== false)
+                    writer.uint32(/* id 13, wireType 0 =*/104).bool(message.output_bound);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint64(message.expires_at_unix_ms);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.role_revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeQuote message, length delimited. Does not implicitly {@link minimir.v1.ForgeQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {minimir.v1.ForgeQuote.$Properties} message ForgeQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape} ForgeQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.blueprint = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.blueprint);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.ores && message.ores.length))
+                                message.ores = [];
+                            message.ores.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.output_item_id = value;
+                            else
+                                delete message.output_item_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.quality = value;
+                            else
+                                delete message.quality;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.required_level = value;
+                            else
+                                delete message.required_level;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.success_ppm = value;
+                            else
+                                delete message.success_ppm;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.output_bound = value;
+                            else
+                                delete message.output_bound;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape} ForgeQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeQuote message.
+             * @function verify
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.blueprint != null && $Object.hasOwnProperty.call(message, "blueprint")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.blueprint, _depth + 1);
+                    if (error)
+                        return "blueprint." + error;
+                }
+                if (message.ores != null && $Object.hasOwnProperty.call(message, "ores")) {
+                    if (!$Array.isArray(message.ores))
+                        return "ores: array expected";
+                    for (var i = 0; i < message.ores.length; ++i) {
+                        var error = $root.minimir.v1.ItemView.verify(message.ores[i], _depth + 1);
+                        if (error)
+                            return "ores." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.output_item_id != null && $Object.hasOwnProperty.call(message, "output_item_id"))
+                    if (!$util.isInteger(message.output_item_id))
+                        return "output_item_id: integer expected";
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
+                    if (!$util.isInteger(message.quality))
+                        return "quality: integer expected";
+                if (message.required_level != null && $Object.hasOwnProperty.call(message, "required_level"))
+                    if (!$util.isInteger(message.required_level))
+                        return "required_level: integer expected";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm"))
+                    if (!$util.isInteger(message.success_ppm))
+                        return "success_ppm: integer expected";
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.output_bound != null && $Object.hasOwnProperty.call(message, "output_bound"))
+                    if (typeof message.output_bound !== "boolean")
+                        return "output_bound: boolean expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeQuote";
+            };
+
+            return ForgeQuote;
+        })();
+
+        v1.ForgeCommitRequest = (function() {
+
+            /**
+             * Properties of a ForgeCommitRequest.
+             * @typedef {Object} minimir.v1.ForgeCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] ForgeCommitRequest quote_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] ForgeCommitRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ForgeCommitRequest.
+             * @memberof minimir.v1
+             * @interface IForgeCommitRequest
+             * @augments minimir.v1.ForgeCommitRequest.$Properties
+             * @deprecated Use minimir.v1.ForgeCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a ForgeCommitRequest.
+             * @typedef {minimir.v1.ForgeCommitRequest.$Properties} minimir.v1.ForgeCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new ForgeCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a ForgeCommitRequest.
+             * @constructor
+             * @param {minimir.v1.ForgeCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ForgeCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ForgeCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @instance
+             */
+            ForgeCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * ForgeCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @instance
+             */
+            ForgeCommitRequest.prototype.operation = null;
+
+            /**
+             * Creates a new ForgeCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {minimir.v1.ForgeCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ForgeCommitRequest} ForgeCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.ForgeCommitRequest.$Shape): minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape;
+             *   (properties?: minimir.v1.ForgeCommitRequest.$Properties): minimir.v1.ForgeCommitRequest;
+             * }}
+             */
+            ForgeCommitRequest.create = function(properties) {
+                return new ForgeCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified ForgeCommitRequest message. Does not implicitly {@link minimir.v1.ForgeCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {minimir.v1.ForgeCommitRequest.$Properties} message ForgeCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ForgeCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.ForgeCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {minimir.v1.ForgeCommitRequest.$Properties} message ForgeCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ForgeCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ForgeCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape} ForgeCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ForgeCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ForgeCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape} ForgeCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ForgeCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ForgeCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ForgeCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ForgeCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.ForgeCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ForgeCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ForgeCommitRequest";
+            };
+
+            return ForgeCommitRequest;
         })();
 
         return v1;

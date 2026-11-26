@@ -22,6 +22,8 @@
 
 `40045 SetMiningAutoRecycleRequest` 通过原经济操作凭据保存角色的矿石回收开关。服务端按原操作编号回传 `40005`，成功重放不会覆盖之后的设置。`20029 MiningState` 额外发送规则允许的矿种、角色当前开关与最近一次出矿对应的实际回收金额。空矿种列表表示功能关闭，两个金额只能有一边为正数。`HostingReport` 对已经提交的托管矿石回收单列块数及绑定分账，余额仍沿原 `earned` 确认。
 
+`40046 ForgeQuoteRequest` 指定原图纸、各块黑铁的实例与版本，并携带本次允许绑定投入的设置。`40047 ForgeQuote` 回传实际用于确认的原物品、金币分账、成品属性、绑定和有效成功率。`40048 ForgeCommitRequest` 只提交报价号和原经济操作身份，`40005 OperationResult.forge` 回传首次确认的成功或失败、实际扣款和成功时的原成品。提交已确认后的同一操作会返回原结果。
+
 `20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。
 
 同一查询的字段 22 和 23 分别是 `dungeon_pending_rewards` 和 `dungeon_pending_rewards_more`。讨伐原奖包沿现有附件格式和 `40030` 领取，来源为 `dungeon`，时间为最终首领实际死亡。讨伐首屏返回最早八包，领取后可继续查看更晚的原奖包。个人和世界列表仍独立计数。

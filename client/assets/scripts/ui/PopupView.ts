@@ -13,6 +13,7 @@ export class PopupView extends Component {
     private readonly stack = new PanelStackState<Node>();
     private readonly pending = new Map<Node, (accepted: boolean) => void>();
     private readonly buttons: Array<{ button: Button; handler: () => void }> = [];
+    private readonly confirmLabels = new Map<Node, string>();
 
     get top(): Node | null { return this.stack.top; }
     get isOpen(): boolean { return this.stack.size > 0; }
@@ -50,6 +51,7 @@ export class PopupView extends Component {
         for (const resolve of this.pending.values()) resolve(false);
         this.pending.clear();
         this.buttons.length = 0;
+        this.confirmLabels.clear();
         this.stack.clear();
     }
 
@@ -68,8 +70,14 @@ export class PopupView extends Component {
         return panel;
     }
 
-    confirm(name: string, message: string, title = '确认'): Promise<boolean> {
+    confirm(name: string, message: string, title = '确认', actionLabel?: string): Promise<boolean> {
         const panel = this.show(name, { title, message });
+        const label = panel?.getChildByPath('ConfirmButton/Label')?.getComponent(Label);
+        if (panel && label) {
+            const saved = this.confirmLabels.get(panel) ?? label.string;
+            this.confirmLabels.set(panel, saved);
+            label.string = actionLabel ?? saved;
+        }
         return panel ? new Promise(resolve => this.pending.set(panel, resolve)) : Promise.resolve(false);
     }
 

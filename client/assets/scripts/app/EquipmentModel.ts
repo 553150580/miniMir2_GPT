@@ -5,6 +5,7 @@ import { assetInteger, sourceName } from './SkillAssetsModel';
 
 export interface EquipmentItem extends PotionItem {
     quality?: number; sourceKind?: string; locked?: boolean; recycleBlockFlags?: number;
+    initialLuck?: number;
     durabilityU?: Parameters<typeof assetInteger>[0]; maxDurabilityU?: Parameters<typeof assetInteger>[0];
     originalDurabilityU?: Parameters<typeof assetInteger>[0];
 }
@@ -100,6 +101,7 @@ export function equipmentDetailLines(definition: EquipmentDefinition | undefined
         && stage === Math.floor((definition.required_level! - 1) / 10);
     return [worn ? '已穿戴装备' : '背包装备', equipmentSlotName(definition.equip_slot ?? -1), `数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品',
         `品质 ${item.quality ?? '未知'}`, `来源 ${sourceName(item.sourceKind)}`, ...[equipmentDurabilityText(item)].filter(Boolean),
+        ...(item.initialLuck && Number.isInteger(item.initialLuck) && item.initialLuck >= 1 && item.initialLuck <= 3 ? [`幸运+${item.initialLuck}`] : []),
         stageKnown ? `装备阶段 T${stage! + 1}` : '装备阶段尚未同步', ...equipmentLevelLines(definition, level, job), ...equipmentBaseAttributeLines(definition),
         ...(item.locked ? ['装备已锁定，回收受保护'] : []), ...((item.recycleBlockFlags ?? 0) & 6 ? ['装备正在处理或有未确认结果'] : [])];
 }

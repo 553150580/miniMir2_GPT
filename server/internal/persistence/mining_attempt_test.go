@@ -154,8 +154,14 @@ func TestMiningSettlementMongo(t *testing.T) {
 // startMiningStoreTest 在本次隔离副本集创建独立业务库、角色及实际游戏节点围栏。
 func startMiningStoreTest(t *testing.T) (context.Context, *Store, *Store, domain.Role, Auth) {
 	t.Helper()
+	return startIsolatedMiningStoreTest(t, "MINIMIR_MINING_TEST_FIXTURE")
+}
+
+// startIsolatedMiningStoreTest 为矿区及其工坊功能装配本轮隔离运行规则。
+func startIsolatedMiningStoreTest(t *testing.T, fixtureEnv string) (context.Context, *Store, *Store, domain.Role, Auth) {
+	t.Helper()
 	uri := os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI")
-	fixturePath := os.Getenv("MINIMIR_MINING_TEST_FIXTURE")
+	fixturePath := os.Getenv(fixtureEnv)
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" || uri == "" || fixturePath == "" {
 		t.Skip("需要专属 MongoDB 副本集和已编译的隔离挖矿候选")
 	}

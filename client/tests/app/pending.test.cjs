@@ -45,6 +45,21 @@ test('关闭矿石自动回收保留原操作流水和明确 false，重连后�
     assert.throws(() => new PendingOperations().set('roleA', { id: 40045, value: { operation, enabled: 0 } }), { code: 'INVALID_OPERATION' });
 });
 
+test('图纸打造未知提交只重放原报价与操作编号，拒绝后补物品或绑定授权', () => {
+    const storage = new MemoryStorage(), operation = pending().value.operation;
+    const original = { id: 40048, value: { quoteId: id(20), operation } };
+    const ledger = new PendingOperations(storage, key);
+    assert.throws(() => ledger.set('roleA', { ...original, value: { ...original.value, allowBound: true } }), /未允许|字段/);
+    ledger.set('roleA', original);
+    const restored = new PendingOperations(storage, key).get('roleA');
+    const encode = ({ quoteId, operation: op }) => pb.ForgeCommitRequest.encode({ quote_id: quoteId,
+        operation: { op_id: op.opId, command_seq: op.commandSeq, expected_revision: op.expectedRevision,
+            expected_rule_version: op.expectedRuleVersion } }).finish();
+    assert.equal(restored.id, 40048);
+    assert.deepEqual(encode(restored.value), encode(original.value));
+    assert.deepEqual(new Uint8Array(pb.ForgeCommitRequest.decode(encode(restored.value)).quote_id), id(20));
+});
+
 test('金币补时仅保存原报价和整数秒，重连保持同一操作的协议字节', () => {
     const storage = new MemoryStorage(), original = { id: 40007, value: { requestedSeconds: 86400, quoteId: id(8), operation: pending().value.operation } };
     const ledger = new PendingOperations(storage, key);

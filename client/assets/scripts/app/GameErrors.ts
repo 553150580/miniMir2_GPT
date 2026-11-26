@@ -5,6 +5,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeVendorUnavailable, CodeVendorQuoteStale, CodeVendorFunds, CodeVendorItemBlocked,
     CodeHostingPurchaseUnavailable, CodeHostingPurchaseQuoteStale, CodeHostingPurchaseBalance, CodeHostingPurchaseFunds, CodeOperationConflict,
     CodeTaskCodexUnavailable, CodeTaskCodexDayChanged,
+    CodeForgeUnavailable, CodeForgeQuoteChanged, CodeForgeInputs,
     CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -40,6 +41,12 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (messageId === 40044 && errorCode === CodeOperationConflict) return '原限价、委托或托管已变化，请刷新';
     if (messageId === 40044 && errorCode === CodeLineForbidden) return '当前角色或市场条件不允许此操作';
     if (messageId === 40045 && errorCode === CodeLineForbidden) return '当前规则未开放矿石自动回收';
+    if (messageId === 40046 || messageId === 40047 || messageId === 40048) {
+        if (errorCode === CodeForgeUnavailable) return '当前规则、角色或场景未开放打造';
+        if (errorCode === CodeForgeQuoteChanged || errorCode === CodeOperationConflict) return '原报价或资产已变化，请重新报价';
+        if (errorCode === CodeForgeInputs) return '原图纸、黑铁矿或绑定设置已变化，请重新选择';
+        if (errorCode === CodeVendorFunds) return '当前允许投入的金币不足';
+    }
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';
         if (errorCode === CodeEquipmentChanged) return '当前矿层没有可用锄头，请检查背包';

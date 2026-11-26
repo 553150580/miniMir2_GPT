@@ -107,6 +107,9 @@ const (
 	MsgS2CGoldMarketState uint16 = 40043
 	MsgC2SGoldMarketAction uint16 = 40044
 	MsgC2SSetMiningAutoRecycle uint16 = 40045
+	MsgC2SForgeQuote uint16 = 40046
+	MsgS2CForgeQuote uint16 = 40047
+	MsgC2SForgeCommit uint16 = 40048
 )
 
 const (
@@ -160,4 +163,7 @@ const (
 	CodeHostingPurchaseBalance uint32 = 3803
 	CodeHostingPurchaseFunds uint32 = 3804
 	CodeMirrorExchangeFunds uint32 = 3901
+	CodeForgeUnavailable uint32 = 3950
+	CodeForgeQuoteChanged uint32 = 3951
+	CodeForgeInputs uint32 = 3952
 )

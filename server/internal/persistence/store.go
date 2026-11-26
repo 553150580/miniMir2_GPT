@@ -109,6 +109,7 @@ type Operation struct {
 	Equipment         *EquipmentReceipt              `bson:"equipment,omitempty"`              // 装备相关操作产生的确定资产回执。
 	Warehouse         *WarehouseReceipt              `bson:"warehouse,omitempty"`              // 仓库资产、页号与版本变化。
 	Vendor            *VendorReceipt                 `bson:"npc_trade,omitempty"`              // NPC 买卖或修理的原成交参数和结果。
+	Forge             *ForgeResultReceipt            `bson:"forge,omitempty"`                  // 图纸打造的原投入、结果及成品。
 	TaskCodex         *TaskCodexClaimReceipt         `bson:"tasks_codex_claim,omitempty"`      // 原任务或图鉴领取确认的定义及绑定奖励。
 	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
 	SkillSlotIDs      []uint32                       `bson:"skill_slot_ids,omitempty"`         // 已确认的四个技能槽位。
@@ -213,6 +214,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 		dungeonRewardCollection:   externalChallengeRewardIndexes(),
 		roleCardPeriodCollection:  roleCardPeriodIndexes(),
 		paymentOrderCollection:    paymentOrderIndexes(),
+	}
+	if s.Cfg.Fixture.Forge != nil {
+		indexes[forgeQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {

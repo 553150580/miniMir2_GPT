@@ -93,6 +93,10 @@ func CanTrade(item domain.Item, definition devconfig.Item) bool {
 	if item.OrePurity != 0 {
 		return false
 	}
+	if item.SourceKind == forgeSourceKind {
+		// 只有实际打造的单件高品质装备可按普通市场规则流通。
+		return definition.IsEquipment && item.Quantity == 1 && item.InitialLuck <= 3 && lowerHex(item.SourceID, 16)
+	}
 	switch item.SourceKind {
 	case "monster_drop", "personal_boss", "world_boss", "world_boss_timeout", "dungeon", "npc_shop",
 		"skill_recycle", "task_reward", "codex_reward":

@@ -377,6 +377,9 @@ export namespace minimir {
             /** OperationResult gold_market. */
             gold_market?: (minimir.v1.GoldMarketReceipt.$Properties|null);
 
+            /** OperationResult forge. */
+            forge?: (minimir.v1.ForgeReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -473,12 +476,255 @@ export namespace minimir {
                 /** OperationResult gold_market */
                 gold_market?: (minimir.v1.GoldMarketReceipt.$Properties|null);
 
+                /** OperationResult forge */
+                forge?: (minimir.v1.ForgeReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeOutput.
+         * @deprecated Use minimir.v1.ForgeOutput.$Properties instead.
+         */
+        interface IForgeOutput extends minimir.v1.ForgeOutput.$Properties {
+        }
+
+        /** Represents a ForgeOutput. */
+        class ForgeOutput {
+
+            /**
+             * Constructs a new ForgeOutput.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeOutput.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeOutput instance_id. */
+            instance_id: Uint8Array;
+
+            /** ForgeOutput item_id. */
+            item_id: number;
+
+            /** ForgeOutput bound. */
+            bound: boolean;
+
+            /** ForgeOutput quality. */
+            quality: number;
+
+            /** ForgeOutput initial_luck. */
+            initial_luck: number;
+
+            /**
+             * Creates a new ForgeOutput instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeOutput instance
+             */
+            static create(properties: minimir.v1.ForgeOutput.$Shape): minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape;
+            static create(properties?: minimir.v1.ForgeOutput.$Properties): minimir.v1.ForgeOutput;
+
+            /**
+             * Encodes the specified ForgeOutput message. Does not implicitly {@link minimir.v1.ForgeOutput.verify|verify} messages.
+             * @param message ForgeOutput message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeOutput message, length delimited. Does not implicitly {@link minimir.v1.ForgeOutput.verify|verify} messages.
+             * @param message ForgeOutput message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeOutput message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape} ForgeOutput
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape;
+
+            /**
+             * Decodes a ForgeOutput message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape} ForgeOutput
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeOutput & minimir.v1.ForgeOutput.$Shape;
+
+            /**
+             * Verifies a ForgeOutput message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeOutput
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeOutput {
+
+            /** Properties of a ForgeOutput. */
+            interface $Properties {
+
+                /** ForgeOutput instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** ForgeOutput item_id */
+                item_id?: (number|null);
+
+                /** ForgeOutput bound */
+                bound?: (boolean|null);
+
+                /** ForgeOutput quality */
+                quality?: (number|null);
+
+                /** ForgeOutput initial_luck */
+                initial_luck?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeOutput. */
+            type $Shape = minimir.v1.ForgeOutput.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeReceipt.
+         * @deprecated Use minimir.v1.ForgeReceipt.$Properties instead.
+         */
+        interface IForgeReceipt extends minimir.v1.ForgeReceipt.$Properties {
+        }
+
+        /** Represents a ForgeReceipt. */
+        class ForgeReceipt {
+
+            /**
+             * Constructs a new ForgeReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** ForgeReceipt success. */
+            success: boolean;
+
+            /** ForgeReceipt output. */
+            output?: (minimir.v1.ForgeOutput.$Properties|null);
+
+            /** ForgeReceipt gold. */
+            gold: Long;
+
+            /** ForgeReceipt bound_gold. */
+            bound_gold: Long;
+
+            /**
+             * Creates a new ForgeReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeReceipt instance
+             */
+            static create(properties: minimir.v1.ForgeReceipt.$Shape): minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape;
+            static create(properties?: minimir.v1.ForgeReceipt.$Properties): minimir.v1.ForgeReceipt;
+
+            /**
+             * Encodes the specified ForgeReceipt message. Does not implicitly {@link minimir.v1.ForgeReceipt.verify|verify} messages.
+             * @param message ForgeReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeReceipt message, length delimited. Does not implicitly {@link minimir.v1.ForgeReceipt.verify|verify} messages.
+             * @param message ForgeReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape} ForgeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape;
+
+            /**
+             * Decodes a ForgeReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape} ForgeReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeReceipt & minimir.v1.ForgeReceipt.$Shape;
+
+            /**
+             * Verifies a ForgeReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeReceipt {
+
+            /** Properties of a ForgeReceipt. */
+            interface $Properties {
+
+                /** ForgeReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** ForgeReceipt success */
+                success?: (boolean|null);
+
+                /** ForgeReceipt output */
+                output?: (minimir.v1.ForgeOutput.$Properties|null);
+
+                /** ForgeReceipt gold */
+                gold?: (Long|null);
+
+                /** ForgeReceipt bound_gold */
+                bound_gold?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeReceipt. */
+            type $Shape = minimir.v1.ForgeReceipt.$Properties;
         }
 
         /**
@@ -8372,6 +8618,9 @@ export namespace minimir {
             /** ItemView ore_purity. */
             ore_purity: number;
 
+            /** ItemView initial_luck. */
+            initial_luck: number;
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -8476,6 +8725,9 @@ export namespace minimir {
 
                 /** ItemView ore_purity */
                 ore_purity?: (number|null);
+
+                /** ItemView initial_luck */
+                initial_luck?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -20207,6 +20459,504 @@ export namespace minimir {
 
             /** Shape of a MiningState. */
             type $Shape = minimir.v1.MiningState.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeItemRef.
+         * @deprecated Use minimir.v1.ForgeItemRef.$Properties instead.
+         */
+        interface IForgeItemRef extends minimir.v1.ForgeItemRef.$Properties {
+        }
+
+        /** Represents a ForgeItemRef. */
+        class ForgeItemRef {
+
+            /**
+             * Constructs a new ForgeItemRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeItemRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeItemRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** ForgeItemRef version. */
+            version: Long;
+
+            /**
+             * Creates a new ForgeItemRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeItemRef instance
+             */
+            static create(properties: minimir.v1.ForgeItemRef.$Shape): minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape;
+            static create(properties?: minimir.v1.ForgeItemRef.$Properties): minimir.v1.ForgeItemRef;
+
+            /**
+             * Encodes the specified ForgeItemRef message. Does not implicitly {@link minimir.v1.ForgeItemRef.verify|verify} messages.
+             * @param message ForgeItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeItemRef message, length delimited. Does not implicitly {@link minimir.v1.ForgeItemRef.verify|verify} messages.
+             * @param message ForgeItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeItemRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape} ForgeItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape;
+
+            /**
+             * Decodes a ForgeItemRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape} ForgeItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeItemRef & minimir.v1.ForgeItemRef.$Shape;
+
+            /**
+             * Verifies a ForgeItemRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeItemRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeItemRef {
+
+            /** Properties of a ForgeItemRef. */
+            interface $Properties {
+
+                /** ForgeItemRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** ForgeItemRef version */
+                version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeItemRef. */
+            type $Shape = minimir.v1.ForgeItemRef.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeQuoteRequest.
+         * @deprecated Use minimir.v1.ForgeQuoteRequest.$Properties instead.
+         */
+        interface IForgeQuoteRequest extends minimir.v1.ForgeQuoteRequest.$Properties {
+        }
+
+        /** Represents a ForgeQuoteRequest. */
+        class ForgeQuoteRequest {
+
+            /**
+             * Constructs a new ForgeQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** ForgeQuoteRequest blueprint. */
+            blueprint?: (minimir.v1.ForgeItemRef.$Properties|null);
+
+            /** ForgeQuoteRequest ores. */
+            ores: minimir.v1.ForgeItemRef.$Properties[];
+
+            /** ForgeQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /**
+             * Creates a new ForgeQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeQuoteRequest instance
+             */
+            static create(properties: minimir.v1.ForgeQuoteRequest.$Shape): minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.ForgeQuoteRequest.$Properties): minimir.v1.ForgeQuoteRequest;
+
+            /**
+             * Encodes the specified ForgeQuoteRequest message. Does not implicitly {@link minimir.v1.ForgeQuoteRequest.verify|verify} messages.
+             * @param message ForgeQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.ForgeQuoteRequest.verify|verify} messages.
+             * @param message ForgeQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape} ForgeQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape;
+
+            /**
+             * Decodes a ForgeQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape} ForgeQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeQuoteRequest & minimir.v1.ForgeQuoteRequest.$Shape;
+
+            /**
+             * Verifies a ForgeQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeQuoteRequest {
+
+            /** Properties of a ForgeQuoteRequest. */
+            interface $Properties {
+
+                /** ForgeQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** ForgeQuoteRequest blueprint */
+                blueprint?: (minimir.v1.ForgeItemRef.$Properties|null);
+
+                /** ForgeQuoteRequest ores */
+                ores?: (minimir.v1.ForgeItemRef.$Properties[]|null);
+
+                /** ForgeQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeQuoteRequest. */
+            type $Shape = minimir.v1.ForgeQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeQuote.
+         * @deprecated Use minimir.v1.ForgeQuote.$Properties instead.
+         */
+        interface IForgeQuote extends minimir.v1.ForgeQuote.$Properties {
+        }
+
+        /** Represents a ForgeQuote. */
+        class ForgeQuote {
+
+            /**
+             * Constructs a new ForgeQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** ForgeQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** ForgeQuote blueprint. */
+            blueprint?: (minimir.v1.ItemView.$Properties|null);
+
+            /** ForgeQuote ores. */
+            ores: minimir.v1.ItemView.$Properties[];
+
+            /** ForgeQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** ForgeQuote output_item_id. */
+            output_item_id: number;
+
+            /** ForgeQuote quality. */
+            quality: number;
+
+            /** ForgeQuote required_level. */
+            required_level: number;
+
+            /** ForgeQuote slot. */
+            slot: number;
+
+            /** ForgeQuote success_ppm. */
+            success_ppm: number;
+
+            /** ForgeQuote gold. */
+            gold: Long;
+
+            /** ForgeQuote bound_gold. */
+            bound_gold: Long;
+
+            /** ForgeQuote output_bound. */
+            output_bound: boolean;
+
+            /** ForgeQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** ForgeQuote role_revision. */
+            role_revision: Long;
+
+            /**
+             * Creates a new ForgeQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeQuote instance
+             */
+            static create(properties: minimir.v1.ForgeQuote.$Shape): minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape;
+            static create(properties?: minimir.v1.ForgeQuote.$Properties): minimir.v1.ForgeQuote;
+
+            /**
+             * Encodes the specified ForgeQuote message. Does not implicitly {@link minimir.v1.ForgeQuote.verify|verify} messages.
+             * @param message ForgeQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeQuote message, length delimited. Does not implicitly {@link minimir.v1.ForgeQuote.verify|verify} messages.
+             * @param message ForgeQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape} ForgeQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape;
+
+            /**
+             * Decodes a ForgeQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape} ForgeQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeQuote & minimir.v1.ForgeQuote.$Shape;
+
+            /**
+             * Verifies a ForgeQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeQuote {
+
+            /** Properties of a ForgeQuote. */
+            interface $Properties {
+
+                /** ForgeQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** ForgeQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** ForgeQuote blueprint */
+                blueprint?: (minimir.v1.ItemView.$Properties|null);
+
+                /** ForgeQuote ores */
+                ores?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** ForgeQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** ForgeQuote output_item_id */
+                output_item_id?: (number|null);
+
+                /** ForgeQuote quality */
+                quality?: (number|null);
+
+                /** ForgeQuote required_level */
+                required_level?: (number|null);
+
+                /** ForgeQuote slot */
+                slot?: (number|null);
+
+                /** ForgeQuote success_ppm */
+                success_ppm?: (number|null);
+
+                /** ForgeQuote gold */
+                gold?: (Long|null);
+
+                /** ForgeQuote bound_gold */
+                bound_gold?: (Long|null);
+
+                /** ForgeQuote output_bound */
+                output_bound?: (boolean|null);
+
+                /** ForgeQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** ForgeQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeQuote. */
+            type $Shape = minimir.v1.ForgeQuote.$Properties;
+        }
+
+        /**
+         * Properties of a ForgeCommitRequest.
+         * @deprecated Use minimir.v1.ForgeCommitRequest.$Properties instead.
+         */
+        interface IForgeCommitRequest extends minimir.v1.ForgeCommitRequest.$Properties {
+        }
+
+        /** Represents a ForgeCommitRequest. */
+        class ForgeCommitRequest {
+
+            /**
+             * Constructs a new ForgeCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ForgeCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ForgeCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** ForgeCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new ForgeCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ForgeCommitRequest instance
+             */
+            static create(properties: minimir.v1.ForgeCommitRequest.$Shape): minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape;
+            static create(properties?: minimir.v1.ForgeCommitRequest.$Properties): minimir.v1.ForgeCommitRequest;
+
+            /**
+             * Encodes the specified ForgeCommitRequest message. Does not implicitly {@link minimir.v1.ForgeCommitRequest.verify|verify} messages.
+             * @param message ForgeCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ForgeCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ForgeCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.ForgeCommitRequest.verify|verify} messages.
+             * @param message ForgeCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ForgeCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ForgeCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape} ForgeCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape;
+
+            /**
+             * Decodes a ForgeCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape} ForgeCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ForgeCommitRequest & minimir.v1.ForgeCommitRequest.$Shape;
+
+            /**
+             * Verifies a ForgeCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ForgeCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ForgeCommitRequest {
+
+            /** Properties of a ForgeCommitRequest. */
+            interface $Properties {
+
+                /** ForgeCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** ForgeCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ForgeCommitRequest. */
+            type $Shape = minimir.v1.ForgeCommitRequest.$Properties;
         }
     }
 }

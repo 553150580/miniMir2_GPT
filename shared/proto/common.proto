@@ -23,6 +23,23 @@ message OperationResult {
   RoleCardDailyReceipt role_card_daily = 9;
   ItemMarketReceipt item_market = 10;
   GoldMarketReceipt gold_market = 11;
+  ForgeReceipt forge = 12;
+}
+// 首次创建的装备身份和原绑定状态，原回执重放时保持不变。
+message ForgeOutput {
+  bytes instance_id = 1;
+  uint32 item_id = 2;
+  bool bound = 3;
+  uint32 quality = 4;
+  uint32 initial_luck = 5;
+}
+// 实际完成判定才出现锻造回执；未成功也按原报价扣矿和金币，图纸保留。
+message ForgeReceipt {
+  bytes quote_id = 1;
+  bool success = 2;
+  ForgeOutput output = 3;
+  int64 gold = 4;
+  int64 bound_gold = 5;
 }
 // 金币市场回执确认原委托、托管或撤单。挂单只确认首次冻结和活动委托，成交由撮合账本推进。
 message GoldMarketReceipt {

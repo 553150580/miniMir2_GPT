@@ -59,6 +59,7 @@ type Item struct {
 	ItemID              uint32 `bson:"item_id" json:"item_id"`                                                 // 配置目录中的物品定义号。
 	Quantity            int64  `bson:"quantity" json:"quantity"`                                               // 当前堆叠数量。
 	OrePurity           uint32 `bson:"ore_purity,omitempty" json:"ore_purity,omitempty"`                       // 原矿的纯度整数，零表示没有纯度属性。
+	InitialLuck         uint32 `bson:"initial_luck,omitempty" json:"initial_luck,omitempty"`                   // 装备生成时保存的初始幸运，零表示未触发。
 	Bound               bool   `bson:"bound" json:"bound"`                                                     // 限制转移并决定回收收入的绑定状态。
 	Version             int64  `bson:"version" json:"version"`                                                 // 该实例的乐观并发版本。
 	DurabilityU         int64  `bson:"durability_u,omitempty" json:"durability_u,omitempty"`                   // 当前耐久，使用约定的定点存储单位。
@@ -76,7 +77,7 @@ type Item struct {
 // i 是调用该方法的道具实例。
 func (i Item) Proto() *pb.ItemView {
 	// wire 保存当前处理所用的线协议。
-	wire := &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags(), OrePurity: i.OrePurity}
+	wire := &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags(), OrePurity: i.OrePurity, InitialLuck: i.InitialLuck}
 	if i.HasValidDurability() {
 		wire.DurabilityU = uint64(i.DurabilityU)
 		wire.MaxDurabilityU = uint64(i.MaxDurabilityU)

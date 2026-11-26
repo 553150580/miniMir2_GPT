@@ -13,6 +13,7 @@ export interface ItemActionView {
     readonly title: string;
     readonly lines: readonly string[];
     readonly actions: readonly ItemAction[];
+    readonly options?: readonly { readonly label: string; readonly key: string; readonly enabled: boolean; readonly choose: () => void }[];
     readonly quantity?: { readonly value: string; readonly minus?: () => void; readonly plus?: () => void };
 }
 
@@ -34,10 +35,13 @@ export class GameItemActions {
         this.panel = panel;
         this.list = list;
         for (const [index, name] of actionNames.entries()) this.bind(name, () => this.activate(index));
+        this.list.node.on(List.EVENT_ITEM_CLICK, this.chooseOption, this);
         this.bind('Minus', () => this.adjust('minus'));
         this.bind('Plus', () => this.adjust('plus'));
         this.popup.node.on(PopupView.EVENT_CHANGED, this.refresh, this);
     }
+
+    isCurrent(read: () => ItemActionView | null): boolean { return this.read === read && this.popup.top === this.panel; }
 
     open(read: () => ItemActionView | null): void {
         this.read = read;
@@ -52,11 +56,12 @@ export class GameItemActions {
         const view = this.read();
         this.label('Title', view?.title ?? '物品已变化');
         this.label('Message', view ? '点击背景返回' : '请返回列表重新选择');
-        const lines = view?.lines ?? ['当前场景或原物品已变化'];
-        const key = JSON.stringify(lines);
+        const description = detailLines(view?.lines ?? ['当前场景或原物品已变化']);
+        const options = view?.options ?? [];
+        const key = JSON.stringify([description, options.map(option => [option.key, option.label, option.enabled])]);
         if (key !== this.rendered) {
-            this.list.setItems(detailLines(lines), (node, text) => {
-                node.getChildByName('Text')!.getComponent(Label)!.string = String(text);
+            this.list.setItems([...description, ...options.map(({ key, label }) => ({ key, label }))], (node, row) => {
+                node.getChildByName('Text')!.getComponent(Label)!.string = typeof row === 'string' ? row : (row as { label: string }).label;
             }, !!this.rendered);
             this.rendered = key;
         }
@@ -69,6 +74,16 @@ export class GameItemActions {
         if (quantity) this.label('Quantity', `数量 ${quantity.value}`);
         this.button('Minus', !!quantity, !!quantity?.minus && !this.busy);
         this.button('Plus', !!quantity, !!quantity?.plus && !this.busy);
+    };
+
+    // 只有当前详情明确提供操作的条目才可点击，旧只读详情仍使用同一份保存列表。
+    private chooseOption = (index: number, row: unknown): void => {
+        if (this.busy || this.popup.top !== this.panel) return;
+        const view = this.read?.();
+        const option = view?.options?.[index - detailLines(view.lines).length];
+        if (!option?.enabled || option.key !== (row as { key?: string } | undefined)?.key) return;
+        option.choose();
+        this.refresh();
     };
 
     private async activate(index: number): Promise<void> {
@@ -108,6 +123,7 @@ export class GameItemActions {
 
     dispose(): void {
         this.read = undefined;
+        if (isValid(this.list.node, true)) this.list.node.off(List.EVENT_ITEM_CLICK, this.chooseOption, this);
         if (isValid(this.popup.node, true)) this.popup.node.off(PopupView.EVENT_CHANGED, this.refresh, this);
         for (const { node, run } of this.handlers) if (isValid(node, true)) node.off(Button.EventType.CLICK, run, this);
         this.handlers.length = 0;

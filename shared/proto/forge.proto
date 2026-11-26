@@ -1,0 +1,45 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "assets.proto";
+import "common.proto";
+
+// 选择原背包实例及版本，服务端重新读取纯度与绑定。
+message ForgeItemRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+}
+
+// 预览只冻结原图纸、选中的各块黑铁及本次绑定投入许可。
+message ForgeQuoteRequest {
+  uint64 scene_epoch = 1;
+  ForgeItemRef blueprint = 2;
+  repeated ForgeItemRef ores = 3;
+  bool allow_bound = 4;
+}
+
+// 展示该次的完整材料、金币分账、装备身份、有效成功率和最终绑定。
+message ForgeQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  ItemView blueprint = 3;
+  repeated ItemView ores = 4;
+  bool allow_bound = 5;
+  uint32 output_item_id = 6;
+  uint32 quality = 7;
+  uint32 required_level = 8;
+  uint32 slot = 9;
+  uint32 success_ppm = 10;
+  int64 gold = 11;
+  int64 bound_gold = 12;
+  bool output_bound = 13;
+  uint64 expires_at_unix_ms = 14;
+  uint64 role_revision = 15;
+}
+
+// 只提交已查看的原报价及现有角色经济操作身份，不提交随机输入或产物。
+message ForgeCommitRequest {
+  bytes quote_id = 1;
+  OperationContext operation = 2;
+}

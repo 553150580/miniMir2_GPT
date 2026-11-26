@@ -29,6 +29,8 @@ message ItemView {
   uint64 original_durability_u = 13;
   // 原矿石实例纯度1–100；0表示该物品没有矿石纯度。
   uint32 ore_purity = 14;
+  // 装备实例的初始幸运；未触发时为零，后续幸运培养使用独立字段。
+  uint32 initial_luck = 15;
 }
 message EquippedItem { uint32 slot = 1; ItemView item = 2; }
 // 已学技能属于永久成长；短冷却、施法与治疗队列不保存在此处。

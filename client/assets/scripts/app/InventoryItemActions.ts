@@ -22,6 +22,7 @@ interface InventoryActionInput {
     readonly skill?: SkillRow;
     readonly playerAlive: boolean;
     readonly miningReason?: string;
+    readonly forgeReason?: string;
 }
 interface InventoryActions {
     equip(): Promise<void>;
@@ -31,6 +32,7 @@ interface InventoryActions {
     learn(): Promise<void>;
     recycleBook(): Promise<void>;
     mine?(): Promise<void>;
+    forge?(): void;
 }
 
 // 使用当前角色与背包数据生成操作；处理器由上层绑定同一个原实例。
@@ -39,7 +41,7 @@ export function inventoryItemActionView(input: InventoryActionInput, handlers: I
     const lines = definition?.kind === 'equipment' ? equipmentDetailLines(definition, item, equipment.level, equipment.job, false)
         : [`数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品', `来源 ${sourceName(item.sourceKind)}`, `品质 ${item.quality ?? 0}`];
     const actions: ItemAction[] = [];
-    const add = (label: string, run: () => Promise<void>, reason?: string | null): void => {
+    const add = (label: string, run: () => void | Promise<void>, reason?: string | null): void => {
         if (reason && !lines.includes(reason)) lines.push(reason);
         actions.push({ label, run, enabled: input.ready && !reason });
     };
@@ -76,6 +78,9 @@ export function inventoryItemActionView(input: InventoryActionInput, handlers: I
             if (handlers.mine) add('使用此锄头', handlers.mine, input.miningReason);
             break;
         }
+        case 'forge_blueprint':
+            if (handlers.forge) add('打造', handlers.forge, item.locked || item.recycleBlockFlags ? '原图纸已锁定或正在处理' : input.forgeReason);
+            break;
     }
     if (!input.ready && input.blockedReason) lines.push(input.blockedReason);
     return { title: definition?.name ?? '物品详情', lines, actions };

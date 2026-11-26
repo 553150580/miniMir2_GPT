@@ -1,0 +1,12 @@
+{
+  "blueprint_item_id": 910021,
+  "blueprint_name": "矿纹项链图纸",
+  "output_item_id": 910022,
+  "output_name": "矿纹项链",
+  "output_template_item_id": 261,
+  "required_level": 20,
+  "quality": 2,
+  "ore_count": 4,
+  "personal_boss_template_id": 3,
+  "reward_pending_limit": 2
+}
