@@ -178,6 +178,7 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 	f := &w.e.Store.Cfg.Fixture
 	// a 保存由玩家发生时间等级取得的a。
 	a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
+	var equipment devconfig.EquipmentContributions // 确认的完整装备基础与各部位强化增量，只在最后取整。
 	// item 接收遍历已穿戴装备时当前的元素。
 	for _, item := range r.Role.Equipped {
 		if item.Slot == devconfig.CastingSupplySlot || f.EquipmentDurability != nil && item.Item.OriginalDurabilityU > 0 && item.Item.DurabilityU <= r.Wear.loss(item.Item, item.Slot) {
@@ -186,6 +187,13 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		// def 保存由道具取得的“def”。
 		def, _ := f.Item(item.Item.ItemID)
 		if f.RuleVersion >= 22 {
+			if rules := f.EquipmentEnhancement; rules != nil {
+				if !equipment.Add(def, rules.BonusBP(r.Role.EnhancementLevel(item.Slot))) {
+					w.isolateRoom(r)
+					return devconfig.Fighter{}
+				}
+				continue
+			}
 			// valid 标记是否处于有效状态。
 			var valid bool
 			a, valid = def.AddEquipmentBonuses(a)
@@ -203,6 +211,14 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		a.DefenceMax += def.DefenceMaxBonus
 		a.MagicDefenceMin += def.MagicDefenceMinBonus
 		a.MagicDefenceMax += def.MagicDefenceMaxBonus
+	}
+	if f.EquipmentEnhancement != nil {
+		var valid bool
+		a, valid = equipment.Apply(a)
+		if !valid {
+			w.isolateRoom(r)
+			return devconfig.Fighter{}
+		}
 	}
 	// skill 接收遍历技能集合时当前的元素。
 	for _, skill := range f.Skills {

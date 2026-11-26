@@ -811,6 +811,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.WeaponOilReceipt.$Properties|null} [weapon_oil] OperationResult weapon_oil
              * @property {minimir.v1.RecycleOilReceipt.$Properties|null} [recycle_oil] OperationResult recycle_oil
              * @property {minimir.v1.WingReceipt.$Properties|null} [wing] OperationResult wing
+             * @property {minimir.v1.EquipmentEnhancementReceipt.$Properties|null} [equipment_enhancement] OperationResult equipment_enhancement
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -963,6 +964,14 @@ $root.minimir = (function() {
             OperationResult.prototype.wing = null;
 
             /**
+             * OperationResult equipment_enhancement.
+             * @member {minimir.v1.EquipmentEnhancementReceipt.$Properties|null|undefined} equipment_enhancement
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.equipment_enhancement = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1024,6 +1033,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.RecycleOilReceipt.encode(message.recycle_oil, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
                 if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
                     $root.minimir.v1.WingReceipt.encode(message.wing, writer.uint32(/* id 15, wireType 2 =*/122).fork(), _depth + 1).ldelim();
+                if (message.equipment_enhancement != null && $Object.hasOwnProperty.call(message, "equipment_enhancement"))
+                    $root.minimir.v1.EquipmentEnhancementReceipt.encode(message.equipment_enhancement, writer.uint32(/* id 16, wireType 2 =*/130).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1186,6 +1197,12 @@ $root.minimir = (function() {
                             message.wing = $root.minimir.v1.WingReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
                             continue;
                         }
+                    case 16: {
+                            if (wireType !== 2)
+                                break;
+                            message.equipment_enhancement = $root.minimir.v1.EquipmentEnhancementReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.equipment_enhancement);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1299,6 +1316,11 @@ $root.minimir = (function() {
                     if (error)
                         return "wing." + error;
                 }
+                if (message.equipment_enhancement != null && $Object.hasOwnProperty.call(message, "equipment_enhancement")) {
+                    var error = $root.minimir.v1.EquipmentEnhancementReceipt.verify(message.equipment_enhancement, _depth + 1);
+                    if (error)
+                        return "equipment_enhancement." + error;
+                }
                 return null;
             };
 
@@ -1317,6 +1339,821 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.EquipmentEnhancementSlot = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementSlot.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementSlot.$Properties
+             * @property {number|null} [slot] EquipmentEnhancementSlot slot
+             * @property {number|null} [level] EquipmentEnhancementSlot level
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementSlot.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementSlot
+             * @augments minimir.v1.EquipmentEnhancementSlot.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementSlot.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementSlot.
+             * @typedef {minimir.v1.EquipmentEnhancementSlot.$Properties} minimir.v1.EquipmentEnhancementSlot.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementSlot.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementSlot.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementSlot.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementSlot = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementSlot slot.
+             * @member {number} slot
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @instance
+             */
+            EquipmentEnhancementSlot.prototype.slot = 0;
+
+            /**
+             * EquipmentEnhancementSlot level.
+             * @member {number} level
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @instance
+             */
+            EquipmentEnhancementSlot.prototype.level = 0;
+
+            /**
+             * Creates a new EquipmentEnhancementSlot instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementSlot.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementSlot} EquipmentEnhancementSlot instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementSlot.$Shape): minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementSlot.$Properties): minimir.v1.EquipmentEnhancementSlot;
+             * }}
+             */
+            EquipmentEnhancementSlot.create = function(properties) {
+                return new EquipmentEnhancementSlot(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementSlot message. Does not implicitly {@link minimir.v1.EquipmentEnhancementSlot.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementSlot.$Properties} message EquipmentEnhancementSlot message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementSlot.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.slot);
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level") && message.level !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.level);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementSlot message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementSlot.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementSlot.$Properties} message EquipmentEnhancementSlot message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementSlot.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementSlot message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape} EquipmentEnhancementSlot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementSlot.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementSlot();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level = value;
+                            else
+                                delete message.level;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementSlot message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape} EquipmentEnhancementSlot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementSlot.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementSlot message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementSlot.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level"))
+                    if (!$util.isInteger(message.level))
+                        return "level: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementSlot
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementSlot
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementSlot.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementSlot";
+            };
+
+            return EquipmentEnhancementSlot;
+        })();
+
+        v1.EquipmentEnhancementStoneSpend = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementStoneSpend.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementStoneSpend.$Properties
+             * @property {minimir.v1.ItemView.$Properties|null} [item] EquipmentEnhancementStoneSpend item
+             * @property {Long|null} [quantity] EquipmentEnhancementStoneSpend quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementStoneSpend.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementStoneSpend
+             * @augments minimir.v1.EquipmentEnhancementStoneSpend.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementStoneSpend.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementStoneSpend.
+             * @typedef {minimir.v1.EquipmentEnhancementStoneSpend.$Properties} minimir.v1.EquipmentEnhancementStoneSpend.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementStoneSpend.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementStoneSpend.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementStoneSpend.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementStoneSpend = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementStoneSpend item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @instance
+             */
+            EquipmentEnhancementStoneSpend.prototype.item = null;
+
+            /**
+             * EquipmentEnhancementStoneSpend quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @instance
+             */
+            EquipmentEnhancementStoneSpend.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new EquipmentEnhancementStoneSpend instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneSpend.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementStoneSpend} EquipmentEnhancementStoneSpend instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementStoneSpend.$Shape): minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementStoneSpend.$Properties): minimir.v1.EquipmentEnhancementStoneSpend;
+             * }}
+             */
+            EquipmentEnhancementStoneSpend.create = function(properties) {
+                return new EquipmentEnhancementStoneSpend(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneSpend message. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneSpend.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneSpend.$Properties} message EquipmentEnhancementStoneSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementStoneSpend.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneSpend message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneSpend.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneSpend.$Properties} message EquipmentEnhancementStoneSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementStoneSpend.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementStoneSpend message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape} EquipmentEnhancementStoneSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementStoneSpend.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementStoneSpend();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementStoneSpend message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape} EquipmentEnhancementStoneSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementStoneSpend.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementStoneSpend message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementStoneSpend.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementStoneSpend
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementStoneSpend
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementStoneSpend.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementStoneSpend";
+            };
+
+            return EquipmentEnhancementStoneSpend;
+        })();
+
+        v1.EquipmentEnhancementReceipt = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementReceipt.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] EquipmentEnhancementReceipt quote_id
+             * @property {number|null} [slot] EquipmentEnhancementReceipt slot
+             * @property {number|null} [before_level] EquipmentEnhancementReceipt before_level
+             * @property {number|null} [after_level] EquipmentEnhancementReceipt after_level
+             * @property {boolean|null} [success] EquipmentEnhancementReceipt success
+             * @property {Array.<minimir.v1.EquipmentEnhancementStoneSpend.$Properties>|null} [stones] EquipmentEnhancementReceipt stones
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementReceipt.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementReceipt
+             * @augments minimir.v1.EquipmentEnhancementReceipt.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementReceipt.
+             * @typedef {minimir.v1.EquipmentEnhancementReceipt.$Properties} minimir.v1.EquipmentEnhancementReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementReceipt.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementReceipt = function (properties) {
+                this.stones = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentEnhancementReceipt slot.
+             * @member {number} slot
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.slot = 0;
+
+            /**
+             * EquipmentEnhancementReceipt before_level.
+             * @member {number} before_level
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.before_level = 0;
+
+            /**
+             * EquipmentEnhancementReceipt after_level.
+             * @member {number} after_level
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.after_level = 0;
+
+            /**
+             * EquipmentEnhancementReceipt success.
+             * @member {boolean} success
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.success = false;
+
+            /**
+             * EquipmentEnhancementReceipt stones.
+             * @member {Array.<minimir.v1.EquipmentEnhancementStoneSpend.$Properties>} stones
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @instance
+             */
+            EquipmentEnhancementReceipt.prototype.stones = $util.emptyArray;
+
+            /**
+             * Creates a new EquipmentEnhancementReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementReceipt} EquipmentEnhancementReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementReceipt.$Shape): minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementReceipt.$Properties): minimir.v1.EquipmentEnhancementReceipt;
+             * }}
+             */
+            EquipmentEnhancementReceipt.create = function(properties) {
+                return new EquipmentEnhancementReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementReceipt message. Does not implicitly {@link minimir.v1.EquipmentEnhancementReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementReceipt.$Properties} message EquipmentEnhancementReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.slot);
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level") && message.before_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.before_level);
+                if (message.after_level != null && $Object.hasOwnProperty.call(message, "after_level") && message.after_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.after_level);
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success") && message.success !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.success);
+                if (message.stones != null && message.stones.length)
+                    for (var i = 0; i < message.stones.length; ++i)
+                        $root.minimir.v1.EquipmentEnhancementStoneSpend.encode(message.stones[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementReceipt message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementReceipt.$Properties} message EquipmentEnhancementReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape} EquipmentEnhancementReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.before_level = value;
+                            else
+                                delete message.before_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.after_level = value;
+                            else
+                                delete message.after_level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.success = value;
+                            else
+                                delete message.success;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.stones && message.stones.length))
+                                message.stones = [];
+                            message.stones.push($root.minimir.v1.EquipmentEnhancementStoneSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape} EquipmentEnhancementReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementReceipt message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level"))
+                    if (!$util.isInteger(message.before_level))
+                        return "before_level: integer expected";
+                if (message.after_level != null && $Object.hasOwnProperty.call(message, "after_level"))
+                    if (!$util.isInteger(message.after_level))
+                        return "after_level: integer expected";
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success"))
+                    if (typeof message.success !== "boolean")
+                        return "success: boolean expected";
+                if (message.stones != null && $Object.hasOwnProperty.call(message, "stones")) {
+                    if (!$Array.isArray(message.stones))
+                        return "stones: array expected";
+                    for (var i = 0; i < message.stones.length; ++i) {
+                        var error = $root.minimir.v1.EquipmentEnhancementStoneSpend.verify(message.stones[i], _depth + 1);
+                        if (error)
+                            return "stones." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementReceipt";
+            };
+
+            return EquipmentEnhancementReceipt;
         })();
 
         v1.WingState = (function() {
@@ -25512,6 +26349,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.ProgressionState.$Properties|null} [progression] InventoryResult progression
              * @property {Array.<number>|null} [skill_slot_ids] InventoryResult skill_slot_ids
              * @property {minimir.v1.WingState.$Properties|null} [wing] InventoryResult wing
+             * @property {Array.<minimir.v1.EquipmentEnhancementSlot.$Properties>|null} [equipment_enhancement_slots] InventoryResult equipment_enhancement_slots
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -25541,6 +26379,7 @@ $root.minimir = (function() {
                 this.equipped = [];
                 this.learned_skills = [];
                 this.skill_slot_ids = [];
+                this.equipment_enhancement_slots = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -25636,6 +26475,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.wing = null;
 
             /**
+             * InventoryResult equipment_enhancement_slots.
+             * @member {Array.<minimir.v1.EquipmentEnhancementSlot.$Properties>} equipment_enhancement_slots
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.equipment_enhancement_slots = $util.emptyArray;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -25692,6 +26539,9 @@ $root.minimir = (function() {
                     writer.uint32(/* id 10, wireType 2 =*/82).uint32s(message.skill_slot_ids);
                 if (message.wing != null && $Object.hasOwnProperty.call(message, "wing"))
                     $root.minimir.v1.WingState.encode(message.wing, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.equipment_enhancement_slots != null && message.equipment_enhancement_slots.length)
+                    for (var i = 0; i < message.equipment_enhancement_slots.length; ++i)
+                        $root.minimir.v1.EquipmentEnhancementSlot.encode(message.equipment_enhancement_slots[i], writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -25841,6 +26691,14 @@ $root.minimir = (function() {
                             message.wing = $root.minimir.v1.WingState.decode(reader, reader.size(), $undefined, _depth + 1, message.wing);
                             continue;
                         }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.equipment_enhancement_slots && message.equipment_enhancement_slots.length))
+                                message.equipment_enhancement_slots = [];
+                            message.equipment_enhancement_slots.push($root.minimir.v1.EquipmentEnhancementSlot.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -25949,6 +26807,15 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.WingState.verify(message.wing, _depth + 1);
                     if (error)
                         return "wing." + error;
+                }
+                if (message.equipment_enhancement_slots != null && $Object.hasOwnProperty.call(message, "equipment_enhancement_slots")) {
+                    if (!$Array.isArray(message.equipment_enhancement_slots))
+                        return "equipment_enhancement_slots: array expected";
+                    for (var i = 0; i < message.equipment_enhancement_slots.length; ++i) {
+                        var error = $root.minimir.v1.EquipmentEnhancementSlot.verify(message.equipment_enhancement_slots[i], _depth + 1);
+                        if (error)
+                            return "equipment_enhancement_slots." + error;
+                    }
                 }
                 return null;
             };
@@ -61057,6 +61924,1366 @@ $root.minimir = (function() {
             };
 
             return WingActionRequest;
+        })();
+
+        v1.EquipmentEnhancementStoneRef = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementStoneRef.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementStoneRef.$Properties
+             * @property {Uint8Array|null} [instance_id] EquipmentEnhancementStoneRef instance_id
+             * @property {Long|null} [version] EquipmentEnhancementStoneRef version
+             * @property {Long|null} [quantity] EquipmentEnhancementStoneRef quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementStoneRef.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementStoneRef
+             * @augments minimir.v1.EquipmentEnhancementStoneRef.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementStoneRef.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementStoneRef.
+             * @typedef {minimir.v1.EquipmentEnhancementStoneRef.$Properties} minimir.v1.EquipmentEnhancementStoneRef.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementStoneRef.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementStoneRef.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementStoneRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementStoneRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementStoneRef instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @instance
+             */
+            EquipmentEnhancementStoneRef.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentEnhancementStoneRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @instance
+             */
+            EquipmentEnhancementStoneRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentEnhancementStoneRef quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @instance
+             */
+            EquipmentEnhancementStoneRef.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new EquipmentEnhancementStoneRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementStoneRef} EquipmentEnhancementStoneRef instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementStoneRef.$Shape): minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementStoneRef.$Properties): minimir.v1.EquipmentEnhancementStoneRef;
+             * }}
+             */
+            EquipmentEnhancementStoneRef.create = function(properties) {
+                return new EquipmentEnhancementStoneRef(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneRef message. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneRef.$Properties} message EquipmentEnhancementStoneRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementStoneRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneRef message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementStoneRef.$Properties} message EquipmentEnhancementStoneRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementStoneRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementStoneRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape} EquipmentEnhancementStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementStoneRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementStoneRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementStoneRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape} EquipmentEnhancementStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementStoneRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementStoneRef message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementStoneRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementStoneRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementStoneRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementStoneRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementStoneRef";
+            };
+
+            return EquipmentEnhancementStoneRef;
+        })();
+
+        v1.EquipmentEnhancementQuoteRequest = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementQuoteRequest.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] EquipmentEnhancementQuoteRequest scene_epoch
+             * @property {number|null} [slot] EquipmentEnhancementQuoteRequest slot
+             * @property {Array.<minimir.v1.EquipmentEnhancementStoneRef.$Properties>|null} [stones] EquipmentEnhancementQuoteRequest stones
+             * @property {boolean|null} [allow_bound] EquipmentEnhancementQuoteRequest allow_bound
+             * @property {Uint8Array|null} [ui_session_id] EquipmentEnhancementQuoteRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementQuoteRequest
+             * @augments minimir.v1.EquipmentEnhancementQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementQuoteRequest.
+             * @typedef {minimir.v1.EquipmentEnhancementQuoteRequest.$Properties} minimir.v1.EquipmentEnhancementQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementQuoteRequest = function (properties) {
+                this.stones = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @instance
+             */
+            EquipmentEnhancementQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentEnhancementQuoteRequest slot.
+             * @member {number} slot
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @instance
+             */
+            EquipmentEnhancementQuoteRequest.prototype.slot = 0;
+
+            /**
+             * EquipmentEnhancementQuoteRequest stones.
+             * @member {Array.<minimir.v1.EquipmentEnhancementStoneRef.$Properties>} stones
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @instance
+             */
+            EquipmentEnhancementQuoteRequest.prototype.stones = $util.emptyArray;
+
+            /**
+             * EquipmentEnhancementQuoteRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @instance
+             */
+            EquipmentEnhancementQuoteRequest.prototype.allow_bound = false;
+
+            /**
+             * EquipmentEnhancementQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @instance
+             */
+            EquipmentEnhancementQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new EquipmentEnhancementQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementQuoteRequest} EquipmentEnhancementQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementQuoteRequest.$Shape): minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementQuoteRequest.$Properties): minimir.v1.EquipmentEnhancementQuoteRequest;
+             * }}
+             */
+            EquipmentEnhancementQuoteRequest.create = function(properties) {
+                return new EquipmentEnhancementQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuoteRequest message. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuoteRequest.$Properties} message EquipmentEnhancementQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.slot);
+                if (message.stones != null && message.stones.length)
+                    for (var i = 0; i < message.stones.length; ++i)
+                        $root.minimir.v1.EquipmentEnhancementStoneRef.encode(message.stones[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.allow_bound);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuoteRequest.$Properties} message EquipmentEnhancementQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape} EquipmentEnhancementQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.stones && message.stones.length))
+                                message.stones = [];
+                            message.stones.push($root.minimir.v1.EquipmentEnhancementStoneRef.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape} EquipmentEnhancementQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                if (message.stones != null && $Object.hasOwnProperty.call(message, "stones")) {
+                    if (!$Array.isArray(message.stones))
+                        return "stones: array expected";
+                    for (var i = 0; i < message.stones.length; ++i) {
+                        var error = $root.minimir.v1.EquipmentEnhancementStoneRef.verify(message.stones[i], _depth + 1);
+                        if (error)
+                            return "stones." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementQuoteRequest";
+            };
+
+            return EquipmentEnhancementQuoteRequest;
+        })();
+
+        v1.EquipmentEnhancementQuote = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementQuote.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] EquipmentEnhancementQuote quote_id
+             * @property {Long|null} [scene_epoch] EquipmentEnhancementQuote scene_epoch
+             * @property {number|null} [slot] EquipmentEnhancementQuote slot
+             * @property {number|null} [current_level] EquipmentEnhancementQuote current_level
+             * @property {number|null} [target_level] EquipmentEnhancementQuote target_level
+             * @property {number|null} [current_bonus_bp] EquipmentEnhancementQuote current_bonus_bp
+             * @property {number|null} [target_bonus_bp] EquipmentEnhancementQuote target_bonus_bp
+             * @property {number|null} [success_ppm] EquipmentEnhancementQuote success_ppm
+             * @property {Array.<minimir.v1.EquipmentEnhancementStoneSpend.$Properties>|null} [stones] EquipmentEnhancementQuote stones
+             * @property {boolean|null} [allow_bound] EquipmentEnhancementQuote allow_bound
+             * @property {Long|null} [expires_at_unix_ms] EquipmentEnhancementQuote expires_at_unix_ms
+             * @property {Long|null} [role_revision] EquipmentEnhancementQuote role_revision
+             * @property {Uint8Array|null} [ui_session_id] EquipmentEnhancementQuote ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementQuote.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementQuote
+             * @augments minimir.v1.EquipmentEnhancementQuote.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementQuote.
+             * @typedef {minimir.v1.EquipmentEnhancementQuote.$Properties} minimir.v1.EquipmentEnhancementQuote.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementQuote.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementQuote = function (properties) {
+                this.stones = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentEnhancementQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentEnhancementQuote slot.
+             * @member {number} slot
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.slot = 0;
+
+            /**
+             * EquipmentEnhancementQuote current_level.
+             * @member {number} current_level
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.current_level = 0;
+
+            /**
+             * EquipmentEnhancementQuote target_level.
+             * @member {number} target_level
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.target_level = 0;
+
+            /**
+             * EquipmentEnhancementQuote current_bonus_bp.
+             * @member {number} current_bonus_bp
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.current_bonus_bp = 0;
+
+            /**
+             * EquipmentEnhancementQuote target_bonus_bp.
+             * @member {number} target_bonus_bp
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.target_bonus_bp = 0;
+
+            /**
+             * EquipmentEnhancementQuote success_ppm.
+             * @member {number} success_ppm
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.success_ppm = 0;
+
+            /**
+             * EquipmentEnhancementQuote stones.
+             * @member {Array.<minimir.v1.EquipmentEnhancementStoneSpend.$Properties>} stones
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.stones = $util.emptyArray;
+
+            /**
+             * EquipmentEnhancementQuote allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.allow_bound = false;
+
+            /**
+             * EquipmentEnhancementQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentEnhancementQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentEnhancementQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @instance
+             */
+            EquipmentEnhancementQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new EquipmentEnhancementQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementQuote} EquipmentEnhancementQuote instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementQuote.$Shape): minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementQuote.$Properties): minimir.v1.EquipmentEnhancementQuote;
+             * }}
+             */
+            EquipmentEnhancementQuote.create = function(properties) {
+                return new EquipmentEnhancementQuote(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuote message. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuote.$Properties} message EquipmentEnhancementQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.slot);
+                if (message.current_level != null && $Object.hasOwnProperty.call(message, "current_level") && message.current_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.current_level);
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level") && message.target_level !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.target_level);
+                if (message.current_bonus_bp != null && $Object.hasOwnProperty.call(message, "current_bonus_bp") && message.current_bonus_bp !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.current_bonus_bp);
+                if (message.target_bonus_bp != null && $Object.hasOwnProperty.call(message, "target_bonus_bp") && message.target_bonus_bp !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.target_bonus_bp);
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm") && message.success_ppm !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.success_ppm);
+                if (message.stones != null && message.stones.length)
+                    for (var i = 0; i < message.stones.length; ++i)
+                        $root.minimir.v1.EquipmentEnhancementStoneSpend.encode(message.stones[i], writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.allow_bound);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.expires_at_unix_ms);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.role_revision);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 13, wireType 2 =*/106).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuote message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementQuote.$Properties} message EquipmentEnhancementQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape} EquipmentEnhancementQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.current_level = value;
+                            else
+                                delete message.current_level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_level = value;
+                            else
+                                delete message.target_level;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.current_bonus_bp = value;
+                            else
+                                delete message.current_bonus_bp;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_bonus_bp = value;
+                            else
+                                delete message.target_bonus_bp;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.success_ppm = value;
+                            else
+                                delete message.success_ppm;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.stones && message.stones.length))
+                                message.stones = [];
+                            message.stones.push($root.minimir.v1.EquipmentEnhancementStoneSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape} EquipmentEnhancementQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementQuote message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                if (message.current_level != null && $Object.hasOwnProperty.call(message, "current_level"))
+                    if (!$util.isInteger(message.current_level))
+                        return "current_level: integer expected";
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level"))
+                    if (!$util.isInteger(message.target_level))
+                        return "target_level: integer expected";
+                if (message.current_bonus_bp != null && $Object.hasOwnProperty.call(message, "current_bonus_bp"))
+                    if (!$util.isInteger(message.current_bonus_bp))
+                        return "current_bonus_bp: integer expected";
+                if (message.target_bonus_bp != null && $Object.hasOwnProperty.call(message, "target_bonus_bp"))
+                    if (!$util.isInteger(message.target_bonus_bp))
+                        return "target_bonus_bp: integer expected";
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm"))
+                    if (!$util.isInteger(message.success_ppm))
+                        return "success_ppm: integer expected";
+                if (message.stones != null && $Object.hasOwnProperty.call(message, "stones")) {
+                    if (!$Array.isArray(message.stones))
+                        return "stones: array expected";
+                    for (var i = 0; i < message.stones.length; ++i) {
+                        var error = $root.minimir.v1.EquipmentEnhancementStoneSpend.verify(message.stones[i], _depth + 1);
+                        if (error)
+                            return "stones." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementQuote";
+            };
+
+            return EquipmentEnhancementQuote;
+        })();
+
+        v1.EquipmentEnhancementCommitRequest = (function() {
+
+            /**
+             * Properties of an EquipmentEnhancementCommitRequest.
+             * @typedef {Object} minimir.v1.EquipmentEnhancementCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] EquipmentEnhancementCommitRequest quote_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] EquipmentEnhancementCommitRequest operation
+             * @property {Uint8Array|null} [ui_session_id] EquipmentEnhancementCommitRequest ui_session_id
+             * @property {number|null} [slot] EquipmentEnhancementCommitRequest slot
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentEnhancementCommitRequest.
+             * @memberof minimir.v1
+             * @interface IEquipmentEnhancementCommitRequest
+             * @augments minimir.v1.EquipmentEnhancementCommitRequest.$Properties
+             * @deprecated Use minimir.v1.EquipmentEnhancementCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentEnhancementCommitRequest.
+             * @typedef {minimir.v1.EquipmentEnhancementCommitRequest.$Properties} minimir.v1.EquipmentEnhancementCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentEnhancementCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentEnhancementCommitRequest.
+             * @constructor
+             * @param {minimir.v1.EquipmentEnhancementCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentEnhancementCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentEnhancementCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @instance
+             */
+            EquipmentEnhancementCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentEnhancementCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @instance
+             */
+            EquipmentEnhancementCommitRequest.prototype.operation = null;
+
+            /**
+             * EquipmentEnhancementCommitRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @instance
+             */
+            EquipmentEnhancementCommitRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentEnhancementCommitRequest slot.
+             * @member {number} slot
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @instance
+             */
+            EquipmentEnhancementCommitRequest.prototype.slot = 0;
+
+            /**
+             * Creates a new EquipmentEnhancementCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentEnhancementCommitRequest} EquipmentEnhancementCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentEnhancementCommitRequest.$Shape): minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape;
+             *   (properties?: minimir.v1.EquipmentEnhancementCommitRequest.$Properties): minimir.v1.EquipmentEnhancementCommitRequest;
+             * }}
+             */
+            EquipmentEnhancementCommitRequest.create = function(properties) {
+                return new EquipmentEnhancementCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementCommitRequest message. Does not implicitly {@link minimir.v1.EquipmentEnhancementCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementCommitRequest.$Properties} message EquipmentEnhancementCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ui_session_id);
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && message.slot !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.slot);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentEnhancementCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {minimir.v1.EquipmentEnhancementCommitRequest.$Properties} message EquipmentEnhancementCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentEnhancementCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape} EquipmentEnhancementCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentEnhancementCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentEnhancementCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape} EquipmentEnhancementCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentEnhancementCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentEnhancementCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentEnhancementCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot))
+                        return "slot: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentEnhancementCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentEnhancementCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentEnhancementCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentEnhancementCommitRequest";
+            };
+
+            return EquipmentEnhancementCommitRequest;
         })();
 
         return v1;

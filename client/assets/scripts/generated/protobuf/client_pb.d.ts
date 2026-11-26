@@ -389,6 +389,9 @@ export namespace minimir {
             /** OperationResult wing. */
             wing?: (minimir.v1.WingReceipt.$Properties|null);
 
+            /** OperationResult equipment_enhancement. */
+            equipment_enhancement?: (minimir.v1.EquipmentEnhancementReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -497,12 +500,345 @@ export namespace minimir {
                 /** OperationResult wing */
                 wing?: (minimir.v1.WingReceipt.$Properties|null);
 
+                /** OperationResult equipment_enhancement */
+                equipment_enhancement?: (minimir.v1.EquipmentEnhancementReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementSlot.
+         * @deprecated Use minimir.v1.EquipmentEnhancementSlot.$Properties instead.
+         */
+        interface IEquipmentEnhancementSlot extends minimir.v1.EquipmentEnhancementSlot.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementSlot. */
+        class EquipmentEnhancementSlot {
+
+            /**
+             * Constructs a new EquipmentEnhancementSlot.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementSlot.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementSlot slot. */
+            slot: number;
+
+            /** EquipmentEnhancementSlot level. */
+            level: number;
+
+            /**
+             * Creates a new EquipmentEnhancementSlot instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementSlot instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementSlot.$Shape): minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementSlot.$Properties): minimir.v1.EquipmentEnhancementSlot;
+
+            /**
+             * Encodes the specified EquipmentEnhancementSlot message. Does not implicitly {@link minimir.v1.EquipmentEnhancementSlot.verify|verify} messages.
+             * @param message EquipmentEnhancementSlot message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementSlot.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementSlot message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementSlot.verify|verify} messages.
+             * @param message EquipmentEnhancementSlot message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementSlot.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementSlot message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape} EquipmentEnhancementSlot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementSlot message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape} EquipmentEnhancementSlot
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementSlot & minimir.v1.EquipmentEnhancementSlot.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementSlot message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementSlot
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementSlot {
+
+            /** Properties of an EquipmentEnhancementSlot. */
+            interface $Properties {
+
+                /** EquipmentEnhancementSlot slot */
+                slot?: (number|null);
+
+                /** EquipmentEnhancementSlot level */
+                level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementSlot. */
+            type $Shape = minimir.v1.EquipmentEnhancementSlot.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementStoneSpend.
+         * @deprecated Use minimir.v1.EquipmentEnhancementStoneSpend.$Properties instead.
+         */
+        interface IEquipmentEnhancementStoneSpend extends minimir.v1.EquipmentEnhancementStoneSpend.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementStoneSpend. */
+        class EquipmentEnhancementStoneSpend {
+
+            /**
+             * Constructs a new EquipmentEnhancementStoneSpend.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementStoneSpend.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementStoneSpend item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** EquipmentEnhancementStoneSpend quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new EquipmentEnhancementStoneSpend instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementStoneSpend instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementStoneSpend.$Shape): minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementStoneSpend.$Properties): minimir.v1.EquipmentEnhancementStoneSpend;
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneSpend message. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneSpend.verify|verify} messages.
+             * @param message EquipmentEnhancementStoneSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementStoneSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneSpend message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneSpend.verify|verify} messages.
+             * @param message EquipmentEnhancementStoneSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementStoneSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementStoneSpend message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape} EquipmentEnhancementStoneSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementStoneSpend message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape} EquipmentEnhancementStoneSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementStoneSpend & minimir.v1.EquipmentEnhancementStoneSpend.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementStoneSpend message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementStoneSpend
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementStoneSpend {
+
+            /** Properties of an EquipmentEnhancementStoneSpend. */
+            interface $Properties {
+
+                /** EquipmentEnhancementStoneSpend item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** EquipmentEnhancementStoneSpend quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementStoneSpend. */
+            type $Shape = minimir.v1.EquipmentEnhancementStoneSpend.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementReceipt.
+         * @deprecated Use minimir.v1.EquipmentEnhancementReceipt.$Properties instead.
+         */
+        interface IEquipmentEnhancementReceipt extends minimir.v1.EquipmentEnhancementReceipt.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementReceipt. */
+        class EquipmentEnhancementReceipt {
+
+            /**
+             * Constructs a new EquipmentEnhancementReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentEnhancementReceipt slot. */
+            slot: number;
+
+            /** EquipmentEnhancementReceipt before_level. */
+            before_level: number;
+
+            /** EquipmentEnhancementReceipt after_level. */
+            after_level: number;
+
+            /** EquipmentEnhancementReceipt success. */
+            success: boolean;
+
+            /** EquipmentEnhancementReceipt stones. */
+            stones: minimir.v1.EquipmentEnhancementStoneSpend.$Properties[];
+
+            /**
+             * Creates a new EquipmentEnhancementReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementReceipt instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementReceipt.$Shape): minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementReceipt.$Properties): minimir.v1.EquipmentEnhancementReceipt;
+
+            /**
+             * Encodes the specified EquipmentEnhancementReceipt message. Does not implicitly {@link minimir.v1.EquipmentEnhancementReceipt.verify|verify} messages.
+             * @param message EquipmentEnhancementReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementReceipt message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementReceipt.verify|verify} messages.
+             * @param message EquipmentEnhancementReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape} EquipmentEnhancementReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape} EquipmentEnhancementReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementReceipt & minimir.v1.EquipmentEnhancementReceipt.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementReceipt {
+
+            /** Properties of an EquipmentEnhancementReceipt. */
+            interface $Properties {
+
+                /** EquipmentEnhancementReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentEnhancementReceipt slot */
+                slot?: (number|null);
+
+                /** EquipmentEnhancementReceipt before_level */
+                before_level?: (number|null);
+
+                /** EquipmentEnhancementReceipt after_level */
+                after_level?: (number|null);
+
+                /** EquipmentEnhancementReceipt success */
+                success?: (boolean|null);
+
+                /** EquipmentEnhancementReceipt stones */
+                stones?: (minimir.v1.EquipmentEnhancementStoneSpend.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementReceipt. */
+            type $Shape = minimir.v1.EquipmentEnhancementReceipt.$Properties;
         }
 
         /**
@@ -9743,6 +10079,9 @@ export namespace minimir {
             /** InventoryResult wing. */
             wing?: (minimir.v1.WingState.$Properties|null);
 
+            /** InventoryResult equipment_enhancement_slots. */
+            equipment_enhancement_slots: minimir.v1.EquipmentEnhancementSlot.$Properties[];
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -9838,6 +10177,9 @@ export namespace minimir {
 
                 /** InventoryResult wing */
                 wing?: (minimir.v1.WingState.$Properties|null);
+
+                /** InventoryResult equipment_enhancement_slots */
+                equipment_enhancement_slots?: (minimir.v1.EquipmentEnhancementSlot.$Properties[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -22895,6 +23237,516 @@ export namespace minimir {
 
             /** Shape of a WingActionRequest. */
             type $Shape = minimir.v1.WingActionRequest.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementStoneRef.
+         * @deprecated Use minimir.v1.EquipmentEnhancementStoneRef.$Properties instead.
+         */
+        interface IEquipmentEnhancementStoneRef extends minimir.v1.EquipmentEnhancementStoneRef.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementStoneRef. */
+        class EquipmentEnhancementStoneRef {
+
+            /**
+             * Constructs a new EquipmentEnhancementStoneRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementStoneRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementStoneRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** EquipmentEnhancementStoneRef version. */
+            version: Long;
+
+            /** EquipmentEnhancementStoneRef quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new EquipmentEnhancementStoneRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementStoneRef instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementStoneRef.$Shape): minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementStoneRef.$Properties): minimir.v1.EquipmentEnhancementStoneRef;
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneRef message. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneRef.verify|verify} messages.
+             * @param message EquipmentEnhancementStoneRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementStoneRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementStoneRef message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementStoneRef.verify|verify} messages.
+             * @param message EquipmentEnhancementStoneRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementStoneRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementStoneRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape} EquipmentEnhancementStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementStoneRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape} EquipmentEnhancementStoneRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementStoneRef & minimir.v1.EquipmentEnhancementStoneRef.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementStoneRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementStoneRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementStoneRef {
+
+            /** Properties of an EquipmentEnhancementStoneRef. */
+            interface $Properties {
+
+                /** EquipmentEnhancementStoneRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** EquipmentEnhancementStoneRef version */
+                version?: (Long|null);
+
+                /** EquipmentEnhancementStoneRef quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementStoneRef. */
+            type $Shape = minimir.v1.EquipmentEnhancementStoneRef.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementQuoteRequest.
+         * @deprecated Use minimir.v1.EquipmentEnhancementQuoteRequest.$Properties instead.
+         */
+        interface IEquipmentEnhancementQuoteRequest extends minimir.v1.EquipmentEnhancementQuoteRequest.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementQuoteRequest. */
+        class EquipmentEnhancementQuoteRequest {
+
+            /**
+             * Constructs a new EquipmentEnhancementQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** EquipmentEnhancementQuoteRequest slot. */
+            slot: number;
+
+            /** EquipmentEnhancementQuoteRequest stones. */
+            stones: minimir.v1.EquipmentEnhancementStoneRef.$Properties[];
+
+            /** EquipmentEnhancementQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** EquipmentEnhancementQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new EquipmentEnhancementQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementQuoteRequest instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementQuoteRequest.$Shape): minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementQuoteRequest.$Properties): minimir.v1.EquipmentEnhancementQuoteRequest;
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuoteRequest message. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuoteRequest.verify|verify} messages.
+             * @param message EquipmentEnhancementQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuoteRequest.verify|verify} messages.
+             * @param message EquipmentEnhancementQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape} EquipmentEnhancementQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape} EquipmentEnhancementQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementQuoteRequest & minimir.v1.EquipmentEnhancementQuoteRequest.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementQuoteRequest {
+
+            /** Properties of an EquipmentEnhancementQuoteRequest. */
+            interface $Properties {
+
+                /** EquipmentEnhancementQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** EquipmentEnhancementQuoteRequest slot */
+                slot?: (number|null);
+
+                /** EquipmentEnhancementQuoteRequest stones */
+                stones?: (minimir.v1.EquipmentEnhancementStoneRef.$Properties[]|null);
+
+                /** EquipmentEnhancementQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** EquipmentEnhancementQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementQuoteRequest. */
+            type $Shape = minimir.v1.EquipmentEnhancementQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementQuote.
+         * @deprecated Use minimir.v1.EquipmentEnhancementQuote.$Properties instead.
+         */
+        interface IEquipmentEnhancementQuote extends minimir.v1.EquipmentEnhancementQuote.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementQuote. */
+        class EquipmentEnhancementQuote {
+
+            /**
+             * Constructs a new EquipmentEnhancementQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentEnhancementQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** EquipmentEnhancementQuote slot. */
+            slot: number;
+
+            /** EquipmentEnhancementQuote current_level. */
+            current_level: number;
+
+            /** EquipmentEnhancementQuote target_level. */
+            target_level: number;
+
+            /** EquipmentEnhancementQuote current_bonus_bp. */
+            current_bonus_bp: number;
+
+            /** EquipmentEnhancementQuote target_bonus_bp. */
+            target_bonus_bp: number;
+
+            /** EquipmentEnhancementQuote success_ppm. */
+            success_ppm: number;
+
+            /** EquipmentEnhancementQuote stones. */
+            stones: minimir.v1.EquipmentEnhancementStoneSpend.$Properties[];
+
+            /** EquipmentEnhancementQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** EquipmentEnhancementQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** EquipmentEnhancementQuote role_revision. */
+            role_revision: Long;
+
+            /** EquipmentEnhancementQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new EquipmentEnhancementQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementQuote instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementQuote.$Shape): minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementQuote.$Properties): minimir.v1.EquipmentEnhancementQuote;
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuote message. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuote.verify|verify} messages.
+             * @param message EquipmentEnhancementQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementQuote message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementQuote.verify|verify} messages.
+             * @param message EquipmentEnhancementQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape} EquipmentEnhancementQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape} EquipmentEnhancementQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementQuote & minimir.v1.EquipmentEnhancementQuote.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementQuote {
+
+            /** Properties of an EquipmentEnhancementQuote. */
+            interface $Properties {
+
+                /** EquipmentEnhancementQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentEnhancementQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** EquipmentEnhancementQuote slot */
+                slot?: (number|null);
+
+                /** EquipmentEnhancementQuote current_level */
+                current_level?: (number|null);
+
+                /** EquipmentEnhancementQuote target_level */
+                target_level?: (number|null);
+
+                /** EquipmentEnhancementQuote current_bonus_bp */
+                current_bonus_bp?: (number|null);
+
+                /** EquipmentEnhancementQuote target_bonus_bp */
+                target_bonus_bp?: (number|null);
+
+                /** EquipmentEnhancementQuote success_ppm */
+                success_ppm?: (number|null);
+
+                /** EquipmentEnhancementQuote stones */
+                stones?: (minimir.v1.EquipmentEnhancementStoneSpend.$Properties[]|null);
+
+                /** EquipmentEnhancementQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** EquipmentEnhancementQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** EquipmentEnhancementQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** EquipmentEnhancementQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementQuote. */
+            type $Shape = minimir.v1.EquipmentEnhancementQuote.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentEnhancementCommitRequest.
+         * @deprecated Use minimir.v1.EquipmentEnhancementCommitRequest.$Properties instead.
+         */
+        interface IEquipmentEnhancementCommitRequest extends minimir.v1.EquipmentEnhancementCommitRequest.$Properties {
+        }
+
+        /** Represents an EquipmentEnhancementCommitRequest. */
+        class EquipmentEnhancementCommitRequest {
+
+            /**
+             * Constructs a new EquipmentEnhancementCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentEnhancementCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentEnhancementCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** EquipmentEnhancementCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** EquipmentEnhancementCommitRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** EquipmentEnhancementCommitRequest slot. */
+            slot: number;
+
+            /**
+             * Creates a new EquipmentEnhancementCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentEnhancementCommitRequest instance
+             */
+            static create(properties: minimir.v1.EquipmentEnhancementCommitRequest.$Shape): minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape;
+            static create(properties?: minimir.v1.EquipmentEnhancementCommitRequest.$Properties): minimir.v1.EquipmentEnhancementCommitRequest;
+
+            /**
+             * Encodes the specified EquipmentEnhancementCommitRequest message. Does not implicitly {@link minimir.v1.EquipmentEnhancementCommitRequest.verify|verify} messages.
+             * @param message EquipmentEnhancementCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentEnhancementCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentEnhancementCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.EquipmentEnhancementCommitRequest.verify|verify} messages.
+             * @param message EquipmentEnhancementCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentEnhancementCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentEnhancementCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape} EquipmentEnhancementCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape;
+
+            /**
+             * Decodes an EquipmentEnhancementCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape} EquipmentEnhancementCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentEnhancementCommitRequest & minimir.v1.EquipmentEnhancementCommitRequest.$Shape;
+
+            /**
+             * Verifies an EquipmentEnhancementCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentEnhancementCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentEnhancementCommitRequest {
+
+            /** Properties of an EquipmentEnhancementCommitRequest. */
+            interface $Properties {
+
+                /** EquipmentEnhancementCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** EquipmentEnhancementCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** EquipmentEnhancementCommitRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** EquipmentEnhancementCommitRequest slot */
+                slot?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentEnhancementCommitRequest. */
+            type $Shape = minimir.v1.EquipmentEnhancementCommitRequest.$Properties;
         }
     }
 }

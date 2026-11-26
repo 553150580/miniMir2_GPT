@@ -107,11 +107,13 @@ type personalBossRecord struct {
 
 	KillRewardGold       int64         `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
 	PrivilegeUntil       time.Time     `bson:"privilege_until_at_entry,omitempty"` // 手动挑战冻结的特权截止时间。
-	RewardPrivilegeUntil time.Time     `bson:"reward_privilege_until,omitempty"`   // 自动场首次胜利确认采用的角色特权截止时间。
+	RewardPrivilegeUntil time.Time     `bson:"reward_privilege_until,omitempty"`   // 按实际击杀时权益判绑所用的角色特权截止时间。
 	KillRewardItems      []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
 	PendingRewardLimit   uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
 	KillMapID            uint64        `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
 	KillMonsterID        uint32        `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
+
+	RewardPrivilegeAtKill bool `bson:"reward_privilege_at_kill,omitempty"` // 含强化石的场次也按实际击杀时特权判绑。
 }
 
 // BeginPersonalBoss 在角色 owner 的事务内确认独占场次，返回的活动预约才能启动新的场景。
@@ -186,6 +188,14 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
 			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil, KillMapID: template.Map.ID, KillMonsterID: template.Monster.ID}
 		freezePersonalBossItems(cfg, &record, template.ItemReward)
+		if rules := cfg.EquipmentEnhancement; rules != nil {
+			for _, item := range record.KillRewardItems {
+				if item.ItemID == rules.StoneItemID {
+					record.RewardPrivilegeAtKill = true
+					break
+				}
+			}
+		}
 		state.ActiveChallengeID = grant.ChallengeID
 		r.PersonalBoss = &state
 		r.Revision++
@@ -313,7 +323,7 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		state.Successes++
 		record.SuccessDay, record.Successes = day, state.Successes
 		cooldown = record.SuccessCooldown
-		if record.Automatic {
+		if record.Automatic || record.RewardPrivilegeAtKill {
 			until, err := s.RolePrivilegeUntilAt(ctx, r, record.FinishedAt)
 			if err != nil {
 				return r, err

@@ -8,6 +8,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeForgeUnavailable, CodeForgeQuoteChanged, CodeForgeInputs,
     CodeWeaponOilUnavailable, CodeWeaponOilQuoteChanged, CodeWeaponOilInputs,
     CodeWingUnavailable, CodeWingQuoteChanged, CodeWingInputs,
+    CodeEquipmentEnhancementUnavailable, CodeEquipmentEnhancementQuoteChanged, CodeEquipmentEnhancementInputs,
     CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -58,6 +59,11 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         if (errorCode === CodeWingUnavailable) return '当前规则、角色或场景未开放翅膀养成';
         if (errorCode === CodeWingQuoteChanged || errorCode === CodeOperationConflict) return '原翅膀或羽毛已变化，请重新确认';
         if (errorCode === CodeWingInputs) return '原翅膀、羽毛或外观不满足条件';
+    }
+    if (messageId === 40055 || messageId === 40056 || messageId === 40057) {
+        if (errorCode === CodeEquipmentEnhancementUnavailable) return '当前规则、角色或场景不可强化';
+        if (errorCode === CodeEquipmentEnhancementQuoteChanged || errorCode === CodeOperationConflict) return '原部位或材料已变化，请重新报价';
+        if (errorCode === CodeEquipmentEnhancementInputs) return '强化石、绑定选择或角色等级不满足条件';
     }
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';

@@ -23,7 +23,8 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026,
+    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -352,6 +353,13 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
             payload.appearanceTier = appearanceTier;
             payload.hidden = item.hidden;
         }
+    } else if (id === 40057) {
+        // 持久未决只保留已确认报价、会话、原槽位和原操作上下文。
+        const item = record(input.value, ['quoteId', 'uiSessionId', 'slot', 'operation']);
+        const slot = uint32(item.slot);
+        if (slot > 9) return invalid('部位强化必须使用原普通装备槽');
+        payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
+            slot, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

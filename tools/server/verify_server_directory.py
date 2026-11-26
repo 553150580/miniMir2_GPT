@@ -25,9 +25,10 @@ def browser_build(path):
     return build
 
 
-def verify(web_root, world_boss_browser=False, world_boss_cold_entry_only=False, world_boss_rewards_browser=False):
+def verify(web_root, world_boss_browser=False, world_boss_cold_entry_only=False, world_boss_rewards_browser=False,
+           *, mongo_storage=mongo.DEFAULT_STORAGE):
     run_id = uuid.uuid4().hex
-    data_dir = mongo.run_directory(run_id)
+    data_dir = mongo.run_directory(run_id, mongo_storage)
     report_dir = ROOT / '.work/server-directory' / run_id
     report_dir.mkdir(parents=True)
     installation, _ = mongo.installation()
@@ -38,8 +39,8 @@ def verify(web_root, world_boss_browser=False, world_boss_cold_entry_only=False,
         report['web_index_sha256'] = hashlib.sha256((web_root / 'index.html').read_bytes()).hexdigest()
         report['web_main_bundle_sha256'] = hashlib.sha256((web_root / 'assets/main/index.js').read_bytes()).hexdigest()
     try:
-        endpoint = mongo.start(installation, data_dir, run_id)
-        report['mongo'] = {'version': endpoint['version'], 'pid': endpoint['pid'], 'port': endpoint['port']}
+        endpoint = mongo.start(installation, data_dir, run_id, storage=mongo_storage)
+        report['mongo'] = {key: endpoint[key] for key in ('version', 'pid', 'port', 'storage', 'log')}
         if world_boss_rewards_browser:
             report['mongo']['replica_set'] = endpoint['replica_set']
         if not endpoint['endpoint_verified'] or not endpoint['ownership_verified']:
@@ -75,7 +76,7 @@ def verify(web_root, world_boss_browser=False, world_boss_cold_entry_only=False,
         report['test_exit_code'] = result.returncode
     finally:
         try:
-            state = mongo.stop(installation, data_dir, run_id)
+            state = mongo.stop(installation, data_dir, run_id, storage=mongo_storage)
             report['mongo_cleaned'] = not state['running'] and state['data_removed']
             report['passed'] = report.get('test_exit_code') == 0 and report['mongo_cleaned']
         finally:
@@ -93,6 +94,7 @@ def main():
     modes.add_argument('--world-boss-browser', action='store_true', help='使用独立副本集验证战士和道士的世界首领触屏流程')
     modes.add_argument('--world-boss-rewards-browser', action='store_true', help='从真实世界首领击杀开始，验收触屏领取原实例')
     parser.add_argument('--world-boss-cold-entry-only', action='store_true', help='只测双端首次入场和跨职业真实施法')
+    mongo.add_storage_argument(parser)
     args = parser.parse_args()
     if os.name != 'nt' or os.environ.get('MINIMIR_TOOLCHAIN_ACTIVE') != '1':
         parser.error('请通过 ./tools/dev.ps1 在项目锁定的 Windows 工具链中运行')
@@ -100,7 +102,8 @@ def main():
         parser.error('世界首领浏览器验收需要 --web-root 指定实际构建')
     if args.world_boss_cold_entry_only and not args.world_boss_browser:
         parser.error('首次入场专项需要 --world-boss-browser')
-    return verify(browser_build(args.web_root), args.world_boss_browser, args.world_boss_cold_entry_only, args.world_boss_rewards_browser)
+    return verify(browser_build(args.web_root), args.world_boss_browser, args.world_boss_cold_entry_only,
+                  args.world_boss_rewards_browser, mongo_storage=args.mongo_storage)
 
 
 if __name__ == '__main__':

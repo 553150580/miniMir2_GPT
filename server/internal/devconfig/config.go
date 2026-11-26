@@ -309,6 +309,8 @@ type Fixture struct {
 	EquipmentRecycleOil *EquipmentRecycleOilConfig `json:"equipment_recycle_oil,omitempty"`
 	// Wings 保存允许使用的羽毛、已配费用的升阶和固定外观演进规则。
 	Wings *WingConfig `json:"wings,omitempty"`
+	// EquipmentEnhancement 配置装备部位的强化石和逐级强化规则。
+	EquipmentEnhancement *EquipmentEnhancementConfig `json:"equipment_enhancement,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -511,6 +513,9 @@ func (f *Fixture) Validate() error {
 	}
 	// err 接收校验成长过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateProgression(); err != nil {
+		return err
+	}
+	if err := f.validateEquipmentEnhancement(); err != nil {
 		return err
 	}
 	// err 接收校验装备统计或属性过程中可能产生的错误，供后续失败分支处理。

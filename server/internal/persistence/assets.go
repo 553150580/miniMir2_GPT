@@ -60,6 +60,10 @@ type AssetRequest struct {
 	WingGate            uint32                     // 首次变更时原场景的门禁，不影响历史回执。
 	WingAcceptedAt      time.Time                  `json:"-"` // 游戏房间首次受理本请求的时间。
 
+	EquipmentEnhancement           *pb.EquipmentEnhancementCommitRequest // 角色确认的原部位强化报价。
+	EquipmentEnhancementGate       uint32                                // 首次提交在当前场景的受理结果。
+	EquipmentEnhancementAcceptedAt time.Time                             `json:"-"` // 原确认到达游戏房间的时刻，排队重试保持。
+
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
 	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
@@ -127,6 +131,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetWingAction && q.WingAcceptedAt.IsZero() {
 		q.WingAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetEquipmentEnhancement && q.EquipmentEnhancementAcceptedAt.IsZero() {
+		q.EquipmentEnhancementAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -189,7 +196,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -217,6 +224,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var forge *ForgeResultReceipt                      // 真成功或真失败时的原打造事实。
 		var weaponOil *WeaponOilResultReceipt              // 一瓶原油的实际扣除和原培养对象结果。
 		var wing *WingActionReceipt                        // 原翅膀的新状态和确切羽毛消费。
+		var enhancement *EquipmentEnhancementReceipt       // 原强化结果和每个已扣石堆。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -250,6 +258,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetWingAction:
 			r, businessCode, wing, e = s.commitWingAction(tc, a, r, q, opID)
+			if e != nil {
+				return e
+			}
+		case AssetEquipmentEnhancement:
+			r, businessCode, enhancement, e = s.commitEquipmentEnhancement(tc, a, r, q)
 			if e != nil {
 				return e
 			}
@@ -400,6 +413,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Forge = forge
 		op.WeaponOil = weaponOil
 		op.Wing = wing
+		op.EquipmentEnhancement = enhancement
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -462,6 +476,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["wing"] = wing
 			audit["rule_version"] = wing.Rule
 			audit["config_hash"] = wing.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if enhancement != nil {
+			audit["equipment_enhancement"] = enhancement
+			audit["rule_version"] = enhancement.Rule
+			audit["config_hash"] = enhancement.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -553,6 +573,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.Forge = receipt.Forge.Proto()
 		result.WeaponOil = receipt.WeaponOil.Proto()
 		result.Wing = receipt.Wing.Proto()
+		if receipt.EquipmentEnhancement != nil {
+			result.EquipmentEnhancement = receipt.EquipmentEnhancement.Proto()
+		}
 		result.RecycleOil = receipt.Recycling.oilProto()
 	}
 	return out, result, receipt, e

@@ -116,6 +116,9 @@ const (
 	MsgC2SWingQuote uint16 = 40052
 	MsgS2CWingQuote uint16 = 40053
 	MsgC2SWingAction uint16 = 40054
+	MsgC2SEquipmentEnhancementQuote uint16 = 40055
+	MsgS2CEquipmentEnhancementQuote uint16 = 40056
+	MsgC2SEquipmentEnhancementCommit uint16 = 40057
 )
 
 const (
@@ -178,4 +181,7 @@ const (
 	CodeWingUnavailable uint32 = 3960
 	CodeWingQuoteChanged uint32 = 3961
 	CodeWingInputs uint32 = 3962
+	CodeEquipmentEnhancementUnavailable uint32 = 3963
+	CodeEquipmentEnhancementQuoteChanged uint32 = 3964
+	CodeEquipmentEnhancementInputs uint32 = 3965
 )

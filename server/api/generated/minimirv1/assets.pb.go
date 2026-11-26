@@ -216,9 +216,11 @@ type InventoryResult struct {
 	// 四个有序槽，0表示空。历史未设置的角色可以缺省。
 	SkillSlotIds []uint32 `protobuf:"varint,10,rep,packed,name=skill_slot_ids,json=skillSlotIds,proto3" json:"skill_slot_ids,omitempty"`
 	// 已激活翅膀是装备面板的独立位置，无背包或普通装备格占用。
-	Wing          *WingState `protobuf:"bytes,11,opt,name=wing,proto3" json:"wing,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Wing *WingState `protobuf:"bytes,11,opt,name=wing,proto3" json:"wing,omitempty"`
+	// 强化开放时包含十个普通装备部位，包括没有装备的部位。
+	EquipmentEnhancementSlots []*EquipmentEnhancementSlot `protobuf:"bytes,12,rep,name=equipment_enhancement_slots,json=equipmentEnhancementSlots,proto3" json:"equipment_enhancement_slots,omitempty"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
 }
 
 func (x *InventoryResult) Reset() {
@@ -324,6 +326,13 @@ func (x *InventoryResult) GetSkillSlotIds() []uint32 {
 func (x *InventoryResult) GetWing() *WingState {
 	if x != nil {
 		return x.Wing
+	}
+	return nil
+}
+
+func (x *InventoryResult) GetEquipmentEnhancementSlots() []*EquipmentEnhancementSlot {
+	if x != nil {
+		return x.EquipmentEnhancementSlots
 	}
 	return nil
 }
@@ -3214,7 +3223,7 @@ const file_assets_proto_rawDesc = "" +
 	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"?\n" +
 	"\fLearnedSkill\x12\x19\n" +
 	"\bskill_id\x18\x01 \x01(\rR\askillId\x12\x14\n" +
-	"\x05level\x18\x02 \x01(\rR\x05level\"\xf5\x03\n" +
+	"\x05level\x18\x02 \x01(\rR\x05level\"\xdb\x04\n" +
 	"\x0fInventoryResult\x12*\n" +
 	"\x05items\x18\x01 \x03(\v2\x14.minimir.v1.ItemViewR\x05items\x12\x1a\n" +
 	"\bcapacity\x18\x02 \x01(\rR\bcapacity\x12\x1a\n" +
@@ -3229,7 +3238,8 @@ const file_assets_proto_rawDesc = "" +
 	"\vprogression\x18\t \x01(\v2\x1c.minimir.v1.ProgressionStateR\vprogression\x12$\n" +
 	"\x0eskill_slot_ids\x18\n" +
 	" \x03(\rR\fskillSlotIds\x12)\n" +
-	"\x04wing\x18\v \x01(\v2\x15.minimir.v1.WingStateR\x04wing\"\xaf\x01\n" +
+	"\x04wing\x18\v \x01(\v2\x15.minimir.v1.WingStateR\x04wing\x12d\n" +
+	"\x1bequipment_enhancement_slots\x18\f \x03(\v2$.minimir.v1.EquipmentEnhancementSlotR\x19equipmentEnhancementSlots\"\xaf\x01\n" +
 	"\x14SetSkillSlotsRequest\x12$\n" +
 	"\x0eskill_slot_ids\x18\x01 \x03(\rR\fskillSlotIds\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x125\n" +
@@ -3564,9 +3574,10 @@ var file_assets_proto_goTypes = []any{
 	(*VendorCommitRequest)(nil),      // 35: minimir.v1.VendorCommitRequest
 	(*ItemView)(nil),                 // 36: minimir.v1.ItemView
 	(*WingState)(nil),                // 37: minimir.v1.WingState
-	(*OperationContext)(nil),         // 38: minimir.v1.OperationContext
-	(*RoleKey)(nil),                  // 39: minimir.v1.RoleKey
-	(*GridPoint)(nil),                // 40: minimir.v1.GridPoint
+	(*EquipmentEnhancementSlot)(nil), // 38: minimir.v1.EquipmentEnhancementSlot
+	(*OperationContext)(nil),         // 39: minimir.v1.OperationContext
+	(*RoleKey)(nil),                  // 40: minimir.v1.RoleKey
+	(*GridPoint)(nil),                // 41: minimir.v1.GridPoint
 }
 var file_assets_proto_depIdxs = []int32{
 	36, // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
@@ -3576,45 +3587,46 @@ var file_assets_proto_depIdxs = []int32{
 	7,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
 	5,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
 	37, // 6: minimir.v1.InventoryResult.wing:type_name -> minimir.v1.WingState
-	38, // 7: minimir.v1.SetSkillSlotsRequest.operation:type_name -> minimir.v1.OperationContext
-	39, // 8: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
-	5,  // 9: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
-	7,  // 10: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
-	38, // 11: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 12: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
-	39, // 13: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
-	38, // 14: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 15: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 16: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 17: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 18: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
-	40, // 19: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
-	38, // 20: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
-	17, // 21: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
-	36, // 22: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
-	0,  // 23: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
-	19, // 24: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
-	36, // 25: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
-	20, // 26: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
-	38, // 27: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 28: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 29: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	0,  // 30: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
-	36, // 31: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
-	36, // 32: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
-	39, // 33: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
-	28, // 34: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
-	38, // 35: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
-	36, // 36: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
-	36, // 37: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
-	39, // 38: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
-	31, // 39: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
-	38, // 40: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	41, // [41:41] is the sub-list for method output_type
-	41, // [41:41] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	38, // 7: minimir.v1.InventoryResult.equipment_enhancement_slots:type_name -> minimir.v1.EquipmentEnhancementSlot
+	39, // 8: minimir.v1.SetSkillSlotsRequest.operation:type_name -> minimir.v1.OperationContext
+	40, // 9: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
+	5,  // 10: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
+	7,  // 11: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
+	39, // 12: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 13: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
+	40, // 14: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
+	39, // 15: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 16: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 17: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 18: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 19: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
+	41, // 20: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
+	39, // 21: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
+	17, // 22: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
+	36, // 23: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
+	0,  // 24: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
+	19, // 25: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
+	36, // 26: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
+	20, // 27: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
+	39, // 28: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 29: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 30: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	0,  // 31: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
+	36, // 32: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
+	36, // 33: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
+	40, // 34: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
+	28, // 35: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
+	39, // 36: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
+	36, // 37: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
+	36, // 38: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
+	40, // 39: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
+	31, // 40: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
+	39, // 41: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_assets_proto_init() }

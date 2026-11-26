@@ -53,6 +53,9 @@ import { forgeReceipt, forgeRecipeFor } from './ForgeModel';
 import type { ForgeReceipt, ForgeSnapshot } from './ForgeModel';
 import { GameWeaponOil } from './GameWeaponOil';
 import { GameWings } from './GameWings';
+import { GameEquipmentEnhancement } from './GameEquipmentEnhancement';
+import { equipmentEnhancementRules, enhancementSlotLines, observedEnhancementSlots, validateEquipmentEnhancementReceipt } from './EquipmentEnhancementModel';
+import type { EquipmentEnhancementCommit, EquipmentEnhancementReceipt, EquipmentEnhancementSnapshot } from './EquipmentEnhancementModel';
 import { validateWingReceipt, wingRules, wingSlotLabel } from './WingModel';
 import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
@@ -137,6 +140,9 @@ export class AppRoot extends Component {
     private forge?: GameForge;
     private weaponOil?: GameWeaponOil;
     private wings?: GameWings;
+    private equipmentEnhancement?: GameEquipmentEnhancement;
+    private equipmentEnhancementRulesSource?: unknown;
+    private equipmentEnhancementRules?: ReturnType<typeof equipmentEnhancementRules>;
     private roleEquipment?: GameRoleEquipment;
     private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
@@ -536,6 +542,11 @@ export class AppRoot extends Component {
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(40052, request), submit: request => this.economic(40054, request),
             openLuck: wing => this.weaponOil!.open({ wingId: wing.wingId }) });
+        this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
+            confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
+            quote: request => session.connection.request(40055, request),
+            submit: (request, expectedRevision) => this.economic(40057, request, expectedRevision) });
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1439,6 +1450,7 @@ export class AppRoot extends Component {
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
             const wornItems = (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
+            const enhancement = panel === 'Role' ? this.currentEnhancementState()?.slots : undefined;
             // 角色专属翅膀单列在保存的装备清单中，不占用普通部位或耗材槽。
             const items = panel === 'Inventory' ? session.inventory?.items ?? [] :
                 (session.inventory && this.currentWingRules() ? [roleWingRow, ...wornItems] : wornItems);
@@ -1454,7 +1466,8 @@ export class AppRoot extends Component {
                 }
                 const worn = session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId));
                 const part = worn ? `${definition?.kind === 'casting_supply' ? '耗材' : equipmentSlotName(worn.slot)} · ` : '';
-                label.string = `${part}${name} ×${item.quantity} ${ownership}${durability ? ` · ${durability}` : ''}`;
+                const level = worn && enhancement?.get(worn.slot);
+                label.string = `${part}${name} ×${item.quantity} ${ownership}${durability ? ` · ${durability}` : ''}${level ? ` · 部位+${level}` : ''}`;
             }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
@@ -1469,6 +1482,10 @@ export class AppRoot extends Component {
                 this.refreshInventoryContext();
                 if (!item) { this.popup!.show('Details', { title: '物品已变化', message: '所选物品已离开此列表\n请重新选择。' }); return; }
                 if (panel === 'Inventory' && this.itemActions) { this.openInventoryItemActions(item.instanceId); return; }
+                if (panel === 'Role' && this.selectedEquipped && this.equipmentEnhancementSnapshot()?.slots.has(this.selectedEquipped.slot)) {
+                    this.selectEquippedSlot(this.selectedEquipped.slot);
+                    return;
+                }
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const book = definition?.kind === 'book' ? `\n${canRecycleBook(item, this.world!.gameplay.skill_book_recycle ?? []) ? '可按白名单拆书为书页' : '此来源或品质不能拆书为书页'}` : '';
                 const pages = definition?.kind === 'skill_page' ? pageMergeGroup(item, session.inventory?.items ?? [], this.world!.gameplay.items) : null;
@@ -1582,23 +1599,58 @@ export class AppRoot extends Component {
             allowLuckOil: !!inventory.wing && !!weaponOilItemId(this.world?.gameplay.luck_oil) && !!wingOilContributions(this.world?.gameplay.wings) };
     }
 
+    private currentEnhancementState() {
+        const source = this.world?.gameplay.equipment_enhancement;
+        if (source !== this.equipmentEnhancementRulesSource) {
+            this.equipmentEnhancementRulesSource = source;
+            this.equipmentEnhancementRules = equipmentEnhancementRules(source);
+        }
+        const rules = this.equipmentEnhancementRules;
+        const slots = rules && observedEnhancementSlots(session.inventory?.equipmentEnhancementSlots, rules);
+        return rules && slots ? { rules, slots } : undefined;
+    }
+
+    // 强化面板绑定角色、附着与原角色面板，永久提交复用经济操作账本。
+    private equipmentEnhancementSnapshot(): EquipmentEnhancementSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, state = this.currentEnhancementState();
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || !state || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || (entry.sceneKind !== 1 && entry.sceneKind !== 2) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { ...state, scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, level: inventory.level,
+            items: inventory.items, equipped: inventory.equipped, catalog: this.world!.gameplay.items, blocked };
+    }
+
     private selectEquippedSlot(slot: number): void {
         const entry = session.inventory?.equipped.find((value: EquippedSelection) => value.slot === slot);
-        if (!session.ready || !entry || this.ui?.top?.name !== 'Role') return;
+        if (!session.ready || this.ui?.top?.name !== 'Role') return;
+        const enhancement = this.equipmentEnhancementSnapshot()?.slots.has(slot);
+        if (!entry) {
+            if (enhancement) this.equipmentEnhancement?.open(slot);
+            return;
+        }
         const scope = currentEntryIdentity(), key = recycleItemKey(entry.item.instanceId);
         this.selectedEquipped = entry;
         this.refreshInventoryContext();
         const definition = this.world?.gameplay.items.find((row: any) => row.item_id === entry.item.itemId);
-        if (slot === 0 && definition?.kind === 'equipment' && this.weaponOilSnapshot() && this.weaponOil && this.itemActions) {
+        const canShowOil = slot === 0 && this.weaponOilSnapshot() && this.weaponOil;
+        if (definition?.kind === 'equipment' && this.itemActions && (canShowOil || enhancement)) {
             this.itemActions.open(() => {
-                const snapshot = this.weaponOilSnapshot();
-                if (!snapshot || !scope || !isCurrentEntry(scope)) return null;
+                if (!scope || !isCurrentEntry(scope) || this.ui?.top?.name !== 'Role') return null;
                 const current = session.inventory?.equipped.find((value: EquippedSelection) =>
                     value.slot === slot && recycleItemKey(value.item.instanceId) === key)?.item;
                 if (!current) return null;
-                return { title: definition.name, lines: equipmentDetailLines(definition, current, session.inventory?.level, session.role?.job, true),
-                    actions: [{ label: '祝福油培养', enabled: !snapshot.blocked,
-                        run: () => this.weaponOil!.open({ instanceId: current.instanceId, equipped: true }) }] };
+                const oil = canShowOil ? this.weaponOilSnapshot() : null;
+                const upgrades = enhancement ? this.equipmentEnhancementSnapshot() : null;
+                const lines = equipmentDetailLines(definition, current, session.inventory?.level, session.role?.job, true);
+                return { title: definition.name, lines: upgrades ? [...enhancementSlotLines(upgrades, slot), ...lines] : lines,
+                    actions: [
+                        ...(upgrades && this.equipmentEnhancement ? [{ label: '部位强化', enabled: true,
+                            run: () => this.equipmentEnhancement!.open(slot) }] : []),
+                        ...(oil ? [{ label: '祝福油培养', enabled: !oil.blocked,
+                            run: () => this.weaponOil!.open({ instanceId: current.instanceId, equipped: true }) }] : []),
+                    ] };
             });
             return;
         }
@@ -1639,7 +1691,7 @@ export class AppRoot extends Component {
         const worn = this.selectedEquipped, wornDefinition = this.world.gameplay.items.find((row: any) => row.item_id === worn?.item.itemId);
         const wornSupply = wornDefinition?.kind === 'casting_supply';
         this.roleEquipment?.refresh(session.role, session.inventory?.equipped ?? [], this.world.gameplay.items,
-            supplyEnabled ? this.world.gameplay.casting_supply?.slot : undefined, worn?.slot, session.ready);
+            supplyEnabled ? this.world.gameplay.casting_supply?.slot : undefined, worn?.slot, session.ready, this.currentEnhancementState()?.slots);
         this.find('UIMgr/Panels/Role/Equip').active = true;
         this.find('UIMgr/Panels/Role/Recycle').active = true;
         this.text('UIMgr/Panels/Role/Equip/Label', wornSupply ? supplyEnabled ? '卸下耗材' : '耗材未开放' : '卸下装备');
@@ -2167,11 +2219,14 @@ export class AppRoot extends Component {
         catch { throw new Error('当前自动施法设置已生效，浏览器未能记住该偏好'); }
     }
 
-    private async economic(id: number, value: any): Promise<void> {
+    private async economic(id: number, value: any, quotedRevision?: Long): Promise<void> {
         this.ensureNotLeaving();
         if (this.economicBusy || this.unresolved) throw new Error('上一笔操作正在核对，请等待回执');
         if (!session.pending || session.pending.get(roleIdentity())) throw new Error('上一笔操作需要沿原身份核对');
-        const payload = { ...value, operation: operation(id === 40031 ? value.expectedSkillSlotIds : undefined) };
+        const context = operation(id === 40031 ? value.expectedSkillSlotIds : undefined);
+        // 强化按原报价的修订持久重放，场景内其他收益可独立推进当前库存修订。
+        if (quotedRevision) context.expectedRevision = quotedRevision;
+        const payload = { ...value, operation: context };
         try { session.pending.set(roleIdentity(), { id, value: payload }); }
         catch (error) { session.command = payload.operation.commandSeq; throw error; }
         await this.submitPending();
@@ -2206,6 +2261,7 @@ export class AppRoot extends Component {
         let forged: ForgeReceipt | undefined;
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
         let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
+        let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
@@ -2228,6 +2284,11 @@ export class AppRoot extends Component {
             if (pending.id === 40054) {
                 const request = pending.value as unknown as WingActionRequest;
                 wing = { request, receipt: this.wings?.reconcile(request, result.wing) ?? validateWingReceipt(request, result.wing) };
+            }
+            if (pending.id === 40057) {
+                const request = pending.value as unknown as EquipmentEnhancementCommit;
+                enhanced = { request, receipt: this.equipmentEnhancement?.reconcile(request, result.equipmentEnhancement) ??
+                    validateEquipmentEnhancementReceipt(request, result.equipmentEnhancement) };
             }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
@@ -2256,6 +2317,12 @@ export class AppRoot extends Component {
         if (wing) {
             this.wings?.accept(role, wing.request, wing.receipt);
             this.status(wing.request.action === 2 ? '翅膀外观已保存' : `翅膀已达 ${wing.receipt.wing.rank}阶`);
+            return;
+        }
+        if (enhanced) {
+            this.equipmentEnhancement?.accept(role, enhanced.request, enhanced.receipt);
+            const { slot, success, afterLevel } = enhanced.receipt;
+            this.status(`${equipmentSlotName(slot)}${success ? '强化成功' : '强化未成功'} · 部位+${afterLevel}`);
             return;
         }
         if (recycleOil.length) {

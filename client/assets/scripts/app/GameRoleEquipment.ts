@@ -28,7 +28,8 @@ export class GameRoleEquipment {
     }
 
     refresh(role: RoleAppearance | null, equipped: readonly EquippedSelection[], definitions: readonly EquipmentLabel[],
-        supplySlot: number | undefined, selectedSlot: number | undefined, ready: boolean): void {
+        supplySlot: number | undefined, selectedSlot: number | undefined, ready: boolean,
+        enhancementLevels?: ReadonlyMap<number, number>): void {
         if (!this.board.activeInHierarchy) return;
         const gender = role?.gender ?? (role?.job === 1 ? 1 : 0), portrait = role && `Job${role.job}Gender${gender}`;
         for (const node of this.portraits.children) node.active = node.name === portrait;
@@ -38,9 +39,12 @@ export class GameRoleEquipment {
             slot.node.active = slot.id !== 100 || supplySlot === 100;
             const item = wearing.get(slot.id);
             const name = item && definitions.find(value => value.item_id === item.itemId)?.name;
-            slot.label.string = item ? `${selectedSlot === slot.id ? '● ' : ''}${name ?? '已装备'}`
-                : slot.id === 100 ? '施法耗材' : equipmentSlotName(slot.id);
-            slot.button.interactable = !!item && ready;
+            const enhancement = enhancementLevels?.get(slot.id);
+            const prefix = selectedSlot === slot.id ? '● ' : '';
+            const title = item ? name ?? '已装备' : slot.id === 100 ? '施法耗材' : equipmentSlotName(slot.id);
+            slot.label.string = `${prefix}${title}${enhancement ? ` +${enhancement}` : ''}`;
+            // 空部位也可强化，独立施法耗材位仍需装备后才可点击。
+            slot.button.interactable = ready && (!!item || enhancement !== undefined);
         }
     }
 }

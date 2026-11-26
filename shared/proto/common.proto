@@ -29,6 +29,26 @@ message OperationResult {
   WeaponOilReceipt weapon_oil = 13;
   RecycleOilReceipt recycle_oil = 14;
   WingReceipt wing = 15;
+  EquipmentEnhancementReceipt equipment_enhancement = 16;
+}
+// 部位等级归角色所有，装备替换和卸下均不改变它。
+message EquipmentEnhancementSlot {
+  uint32 slot = 1;
+  uint32 level = 2;
+}
+// 结算只消耗这些原石堆，不扣钱包，也不改穿戴装备的绑定。
+message EquipmentEnhancementStoneSpend {
+  ItemView item = 1;
+  int64 quantity = 2;
+}
+// 失败同样确认原投入，等级保持；重放返回首次确认的原结果。
+message EquipmentEnhancementReceipt {
+  bytes quote_id = 1;
+  uint32 slot = 2;
+  uint32 before_level = 3;
+  uint32 after_level = 4;
+  bool success = 5;
+  repeated EquipmentEnhancementStoneSpend stones = 6;
 }
 // 一名角色永久拥有的同一个翅膀实例。隐藏外观仍保持全部属性。
 message WingState {

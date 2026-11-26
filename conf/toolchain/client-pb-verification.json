@@ -4,12 +4,15 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 178,
+  "message_count": 185,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "EquipmentEnhancementSlot",
+    "EquipmentEnhancementStoneSpend",
+    "EquipmentEnhancementReceipt",
     "WingState",
     "WingFeatherSpend",
     "WingReceipt",
@@ -183,10 +186,14 @@
     "WingFeatherRef",
     "WingQuoteRequest",
     "WingQuote",
-    "WingActionRequest"
+    "WingActionRequest",
+    "EquipmentEnhancementStoneRef",
+    "EquipmentEnhancementQuoteRequest",
+    "EquipmentEnhancementQuote",
+    "EquipmentEnhancementCommitRequest"
   ],
-  "int64_field_count": 425,
-  "int64_boundary_cases": 1452,
+  "int64_field_count": 432,
+  "int64_boundary_cases": 1475,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -223,6 +230,12 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementStoneSpend",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "WingState",
@@ -2737,9 +2750,45 @@
       "field": "wing_version",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementStoneRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementStoneRef",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EquipmentEnhancementQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementQuote",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementQuote",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentEnhancementQuote",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 93,
+  "bytes_field_count": 100,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2754,6 +2803,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -3205,6 +3259,36 @@
       "message": "WingActionRequest",
       "field": "wing_id",
       "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementStoneRef",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementQuoteRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementQuote",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementCommitRequest",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentEnhancementCommitRequest",
+      "field": "ui_session_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -3213,7 +3297,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "97bbe7ce758533b63e950f9beea00cb25a1a910cc1bdd13c729810ccaedb3851"
+      "sha256": "c85b5fb5f68970d2644c2935fc06bfb7162538062a27ff4eeca0b802d464c9bc"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3225,7 +3309,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "12d6689bca5aaffe6fb111fd328a9236b17a1a27d84a8fed877d8eb6ed56bb69"
+      "sha256": "2af95fd6ccffb852e08e655d1d77399f6e6f43d3cca7600d6cf1c9b8d8c2c93d"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -3274,18 +3358,22 @@
     {
       "path": "shared/proto/wings.proto",
       "sha256": "18f6b18d7aa929011e661387cc5030bf934fdfe4c8983c56f756cc3cb608a3ae"
+    },
+    {
+      "path": "shared/proto/equipment_enhancement.proto",
+      "sha256": "c3c618d899bf5d563ed542462c6e64054a90390743b80931b1de840df2e8601b"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "4856f8cdbc15e14785c390eb59fb17c8ae90e955ccb774003f34e3d97d82a0bb",
-      "bytes": 3182778
+      "sha256": "96032a46e7f5172a7af3da1f530440e7031cfd9a815cf292caa1a0b10b117aca",
+      "bytes": 3302525
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "c2932dfc5c23f778c287bb3fbd0583d60a11f52c1ecf52cf1bf98ca3e3df90f4",
-      "bytes": 987208
+      "sha256": "f2e6d7386ac9e55b7ad8f1b2a965cca02097ab109823c1134401dda1e8226c0f",
+      "bytes": 1028969
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

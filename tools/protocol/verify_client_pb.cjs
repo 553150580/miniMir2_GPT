@@ -29,7 +29,7 @@ assert.equal(minimal.util.Long, Long, '运行时必须实际加载Long');
 assert(!generatedText.includes('.toNumber('), '候选不能含64位到Number转换');
 assert(!/number\s*\|\s*Long|Long\s*\|\s*number/.test(declarationsText), '64位声明不能放宽成number');
 const candidate = require(generatedPath).minimir.v1;
-const inputs = ['common.proto', 'account.proto', 'world.proto', 'assets.proto', 'tasks_codex.proto', 'personal_boss.proto', 'world_boss.proto', 'dungeon_party.proto', 'mirror_arena.proto', 'role_card.proto', 'item_market.proto', 'gold_market.proto', 'mining.proto', 'forge.proto', 'weapon_oil.proto', 'wings.proto'];
+const inputs = ['common.proto', 'account.proto', 'world.proto', 'assets.proto', 'tasks_codex.proto', 'personal_boss.proto', 'world_boss.proto', 'dungeon_party.proto', 'mirror_arena.proto', 'role_card.proto', 'item_market.proto', 'gold_market.proto', 'mining.proto', 'forge.proto', 'weapon_oil.proto', 'wings.proto', 'equipment_enhancement.proto'];
 const reflection = new protobuf.Root().loadSync(inputs.map(p => path.join(projectRoot, 'shared/proto', p)), { keepCase: true });
 const ns = reflection.lookup('minimir.v1');
 const hash = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');

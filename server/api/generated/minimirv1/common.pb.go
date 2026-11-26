@@ -195,24 +195,25 @@ func (x *OperationContext) GetExpectedRuleVersion() uint64 {
 }
 
 type OperationResult struct {
-	state               protoimpl.MessageState      `protogen:"open.v1"`
-	OpId                []byte                      `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
-	CommandSeq          uint64                      `protobuf:"varint,2,opt,name=command_seq,json=commandSeq,proto3" json:"command_seq,omitempty"`
-	NewRevision         uint64                      `protobuf:"varint,3,opt,name=new_revision,json=newRevision,proto3" json:"new_revision,omitempty"`
-	ErrorCode           uint32                      `protobuf:"varint,4,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
-	Pending             bool                        `protobuf:"varint,5,opt,name=pending,proto3" json:"pending,omitempty"`
-	HostingPurchase     *HostingPurchaseReceipt     `protobuf:"bytes,6,opt,name=hosting_purchase,json=hostingPurchase,proto3" json:"hosting_purchase,omitempty"`
-	MirrorArenaExchange *MirrorArenaExchangeReceipt `protobuf:"bytes,7,opt,name=mirror_arena_exchange,json=mirrorArenaExchange,proto3" json:"mirror_arena_exchange,omitempty"`
-	RoleCardPurchase    *RoleCardPurchaseReceipt    `protobuf:"bytes,8,opt,name=role_card_purchase,json=roleCardPurchase,proto3" json:"role_card_purchase,omitempty"`
-	RoleCardDaily       *RoleCardDailyReceipt       `protobuf:"bytes,9,opt,name=role_card_daily,json=roleCardDaily,proto3" json:"role_card_daily,omitempty"`
-	ItemMarket          *ItemMarketReceipt          `protobuf:"bytes,10,opt,name=item_market,json=itemMarket,proto3" json:"item_market,omitempty"`
-	GoldMarket          *GoldMarketReceipt          `protobuf:"bytes,11,opt,name=gold_market,json=goldMarket,proto3" json:"gold_market,omitempty"`
-	Forge               *ForgeReceipt               `protobuf:"bytes,12,opt,name=forge,proto3" json:"forge,omitempty"`
-	WeaponOil           *WeaponOilReceipt           `protobuf:"bytes,13,opt,name=weapon_oil,json=weaponOil,proto3" json:"weapon_oil,omitempty"`
-	RecycleOil          *RecycleOilReceipt          `protobuf:"bytes,14,opt,name=recycle_oil,json=recycleOil,proto3" json:"recycle_oil,omitempty"`
-	Wing                *WingReceipt                `protobuf:"bytes,15,opt,name=wing,proto3" json:"wing,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                protoimpl.MessageState       `protogen:"open.v1"`
+	OpId                 []byte                       `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	CommandSeq           uint64                       `protobuf:"varint,2,opt,name=command_seq,json=commandSeq,proto3" json:"command_seq,omitempty"`
+	NewRevision          uint64                       `protobuf:"varint,3,opt,name=new_revision,json=newRevision,proto3" json:"new_revision,omitempty"`
+	ErrorCode            uint32                       `protobuf:"varint,4,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	Pending              bool                         `protobuf:"varint,5,opt,name=pending,proto3" json:"pending,omitempty"`
+	HostingPurchase      *HostingPurchaseReceipt      `protobuf:"bytes,6,opt,name=hosting_purchase,json=hostingPurchase,proto3" json:"hosting_purchase,omitempty"`
+	MirrorArenaExchange  *MirrorArenaExchangeReceipt  `protobuf:"bytes,7,opt,name=mirror_arena_exchange,json=mirrorArenaExchange,proto3" json:"mirror_arena_exchange,omitempty"`
+	RoleCardPurchase     *RoleCardPurchaseReceipt     `protobuf:"bytes,8,opt,name=role_card_purchase,json=roleCardPurchase,proto3" json:"role_card_purchase,omitempty"`
+	RoleCardDaily        *RoleCardDailyReceipt        `protobuf:"bytes,9,opt,name=role_card_daily,json=roleCardDaily,proto3" json:"role_card_daily,omitempty"`
+	ItemMarket           *ItemMarketReceipt           `protobuf:"bytes,10,opt,name=item_market,json=itemMarket,proto3" json:"item_market,omitempty"`
+	GoldMarket           *GoldMarketReceipt           `protobuf:"bytes,11,opt,name=gold_market,json=goldMarket,proto3" json:"gold_market,omitempty"`
+	Forge                *ForgeReceipt                `protobuf:"bytes,12,opt,name=forge,proto3" json:"forge,omitempty"`
+	WeaponOil            *WeaponOilReceipt            `protobuf:"bytes,13,opt,name=weapon_oil,json=weaponOil,proto3" json:"weapon_oil,omitempty"`
+	RecycleOil           *RecycleOilReceipt           `protobuf:"bytes,14,opt,name=recycle_oil,json=recycleOil,proto3" json:"recycle_oil,omitempty"`
+	Wing                 *WingReceipt                 `protobuf:"bytes,15,opt,name=wing,proto3" json:"wing,omitempty"`
+	EquipmentEnhancement *EquipmentEnhancementReceipt `protobuf:"bytes,16,opt,name=equipment_enhancement,json=equipmentEnhancement,proto3" json:"equipment_enhancement,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *OperationResult) Reset() {
@@ -350,6 +351,204 @@ func (x *OperationResult) GetWing() *WingReceipt {
 	return nil
 }
 
+func (x *OperationResult) GetEquipmentEnhancement() *EquipmentEnhancementReceipt {
+	if x != nil {
+		return x.EquipmentEnhancement
+	}
+	return nil
+}
+
+// 部位等级归角色所有，装备替换和卸下均不改变它。
+type EquipmentEnhancementSlot struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slot          uint32                 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
+	Level         uint32                 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EquipmentEnhancementSlot) Reset() {
+	*x = EquipmentEnhancementSlot{}
+	mi := &file_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EquipmentEnhancementSlot) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EquipmentEnhancementSlot) ProtoMessage() {}
+
+func (x *EquipmentEnhancementSlot) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EquipmentEnhancementSlot.ProtoReflect.Descriptor instead.
+func (*EquipmentEnhancementSlot) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *EquipmentEnhancementSlot) GetSlot() uint32 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *EquipmentEnhancementSlot) GetLevel() uint32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+// 结算只消耗这些原石堆，不扣钱包，也不改穿戴装备的绑定。
+type EquipmentEnhancementStoneSpend struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Item          *ItemView              `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	Quantity      int64                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EquipmentEnhancementStoneSpend) Reset() {
+	*x = EquipmentEnhancementStoneSpend{}
+	mi := &file_common_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EquipmentEnhancementStoneSpend) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EquipmentEnhancementStoneSpend) ProtoMessage() {}
+
+func (x *EquipmentEnhancementStoneSpend) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EquipmentEnhancementStoneSpend.ProtoReflect.Descriptor instead.
+func (*EquipmentEnhancementStoneSpend) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *EquipmentEnhancementStoneSpend) GetItem() *ItemView {
+	if x != nil {
+		return x.Item
+	}
+	return nil
+}
+
+func (x *EquipmentEnhancementStoneSpend) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+// 失败同样确认原投入，等级保持；重放返回首次确认的原结果。
+type EquipmentEnhancementReceipt struct {
+	state         protoimpl.MessageState            `protogen:"open.v1"`
+	QuoteId       []byte                            `protobuf:"bytes,1,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
+	Slot          uint32                            `protobuf:"varint,2,opt,name=slot,proto3" json:"slot,omitempty"`
+	BeforeLevel   uint32                            `protobuf:"varint,3,opt,name=before_level,json=beforeLevel,proto3" json:"before_level,omitempty"`
+	AfterLevel    uint32                            `protobuf:"varint,4,opt,name=after_level,json=afterLevel,proto3" json:"after_level,omitempty"`
+	Success       bool                              `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
+	Stones        []*EquipmentEnhancementStoneSpend `protobuf:"bytes,6,rep,name=stones,proto3" json:"stones,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EquipmentEnhancementReceipt) Reset() {
+	*x = EquipmentEnhancementReceipt{}
+	mi := &file_common_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EquipmentEnhancementReceipt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EquipmentEnhancementReceipt) ProtoMessage() {}
+
+func (x *EquipmentEnhancementReceipt) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EquipmentEnhancementReceipt.ProtoReflect.Descriptor instead.
+func (*EquipmentEnhancementReceipt) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *EquipmentEnhancementReceipt) GetQuoteId() []byte {
+	if x != nil {
+		return x.QuoteId
+	}
+	return nil
+}
+
+func (x *EquipmentEnhancementReceipt) GetSlot() uint32 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *EquipmentEnhancementReceipt) GetBeforeLevel() uint32 {
+	if x != nil {
+		return x.BeforeLevel
+	}
+	return 0
+}
+
+func (x *EquipmentEnhancementReceipt) GetAfterLevel() uint32 {
+	if x != nil {
+		return x.AfterLevel
+	}
+	return 0
+}
+
+func (x *EquipmentEnhancementReceipt) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *EquipmentEnhancementReceipt) GetStones() []*EquipmentEnhancementStoneSpend {
+	if x != nil {
+		return x.Stones
+	}
+	return nil
+}
+
 // 一名角色永久拥有的同一个翅膀实例。隐藏外观仍保持全部属性。
 type WingState struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
@@ -367,7 +566,7 @@ type WingState struct {
 
 func (x *WingState) Reset() {
 	*x = WingState{}
-	mi := &file_common_proto_msgTypes[4]
+	mi := &file_common_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -379,7 +578,7 @@ func (x *WingState) String() string {
 func (*WingState) ProtoMessage() {}
 
 func (x *WingState) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[4]
+	mi := &file_common_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -392,7 +591,7 @@ func (x *WingState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WingState.ProtoReflect.Descriptor instead.
 func (*WingState) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{4}
+	return file_common_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *WingState) GetWingId() []byte {
@@ -462,7 +661,7 @@ type WingFeatherSpend struct {
 
 func (x *WingFeatherSpend) Reset() {
 	*x = WingFeatherSpend{}
-	mi := &file_common_proto_msgTypes[5]
+	mi := &file_common_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -474,7 +673,7 @@ func (x *WingFeatherSpend) String() string {
 func (*WingFeatherSpend) ProtoMessage() {}
 
 func (x *WingFeatherSpend) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[5]
+	mi := &file_common_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -487,7 +686,7 @@ func (x *WingFeatherSpend) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WingFeatherSpend.ProtoReflect.Descriptor instead.
 func (*WingFeatherSpend) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{5}
+	return file_common_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *WingFeatherSpend) GetItem() *ItemView {
@@ -517,7 +716,7 @@ type WingReceipt struct {
 
 func (x *WingReceipt) Reset() {
 	*x = WingReceipt{}
-	mi := &file_common_proto_msgTypes[6]
+	mi := &file_common_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -529,7 +728,7 @@ func (x *WingReceipt) String() string {
 func (*WingReceipt) ProtoMessage() {}
 
 func (x *WingReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[6]
+	mi := &file_common_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -542,7 +741,7 @@ func (x *WingReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WingReceipt.ProtoReflect.Descriptor instead.
 func (*WingReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{6}
+	return file_common_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *WingReceipt) GetAction() uint32 {
@@ -583,7 +782,7 @@ type RecycleOilReceipt struct {
 
 func (x *RecycleOilReceipt) Reset() {
 	*x = RecycleOilReceipt{}
-	mi := &file_common_proto_msgTypes[7]
+	mi := &file_common_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -595,7 +794,7 @@ func (x *RecycleOilReceipt) String() string {
 func (*RecycleOilReceipt) ProtoMessage() {}
 
 func (x *RecycleOilReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[7]
+	mi := &file_common_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -608,7 +807,7 @@ func (x *RecycleOilReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecycleOilReceipt.ProtoReflect.Descriptor instead.
 func (*RecycleOilReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{7}
+	return file_common_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RecycleOilReceipt) GetRolls() []*RecycleOilRoll {
@@ -630,7 +829,7 @@ type RecycleOilRoll struct {
 
 func (x *RecycleOilRoll) Reset() {
 	*x = RecycleOilRoll{}
-	mi := &file_common_proto_msgTypes[8]
+	mi := &file_common_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -642,7 +841,7 @@ func (x *RecycleOilRoll) String() string {
 func (*RecycleOilRoll) ProtoMessage() {}
 
 func (x *RecycleOilRoll) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[8]
+	mi := &file_common_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -655,7 +854,7 @@ func (x *RecycleOilRoll) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecycleOilRoll.ProtoReflect.Descriptor instead.
 func (*RecycleOilRoll) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{8}
+	return file_common_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *RecycleOilRoll) GetEquipmentInstanceId() []byte {
@@ -699,7 +898,7 @@ type WeaponOilReceipt struct {
 
 func (x *WeaponOilReceipt) Reset() {
 	*x = WeaponOilReceipt{}
-	mi := &file_common_proto_msgTypes[9]
+	mi := &file_common_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -711,7 +910,7 @@ func (x *WeaponOilReceipt) String() string {
 func (*WeaponOilReceipt) ProtoMessage() {}
 
 func (x *WeaponOilReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[9]
+	mi := &file_common_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -724,7 +923,7 @@ func (x *WeaponOilReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WeaponOilReceipt.ProtoReflect.Descriptor instead.
 func (*WeaponOilReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{9}
+	return file_common_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *WeaponOilReceipt) GetQuoteId() []byte {
@@ -811,7 +1010,7 @@ type ForgeOutput struct {
 
 func (x *ForgeOutput) Reset() {
 	*x = ForgeOutput{}
-	mi := &file_common_proto_msgTypes[10]
+	mi := &file_common_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -823,7 +1022,7 @@ func (x *ForgeOutput) String() string {
 func (*ForgeOutput) ProtoMessage() {}
 
 func (x *ForgeOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[10]
+	mi := &file_common_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -836,7 +1035,7 @@ func (x *ForgeOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForgeOutput.ProtoReflect.Descriptor instead.
 func (*ForgeOutput) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{10}
+	return file_common_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ForgeOutput) GetInstanceId() []byte {
@@ -888,7 +1087,7 @@ type ForgeReceipt struct {
 
 func (x *ForgeReceipt) Reset() {
 	*x = ForgeReceipt{}
-	mi := &file_common_proto_msgTypes[11]
+	mi := &file_common_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -900,7 +1099,7 @@ func (x *ForgeReceipt) String() string {
 func (*ForgeReceipt) ProtoMessage() {}
 
 func (x *ForgeReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[11]
+	mi := &file_common_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -913,7 +1112,7 @@ func (x *ForgeReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForgeReceipt.ProtoReflect.Descriptor instead.
 func (*ForgeReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{11}
+	return file_common_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ForgeReceipt) GetQuoteId() []byte {
@@ -975,7 +1174,7 @@ type GoldMarketReceipt struct {
 
 func (x *GoldMarketReceipt) Reset() {
 	*x = GoldMarketReceipt{}
-	mi := &file_common_proto_msgTypes[12]
+	mi := &file_common_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -987,7 +1186,7 @@ func (x *GoldMarketReceipt) String() string {
 func (*GoldMarketReceipt) ProtoMessage() {}
 
 func (x *GoldMarketReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[12]
+	mi := &file_common_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1000,7 +1199,7 @@ func (x *GoldMarketReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GoldMarketReceipt.ProtoReflect.Descriptor instead.
 func (*GoldMarketReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{12}
+	return file_common_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GoldMarketReceipt) GetAction() uint32 {
@@ -1127,7 +1326,7 @@ type ItemMarketReceipt struct {
 
 func (x *ItemMarketReceipt) Reset() {
 	*x = ItemMarketReceipt{}
-	mi := &file_common_proto_msgTypes[13]
+	mi := &file_common_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1139,7 +1338,7 @@ func (x *ItemMarketReceipt) String() string {
 func (*ItemMarketReceipt) ProtoMessage() {}
 
 func (x *ItemMarketReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[13]
+	mi := &file_common_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +1351,7 @@ func (x *ItemMarketReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ItemMarketReceipt.ProtoReflect.Descriptor instead.
 func (*ItemMarketReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{13}
+	return file_common_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ItemMarketReceipt) GetAction() uint32 {
@@ -1239,7 +1438,7 @@ type MirrorArenaExchangeReceipt struct {
 
 func (x *MirrorArenaExchangeReceipt) Reset() {
 	*x = MirrorArenaExchangeReceipt{}
-	mi := &file_common_proto_msgTypes[14]
+	mi := &file_common_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1251,7 +1450,7 @@ func (x *MirrorArenaExchangeReceipt) String() string {
 func (*MirrorArenaExchangeReceipt) ProtoMessage() {}
 
 func (x *MirrorArenaExchangeReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[14]
+	mi := &file_common_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1264,7 +1463,7 @@ func (x *MirrorArenaExchangeReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MirrorArenaExchangeReceipt.ProtoReflect.Descriptor instead.
 func (*MirrorArenaExchangeReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{14}
+	return file_common_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *MirrorArenaExchangeReceipt) GetSpentPoints() int64 {
@@ -1329,7 +1528,7 @@ type HostingQuoteResult struct {
 
 func (x *HostingQuoteResult) Reset() {
 	*x = HostingQuoteResult{}
-	mi := &file_common_proto_msgTypes[15]
+	mi := &file_common_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1341,7 +1540,7 @@ func (x *HostingQuoteResult) String() string {
 func (*HostingQuoteResult) ProtoMessage() {}
 
 func (x *HostingQuoteResult) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[15]
+	mi := &file_common_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1354,7 +1553,7 @@ func (x *HostingQuoteResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingQuoteResult.ProtoReflect.Descriptor instead.
 func (*HostingQuoteResult) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{15}
+	return file_common_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *HostingQuoteResult) GetQuoteId() []byte {
@@ -1494,7 +1693,7 @@ type HostingPurchaseReceipt struct {
 
 func (x *HostingPurchaseReceipt) Reset() {
 	*x = HostingPurchaseReceipt{}
-	mi := &file_common_proto_msgTypes[16]
+	mi := &file_common_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1506,7 +1705,7 @@ func (x *HostingPurchaseReceipt) String() string {
 func (*HostingPurchaseReceipt) ProtoMessage() {}
 
 func (x *HostingPurchaseReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[16]
+	mi := &file_common_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1519,7 +1718,7 @@ func (x *HostingPurchaseReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingPurchaseReceipt.ProtoReflect.Descriptor instead.
 func (*HostingPurchaseReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{16}
+	return file_common_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *HostingPurchaseReceipt) GetQuote() *HostingQuoteResult {
@@ -1549,7 +1748,7 @@ type RoleCardProductView struct {
 
 func (x *RoleCardProductView) Reset() {
 	*x = RoleCardProductView{}
-	mi := &file_common_proto_msgTypes[17]
+	mi := &file_common_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1561,7 +1760,7 @@ func (x *RoleCardProductView) String() string {
 func (*RoleCardProductView) ProtoMessage() {}
 
 func (x *RoleCardProductView) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[17]
+	mi := &file_common_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1574,7 +1773,7 @@ func (x *RoleCardProductView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCardProductView.ProtoReflect.Descriptor instead.
 func (*RoleCardProductView) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{17}
+	return file_common_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *RoleCardProductView) GetProductId() uint32 {
@@ -1620,7 +1819,7 @@ type RoleCardQuoteView struct {
 
 func (x *RoleCardQuoteView) Reset() {
 	*x = RoleCardQuoteView{}
-	mi := &file_common_proto_msgTypes[18]
+	mi := &file_common_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1632,7 +1831,7 @@ func (x *RoleCardQuoteView) String() string {
 func (*RoleCardQuoteView) ProtoMessage() {}
 
 func (x *RoleCardQuoteView) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[18]
+	mi := &file_common_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1645,7 +1844,7 @@ func (x *RoleCardQuoteView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCardQuoteView.ProtoReflect.Descriptor instead.
 func (*RoleCardQuoteView) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{18}
+	return file_common_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *RoleCardQuoteView) GetQuoteId() []byte {
@@ -1703,7 +1902,7 @@ type RoleCardPurchaseReceipt struct {
 
 func (x *RoleCardPurchaseReceipt) Reset() {
 	*x = RoleCardPurchaseReceipt{}
-	mi := &file_common_proto_msgTypes[19]
+	mi := &file_common_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1715,7 +1914,7 @@ func (x *RoleCardPurchaseReceipt) String() string {
 func (*RoleCardPurchaseReceipt) ProtoMessage() {}
 
 func (x *RoleCardPurchaseReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[19]
+	mi := &file_common_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1728,7 +1927,7 @@ func (x *RoleCardPurchaseReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCardPurchaseReceipt.ProtoReflect.Descriptor instead.
 func (*RoleCardPurchaseReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{19}
+	return file_common_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RoleCardPurchaseReceipt) GetQuote() *RoleCardQuoteView {
@@ -1772,7 +1971,7 @@ type RoleCardDailyReceipt struct {
 
 func (x *RoleCardDailyReceipt) Reset() {
 	*x = RoleCardDailyReceipt{}
-	mi := &file_common_proto_msgTypes[20]
+	mi := &file_common_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1784,7 +1983,7 @@ func (x *RoleCardDailyReceipt) String() string {
 func (*RoleCardDailyReceipt) ProtoMessage() {}
 
 func (x *RoleCardDailyReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[20]
+	mi := &file_common_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1797,7 +1996,7 @@ func (x *RoleCardDailyReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleCardDailyReceipt.ProtoReflect.Descriptor instead.
 func (*RoleCardDailyReceipt) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{20}
+	return file_common_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *RoleCardDailyReceipt) GetOperatingDay() string {
@@ -1837,7 +2036,7 @@ type Heartbeat struct {
 
 func (x *Heartbeat) Reset() {
 	*x = Heartbeat{}
-	mi := &file_common_proto_msgTypes[21]
+	mi := &file_common_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1849,7 +2048,7 @@ func (x *Heartbeat) String() string {
 func (*Heartbeat) ProtoMessage() {}
 
 func (x *Heartbeat) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[21]
+	mi := &file_common_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1862,7 +2061,7 @@ func (x *Heartbeat) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Heartbeat.ProtoReflect.Descriptor instead.
 func (*Heartbeat) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{21}
+	return file_common_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *Heartbeat) GetClientMonotonicMs() uint64 {
@@ -1881,7 +2080,7 @@ type HeartbeatResult struct {
 
 func (x *HeartbeatResult) Reset() {
 	*x = HeartbeatResult{}
-	mi := &file_common_proto_msgTypes[22]
+	mi := &file_common_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1893,7 +2092,7 @@ func (x *HeartbeatResult) String() string {
 func (*HeartbeatResult) ProtoMessage() {}
 
 func (x *HeartbeatResult) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[22]
+	mi := &file_common_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1906,7 +2105,7 @@ func (x *HeartbeatResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HeartbeatResult.ProtoReflect.Descriptor instead.
 func (*HeartbeatResult) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{22}
+	return file_common_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *HeartbeatResult) GetServerUnixMs() uint64 {
@@ -1926,7 +2125,7 @@ type Batch struct {
 
 func (x *Batch) Reset() {
 	*x = Batch{}
-	mi := &file_common_proto_msgTypes[23]
+	mi := &file_common_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1938,7 +2137,7 @@ func (x *Batch) String() string {
 func (*Batch) ProtoMessage() {}
 
 func (x *Batch) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[23]
+	mi := &file_common_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1951,7 +2150,7 @@ func (x *Batch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Batch.ProtoReflect.Descriptor instead.
 func (*Batch) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{23}
+	return file_common_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *Batch) GetApplicationBodies() [][]byte {
@@ -1973,7 +2172,7 @@ type ConfigVersion struct {
 
 func (x *ConfigVersion) Reset() {
 	*x = ConfigVersion{}
-	mi := &file_common_proto_msgTypes[24]
+	mi := &file_common_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1985,7 +2184,7 @@ func (x *ConfigVersion) String() string {
 func (*ConfigVersion) ProtoMessage() {}
 
 func (x *ConfigVersion) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[24]
+	mi := &file_common_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1998,7 +2197,7 @@ func (x *ConfigVersion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigVersion.ProtoReflect.Descriptor instead.
 func (*ConfigVersion) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{24}
+	return file_common_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ConfigVersion) GetRuleVersion() uint64 {
@@ -2046,7 +2245,7 @@ const file_common_proto_rawDesc = "" +
 	"\vcommand_seq\x18\x02 \x01(\x04R\n" +
 	"commandSeq\x12+\n" +
 	"\x11expected_revision\x18\x03 \x01(\x04R\x10expectedRevision\x122\n" +
-	"\x15expected_rule_version\x18\x04 \x01(\x04R\x13expectedRuleVersion\"\xc5\x06\n" +
+	"\x15expected_rule_version\x18\x04 \x01(\x04R\x13expectedRuleVersion\"\xa3\a\n" +
 	"\x0fOperationResult\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\fR\x04opId\x12\x1f\n" +
 	"\vcommand_seq\x18\x02 \x01(\x04R\n" +
@@ -2069,7 +2268,22 @@ const file_common_proto_rawDesc = "" +
 	"weapon_oil\x18\r \x01(\v2\x1c.minimir.v1.WeaponOilReceiptR\tweaponOil\x12>\n" +
 	"\vrecycle_oil\x18\x0e \x01(\v2\x1d.minimir.v1.RecycleOilReceiptR\n" +
 	"recycleOil\x12+\n" +
-	"\x04wing\x18\x0f \x01(\v2\x17.minimir.v1.WingReceiptR\x04wing\"\xe5\x01\n" +
+	"\x04wing\x18\x0f \x01(\v2\x17.minimir.v1.WingReceiptR\x04wing\x12\\\n" +
+	"\x15equipment_enhancement\x18\x10 \x01(\v2'.minimir.v1.EquipmentEnhancementReceiptR\x14equipmentEnhancement\"D\n" +
+	"\x18EquipmentEnhancementSlot\x12\x12\n" +
+	"\x04slot\x18\x01 \x01(\rR\x04slot\x12\x14\n" +
+	"\x05level\x18\x02 \x01(\rR\x05level\"f\n" +
+	"\x1eEquipmentEnhancementStoneSpend\x12(\n" +
+	"\x04item\x18\x01 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\x12\x1a\n" +
+	"\bquantity\x18\x02 \x01(\x03R\bquantity\"\xee\x01\n" +
+	"\x1bEquipmentEnhancementReceipt\x12\x19\n" +
+	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12\x12\n" +
+	"\x04slot\x18\x02 \x01(\rR\x04slot\x12!\n" +
+	"\fbefore_level\x18\x03 \x01(\rR\vbeforeLevel\x12\x1f\n" +
+	"\vafter_level\x18\x04 \x01(\rR\n" +
+	"afterLevel\x12\x18\n" +
+	"\asuccess\x18\x05 \x01(\bR\asuccess\x12B\n" +
+	"\x06stones\x18\x06 \x03(\v2*.minimir.v1.EquipmentEnhancementStoneSpendR\x06stones\"\xe5\x01\n" +
 	"\tWingState\x12\x17\n" +
 	"\awing_id\x18\x01 \x01(\fR\x06wingId\x12\x12\n" +
 	"\x04rank\x18\x02 \x01(\rR\x04rank\x12'\n" +
@@ -2236,63 +2450,69 @@ func file_common_proto_rawDescGZIP() []byte {
 	return file_common_proto_rawDescData
 }
 
-var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_common_proto_goTypes = []any{
-	(*RoleKey)(nil),                    // 0: minimir.v1.RoleKey
-	(*GridPoint)(nil),                  // 1: minimir.v1.GridPoint
-	(*OperationContext)(nil),           // 2: minimir.v1.OperationContext
-	(*OperationResult)(nil),            // 3: minimir.v1.OperationResult
-	(*WingState)(nil),                  // 4: minimir.v1.WingState
-	(*WingFeatherSpend)(nil),           // 5: minimir.v1.WingFeatherSpend
-	(*WingReceipt)(nil),                // 6: minimir.v1.WingReceipt
-	(*RecycleOilReceipt)(nil),          // 7: minimir.v1.RecycleOilReceipt
-	(*RecycleOilRoll)(nil),             // 8: minimir.v1.RecycleOilRoll
-	(*WeaponOilReceipt)(nil),           // 9: minimir.v1.WeaponOilReceipt
-	(*ForgeOutput)(nil),                // 10: minimir.v1.ForgeOutput
-	(*ForgeReceipt)(nil),               // 11: minimir.v1.ForgeReceipt
-	(*GoldMarketReceipt)(nil),          // 12: minimir.v1.GoldMarketReceipt
-	(*ItemMarketReceipt)(nil),          // 13: minimir.v1.ItemMarketReceipt
-	(*MirrorArenaExchangeReceipt)(nil), // 14: minimir.v1.MirrorArenaExchangeReceipt
-	(*HostingQuoteResult)(nil),         // 15: minimir.v1.HostingQuoteResult
-	(*HostingPurchaseReceipt)(nil),     // 16: minimir.v1.HostingPurchaseReceipt
-	(*RoleCardProductView)(nil),        // 17: minimir.v1.RoleCardProductView
-	(*RoleCardQuoteView)(nil),          // 18: minimir.v1.RoleCardQuoteView
-	(*RoleCardPurchaseReceipt)(nil),    // 19: minimir.v1.RoleCardPurchaseReceipt
-	(*RoleCardDailyReceipt)(nil),       // 20: minimir.v1.RoleCardDailyReceipt
-	(*Heartbeat)(nil),                  // 21: minimir.v1.Heartbeat
-	(*HeartbeatResult)(nil),            // 22: minimir.v1.HeartbeatResult
-	(*Batch)(nil),                      // 23: minimir.v1.Batch
-	(*ConfigVersion)(nil),              // 24: minimir.v1.ConfigVersion
-	(*ItemView)(nil),                   // 25: minimir.v1.ItemView
+	(*RoleKey)(nil),                        // 0: minimir.v1.RoleKey
+	(*GridPoint)(nil),                      // 1: minimir.v1.GridPoint
+	(*OperationContext)(nil),               // 2: minimir.v1.OperationContext
+	(*OperationResult)(nil),                // 3: minimir.v1.OperationResult
+	(*EquipmentEnhancementSlot)(nil),       // 4: minimir.v1.EquipmentEnhancementSlot
+	(*EquipmentEnhancementStoneSpend)(nil), // 5: minimir.v1.EquipmentEnhancementStoneSpend
+	(*EquipmentEnhancementReceipt)(nil),    // 6: minimir.v1.EquipmentEnhancementReceipt
+	(*WingState)(nil),                      // 7: minimir.v1.WingState
+	(*WingFeatherSpend)(nil),               // 8: minimir.v1.WingFeatherSpend
+	(*WingReceipt)(nil),                    // 9: minimir.v1.WingReceipt
+	(*RecycleOilReceipt)(nil),              // 10: minimir.v1.RecycleOilReceipt
+	(*RecycleOilRoll)(nil),                 // 11: minimir.v1.RecycleOilRoll
+	(*WeaponOilReceipt)(nil),               // 12: minimir.v1.WeaponOilReceipt
+	(*ForgeOutput)(nil),                    // 13: minimir.v1.ForgeOutput
+	(*ForgeReceipt)(nil),                   // 14: minimir.v1.ForgeReceipt
+	(*GoldMarketReceipt)(nil),              // 15: minimir.v1.GoldMarketReceipt
+	(*ItemMarketReceipt)(nil),              // 16: minimir.v1.ItemMarketReceipt
+	(*MirrorArenaExchangeReceipt)(nil),     // 17: minimir.v1.MirrorArenaExchangeReceipt
+	(*HostingQuoteResult)(nil),             // 18: minimir.v1.HostingQuoteResult
+	(*HostingPurchaseReceipt)(nil),         // 19: minimir.v1.HostingPurchaseReceipt
+	(*RoleCardProductView)(nil),            // 20: minimir.v1.RoleCardProductView
+	(*RoleCardQuoteView)(nil),              // 21: minimir.v1.RoleCardQuoteView
+	(*RoleCardPurchaseReceipt)(nil),        // 22: minimir.v1.RoleCardPurchaseReceipt
+	(*RoleCardDailyReceipt)(nil),           // 23: minimir.v1.RoleCardDailyReceipt
+	(*Heartbeat)(nil),                      // 24: minimir.v1.Heartbeat
+	(*HeartbeatResult)(nil),                // 25: minimir.v1.HeartbeatResult
+	(*Batch)(nil),                          // 26: minimir.v1.Batch
+	(*ConfigVersion)(nil),                  // 27: minimir.v1.ConfigVersion
+	(*ItemView)(nil),                       // 28: minimir.v1.ItemView
 }
 var file_common_proto_depIdxs = []int32{
-	16, // 0: minimir.v1.OperationResult.hosting_purchase:type_name -> minimir.v1.HostingPurchaseReceipt
-	14, // 1: minimir.v1.OperationResult.mirror_arena_exchange:type_name -> minimir.v1.MirrorArenaExchangeReceipt
-	19, // 2: minimir.v1.OperationResult.role_card_purchase:type_name -> minimir.v1.RoleCardPurchaseReceipt
-	20, // 3: minimir.v1.OperationResult.role_card_daily:type_name -> minimir.v1.RoleCardDailyReceipt
-	13, // 4: minimir.v1.OperationResult.item_market:type_name -> minimir.v1.ItemMarketReceipt
-	12, // 5: minimir.v1.OperationResult.gold_market:type_name -> minimir.v1.GoldMarketReceipt
-	11, // 6: minimir.v1.OperationResult.forge:type_name -> minimir.v1.ForgeReceipt
-	9,  // 7: minimir.v1.OperationResult.weapon_oil:type_name -> minimir.v1.WeaponOilReceipt
-	7,  // 8: minimir.v1.OperationResult.recycle_oil:type_name -> minimir.v1.RecycleOilReceipt
-	6,  // 9: minimir.v1.OperationResult.wing:type_name -> minimir.v1.WingReceipt
-	25, // 10: minimir.v1.WingFeatherSpend.item:type_name -> minimir.v1.ItemView
-	4,  // 11: minimir.v1.WingReceipt.wing:type_name -> minimir.v1.WingState
-	5,  // 12: minimir.v1.WingReceipt.feathers:type_name -> minimir.v1.WingFeatherSpend
-	8,  // 13: minimir.v1.RecycleOilReceipt.rolls:type_name -> minimir.v1.RecycleOilRoll
-	25, // 14: minimir.v1.RecycleOilRoll.oil:type_name -> minimir.v1.ItemView
-	25, // 15: minimir.v1.WeaponOilReceipt.weapon:type_name -> minimir.v1.ItemView
-	25, // 16: minimir.v1.WeaponOilReceipt.oil:type_name -> minimir.v1.ItemView
-	4,  // 17: minimir.v1.WeaponOilReceipt.wing:type_name -> minimir.v1.WingState
-	10, // 18: minimir.v1.ForgeReceipt.output:type_name -> minimir.v1.ForgeOutput
-	15, // 19: minimir.v1.HostingPurchaseReceipt.quote:type_name -> minimir.v1.HostingQuoteResult
-	17, // 20: minimir.v1.RoleCardQuoteView.product:type_name -> minimir.v1.RoleCardProductView
-	18, // 21: minimir.v1.RoleCardPurchaseReceipt.quote:type_name -> minimir.v1.RoleCardQuoteView
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	19, // 0: minimir.v1.OperationResult.hosting_purchase:type_name -> minimir.v1.HostingPurchaseReceipt
+	17, // 1: minimir.v1.OperationResult.mirror_arena_exchange:type_name -> minimir.v1.MirrorArenaExchangeReceipt
+	22, // 2: minimir.v1.OperationResult.role_card_purchase:type_name -> minimir.v1.RoleCardPurchaseReceipt
+	23, // 3: minimir.v1.OperationResult.role_card_daily:type_name -> minimir.v1.RoleCardDailyReceipt
+	16, // 4: minimir.v1.OperationResult.item_market:type_name -> minimir.v1.ItemMarketReceipt
+	15, // 5: minimir.v1.OperationResult.gold_market:type_name -> minimir.v1.GoldMarketReceipt
+	14, // 6: minimir.v1.OperationResult.forge:type_name -> minimir.v1.ForgeReceipt
+	12, // 7: minimir.v1.OperationResult.weapon_oil:type_name -> minimir.v1.WeaponOilReceipt
+	10, // 8: minimir.v1.OperationResult.recycle_oil:type_name -> minimir.v1.RecycleOilReceipt
+	9,  // 9: minimir.v1.OperationResult.wing:type_name -> minimir.v1.WingReceipt
+	6,  // 10: minimir.v1.OperationResult.equipment_enhancement:type_name -> minimir.v1.EquipmentEnhancementReceipt
+	28, // 11: minimir.v1.EquipmentEnhancementStoneSpend.item:type_name -> minimir.v1.ItemView
+	5,  // 12: minimir.v1.EquipmentEnhancementReceipt.stones:type_name -> minimir.v1.EquipmentEnhancementStoneSpend
+	28, // 13: minimir.v1.WingFeatherSpend.item:type_name -> minimir.v1.ItemView
+	7,  // 14: minimir.v1.WingReceipt.wing:type_name -> minimir.v1.WingState
+	8,  // 15: minimir.v1.WingReceipt.feathers:type_name -> minimir.v1.WingFeatherSpend
+	11, // 16: minimir.v1.RecycleOilReceipt.rolls:type_name -> minimir.v1.RecycleOilRoll
+	28, // 17: minimir.v1.RecycleOilRoll.oil:type_name -> minimir.v1.ItemView
+	28, // 18: minimir.v1.WeaponOilReceipt.weapon:type_name -> minimir.v1.ItemView
+	28, // 19: minimir.v1.WeaponOilReceipt.oil:type_name -> minimir.v1.ItemView
+	7,  // 20: minimir.v1.WeaponOilReceipt.wing:type_name -> minimir.v1.WingState
+	13, // 21: minimir.v1.ForgeReceipt.output:type_name -> minimir.v1.ForgeOutput
+	18, // 22: minimir.v1.HostingPurchaseReceipt.quote:type_name -> minimir.v1.HostingQuoteResult
+	20, // 23: minimir.v1.RoleCardQuoteView.product:type_name -> minimir.v1.RoleCardProductView
+	21, // 24: minimir.v1.RoleCardPurchaseReceipt.quote:type_name -> minimir.v1.RoleCardQuoteView
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_common_proto_init() }
@@ -2307,7 +2527,7 @@ func file_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_proto_rawDesc), len(file_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   25,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

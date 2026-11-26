@@ -28,6 +28,7 @@ run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbjs'), [
   'shared/proto/forge.proto',
   'shared/proto/weapon_oil.proto',
   'shared/proto/wings.proto',
+  'shared/proto/equipment_enhancement.proto',
 ]);
 run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbts'), ['-o', 'client/assets/scripts/generated/protobuf/client_pb.d.ts', 'client/assets/scripts/generated/protobuf/client_pb.js']);
 run(path.join(root, 'tools/protocol/verify_client_pb.cjs'), ['--report', 'conf/toolchain/client-pb-verification.json']);

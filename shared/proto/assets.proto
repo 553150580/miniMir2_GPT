@@ -28,6 +28,8 @@ message InventoryResult {
   repeated uint32 skill_slot_ids = 10;
   // 已激活翅膀是装备面板的独立位置，无背包或普通装备格占用。
   WingState wing = 11;
+  // 强化开放时包含十个普通装备部位，包括没有装备的部位。
+  repeated EquipmentEnhancementSlot equipment_enhancement_slots = 12;
 }
 message SetSkillSlotsRequest {
   repeated uint32 skill_slot_ids = 1;

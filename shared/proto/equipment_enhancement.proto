@@ -1,0 +1,46 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 玩家选定的原堆、观察到的版本与本次扣量。
+message EquipmentEnhancementStoneRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  int64 quantity = 3;
+}
+
+// 在当前附着和界面取得下一强化等级的完整条款。
+message EquipmentEnhancementQuoteRequest {
+  uint64 scene_epoch = 1;
+  uint32 slot = 2;
+  repeated EquipmentEnhancementStoneRef stones = 3;
+  bool allow_bound = 4;
+  bytes ui_session_id = 5;
+}
+
+// 公布角色部位的当前、目标与累计基点，不暴露服务端判定值。
+message EquipmentEnhancementQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  uint32 slot = 3;
+  uint32 current_level = 4;
+  uint32 target_level = 5;
+  uint32 current_bonus_bp = 6;
+  uint32 target_bonus_bp = 7;
+  uint32 success_ppm = 8;
+  repeated EquipmentEnhancementStoneSpend stones = 9;
+  bool allow_bound = 10;
+  uint64 expires_at_unix_ms = 11;
+  uint64 role_revision = 12;
+  bytes ui_session_id = 13;
+}
+
+// 提交已展示的报价，原操作编号用于未知结果恢复和幂等重放。
+message EquipmentEnhancementCommitRequest {
+  bytes quote_id = 1;
+  OperationContext operation = 2;
+  bytes ui_session_id = 3;
+  uint32 slot = 4;
+}

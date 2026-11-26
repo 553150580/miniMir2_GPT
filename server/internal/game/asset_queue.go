@@ -16,7 +16,7 @@ func waitsForAssetSlot(id uint16) bool {
 	case p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit,
 		p.MsgC2SCastWithMaterial, p.MsgC2SSetCastingSupply, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange,
 		p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction,
-		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction:
+		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction, p.MsgC2SEquipmentEnhancementCommit:
 		return true
 	}
 	return false
@@ -34,6 +34,10 @@ func (w *worker) replayGrowthOperation(r *room, c command) bool {
 	}
 	var operation *pb.OperationContext
 	switch c.frame.ID {
+	case p.MsgC2SEquipmentEnhancementCommit:
+		if request, valid := readEquipmentEnhancementCommit(c.frame); valid {
+			operation = request.Operation
+		}
 	case p.MsgC2SWeaponOilCommit:
 		if request, valid := readWeaponOilCommit(c.frame); valid {
 			operation = request.Operation

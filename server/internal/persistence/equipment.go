@@ -115,6 +115,7 @@ func equipmentRoleArithmeticSafe(r domain.Role, f devconfig.Fixture) bool {
 	if !ok {
 		return false
 	}
+	var gear devconfig.EquipmentContributions // 与当前场景和挑战战斗共用强化前后的定点聚合。
 	// eq 接收遍历已穿戴装备时当前的元素。
 	for _, eq := range r.Equipped {
 		if eq.Slot == devconfig.CastingSupplySlot {
@@ -125,7 +126,19 @@ func equipmentRoleArithmeticSafe(r domain.Role, f devconfig.Fixture) bool {
 		if !exists {
 			return false
 		}
+		if rules := f.EquipmentEnhancement; rules != nil {
+			if !gear.Add(d, rules.BonusBP(r.EnhancementLevel(eq.Slot))) {
+				return false
+			}
+			continue
+		}
 		a, ok = d.AddEquipmentBonuses(a)
+		if !ok {
+			return false
+		}
+	}
+	if f.EquipmentEnhancement != nil {
+		a, ok = gear.Apply(a)
 		if !ok {
 			return false
 		}

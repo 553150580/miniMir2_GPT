@@ -43,37 +43,14 @@ func equipmentMultiply(a, b int64) (int64, bool) {
 // 只做基础装备加法，不重复放大被动、状态或护符。溢出不能静默变成负属性。
 // i 是调用该方法的道具实例，a 记录a，使用战斗单位表示。
 func (i Item) AddEquipmentBonuses(a Fighter) (Fighter, bool) {
-	// values 初始化用作值集合的临时结构列表。
-	values := []struct {
-		// target 记录目标，使用数值表示。
-		target *int64
-		// bonus 记录加成，使用数值表示。
-		bonus int64
-	}{
-		{&a.AttackMin, i.AttackBonus}, {&a.AttackMin, i.AttackMinBonus},
-		{&a.AttackMax, i.AttackBonus}, {&a.AttackMax, i.AttackMaxBonus},
-		{&a.MagicMin, i.MagicMinBonus}, {&a.MagicMax, i.MagicMaxBonus},
-		{&a.TaoMin, i.TaoMinBonus}, {&a.TaoMax, i.TaoMaxBonus},
-		{&a.AttackSpeed, i.AttackSpeedBonus}, {&a.Defence, i.DefenceBonus},
-		{&a.DefenceMin, i.DefenceMinBonus}, {&a.DefenceMax, i.DefenceMaxBonus},
-		{&a.MagicDefenceMin, i.MagicDefenceMinBonus}, {&a.MagicDefenceMax, i.MagicDefenceMaxBonus},
+	// 原固定攻击对区间两端生效，仍按历史顺序先加固定攻击再加基础区间。
+	minimum, minimumOK := equipmentAdd(a.AttackMin, i.AttackBonus)
+	maximum, maximumOK := equipmentAdd(a.AttackMax, i.AttackBonus)
+	if !minimumOK || !maximumOK {
+		return Fighter{}, false
 	}
-	// v 接收遍历值集合时当前的元素。
-	for _, v := range values {
-		// n 接收装备新增供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
-		n, ok := equipmentAdd(*v.target, v.bonus)
-		if !ok {
-			return Fighter{}, false
-		}
-		*v.target = n
-	}
-	// pair 接收遍历数值列表列表时当前的元素。
-	for _, pair := range [][2]int64{{a.AttackMin, a.AttackMax}, {a.MagicMin, a.MagicMax}, {a.TaoMin, a.TaoMax}, {a.DefenceMin, a.DefenceMax}, {a.MagicDefenceMin, a.MagicDefenceMax}} {
-		if pair[0] < 0 || pair[1] < pair[0] || pair[1]-pair[0] == math.MaxInt64 {
-			return Fighter{}, false // interval的闭区间长度还需+1。
-		}
-	}
-	return a, true
+	a.AttackMin, a.AttackMax = minimum, maximum
+	return applyEquipmentStats(a, i.equipmentStats())
 }
 
 // sourcePowerBound 处理来源能力值绑定。
@@ -219,14 +196,19 @@ func (f *Fixture) ValidateEquipmentStats() error {
 		return nil
 	}
 	// 每个槽分别取各端点最坏值，覆盖所有本次可穿组合；不按当前两件目录写死总和。
+	var maxEnhancementBP uint32
+	if f.EquipmentEnhancement != nil {
+		maxEnhancementBP = f.EquipmentEnhancement.BonusBP(maxEnhancementLevel)
+	}
 	// player 接收遍历玩家集合时当前的元素。
 	for _, player := range f.Players {
 		// level 保存由最大取得的等级。
 		level := max(uint32(1), f.Progression.CatalogMaxLevel)
 		// a 保存由玩家发生时间等级取得的a。
 		a, _ := f.PlayerAtLevel(player.JobID, level)
+		var strengthened EquipmentContributions // 汇集当前职业所有强化部位的最坏基础贡献。
 		// slot 保存由无符号整数“32”取得的槽位。
-		for slot := uint32(0); slot < 10; slot++ {
+		for slot := uint32(0); slot < equipmentSlotCount; slot++ {
 			// worst 记录“worst”，使用道具表示。
 			var worst Item
 			// i 接收遍历道具集合时当前的元素。
@@ -257,11 +239,24 @@ func (f *Fixture) ValidateEquipmentStats() error {
 				worst.MagicDefenceMinBonus = max(worst.MagicDefenceMinBonus, i.MagicDefenceMinBonus)
 				worst.MagicDefenceMaxBonus = max(worst.MagicDefenceMaxBonus, i.MagicDefenceMaxBonus)
 			}
+			if maxEnhancementBP != 0 {
+				if !strengthened.Add(worst, maxEnhancementBP) {
+					return errors.New("装备组合的部位强化定点中间值溢出")
+				}
+				continue
+			}
 			// ok 表明查询、校验或类型转换是否成功。
 			var ok bool
 			a, ok = worst.AddEquipmentBonuses(a)
 			if !ok {
 				return errors.New("装备组合基础属性或随机区间溢出")
+			}
+		}
+		if maxEnhancementBP != 0 {
+			var valid bool
+			a, valid = strengthened.Apply(a)
+			if !valid {
+				return errors.New("装备组合的部位强化属性或随机区间溢出")
 			}
 		}
 		if !f.EquipmentArithmeticSafe(a) {

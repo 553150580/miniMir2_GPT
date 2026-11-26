@@ -123,6 +123,8 @@ type Operation struct {
 	PaymentGrant      *PaymentGrantReceipt           `bson:"payment_grant,omitempty"`          // 渠道成功支付对应的唯一原角色投放或现金卡权益。
 	ItemMarket        *ItemMarketReceipt             `bson:"item_market,omitempty"`            // 市场唯一资产操作原回执。
 	GoldMarket        *GoldMarketReceipt             `bson:"gold_market,omitempty"`            // 金币委托原操作回执。
+
+	EquipmentEnhancement *EquipmentEnhancementReceipt `bson:"equipment_enhancement,omitempty"` // 原部位的成功或失败及实际石头消费。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -226,6 +228,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if s.Cfg.Fixture.Wings != nil {
 		indexes[roleWingCollection] = wingIndexes()
 		indexes[wingQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
+	}
+	if s.Cfg.Fixture.EquipmentEnhancement != nil {
+		indexes[enhancementQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {
@@ -409,11 +414,13 @@ func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，id 区分当前步骤指向的目标对象。
 func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 	role, err := s.readRole(ctx, bson.M{"_id": id})
-	if err != nil || s.Cfg.Fixture.Wings == nil {
-		return role, err
+	// 仅启用的独立养成随入场、资产和收益装配，账号签票仍只读角色本身。
+	if err == nil && s.Cfg.Fixture.Wings != nil {
+		role.Wing, err = s.readRoleWing(ctx, role.ID)
 	}
-	// 入场、资产和收益都在同一读取入口装配翅膀；仅签票的账号读原角色归属即可。
-	role.Wing, err = s.readRoleWing(ctx, role.ID)
+	if err == nil && s.Cfg.Fixture.EquipmentEnhancement != nil {
+		role.EquipmentEnhancement, err = s.readRoleEquipmentEnhancement(ctx, role)
+	}
 	return role, err
 }
 

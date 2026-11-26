@@ -42,7 +42,7 @@ func recordPersonalBossQualification(state *domain.PersonalBossProgress, record 
 // rewardIsBound 用场次记录的原特权证据判断实际击杀时的物品与金币归属。
 func (r personalBossRecord) rewardIsBound() bool {
 	until := r.PrivilegeUntil
-	if r.Automatic {
+	if r.Automatic || r.RewardPrivilegeAtKill {
 		until = r.RewardPrivilegeUntil
 	}
 	return !until.After(r.FinishedAt)

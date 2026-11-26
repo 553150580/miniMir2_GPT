@@ -53,14 +53,6 @@ func wingRefMatches(wing *domain.WingState, id []byte, version uint64) bool {
 	return wing.ID == domain.Hex(id) && version == uint64(wing.Version)
 }
 
-// validWingFeather 校验实际的角色背包材料，允许合规的世界首领、兑换及其他已登记来源。
-func validWingFeather(item domain.Item, definition devconfig.Item) bool {
-	return item.ItemID == definition.ID && item.Quantity > 0 && item.Quantity <= definition.MaxStack &&
-		item.Version > 0 && item.Version < math.MaxInt64 && !item.Locked && !equipmentOccupied(item) &&
-		item.SourceKind != "" && item.SourceID != "" && item.OrePurity == 0 && item.InitialLuck == 0 && item.CurrentLuck == 0 &&
-		item.LuckOilToSix == 0 && item.LuckOilToNine == 0 && item.DurabilityU == 0 && item.MaxDurabilityU == 0 && item.OriginalDurabilityU == 0
-}
-
 // buildWingGrowthPlan 以原角色快照计算一笔可重复核对的逐阶用料。空白阶位不产生零价升级。
 func buildWingGrowthPlan(role domain.Role, fixture *devconfig.Fixture, q *pb.WingQuoteRequest) (wingGrowthPlan, uint32) {
 	rules := fixture.Wings
@@ -107,7 +99,7 @@ func buildWingGrowthPlan(role domain.Role, fixture *devconfig.Fixture, q *pb.Win
 		}
 		id := domain.Hex(ref.InstanceId)
 		item, found := owned[id]
-		if !found || !validWingFeather(item, definition) || uint64(item.Version) != ref.Version ||
+		if !found || !validGrowthMaterial(item, definition) || uint64(item.Version) != ref.Version ||
 			ref.Quantity > item.Quantity || item.Bound && !q.AllowBound {
 			return wingGrowthPlan{}, p.CodeWingInputs
 		}
@@ -133,19 +125,7 @@ func applyWingGrowthPlan(role domain.Role, plan wingGrowthPlan, operationID stri
 	for _, material := range plan.Feathers {
 		uses[material.Item.ID] = material.Quantity
 	}
-	items := make([]domain.Item, 0, len(role.Items))
-	for _, item := range role.Items {
-		amount, used := uses[item.ID]
-		if used {
-			item.Quantity -= amount
-			item.Version++
-			if item.Quantity == 0 {
-				continue
-			}
-		}
-		items = append(items, item)
-	}
-	role.Items, role.Wing = items, &wing
+	role.Items, role.Wing = spendGrowthMaterials(role.Items, uses), &wing
 	return role, wing
 }
 
