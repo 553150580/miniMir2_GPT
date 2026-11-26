@@ -31,8 +31,9 @@ func applyPersonalBossItems(r *domain.Role, record *personalBossRecord) error {
 		return nil
 	}
 	items := slices.Clone(record.KillRewardItems)
+	bound := record.rewardIsBound()
 	for i := range items {
-		items[i].Bound = !record.PrivilegeUntil.After(record.FinishedAt)
+		items[i].Bound = bound
 	}
 	record.RewardItems = items
 	if len(items) <= r.Capacity-len(r.Items) {

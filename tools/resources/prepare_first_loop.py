@@ -1170,6 +1170,8 @@ def main():
             fixture['_source_evidence']['compact_town_compiler_sha256']=config.sha256(Path(compact_towns.__file__))
         if fixture['rule_version']>=25:
             fixture['_source_evidence']['npc_shop_compiler_sha256']=config.sha256(Path(npc_shops.__file__))
+        if fixture['rule_version']>=30:
+            fixture['_source_evidence']['hosting_benefits_compiler_sha256']=config.sha256(Path(hosting_benefits.__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)

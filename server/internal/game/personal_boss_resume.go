@@ -23,7 +23,7 @@ func (w *worker) detachPersonalBoss(owner *room) {
 // resumePersonalBoss 在新票完成普通场景确认后续接原预约，只轮换观察身份。
 func (w *worker) resumePersonalBoss(owner *room, now time.Time) {
 	run := owner.personalBoss
-	if run == nil || run.battle == nil || run.shown || owner.Auth != run.auth || owner.Conn == nil || !owner.Conn.Alive() {
+	if run == nil || run.begin.Automatic || run.battle == nil || run.shown || owner.Auth != run.auth || owner.Conn == nil || !owner.Conn.Alive() {
 		return
 	}
 	w.stepPersonalBoss(owner, now)

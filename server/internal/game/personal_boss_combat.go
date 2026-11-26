@@ -28,7 +28,7 @@ func newPersonalBossBattle(owner *room, cfg *devconfig.PersonalBossConfig, snaps
 		MaxHP: challenge.hp, MP: cfg.Monster.MP, MaxMP: cfg.Monster.MP, Monster: &cfg.Monster, Life: 1}
 	world := &worldState{MapID: cfg.Map.ID, BossMap: &cfg.Map, Monsters: []*entity{monster}, MonsterCount: 1, Auto: true}
 	child := &room{worldState: world, runStore: owner.runStore, ExecutionEpoch: challenge.identity.execution,
-		Auth: owner.Auth, Conn: owner.Conn, Scene: owner.Scene + 1, Baseline: baseline,
+		Auth: owner.Auth, Scene: owner.Scene + 1, Baseline: baseline,
 		AutoSkills: snapshot.autoSkills,
 		Role: domain.Role{ID: owner.Role.ID, Name: owner.Role.Name, Job: owner.Role.Job, Level: owner.Role.Level, EconomicSeq: owner.Role.EconomicSeq, Revision: owner.Role.Revision, Skills: snapshot.Skills,
 			HostingSeconds: owner.Role.HostingSeconds, SkillSlotIDs: snapshot.SkillSlotIDs},
@@ -132,6 +132,16 @@ func (w *worker) stepPersonalBoss(owner *room, now time.Time) {
 	battle := run.battle
 	challenge := battle.bossBattle.challenge
 	if challenge.finish == nil {
+		if run.begin.Automatic {
+			// 先确认普通账本事实，避免在最后一秒离线扣费未决时继续新自动动作。
+			if owner.Pending {
+				return
+			}
+			if !owner.Auto || owner.Player.HP <= 0 || owner.Conn == nil && !personalBossOfflineAvailable(owner) {
+				w.interruptPersonalBoss(owner, now)
+				return
+			}
+		}
 		if run.abort || battle.Isolated {
 			w.interruptPersonalBoss(owner, now)
 			return
@@ -218,6 +228,10 @@ func (w *worker) restoreAfterPersonalBoss(owner *room, run *personalBossRun) {
 	kind := run.battle.bossBattle.challenge.finish.kind
 	w.personalBossState(owner, run, 0, bossStateDefeated+uint32(kind-bossDefeated), 0)
 	owner.personalBoss = nil
+	if run.begin.Automatic {
+		w.assets(owner)
+		return
+	}
 	if !run.shown || owner.Conn == nil || owner.Conn != run.conn || !run.conn.Alive() {
 		return
 	}

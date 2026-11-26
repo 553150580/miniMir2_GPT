@@ -71,6 +71,9 @@ func (w *worker) personalBossCommand(owner *room, c command) bool {
 		return true
 	}
 	run := owner.personalBoss
+	if run != nil && run.begin.Automatic {
+		return false // 后台场只占挑战名额，普通场景继续接收所有原输入。
+	}
 	if run == nil || run.battle == nil {
 		if run != nil && (frame.ID == p.MsgC2SMapTravelPrepare || frame.ID == p.MsgC2SMapTravelCommit) {
 			w.failure(owner, frame, p.CodeLineRecovering)
@@ -157,23 +160,39 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 		return
 	}
 	snapshot := w.freezePersonalBossSnapshot(owner, template)
+	var qualification string
+	if fixture.HostingBenefits != nil && fixture.HostingBenefits.AutoPersonalBoss {
+		qualification = personalBossQualification(owner, snapshot)
+	}
+	w.reservePersonalBoss(owner, template, snapshot, qualification, msg.ChallengeId, frame.Request, now)
+}
+
+// reservePersonalBoss 将手动入口和后台调度冻结成同一种可重放预约。
+// requestID 为空时表示原分片发起的后台场，request 只回送给手动入口。
+func (w *worker) reservePersonalBoss(owner *room, template *devconfig.PersonalBossConfig, snapshot personalBossSnapshot,
+	qualification, requestID string, request uint32, now time.Time) {
+	store := w.roomStore(owner)
+	fixture := &store.Cfg.Fixture
 	encoded, err := json.Marshal(snapshot)
 	if err != nil || owner.Isolated || snapshot.Fighter.HP <= 0 {
 		w.isolateRoom(owner)
 		return
 	}
-	run := &personalBossRun{requestID: msg.ChallengeId, auth: owner.Auth, conn: owner.Conn,
+	run := &personalBossRun{requestID: requestID, auth: owner.Auth,
 		begin: persistence.PersonalBossBegin{ChallengeID: domain.ID(), Execution: ownerExecutionEpoch.Add(1), TemplateID: template.TemplateID,
 			CombatSnapshot: persistence.Hash(encoded), ExpectedRevision: owner.Role.Revision, RuleVersion: fixture.RuleVersion, ConfigHash: fixture.Hash,
 			StartedAt: now.UTC().Truncate(time.Millisecond), Duration: template.Duration, SuccessCooldown: template.SuccessCooldown,
-			RetryCooldown: template.RetryCooldown, BossHP: template.Monster.HP}}
+			RetryCooldown: template.RetryCooldown, BossHP: template.Monster.HP, Automatic: requestID == "", Qualification: qualification}}
+	if !run.begin.Automatic {
+		run.conn = owner.Conn
+	}
 	owner.personalBoss = run
-	w.personalBossState(owner, run, frame.Request, bossStateBooking, 0)
-	w.personalBossJob(owner, "start", run.begin.ChallengeID, run.auth, false, func() (domain.Role, persistence.PersonalBossChallenge, error) {
+	w.personalBossState(owner, run, request, bossStateBooking, 0)
+	accepted := w.submitPersonalBossJob(owner, "start", run.begin.ChallengeID, run.auth, false, run.begin.Automatic, func() (domain.Role, persistence.PersonalBossChallenge, error) {
 		return store.BeginPersonalBoss(w.e.ctx, run.auth, run.begin)
 	}, func(role domain.Role, grant persistence.PersonalBossChallenge, err error) {
 		if err != nil {
-			w.personalBossState(owner, run, frame.Request, bossStateCancelled, persistence.Code(err))
+			w.personalBossState(owner, run, request, bossStateCancelled, persistence.Code(err))
 			owner.personalBoss = nil
 			return
 		}
@@ -182,6 +201,9 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 		w.acceptRolePrivilege(owner, time.Now(), previousPrivilege)
 		w.installPersonalBoss(owner, run, template, snapshot, grant, time.Now())
 	})
+	if !accepted {
+		owner.personalBoss = nil // 若数据库队列饱和，未接纳的新自动预约不会冻结原房间。
+	}
 }
 
 // pendingPersonalBossTransfer 确保之前已经受理的瞬移先完成，再建立双场景观察关系。
@@ -199,6 +221,12 @@ func pendingPersonalBossTransfer(owner *room) bool {
 // personalBossJob 使用普通角色的永久操作槽，未知提交继续用捕获的原请求重试。
 func (w *worker) personalBossJob(owner *room, stage, id string, auth persistence.Auth, settlement bool,
 	work func() (domain.Role, persistence.PersonalBossChallenge, error), complete func(domain.Role, persistence.PersonalBossChallenge, error)) {
+	w.submitPersonalBossJob(owner, stage, id, auth, settlement, false, work, complete)
+}
+
+// submitPersonalBossJob 允许后台新预约在队列满时让出原 owner，已接纳的确认未知必须按原编号重试。
+func (w *worker) submitPersonalBossJob(owner *room, stage, id string, auth persistence.Auth, settlement, opportunistic bool,
+	work func() (domain.Role, persistence.PersonalBossChallenge, error), complete func(domain.Role, persistence.PersonalBossChallenge, error)) bool {
 	key := "boss:" + stage + ":" + id
 	owner.Pending, owner.PendingOperationID = true, key
 	var task job
@@ -219,8 +247,13 @@ func (w *worker) personalBossJob(owner *room, stage, id string, auth persistence
 		}
 	}}
 	if !w.submit(task) {
+		if opportunistic {
+			owner.Pending, owner.PendingOperationID = false, ""
+			return false
+		}
 		owner.PendingRetry, owner.RetryAt = &task, time.Now().Add(100*time.Millisecond)
 	}
+	return true
 }
 
 // installPersonalBoss 校验预约身份，在同一原执行器内创建年轻的独立战斗场景。
@@ -228,6 +261,7 @@ func (w *worker) installPersonalBoss(owner *room, run *personalBossRun, template
 	begin := run.begin
 	if grant.ChallengeID != begin.ChallengeID || grant.RoleID != owner.Role.ID || grant.RunID != w.roomStore(owner).Cfg.RunID ||
 		grant.Execution != begin.Execution || grant.RuleVersion != begin.RuleVersion || grant.ConfigHash != begin.ConfigHash || grant.TemplateID != begin.TemplateID ||
+		grant.Automatic != begin.Automatic || grant.Qualification != begin.Qualification ||
 		grant.CombatSnapshot != begin.CombatSnapshot || grant.BossHP != begin.BossHP || grant.Outcome != 0 || !grant.StartedAt.Equal(begin.StartedAt) || !grant.ExpiresAt.Equal(begin.StartedAt.Add(begin.Duration)) {
 		w.isolateRoom(owner)
 		return
@@ -242,12 +276,20 @@ func (w *worker) installPersonalBoss(owner *room, run *personalBossRun, template
 	}
 	run.grant = grant
 	run.battle = newPersonalBossBattle(owner, template, snapshot, challenge, participant, baseline, now)
+	if run.begin.Automatic {
+		// 后台场从创建时就没有客户端连接。普通导航、首基线和场景身份沿用原房间。
+		run.started = true
+		w.assets(owner)
+	}
 	if run.abort {
 		w.interruptPersonalBoss(owner, now)
 		return
 	}
 	if !now.Before(grant.ExpiresAt) {
 		w.stepPersonalBoss(owner, now)
+		return
+	}
+	if run.begin.Automatic {
 		return
 	}
 	owner.Manual, owner.Destination, owner.PetBornReady = false, nil, nil

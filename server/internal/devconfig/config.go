@@ -322,7 +322,7 @@ type Fixture struct {
 	OrdinaryDropPools []OrdinaryDropPool `json:"ordinary_drop_pools,omitempty"`
 	// OrdinaryEquipmentQuotas 收录明确启用的普通怪稀有和史诗装备额度。
 	OrdinaryEquipmentQuotas []OrdinaryEquipmentQuota `json:"drop_quotas,omitempty"`
-	// HostingBenefits 包含当日领时和真实普通击杀按权益发放的加成。
+	// HostingBenefits 包含当日领时、普通怪击杀加成及个人首领自动挑战权益。
 	HostingBenefits *HostingBenefits `json:"hosting_benefits,omitempty"`
 	// HostingTimePrices 仅包含显式发布的补时价格版本，缺省时关闭金币购时。
 	HostingTimePrices []HostingTimePriceVersion `json:"hosting_time_prices,omitempty"`

@@ -46,6 +46,8 @@ type PersonalBossBegin struct {
 	SuccessCooldown  time.Duration // 成功后该模板的冷却时长。
 	RetryCooldown    time.Duration // 未成功后该模板的重试冷却。
 	BossHP           int64         // 原挑战具有的首领生命值。
+	Automatic        bool          `json:",omitempty"` // 是否由角色托管卡自动发起，空值保留旧预约摘要。
+	Qualification    string        `json:",omitempty"` // 原执行器冻结的战斗条件证明，空值兼容旧手动场次。
 }
 
 // PersonalBossFinish 携带原挑战执行器冻结的终态和有效伤害证明。
@@ -90,6 +92,8 @@ type PersonalBossChallenge struct {
 	RewardBound     bool                `bson:"reward_bound,omitempty"`  // 该金币依据原击杀时刻进入绑定账户。
 	RewardItems     []domain.Item       `bson:"reward_items,omitempty"`  // 胜利时确认的原实例，后续领取不会改写历史。
 	RewardQueued    bool                `bson:"reward_queued,omitempty"` // 胜利时是否转入永久待领。
+	Automatic       bool                `bson:"automatic,omitempty"`     // 原预约是否由有效托管卡自动启动。
+	Qualification   string              `bson:"qualification,omitempty"` // 入场条件摘要，真实击杀会成为对应模板的通关证明。
 }
 
 // personalBossRecord 额外保存仅持久层使用的所有者围栏和幂等指纹。
@@ -101,12 +105,13 @@ type personalBossRecord struct {
 	BeginDigest           string `bson:"begin_digest"`            // 初次预约内容摘要。
 	FinishDigest          string `bson:"finish_digest,omitempty"` // 首次确认的结束提案内容摘要。
 
-	KillRewardGold     int64         `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
-	PrivilegeUntil     time.Time     `bson:"privilege_until_at_entry,omitempty"` // 原角色授权的卡到期时刻，当前挑战不受理卡资产操作。
-	KillRewardItems    []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
-	PendingRewardLimit uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
-	KillMapID          uint64        `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
-	KillMonsterID      uint32        `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
+	KillRewardGold       int64         `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
+	PrivilegeUntil       time.Time     `bson:"privilege_until_at_entry,omitempty"` // 手动挑战冻结的特权截止时间。
+	RewardPrivilegeUntil time.Time     `bson:"reward_privilege_until,omitempty"`   // 自动场首次胜利确认采用的角色特权截止时间。
+	KillRewardItems      []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
+	PendingRewardLimit   uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
+	KillMapID            uint64        `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
+	KillMonsterID        uint32        `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
 }
 
 // BeginPersonalBoss 在角色 owner 的事务内确认独占场次，返回的活动预约才能启动新的场景。
@@ -116,6 +121,9 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 	if !lowerHex(q.ChallengeID, 16) || q.Execution == 0 || q.Execution > math.MaxInt64 || q.TemplateID == 0 ||
 		!lowerHex(q.CombatSnapshot, 32) || q.ExpectedRevision <= 0 || q.StartedAt.IsZero() {
 		return out, grant, Fail(p.CodeInvalidArgument, "个人首领预约身份或快照无效")
+	}
+	if (q.Automatic || q.Qualification != "") && !lowerHex(q.Qualification, 32) {
+		return out, grant, Fail(p.CodeInvalidArgument, "个人首领通关条件摘要无效")
 	}
 	q.StartedAt = bossTime(q.StartedAt)
 	now := bossTime(time.Now())
@@ -157,6 +165,11 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 			return Fail(p.CodeOperationConflict, "原个人首领预约已错过启动窗口")
 		}
 		state := personalBossProgress(r)
+		if q.Automatic {
+			if err := checkAutomaticPersonalBoss(r, state, cfg.HostingBenefits, q, bossTime(time.Now())); err != nil {
+				return err
+			}
+		}
 		availability := personalBossAvailability(r, state, template, q.StartedAt)
 		if err := personalBossAdmissionError(availability.EligibilityReason); err != nil {
 			return err
@@ -168,7 +181,8 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 		grant = PersonalBossChallenge{ChallengeID: q.ChallengeID, ReservationID: domain.ID(), RoleID: r.ID,
 			RunID: s.Cfg.RunID, Execution: q.Execution, TemplateID: q.TemplateID, RuleVersion: q.RuleVersion,
 			ConfigHash: q.ConfigHash, CombatSnapshot: q.CombatSnapshot, StartedAt: q.StartedAt, ExpiresAt: expires,
-			BossHP: q.BossHP, DailyLimit: availability.DailyLimit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown}
+			BossHP: q.BossHP, DailyLimit: availability.DailyLimit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown,
+			Automatic: q.Automatic, Qualification: q.Qualification}
 		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
 			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil, KillMapID: template.Map.ID, KillMonsterID: template.Monster.ID}
 		freezePersonalBossItems(cfg, &record, template.ItemReward)
@@ -299,12 +313,16 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		state.Successes++
 		record.SuccessDay, record.Successes = day, state.Successes
 		cooldown = record.SuccessCooldown
+		if record.Automatic {
+			record.RewardPrivilegeUntil = r.PrivilegeUntil
+		}
 		if err := applyPersonalBossGold(&r, record); err != nil {
 			return r, err
 		}
 		if err := applyPersonalBossItems(&r, record); err != nil {
 			return r, err
 		}
+		recordPersonalBossQualification(&state, record)
 		r = s.advancePersonalBossTasks(r, record)
 	}
 	record.AvailableAt = bossTime(record.FinishedAt.Add(cooldown))
@@ -354,7 +372,7 @@ func applyPersonalBossGold(r *domain.Role, record *personalBossRecord) error {
 	if record.KillRewardGold == 0 {
 		return nil
 	}
-	bound := !record.PrivilegeUntil.After(record.FinishedAt)
+	bound := record.rewardIsBound()
 	wallet := &r.Wallet.Gold
 	if bound {
 		wallet = &r.Wallet.BoundGold

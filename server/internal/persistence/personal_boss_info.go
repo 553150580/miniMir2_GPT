@@ -64,6 +64,11 @@ func (info PersonalBossInfo) choice() PersonalBossTemplateChoice {
 		DisplayName: info.DisplayName, MapID: info.MapID, EligibilityReason: info.EligibilityReason, AvailableAt: info.AvailableAt}
 }
 
+// CanBookPersonalBoss 用当前房间快照预筛资格。提交预约时仍会在角色事务中重查。
+func CanBookPersonalBoss(r domain.Role, cfg *devconfig.PersonalBossConfig, at time.Time) bool {
+	return personalBossAvailability(r, personalBossProgress(r), cfg, bossTime(at)).EligibilityReason == PersonalBossEligible
+}
+
 // personalBossAvailability 让目录查询和预约事务采用同一等级、次数与冷却规则。
 func personalBossAvailability(r domain.Role, state domain.PersonalBossProgress, cfg *devconfig.PersonalBossConfig, at time.Time) PersonalBossInfo {
 	day := shanghaiOperatingDay(at)
