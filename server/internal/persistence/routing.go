@@ -263,6 +263,20 @@ func (s *Store) availableRuns(ctx context.Context, routes []originRoute) (map[ui
 	return available, nil
 }
 
+// reserveTicketRoute 把新签票与运行服冻结、租约换代的组写屏障对齐，分散同服并发签票。
+func (s *Store) reserveTicketRoute(ctx context.Context, run Run, accountID string) error {
+	guard := bson.M{"_id": fmt.Sprintf("%d:%d", run.ID, runGuardGroup(accountID)),
+		"owner_instance": run.Owner, "run_epoch": run.Epoch, "control_version": run.ControlVersion}
+	updated, err := s.DB.Collection("run_guards").UpdateOne(ctx, guard, bson.M{"$inc": bson.M{"ticket_issue_seq": int64(1)}})
+	if err != nil {
+		return err
+	}
+	if updated.MatchedCount != 1 {
+		return Fail(p.CodeLineRecovering, "签票期间运行服授权已变化")
+	}
+	return nil
+}
+
 // confirmTicketRoute 在入场事务中核对原票据是否仍绑定当前入口路由与部署。数据库异常由事务层处理。
 func (s *Store) confirmTicketRoute(ctx context.Context, ticket Ticket) error {
 	current, err := s.liveRoute(ctx, ticket.Origin)

@@ -50,7 +50,7 @@ func goldMarketAdvanceResult(err error) (bool, error) {
 	if errors.Is(err, errGoldMarketWorkChanged) {
 		return true, nil
 	}
-	return err == nil, err
+	return marketAdvanceResult(err)
 }
 
 // goldMarketClock 涵盖任务排队和事务回调重试的时间，旧时点不能延长订单期限。

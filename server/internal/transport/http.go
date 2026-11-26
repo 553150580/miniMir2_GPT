@@ -25,7 +25,7 @@ import (
 type Server struct {
 	Store        *persistence.Store // 节点使用的专用库连接及身份。
 	Mode         string             // 选择账号、游戏或 GM 路由集合。
-	NodeKey      string             // 内部登记和 GM 只读接口的共享密钥。
+	NodeKey      string             // 内部登记和本机 GM 接口的共享密钥。
 	Engine       *game.Engine       // 游戏节点将已校验的连接交给此运行时。
 	HostedRunIDs []uint64           // 游戏节点启动时确认为可用的运行服身份。
 	active       atomic.Int64       // 游戏连接数，用于升级前的接入配额。
@@ -59,6 +59,7 @@ func (s *Server) Handler() http.Handler {
 		mux.HandleFunc("GET /api/role", s.jsonRole)
 	}
 	if s.Mode == "gm" {
+		s.mountGMMarketMerge(mux)
 		// w 写入当前 HTTP 响应头和正文，r 提供当前 HTTP 请求、请求头和取消信号。
 		mux.HandleFunc("GET /api/status", func(w http.ResponseWriter, r *http.Request) {
 			if subtle.ConstantTimeCompare([]byte(r.Header.Get("X-Dev-Node-Key")), []byte(s.NodeKey)) != 1 {
@@ -67,11 +68,22 @@ func (s *Server) Handler() http.Handler {
 			}
 			// roles 保存由“estimated”文档数量取得的角色集合。
 			roles, _ := s.Store.DB.Collection("roles").EstimatedDocumentCount(r.Context())
-			respond(w, map[string]any{"mode": "gm", "role_count": roles, "maintenance_write_endpoints": "disabled", "production_ready": false})
+			respond(w, map[string]any{"mode": "gm", "role_count": roles, "maintenance_write_endpoints": "market_merge_only", "production_ready": false})
 		})
 	}
 	// w 写入当前 HTTP 响应头和正文，r 提供当前 HTTP 请求、请求头和取消信号。
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// 清退只允许本机运维客户端，经过独立来源校验后才交给路由，不参与浏览器预检。
+		if gmMarketRequestPath(r.URL.Path) {
+			if s.Mode != "gm" {
+				http.NotFound(w, r)
+				return
+			}
+			if s.gmMarketAuthorize(w, r) {
+				mux.ServeHTTP(w, r)
+			}
+			return
+		}
 		// 开发路由仅服务本机来源。预检提前结束，正式请求再经过帧大小限制。
 		// origin 保存由“get”取得的大区或起点。
 		origin := r.Header.Get("Origin")

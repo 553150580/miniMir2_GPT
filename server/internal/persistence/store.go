@@ -221,6 +221,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 	for collection, models := range itemMarketIndexes() {
 		indexes[collection] = models
 	}
+	indexes[itemMarketBids] = append(indexes[itemMarketBids], marketMergeAssetIndexes()...)
 	for collection, models := range goldMarketIndexes() {
 		indexes[collection] = models
 	}

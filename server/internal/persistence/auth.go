@@ -299,29 +299,39 @@ func (s *Store) IssueTicket(ctx context.Context, a Auth, key *pb.RoleKey) (*pb.E
 	if e != nil {
 		return nil, authorityReadError(e, p.CodeInvalidArgument, "所选角色不可用")
 	}
-	// destination 将永久入口解析为当前获准的节点、运行服和部署版本。
-	destination, e := s.liveRoute(ctx, r.Origin)
-	if e != nil {
-		return nil, e
-	}
 	// token 是交给客户端、供 WebSocket 入场使用的一次性票据原文。
 	token := domain.ID() + domain.ID()
 	// until 是本张票据 45 秒的有效期终点。
 	until := time.Now().Add(45 * time.Second)
-	ticket := Ticket{
-		ID: Hash([]byte(token)), AccountID: a.AccountID, AuthVersion: a.AuthVersion, RoleID: r.ID, Origin: r.Origin,
-		Run: destination.origin.RunID, GameNodeID: destination.assignment.GameNodeID,
-		AssignmentVersion: destination.assignment.AssignmentVersion, Owner: destination.run.Owner, Epoch: destination.run.Epoch,
-		RouteVersion: destination.origin.Version, Expires: until,
-	}
-	_, e = s.DB.Collection("entry_tickets").InsertOne(ctx, ticket)
+	var out *pb.EntryTicketResult
+	e = s.tx(ctx, func(tc context.Context) error {
+		// 在同一事务读当前路由、与维护竞争并保存票据，避免冻结后提交迟到的签票。
+		destination, err := s.liveRoute(tc, r.Origin)
+		if err != nil {
+			return err
+		}
+		if err = s.reserveTicketRoute(tc, destination.run, a.AccountID); err != nil {
+			return err
+		}
+		ticket := Ticket{
+			ID: Hash([]byte(token)), AccountID: a.AccountID, AuthVersion: a.AuthVersion, RoleID: r.ID, Origin: r.Origin,
+			Run: destination.origin.RunID, GameNodeID: destination.assignment.GameNodeID,
+			AssignmentVersion: destination.assignment.AssignmentVersion, Owner: destination.run.Owner, Epoch: destination.run.Epoch,
+			RouteVersion: destination.origin.Version, Expires: until,
+		}
+		if _, err = s.DB.Collection("entry_tickets").InsertOne(tc, ticket); err != nil {
+			return err
+		}
+		out = &pb.EntryTicketResult{
+			Ticket: token, GameWssUrl: destination.assignment.GameWSURL, RunServerId: ticket.Run, GameNodeId: ticket.GameNodeID,
+			RouteVersion: uint64(ticket.RouteVersion), ExpiresAtUnix: uint64(until.Unix()),
+		}
+		return nil
+	})
 	if e != nil {
 		return nil, e
 	}
-	return &pb.EntryTicketResult{
-		Ticket: token, GameWssUrl: destination.assignment.GameWSURL, RunServerId: ticket.Run, GameNodeId: ticket.GameNodeID,
-		RouteVersion: uint64(ticket.RouteVersion), ExpiresAtUnix: uint64(until.Unix()),
-	}, nil
+	return out, nil
 }
 
 // TicketRole 预读未消费且未过期的票据，供游戏服把入场分派到角色 worker。

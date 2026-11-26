@@ -37,6 +37,14 @@ func (s *Store) marketSystemTx(ctx context.Context, market string, accounts []st
 		defer func() { <-slot }()
 	}
 	return s.tx(ctx, func(tc context.Context) error {
+		frozen, err := s.marketMergeFrozen(tc)
+		if err != nil {
+			return err
+		}
+		if frozen {
+			return errMarketMergeFrozen
+		}
+		// 冻结也会推进全部组的写序列。即使这里读到旧快照，后续写入也会冲突并重读门禁。
 		writes := make([]mongo.ClientBulkWrite, 0, len(groups))
 		for _, group := range groups {
 			write, err := s.runFenceWrite(tc, group)

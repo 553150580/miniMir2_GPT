@@ -32,6 +32,11 @@ GROUP_PREFIXES = {
     'mirror-arena': ('MirrorArena',),
     'market': ('ItemMarket', 'GoldMarket'),
 }
+# 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
+MARKET_PERSISTENCE_CASES = (
+    'TestItemMarketBackgroundMongo', 'TestGoldMarketBackgroundPriorityMongo', 'TestGoldMarketBackgroundExpiryMongo',
+    'TestMarketMergeAssetsMongo', 'TestMarketMergePlanAuthorityMongo', 'TestMarketMergeWriteFenceMongo',
+)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -62,6 +67,7 @@ def suites():
         if len(match) != 1:
             raise ValueError(f'联机用例 {name} 需要明确的单个验收分组')
         groups[match[0]].append(name)
+    groups['market'].extend(MARKET_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -95,7 +101,10 @@ def run_batch(output, group, cases, timeout):
         environment.pop('MINIMIR_SERVER_DIRECTORY_WEB_ROOT', None)
         environment.pop('MINIMIR_WORLD_BOSS_BROWSER_WEB_ROOT', None)
         expression = '^(' + '|'.join(cases) + ')$'
-        command = [*GO, '-json', '-race', '-p', '1', './internal/integration', '-run', expression,
+        packages = ['./internal/integration']
+        if group == 'market':
+            packages.append('./internal/persistence')
+        command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']
         report['command'] = command
         log = destination / 'events.jsonl'

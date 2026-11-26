@@ -129,6 +129,9 @@ func (s *Store) applyItemMarket(ctx context.Context, role domain.Role, request *
 	if gate != 0 {
 		return role, nil, gate, nil
 	}
+	if err := s.requireOpenMarkets(ctx); err != nil {
+		return role, nil, 0, err
+	}
 	now := bossTime(time.Now()) // 业务实际受理时以统一毫秒时钟检查截止。
 	if request.Action == itemMarketClaim {
 		return s.claimItemMarketAsset(ctx, role, request, now)

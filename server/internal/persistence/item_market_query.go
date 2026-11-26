@@ -44,6 +44,14 @@ func (s *Store) QueryItemMarket(ctx context.Context, auth Auth, q *pb.ItemMarket
 		rules := s.Cfg.Fixture.ItemMarket
 		out = &pb.ItemMarketState{SceneEpoch: q.SceneEpoch, Scope: q.Scope, Enabled: rules != nil,
 			CanTrade: rules != nil && role.PrivilegeActiveAt(now), RoleRevision: uint64(role.Revision)}
+		if out.CanTrade {
+			var frozen bool
+			frozen, err = s.marketMergeFrozen(tc)
+			if err != nil {
+				return err
+			}
+			out.CanTrade = !frozen
+		}
 		if !out.Enabled {
 			out.Enabled, err = s.hasItemMarketObligations(tc, role)
 			if err != nil || !out.Enabled {

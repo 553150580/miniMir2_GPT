@@ -38,12 +38,10 @@ func (s *Store) AdvanceItemMarket(ctx context.Context, now time.Time) (bool, err
 	// 退款批次完成后更新自己的下次水位，旧订单的大名单不会独占到期调度。
 	if refund.ID != "" && (auction.ID == "" || !auction.AuctionEndsAt.Before(refund.NextCheckAt)) &&
 		(direct.ID == "" || !direct.DirectEndsAt.Before(refund.NextCheckAt)) {
-		err = s.advanceItemMarketRefund(ctx, refund, now)
-		return err == nil, err
+		return marketAdvanceResult(s.advanceItemMarketRefund(ctx, refund, now))
 	}
 	if direct.ID != "" && (auction.ID == "" || direct.DirectEndsAt.Before(auction.AuctionEndsAt)) {
-		err = s.finishItemMarketDirectExpiry(ctx, direct, now)
-		return err == nil, err
+		return marketAdvanceResult(s.finishItemMarketDirectExpiry(ctx, direct, now))
 	}
 	if auction.ID != "" {
 		var entropy [32]byte
@@ -52,8 +50,7 @@ func (s *Store) AdvanceItemMarket(ctx context.Context, now time.Time) (bool, err
 				return false, err
 			}
 		}
-		err = s.finishItemMarketAuction(ctx, auction, entropy, now)
-		return err == nil, err
+		return marketAdvanceResult(s.finishItemMarketAuction(ctx, auction, entropy, now))
 	}
 	return false, nil
 }

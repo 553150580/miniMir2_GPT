@@ -51,6 +51,14 @@ func (s *Store) QueryGoldMarket(ctx context.Context, auth Auth, q *pb.GoldMarket
 		} else {
 			out.Enabled, out.CanTrade = true, role.PrivilegeActiveAt(now)
 		}
+		if out.CanTrade {
+			var frozen bool
+			frozen, err = s.marketMergeFrozen(tc)
+			if err != nil {
+				return err
+			}
+			out.CanTrade = !frozen
+		}
 		if q.Scope == 4 {
 			return s.readGoldMarketClaims(tc, role, q, out)
 		}

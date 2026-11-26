@@ -79,6 +79,9 @@ func (s *Store) applyGoldMarket(ctx context.Context, role domain.Role, q *pb.Gol
 	if gate != 0 {
 		return role, nil, gate, nil
 	}
+	if err := s.requireOpenMarkets(ctx); err != nil {
+		return role, nil, 0, err
+	}
 	now := bossTime(time.Now())
 	switch q.Action {
 	case goldMarketPlace:
