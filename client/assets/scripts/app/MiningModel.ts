@@ -31,6 +31,10 @@ export interface MiningState {
     readonly lastOre?: MiningItem;
     readonly attempts: Long;
     readonly successes: Long;
+    readonly recycleItemIds?: readonly number[]; // 当前规则允许自动回收的矿石模板。
+    readonly autoRecycleEnabled?: boolean; // 当前角色已经提交的矿石策略。
+    readonly lastRecycleGold?: Long; // 上次出矿实际收到的非绑定金币。
+    readonly lastRecycleBoundGold?: Long; // 上次出矿实际收到的绑定金币。
 }
 
 // 只接受当前场景已确认的完整观察，忽略旧图和乱序回包。
@@ -46,7 +50,7 @@ export function isMiningState(value: unknown, scope: MiningScope): value is Mini
         (!state.tool || (validItemId(state.tool.itemId) && unsignedMiningInteger(state.tool.durabilityU) &&
             unsignedMiningInteger(state.tool.maxDurabilityU) && state.tool.durabilityU.lessThanOrEqual(state.tool.maxDurabilityU))) &&
         (!state.lastOre || (validItemId(state.lastOre.itemId) && orePurityText(state.lastOre.orePurity) !== '' &&
-            typeof state.lastOre.bound === 'boolean'));
+            typeof state.lastOre.bound === 'boolean')) && validMiningRecycle(state);
 }
 
 function unsignedMiningInteger(value: unknown): value is Long {
@@ -55,6 +59,17 @@ function unsignedMiningInteger(value: unknown): value is Long {
 
 function validItemId(value: number): boolean {
     return Number.isInteger(value) && value > 0 && value <= 0xffffffff;
+}
+
+// 旧版本允许缺省字段；非零到账只接受与原矿绑态一致的金币钱包。
+function validMiningRecycle(state: MiningState): boolean {
+    const { recycleItemIds: ids, autoRecycleEnabled: enabled, lastRecycleGold: gold, lastRecycleBoundGold: boundGold } = state;
+    if (ids !== undefined && (!Array.isArray(ids) || ids.length > 4 || !ids.every(validItemId) || new Set(ids).size !== ids.length)) return false;
+    if (enabled !== undefined && (typeof enabled !== 'boolean' || enabled && !ids?.length)) return false;
+    if ([gold, boundGold].some(value => value !== undefined && (!Long.isLong(value) || value.isNegative()))) return false;
+    if (gold?.isZero() !== false && boundGold?.isZero() !== false) return true;
+    const ore = state.lastOre;
+    return !!ore && !!ids?.includes(ore.itemId) && (ore.bound ? gold?.isZero() !== false : boundGold?.isZero() !== false);
 }
 
 // 旧物品纯度为0或缺省，不凭模板补造矿石属性。

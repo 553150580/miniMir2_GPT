@@ -30,6 +30,8 @@ type roomMining struct {
 	successes uint64       // 当前矿区已经确认的出矿数。
 	sequence  uint64       // 当前客户端场景下的状态观察顺序。
 	code      uint32       // 最近一次因容量、工具或时长停止的原因。
+
+	lastRecycle domain.Wallet // 最近出矿同一事务确认的回收增量，矿石留包时为零。
 }
 
 // miningCommand 只受理已确认在原矿层的角色，旧场景和无效工具不能开始挖矿。
@@ -112,6 +114,11 @@ func (w *worker) sendMiningState(r *room, request, code uint32) {
 	}
 	if state.lastOre != nil {
 		result.LastOre = state.lastOre.Proto()
+	}
+	if recycle := f.Mining.AutoRecycle; recycle != nil {
+		result.RecycleItemIds = recycle.ItemIDs
+		result.AutoRecycleEnabled = r.Role.MiningAutoRecycle
+		result.LastRecycleGold, result.LastRecycleBoundGold = state.lastRecycle.Gold, state.lastRecycle.BoundGold
 	}
 	w.send(r, p.MsgS2CMiningState, request, result)
 }

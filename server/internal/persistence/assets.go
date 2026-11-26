@@ -60,6 +60,7 @@ type AssetRequest struct {
 	ItemMarketGate       uint32                         // 只拒绝当前场景的新市场写入，不覆盖原有回执。
 	GoldMarket           *pb.GoldMarketAction           // 原金币委托、撤销或领取命令。
 	GoldMarketGate       uint32                         // 当前场景对首次金币委托写入的门禁。
+	MiningAutoRecycle    bool                           // 玩家为后续新矿石选定的独立自动回收开关。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -167,8 +168,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
-		if q.Kind == AssetMirrorArenaExchange || q.Kind == AssetBuyRoleCard || q.Kind == AssetClaimRoleCardDaily || q.Kind == AssetItemMarket || q.Kind == AssetGoldMarket {
-			// 普通收益可推进角色修订。此处经济命令另行复核原报价、角色资格与当前余额。
+		switch q.Kind {
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle:
+			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
 		if !sequenceValid || !revisionValid || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
@@ -234,6 +236,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			if e != nil {
 				return e
 			}
+		case AssetSetMiningAutoRecycle:
+			r, businessCode = setMiningAutoRecycle(r, q.MiningAutoRecycle, &s.Cfg.Fixture)
 		case "set_item_lock":
 			r, businessCode = setItemLock(r, q, s.Cfg.Fixture)
 		case AssetClaimHostingTime:
@@ -368,6 +372,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
+		if q.Kind == AssetSetMiningAutoRecycle && businessCode == 0 {
+			enabled := r.MiningAutoRecycle
+			op.MiningAutoRecycle = &enabled
+		}
 		if _, e = s.DB.Collection("operations").InsertOne(tc, op); e != nil {
 			return e
 		}
@@ -375,6 +383,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		audit := bson.M{"_id": opID, "role_id": r.ID, "account_id": a.AccountID, "kind": q.Kind, "op_id": domain.Hex(q.Context.OpId), "revision": r.Revision, "result_code": businessCode, "at": time.Now()}
 		if op.AutoRecyclePolicy != nil {
 			audit["auto_recycle_policy"] = op.AutoRecyclePolicy
+		}
+		if op.MiningAutoRecycle != nil {
+			audit["mining_auto_recycle"] = *op.MiningAutoRecycle
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
 		if skillDetails != nil {
 			audit["preview_id"] = q.PreviewID

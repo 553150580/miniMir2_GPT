@@ -20,6 +20,8 @@
 
 `40044 GoldMarketAction` 挂单提交原手数、单价、条款摘要和期限，撤单和领取核对原标识与版本。挂单回执确认原币种冻结，市场在运行服内按接单序号和簿内价时优先推进成交。成交金币、卖方净额、价差及剩余退款通过各原角色的待领记录交付。`40005 OperationResult.gold_market` 重放返回原挂单、撤单或领取回执。
 
+`40045 SetMiningAutoRecycleRequest` 通过原经济操作凭据保存角色的矿石回收开关。服务端按原操作编号回传 `40005`，成功重放不会覆盖之后的设置。`20029 MiningState` 额外发送规则允许的矿种、角色当前开关与最近一次出矿对应的实际回收金额。空矿种列表表示功能关闭，两个金额只能有一边为正数。`HostingReport` 对已经提交的托管矿石回收单列块数及绑定分账，余额仍沿原 `earned` 确认。
+
 `20016 PersonalBossInfo` 添加 `world_pending_rewards` 和 `world_pending_rewards_more`，以同一角色授权展示独立于个人容量的世界首领奖励。原待领消息可携带来源和发生时的名次，`40030 ClaimChallengeReward` 继续沿用原附件编号和经济身份整笔领取。配置变更和新票重连仍使用已冻结物品、归属和绑定。
 
 同一查询的字段 22 和 23 分别是 `dungeon_pending_rewards` 和 `dungeon_pending_rewards_more`。讨伐原奖包沿现有附件格式和 `40030` 领取，来源为 `dungeon`，时间为最终首领实际死亡。讨伐首屏返回最早八包，领取后可继续查看更晚的原奖包。个人和世界列表仍独立计数。

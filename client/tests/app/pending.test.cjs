@@ -30,6 +30,21 @@ function pending(seed = 1) {
     } } };
 }
 
+test('关闭矿石自动回收保留原操作流水和明确 false，重连后协议字节一致', () => {
+    const storage = new MemoryStorage(), operation = pending().value.operation;
+    const original = { id: 40045, value: { enabled: false, operation } };
+    new PendingOperations(storage, key).set('roleA', original);
+    const restored = new PendingOperations(storage, key).get('roleA');
+    const encode = ({ enabled, operation: op }) => pb.SetMiningAutoRecycleRequest.encode({ enabled,
+        operation: { op_id: op.opId, command_seq: op.commandSeq, expected_revision: op.expectedRevision,
+            expected_rule_version: op.expectedRuleVersion } }).finish();
+    assert.equal(restored.value.enabled, false);
+    assert.deepEqual(encode(restored.value), encode(original.value));
+    assert.equal(pb.SetMiningAutoRecycleRequest.decode(encode(restored.value)).enabled, false);
+    assert.throws(() => new PendingOperations().set('roleA', { id: 40045, value: { operation } }), { code: 'INVALID_OPERATION' });
+    assert.throws(() => new PendingOperations().set('roleA', { id: 40045, value: { operation, enabled: 0 } }), { code: 'INVALID_OPERATION' });
+});
+
 test('金币补时仅保存原报价和整数秒，重连保持同一操作的协议字节', () => {
     const storage = new MemoryStorage(), original = { id: 40007, value: { requestedSeconds: 86400, quoteId: id(8), operation: pending().value.operation } };
     const ledger = new PendingOperations(storage, key);

@@ -104,6 +104,7 @@ export const MsgC2SItemMarketAction: 40041 = 40041;
 export const MsgC2SGoldMarketQuery: 40042 = 40042;
 export const MsgS2CGoldMarketState: 40043 = 40043;
 export const MsgC2SGoldMarketAction: 40044 = 40044;
+export const MsgC2SSetMiningAutoRecycle: 40045 = 40045;
 export const CodeOK: 0 = 0;
 export const CodeInvalidArgument: 1001 = 1001;
 export const CodeUnauthenticated: 1002 = 1002;

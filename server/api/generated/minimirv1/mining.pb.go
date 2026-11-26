@@ -83,6 +83,59 @@ func (x *MiningIntent) GetToolInstanceId() []byte {
 	return nil
 }
 
+// 保存本角色新采矿石的自动回收开关，沿原经济操作编号确认和重试。
+type SetMiningAutoRecycleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Enabled       bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	Operation     *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetMiningAutoRecycleRequest) Reset() {
+	*x = SetMiningAutoRecycleRequest{}
+	mi := &file_mining_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetMiningAutoRecycleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetMiningAutoRecycleRequest) ProtoMessage() {}
+
+func (x *SetMiningAutoRecycleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_mining_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetMiningAutoRecycleRequest.ProtoReflect.Descriptor instead.
+func (*SetMiningAutoRecycleRequest) Descriptor() ([]byte, []int) {
+	return file_mining_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SetMiningAutoRecycleRequest) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
+func (x *SetMiningAutoRecycleRequest) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
 // 当前矿区附着的完整观察，由查询、开停和已确认判定返回。
 type MiningState struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -95,16 +148,22 @@ type MiningState struct {
 	// 当前/最近使用的锄头，持久保留原存储单位。工具耗尽并移除时允许省略。
 	Tool *ItemView `protobuf:"bytes,7,opt,name=tool,proto3" json:"tool,omitempty"`
 	// 当前场景最近一次已确认出矿，保留原实例纯度和绑定状态。
-	LastOre       *ItemView `protobuf:"bytes,8,opt,name=last_ore,json=lastOre,proto3" json:"last_ore,omitempty"`
-	Attempts      uint64    `protobuf:"varint,9,opt,name=attempts,proto3" json:"attempts,omitempty"`
-	Successes     uint64    `protobuf:"varint,10,opt,name=successes,proto3" json:"successes,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	LastOre   *ItemView `protobuf:"bytes,8,opt,name=last_ore,json=lastOre,proto3" json:"last_ore,omitempty"`
+	Attempts  uint64    `protobuf:"varint,9,opt,name=attempts,proto3" json:"attempts,omitempty"`
+	Successes uint64    `protobuf:"varint,10,opt,name=successes,proto3" json:"successes,omitempty"`
+	// 本规则允许自动回收的矿石配置编号；空列表表示功能关闭。
+	RecycleItemIds     []uint32 `protobuf:"varint,11,rep,packed,name=recycle_item_ids,json=recycleItemIds,proto3" json:"recycle_item_ids,omitempty"`
+	AutoRecycleEnabled bool     `protobuf:"varint,12,opt,name=auto_recycle_enabled,json=autoRecycleEnabled,proto3" json:"auto_recycle_enabled,omitempty"`
+	// 最近一次出矿已自动回收时，仅对应原绑定状态的钱包金额为正数。
+	LastRecycleGold      int64 `protobuf:"varint,13,opt,name=last_recycle_gold,json=lastRecycleGold,proto3" json:"last_recycle_gold,omitempty"`
+	LastRecycleBoundGold int64 `protobuf:"varint,14,opt,name=last_recycle_bound_gold,json=lastRecycleBoundGold,proto3" json:"last_recycle_bound_gold,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *MiningState) Reset() {
 	*x = MiningState{}
-	mi := &file_mining_proto_msgTypes[1]
+	mi := &file_mining_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -116,7 +175,7 @@ func (x *MiningState) String() string {
 func (*MiningState) ProtoMessage() {}
 
 func (x *MiningState) ProtoReflect() protoreflect.Message {
-	mi := &file_mining_proto_msgTypes[1]
+	mi := &file_mining_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -129,7 +188,7 @@ func (x *MiningState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MiningState.ProtoReflect.Descriptor instead.
 func (*MiningState) Descriptor() ([]byte, []int) {
-	return file_mining_proto_rawDescGZIP(), []int{1}
+	return file_mining_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *MiningState) GetSceneEpoch() uint64 {
@@ -202,17 +261,48 @@ func (x *MiningState) GetSuccesses() uint64 {
 	return 0
 }
 
+func (x *MiningState) GetRecycleItemIds() []uint32 {
+	if x != nil {
+		return x.RecycleItemIds
+	}
+	return nil
+}
+
+func (x *MiningState) GetAutoRecycleEnabled() bool {
+	if x != nil {
+		return x.AutoRecycleEnabled
+	}
+	return false
+}
+
+func (x *MiningState) GetLastRecycleGold() int64 {
+	if x != nil {
+		return x.LastRecycleGold
+	}
+	return 0
+}
+
+func (x *MiningState) GetLastRecycleBoundGold() int64 {
+	if x != nil {
+		return x.LastRecycleBoundGold
+	}
+	return 0
+}
+
 var File_mining_proto protoreflect.FileDescriptor
 
 const file_mining_proto_rawDesc = "" +
 	"\n" +
 	"\fmining.proto\x12\n" +
-	"minimir.v1\x1a\fassets.proto\"q\n" +
+	"minimir.v1\x1a\fassets.proto\x1a\fcommon.proto\"q\n" +
 	"\fMiningIntent\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x16\n" +
 	"\x06action\x18\x02 \x01(\rR\x06action\x12(\n" +
-	"\x10tool_instance_id\x18\x03 \x01(\fR\x0etoolInstanceId\"\xd5\x02\n" +
+	"\x10tool_instance_id\x18\x03 \x01(\fR\x0etoolInstanceId\"s\n" +
+	"\x1bSetMiningAutoRecycleRequest\x12\x18\n" +
+	"\aenabled\x18\x01 \x01(\bR\aenabled\x12:\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x94\x04\n" +
 	"\vMiningState\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x15\n" +
@@ -226,7 +316,11 @@ const file_mining_proto_rawDesc = "" +
 	"\blast_ore\x18\b \x01(\v2\x14.minimir.v1.ItemViewR\alastOre\x12\x1a\n" +
 	"\battempts\x18\t \x01(\x04R\battempts\x12\x1c\n" +
 	"\tsuccesses\x18\n" +
-	" \x01(\x04R\tsuccessesB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	" \x01(\x04R\tsuccesses\x12(\n" +
+	"\x10recycle_item_ids\x18\v \x03(\rR\x0erecycleItemIds\x120\n" +
+	"\x14auto_recycle_enabled\x18\f \x01(\bR\x12autoRecycleEnabled\x12*\n" +
+	"\x11last_recycle_gold\x18\r \x01(\x03R\x0flastRecycleGold\x125\n" +
+	"\x17last_recycle_bound_gold\x18\x0e \x01(\x03R\x14lastRecycleBoundGoldB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_mining_proto_rawDescOnce sync.Once
@@ -240,20 +334,23 @@ func file_mining_proto_rawDescGZIP() []byte {
 	return file_mining_proto_rawDescData
 }
 
-var file_mining_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_mining_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_mining_proto_goTypes = []any{
-	(*MiningIntent)(nil), // 0: minimir.v1.MiningIntent
-	(*MiningState)(nil),  // 1: minimir.v1.MiningState
-	(*ItemView)(nil),     // 2: minimir.v1.ItemView
+	(*MiningIntent)(nil),                // 0: minimir.v1.MiningIntent
+	(*SetMiningAutoRecycleRequest)(nil), // 1: minimir.v1.SetMiningAutoRecycleRequest
+	(*MiningState)(nil),                 // 2: minimir.v1.MiningState
+	(*OperationContext)(nil),            // 3: minimir.v1.OperationContext
+	(*ItemView)(nil),                    // 4: minimir.v1.ItemView
 }
 var file_mining_proto_depIdxs = []int32{
-	2, // 0: minimir.v1.MiningState.tool:type_name -> minimir.v1.ItemView
-	2, // 1: minimir.v1.MiningState.last_ore:type_name -> minimir.v1.ItemView
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	3, // 0: minimir.v1.SetMiningAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	4, // 1: minimir.v1.MiningState.tool:type_name -> minimir.v1.ItemView
+	4, // 2: minimir.v1.MiningState.last_ore:type_name -> minimir.v1.ItemView
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_mining_proto_init() }
@@ -262,13 +359,14 @@ func file_mining_proto_init() {
 		return
 	}
 	file_assets_proto_init()
+	file_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_mining_proto_rawDesc), len(file_mining_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

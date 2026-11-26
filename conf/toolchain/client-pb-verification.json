@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 156,
+  "message_count": 157,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -161,10 +161,11 @@
     "GoldMarketState",
     "GoldMarketAction",
     "MiningIntent",
+    "SetMiningAutoRecycleRequest",
     "MiningState"
   ],
-  "int64_field_count": 395,
-  "int64_boundary_cases": 1352,
+  "int64_field_count": 400,
+  "int64_boundary_cases": 1371,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1529,6 +1530,24 @@
       "cases": 4
     },
     {
+      "message": "HostingReport",
+      "field": "mining_recycle_count",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "mining_recycle_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "mining_recycle_bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "WarehouseQuery",
       "field": "start_slot",
       "type": "uint64",
@@ -2535,6 +2554,18 @@
       "field": "successes",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "last_recycle_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MiningState",
+      "field": "last_recycle_bound_gold",
+      "type": "int64",
+      "cases": 4
     }
   ],
   "bytes_field_count": 69,
@@ -2903,7 +2934,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "9b7c957fc2e9b699daa6ddfad723d5ba9fe6840e22cfc674ab9ff2ed93bb1322"
+      "sha256": "5313d60cec99b9e2d4d13dfdbbeeac8c60d0e082fe1f4be9a01dbbd0f6491f39"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -2939,19 +2970,19 @@
     },
     {
       "path": "shared/proto/mining.proto",
-      "sha256": "3c23f19868fe3b840f3aff3387fb85f8b0a9f29480f795b984969d85ad04f2e9"
+      "sha256": "27dfe1f10caf190535d55893498d2f96e8bd003464537a9afa6cb1d7b032c309"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "9ce7f0b2c0a1d051dccba08507b21076de2a0a23e9faca4ab7fc9cdeb1da3fb6",
-      "bytes": 2800382
+      "sha256": "9382b5090b9cb235396ed462609cb15a7c2f4bccf8f75f112e693b203097cd4f",
+      "bytes": 2824296
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "bff4af0ac5aa2e362d5f1141029e4c0f70c483a20ef323c5b737647c09cd2d7f",
-      "bytes": 866887
+      "sha256": "2b79327291b2d68397edc423603db9cb26fa0516d86b286cdde3834d01251f38",
+      "bytes": 873547
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

@@ -178,12 +178,16 @@ func TestAutoRecycleAndLockAreEconomicCommandsWithOriginalOperation(t *testing.T
 		msg proto.Message
 	}{
 		{p.MsgC2SSetAutoRecycle, &pb.SetAutoRecycleRequest{Policy: &pb.AutoRecyclePolicy{Enabled: true, QualityIds: []uint32{0}}, Operation: op}},
+		{p.MsgC2SSetMiningAutoRecycle, &pb.SetMiningAutoRecycleRequest{Enabled: true, Operation: op}},
 		{p.MsgC2SSetItemLock, &pb.SetItemLockRequest{ItemInstanceId: domain.Bytes(domain.ID()), ItemVersion: 3, Locked: true, Operation: op}},
 	} {
 		// f 接收消息供后续步骤使用。
 		f := wire.Message(tc.id, 8, 3, tc.msg)
 		if !economic(tc.id) || !proto.Equal(operationContext(f), op) {
 			t.Fatal("新请求绕过经济门禁或操作身份", tc.id)
+		}
+		if tc.id == p.MsgC2SSetMiningAutoRecycle && !waitsForAssetSlot(tc.id) {
+			t.Fatal("矿石回收设置必须等待已经受理的采矿结算")
 		}
 		// w 接收回收所有者供后续步骤使用，r 接收回收所有者供后续步骤使用。
 		w, r, _, _, _ := recycleOwner(t)

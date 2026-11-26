@@ -37,6 +37,8 @@ class TestPrepareMining(unittest.TestCase):
             {'item_id': 910003, 'numerator': 2, 'denominator': 1, 'rounding': 'exact'},
         ])
         self.assertEqual([s['key'] for s in server['npc_shops'] if 'mineral_buyback' in s], ['grocery'])
+        self.assertEqual(rules['auto_recycle'], {'shop_key': 'grocery', 'item_ids': [910001, 910002, 910003]})
+        self.assertNotIn('mining', client)
         self.assertEqual(server['npc_shops'], client['npc_shops'])
         self.assertFalse(any('mineral_buyback' in shop for shop in self.server['npc_shops']))
         self.assertEqual([(o['item_id'], o['price_units']) for o in experimental['offers'][-2:]], [(910011, 50), (910012, 80)])
@@ -49,6 +51,7 @@ class TestPrepareMining(unittest.TestCase):
     def test_buyback_selects_shops_and_ores_without_replacing_workbook_prices(self):
         assembly = copy.deepcopy(self.assembly)
         assembly.pop('mineral_buyback')
+        assembly.pop('auto_recycle')
         legacy, _ = mining.project(self.server, self.client, self.tables, assembly)
         self.assertFalse(any('mineral_buyback' in shop for shop in legacy['npc_shops']))
         tables = copy.deepcopy(self.tables)
@@ -58,6 +61,17 @@ class TestPrepareMining(unittest.TestCase):
         expected = [{'item_id': 910004, 'numerator': 5, 'denominator': 1, 'rounding': 'exact'}]
         self.assertEqual(next(s for s in server['npc_shops'] if s['key'] == 'grocery')['mineral_buyback'], expected)
         self.assertEqual(server['npc_shops'], client['npc_shops'])
+
+    def test_auto_recycle_requires_explicit_priced_minerals(self):
+        legacy = {key: value for key, value in self.assembly.items() if key != 'auto_recycle'}
+        server, _ = mining.project(self.server, self.client, self.tables, legacy)
+        self.assertNotIn('auto_recycle', server['mining'])
+        for policy in (None, {}, {'shop_key': 'none', 'ore_keys': ['copper']},
+                       {'shop_key': 'grocery', 'ore_keys': []}, {'shop_key': 'grocery', 'ore_keys': ['iron', 'iron']},
+                       {'shop_key': 'grocery', 'ore_keys': ['black_iron']},
+                       {'shop_key': 'grocery', 'ore_keys': ['iron'], 'numerator': 10}):
+            with self.subTest(policy=policy), self.assertRaises(ValueError):
+                mining.project(self.server, self.client, self.tables, {**self.assembly, 'auto_recycle': policy})
 
     def test_buyback_rejects_unknown_duplicate_or_overridden_prices(self):
         for selection in (None, [], {'none': ['copper']}, {'grocery': []}, {'grocery': ['copper', 'copper']},

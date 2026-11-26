@@ -53,6 +53,7 @@ const codecs: Record<number, MessageType> = {
     40037: pb.BuyRoleCardRequest, 40038: pb.ClaimRoleCardDailyRequest,
     40039: pb.ItemMarketQuery, 40040: pb.ItemMarketState, 40041: pb.ItemMarketAction,
     40042: pb.GoldMarketQuery, 40043: pb.GoldMarketState, 40044: pb.GoldMarketAction,
+    40045: pb.SetMiningAutoRecycleRequest,
 };
 
 function variable(value: Long): number[] {

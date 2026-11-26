@@ -2277,8 +2277,12 @@ type HostingReport struct {
 	RawExperience      int64  `protobuf:"varint,15,opt,name=raw_experience,json=rawExperience,proto3" json:"raw_experience,omitempty"`
 	RejectedExperience int64  `protobuf:"varint,16,opt,name=rejected_experience,json=rejectedExperience,proto3" json:"rejected_experience,omitempty"`
 	PooledExperience   int64  `protobuf:"varint,17,opt,name=pooled_experience,json=pooledExperience,proto3" json:"pooled_experience,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// 已自动回收的新采矿石和到账金额，属于原战报的 earned，不计入装备回收与入包明细。
+	MiningRecycleCount     uint64 `protobuf:"varint,18,opt,name=mining_recycle_count,json=miningRecycleCount,proto3" json:"mining_recycle_count,omitempty"`
+	MiningRecycleGold      int64  `protobuf:"varint,19,opt,name=mining_recycle_gold,json=miningRecycleGold,proto3" json:"mining_recycle_gold,omitempty"`
+	MiningRecycleBoundGold int64  `protobuf:"varint,20,opt,name=mining_recycle_bound_gold,json=miningRecycleBoundGold,proto3" json:"mining_recycle_bound_gold,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *HostingReport) Reset() {
@@ -2426,6 +2430,27 @@ func (x *HostingReport) GetRejectedExperience() int64 {
 func (x *HostingReport) GetPooledExperience() int64 {
 	if x != nil {
 		return x.PooledExperience
+	}
+	return 0
+}
+
+func (x *HostingReport) GetMiningRecycleCount() uint64 {
+	if x != nil {
+		return x.MiningRecycleCount
+	}
+	return 0
+}
+
+func (x *HostingReport) GetMiningRecycleGold() int64 {
+	if x != nil {
+		return x.MiningRecycleGold
+	}
+	return 0
+}
+
+func (x *HostingReport) GetMiningRecycleBoundGold() int64 {
+	if x != nil {
+		return x.MiningRecycleBoundGold
 	}
 	return 0
 }
@@ -3531,7 +3556,7 @@ const file_assets_proto_rawDesc = "" +
 	"\x15BuyHostingTimeRequest\x12+\n" +
 	"\x11requested_seconds\x18\x01 \x01(\rR\x10requestedSeconds\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12\x19\n" +
-	"\bquote_id\x18\x03 \x01(\fR\aquoteId\"\xbf\x05\n" +
+	"\bquote_id\x18\x03 \x01(\fR\aquoteId\"\xdc\x06\n" +
 	"\rHostingReport\x12,\n" +
 	"\x12hosting_session_id\x18\x01 \x01(\fR\x10hostingSessionId\x12!\n" +
 	"\fused_seconds\x18\x02 \x01(\x04R\vusedSeconds\x12\x14\n" +
@@ -3553,7 +3578,10 @@ const file_assets_proto_rawDesc = "" +
 	"\x10total_drop_count\x18\x0e \x01(\x04R\x0etotalDropCount\x12%\n" +
 	"\x0eraw_experience\x18\x0f \x01(\x03R\rrawExperience\x12/\n" +
 	"\x13rejected_experience\x18\x10 \x01(\x03R\x12rejectedExperience\x12+\n" +
-	"\x11pooled_experience\x18\x11 \x01(\x03R\x10pooledExperience\"[\n" +
+	"\x11pooled_experience\x18\x11 \x01(\x03R\x10pooledExperience\x120\n" +
+	"\x14mining_recycle_count\x18\x12 \x01(\x04R\x12miningRecycleCount\x12.\n" +
+	"\x13mining_recycle_gold\x18\x13 \x01(\x03R\x11miningRecycleGold\x129\n" +
+	"\x19mining_recycle_bound_gold\x18\x14 \x01(\x03R\x16miningRecycleBoundGold\"[\n" +
 	"\x0eWarehouseQuery\x12\x14\n" +
 	"\x05scope\x18\x01 \x01(\rR\x05scope\x12\x1d\n" +
 	"\n" +

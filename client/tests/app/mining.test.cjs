@@ -84,6 +84,48 @@ test('矿区先查询再开始与停止；状态晚到不重放，工具行发�
     game.dispose(); assert.equal(receive,null);
 });
 
+test('矿石回收只确认原附着的明确开关，到账显示跟随原矿绑态和 Long',async()=>{
+    const copper={...mineItem,itemId:910001};
+    const ids=[copper.itemId], saved=[];
+    const receipt=Long.fromString('9007199254740997');
+    let current=scope, receive, confirm, writable=true;
+    const game=new GameMining({subscribe(listener){receive=listener;return ()=>{};}},()=>current,()=>{},
+        id=>id===copper.itemId?'铜矿':undefined,{canSave:()=>writable,confirmEnable:names=>{
+            assert.deepEqual(Array.from(names),['铜矿']);
+            return new Promise(resolve=>{confirm=resolve;});
+        },save:async enabled=>{saved.push(enabled);}});
+    const deliver=(sequence,fields={})=>receive({id:20029,binding:u(current.binding),error:0,value:state(sequence,fields)});
+    deliver(1);
+    assert.equal(game.recycleDetails(),null);
+    deliver(2,{recycleItemIds:ids,autoRecycleEnabled:false});
+    const read=game.recycleDetails();
+    assert(read().lines.includes('矿石自动回收 已关闭'));
+    assert.equal(read().actions[0].label,'开启回收');
+    const canceled=read().actions[0].run(); confirm(false); await canceled;
+    assert.deepEqual(saved,[]);
+    const enabled=read().actions[0].run(); confirm(true); await enabled;
+    assert.deepEqual(saved,[true]);
+    assert.equal(read().actions[0].label,'开启回收','服务端观察前不乐观改设定');
+    deliver(3,{recycleItemIds:ids,autoRecycleEnabled:true,lastOre:copper,lastRecycleBoundGold:receipt});
+    assert.match(game.objective,/已回收/);
+    assert(read().lines.includes(`本次回收 ${receipt}绑定金币`));
+    writable=false;
+    assert.equal(read().actions[0].enabled,false);
+    writable=true;
+    await read().actions[0].run();
+    assert.deepEqual(saved,[true,false]);
+    deliver(4,{recycleItemIds:ids,autoRecycleEnabled:false,lastOre:copper,lastRecycleBoundGold:receipt});
+    const stale=read().actions[0].run();
+    current={...scope,key:'新附着',binding:'3'};
+    deliver(1,{recycleItemIds:ids,autoRecycleEnabled:false});
+    confirm(true); await stale;
+    assert.equal(read(),null);
+    assert.deepEqual(saved,[true,false]);
+    assert.equal(game.recycleDetails()().actions[0].label,'开启回收');
+    assert(!model.isMiningState(state(1,{recycleItemIds:ids,autoRecycleEnabled:true,lastOre:copper,lastRecycleGold:receipt}),scope));
+    assert(!model.isMiningState(state(1,{recycleItemIds:[...ids,...ids],autoRecycleEnabled:true}),scope));
+});
+
 test('只在公开候选显示两层矿区并锁等级，复用原尺寸地表与原目的3',()=>{
     const regular={id:'1',name:'普通挂机',resource_key:'development/maps/personal-map',scene_kind:1,width:13,height:13};
     const cave={...regular,id:'7',name:'原洞穴'};

@@ -11621,6 +11621,15 @@ export namespace minimir {
             /** HostingReport pooled_experience. */
             pooled_experience: Long;
 
+            /** HostingReport mining_recycle_count. */
+            mining_recycle_count: Long;
+
+            /** HostingReport mining_recycle_gold. */
+            mining_recycle_gold: Long;
+
+            /** HostingReport mining_recycle_bound_gold. */
+            mining_recycle_bound_gold: Long;
+
             /**
              * Creates a new HostingReport instance using the specified properties.
              * @param [properties] Properties to set
@@ -11734,6 +11743,15 @@ export namespace minimir {
 
                 /** HostingReport pooled_experience */
                 pooled_experience?: (Long|null);
+
+                /** HostingReport mining_recycle_count */
+                mining_recycle_count?: (Long|null);
+
+                /** HostingReport mining_recycle_gold */
+                mining_recycle_gold?: (Long|null);
+
+                /** HostingReport mining_recycle_bound_gold */
+                mining_recycle_bound_gold?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -19916,6 +19934,108 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a SetMiningAutoRecycleRequest.
+         * @deprecated Use minimir.v1.SetMiningAutoRecycleRequest.$Properties instead.
+         */
+        interface ISetMiningAutoRecycleRequest extends minimir.v1.SetMiningAutoRecycleRequest.$Properties {
+        }
+
+        /** Represents a SetMiningAutoRecycleRequest. */
+        class SetMiningAutoRecycleRequest {
+
+            /**
+             * Constructs a new SetMiningAutoRecycleRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SetMiningAutoRecycleRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SetMiningAutoRecycleRequest enabled. */
+            enabled: boolean;
+
+            /** SetMiningAutoRecycleRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SetMiningAutoRecycleRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SetMiningAutoRecycleRequest instance
+             */
+            static create(properties: minimir.v1.SetMiningAutoRecycleRequest.$Shape): minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape;
+            static create(properties?: minimir.v1.SetMiningAutoRecycleRequest.$Properties): minimir.v1.SetMiningAutoRecycleRequest;
+
+            /**
+             * Encodes the specified SetMiningAutoRecycleRequest message. Does not implicitly {@link minimir.v1.SetMiningAutoRecycleRequest.verify|verify} messages.
+             * @param message SetMiningAutoRecycleRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SetMiningAutoRecycleRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SetMiningAutoRecycleRequest message, length delimited. Does not implicitly {@link minimir.v1.SetMiningAutoRecycleRequest.verify|verify} messages.
+             * @param message SetMiningAutoRecycleRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SetMiningAutoRecycleRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SetMiningAutoRecycleRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape} SetMiningAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape;
+
+            /**
+             * Decodes a SetMiningAutoRecycleRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape} SetMiningAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape;
+
+            /**
+             * Verifies a SetMiningAutoRecycleRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SetMiningAutoRecycleRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SetMiningAutoRecycleRequest {
+
+            /** Properties of a SetMiningAutoRecycleRequest. */
+            interface $Properties {
+
+                /** SetMiningAutoRecycleRequest enabled */
+                enabled?: (boolean|null);
+
+                /** SetMiningAutoRecycleRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SetMiningAutoRecycleRequest. */
+            type $Shape = minimir.v1.SetMiningAutoRecycleRequest.$Properties;
+        }
+
+        /**
          * Properties of a MiningState.
          * @deprecated Use minimir.v1.MiningState.$Properties instead.
          */
@@ -19963,6 +20083,18 @@ export namespace minimir {
 
             /** MiningState successes. */
             successes: Long;
+
+            /** MiningState recycle_item_ids. */
+            recycle_item_ids: number[];
+
+            /** MiningState auto_recycle_enabled. */
+            auto_recycle_enabled: boolean;
+
+            /** MiningState last_recycle_gold. */
+            last_recycle_gold: Long;
+
+            /** MiningState last_recycle_bound_gold. */
+            last_recycle_bound_gold: Long;
 
             /**
              * Creates a new MiningState instance using the specified properties.
@@ -20056,6 +20188,18 @@ export namespace minimir {
 
                 /** MiningState successes */
                 successes?: (Long|null);
+
+                /** MiningState recycle_item_ids */
+                recycle_item_ids?: (number[]|null);
+
+                /** MiningState auto_recycle_enabled */
+                auto_recycle_enabled?: (boolean|null);
+
+                /** MiningState last_recycle_gold */
+                last_recycle_gold?: (Long|null);
+
+                /** MiningState last_recycle_bound_gold */
+                last_recycle_bound_gold?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

@@ -41,11 +41,6 @@ func TestMiningAssetsKeepSourceAndPurity(t *testing.T) {
 
 // TestMiningSettlementMongo 使用编译候选和独立副本集验证来源事务及审计。
 func TestMiningSettlementMongo(t *testing.T) {
-	uri := os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI")
-	fixturePath := os.Getenv("MINIMIR_MINING_TEST_FIXTURE")
-	if os.Getenv("MINIMIR_MONGO_E2E") != "1" || uri == "" || fixturePath == "" {
-		t.Skip("需要专属 MongoDB 副本集和已编译的隔离挖矿候选")
-	}
 	must := func(err error) {
 		t.Helper()
 		if err != nil {
@@ -58,48 +53,8 @@ func TestMiningSettlementMongo(t *testing.T) {
 			t.Fatalf("错误码 %d，预期 %d，原错误 %v", Code(err), code, err)
 		}
 	}
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
-	must(err)
-	raw, err := os.ReadFile(fixturePath)
-	must(err)
-	var fixture devconfig.Fixture
-	must(json.Unmarshal(raw, &fixture))
-	fixture.Hash = Hash(raw)
-	must(fixture.Validate())
-	if fixture.Mining == nil || len(fixture.Mining.Layers) == 0 {
-		t.Fatal("实测夹具未装配矿层")
-	}
-	t.Logf("挖矿持久化实际加载候选 SHA-256=%s", fixture.Hash)
-	cfg.MongoURI, cfg.Database, cfg.Fixture = uri, "minimir_dev_game_test_mining_"+domain.ID()[:12], fixture
-	ctx, stop := context.WithTimeout(t.Context(), 35*time.Second)
-	t.Cleanup(stop)
-	account, err := Open(ctx, cfg)
-	must(err)
-	t.Cleanup(func() {
-		cleanup, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		defer account.Close(cleanup)
-		must(account.DB.Drop(cleanup))
-	})
-	must(account.Singleton(ctx, "account"))
-	game, err := Open(ctx, cfg)
-	must(err)
-	t.Cleanup(func() { game.Close(context.Background()) })
-	lease, err := account.ApproveGame(ctx, cfg.NodeID, game.Instance, cfg.RunID)
-	must(err)
-	game.Epoch = lease.Epoch
-
-	name := "miner_" + domain.ID()[:8]
-	login, err := account.Login(ctx, name, "mining_test_123456", true)
-	must(err)
-	auth, err := account.Authenticate(ctx, login.AccountToken)
-	must(err)
-	created, err := account.CreateRole(ctx, auth, &pb.CreateRoleRequest{OriginServerId: cfg.OriginID, Slot: 1, Name: name, OpId: domain.Bytes(domain.ID())})
-	must(err)
-	ticket, err := account.IssueTicket(ctx, auth, created.Key)
-	must(err)
-	role, auth, err := game.Enter(ctx, ticket.Ticket)
-	must(err)
+	ctx, account, game, role, auth := startMiningStoreTest(t)
+	fixture := game.Cfg.Fixture
 	layer := fixture.Mining.Layers[0]
 	toolDef := fixture.Mining.Tools[0]
 	if layer.Layer != toolDef.Layer || fixture.Mining.IntervalMS != 3000 || fixture.Mining.ToolWearU != 1 || toolDef.DurabilityU < 3 {
@@ -113,7 +68,7 @@ func TestMiningSettlementMongo(t *testing.T) {
 	}
 	tool.DurabilityU = 3
 	roles := account.DB.Collection("roles")
-	_, err = roles.UpdateByID(ctx, role.ID, bson.M{"$set": bson.M{"items": []domain.Item{tool}, "capacity": 2,
+	_, err := roles.UpdateByID(ctx, role.ID, bson.M{"$set": bson.M{"items": []domain.Item{tool}, "capacity": 2,
 		"hosting_seconds": 5, "privilege_since": firstAt.Add(-time.Minute), "privilege_until": firstAt.Add(2 * interval)}})
 	must(err)
 	role, err = game.Role(ctx, role.ID)
@@ -194,6 +149,65 @@ func TestMiningSettlementMongo(t *testing.T) {
 			t.Fatalf("%s 挖矿账本 %d 条，预期只记录三次成功提交的判定", collection, count)
 		}
 	}
+}
+
+// startMiningStoreTest 在本次隔离副本集创建独立业务库、角色及实际游戏节点围栏。
+func startMiningStoreTest(t *testing.T) (context.Context, *Store, *Store, domain.Role, Auth) {
+	t.Helper()
+	uri := os.Getenv("MINIMIR_INTEGRATION_TEST_MONGO_URI")
+	fixturePath := os.Getenv("MINIMIR_MINING_TEST_FIXTURE")
+	if os.Getenv("MINIMIR_MONGO_E2E") != "1" || uri == "" || fixturePath == "" {
+		t.Skip("需要专属 MongoDB 副本集和已编译的隔离挖矿候选")
+	}
+	must := func(err error) {
+		t.Helper()
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	must(err)
+	raw, err := os.ReadFile(fixturePath)
+	must(err)
+	var fixture devconfig.Fixture
+	must(json.Unmarshal(raw, &fixture))
+	fixture.Hash = Hash(raw)
+	must(fixture.Validate())
+	if fixture.Mining == nil || len(fixture.Mining.Layers) == 0 {
+		t.Fatal("实测夹具未装配矿层")
+	}
+	t.Logf("挖矿持久化实际加载候选 SHA-256=%s", fixture.Hash)
+	cfg.MongoURI, cfg.Database, cfg.Fixture = uri, "minimir_dev_game_test_mining_"+domain.ID()[:12], fixture
+	ctx, stop := context.WithTimeout(t.Context(), 35*time.Second)
+	t.Cleanup(stop)
+	account, err := Open(ctx, cfg)
+	must(err)
+	t.Cleanup(func() {
+		cleanup, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		defer account.Close(cleanup)
+		must(account.DB.Drop(cleanup))
+	})
+	must(account.Singleton(ctx, "account"))
+	game, err := Open(ctx, cfg)
+	must(err)
+	t.Cleanup(func() { game.Close(context.Background()) })
+	lease, err := account.ApproveGame(ctx, cfg.NodeID, game.Instance, cfg.RunID)
+	must(err)
+	game.Epoch = lease.Epoch
+
+	name := "miner_" + domain.ID()[:8]
+	login, err := account.Login(ctx, name, "mining_test_123456", true)
+	must(err)
+	auth, err := account.Authenticate(ctx, login.AccountToken)
+	must(err)
+	created, err := account.CreateRole(ctx, auth, &pb.CreateRoleRequest{OriginServerId: cfg.OriginID, Slot: 1, Name: name, OpId: domain.Bytes(domain.ID())})
+	must(err)
+	ticket, err := account.IssueTicket(ctx, auth, created.Key)
+	must(err)
+	role, auth, err := game.Enter(ctx, ticket.Ticket)
+	must(err)
+	return ctx, account, game, role, auth
 }
 
 // miningTestEvent 只在验收中挑选一个确实会出矿或判定失败的随机原事件。

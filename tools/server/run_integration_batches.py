@@ -42,7 +42,7 @@ MARKET_PERSISTENCE_CASES = (
 # 支付另验订单归属和幂等履约，测试组使用与现金卡工作簿一致的隔离运行配置。
 PAYMENT_PERSISTENCE_CASES = ('TestPaymentOrderAuthorityMongo', 'TestPaymentGrantMongo')
 # 挖矿联机与原矿来源、扣费、工具耐久共享同一份隔离投影。
-MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSourceAndPurity')
+MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSourceAndPurity', 'TestMiningAutoRecycleSettlementMongo')
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',

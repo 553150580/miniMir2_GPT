@@ -500,7 +500,12 @@ export class AppRoot extends Component {
                 session.travel.active || session.teleport.blocksInput || !this.isWorldCurrent() || !isCurrentEntry(identity)) return null;
             return { key: attachmentKey(identity), binding: identity.binding.toString(), sceneEpoch: entry.sceneEpoch, mapId: entry.roomId,
                 inventoryRevision: session.inventory?.revision };
-        }, () => this.refreshGame(), id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name);
+        }, () => this.refreshGame(), id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name, {
+            canSave: () => !this.economicBusy && !this.unresolved && !!session.pending,
+            confirmEnable: names => this.popup!.confirm('Confirm', [names.join('、'), '新采矿石将直接换成金币',
+                '绑定矿石换成绑定金币', '背包已有矿石照常保留', '在线和离线挖矿均生效', '回收不可撤销'].join('\n'), '开启矿石自动回收'),
+            save: enabled => this.economic(40045, { enabled }),
+        });
         this.cleanups.push(() => this.mining?.dispose());
         this.itemActions = new GameItemActions(safe, this.popup, error => this.error(error));
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
@@ -718,6 +723,8 @@ export class AppRoot extends Component {
         this.button('BottomHUD/Skills/BluePotion', () => this.usePotion(36));
         this.button('MapViewport/Actions/Attack', () => {
             if (session.entry?.sceneKind !== miningSceneKind) return this.basicAttack();
+            const actions = this.mining?.recycleDetails();
+            if (actions) { this.itemActions?.open(actions); return; }
             this.combatStatus?.showLiveDetails('矿况', () => session.entry?.sceneKind === miningSceneKind
                 ? this.mining?.details() ?? null : null);
         });

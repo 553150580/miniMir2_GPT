@@ -230,6 +230,10 @@ message HostingReport {
   int64 raw_experience = 15;
   int64 rejected_experience = 16;
   int64 pooled_experience = 17;
+  // 已自动回收的新采矿石和到账金额，属于原战报的 earned，不计入装备回收与入包明细。
+  uint64 mining_recycle_count = 18;
+  int64 mining_recycle_gold = 19;
+  int64 mining_recycle_bound_gold = 20;
 }
 
 

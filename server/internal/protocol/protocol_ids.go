@@ -106,6 +106,7 @@ const (
 	MsgC2SGoldMarketQuery uint16 = 40042
 	MsgS2CGoldMarketState uint16 = 40043
 	MsgC2SGoldMarketAction uint16 = 40044
+	MsgC2SSetMiningAutoRecycle uint16 = 40045
 )
 
 const (

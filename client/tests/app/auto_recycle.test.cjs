@@ -49,6 +49,16 @@ test('战报保留Long完整值、原绑定分账与总掉落，100条仅样本�
  const text=model.autoRecycleReportLines(r).join('\n');assert(text.includes(Long.MAX_UNSIGNED_VALUE.toString()));assert(text.includes('总掉落 1000'));assert(text.includes('仅为样本'));assert(text.includes('角色倒下'));assert(text.includes('未能入包的新掉落已放弃'));
  assert(!model.recycleDiscardText('future_reason').includes('背包已满'));
 });
+test('矿石回收战报单列已到账矿石收益，总钱包不重复相加',()=>{
+ const r={recycleCount:Long.UONE,recycleGold:Long.fromInt(5),recycleBoundGold:Long.ZERO,
+  earned:{gold:Long.fromInt(11),boundGold:Long.fromInt(8)},miningRecycleCount:Long.fromInt(2,true),
+  miningRecycleGold:Long.fromInt(6),miningRecycleBoundGold:Long.fromInt(8)};
+ const lines=model.autoRecycleReportLines(r);
+ assert(lines.includes('金币 11，绑定金币 8'));
+ assert(lines.includes('自动回收 1 件 · 金币 5，绑定金币 0'));
+ assert(lines.includes('矿石自动回收 2 块 · 金币 6，绑定金币 8'));
+ assert(!model.autoRecycleReportLines({...r,miningRecycleCount:Long.UZERO}).some(line=>line.startsWith('矿石自动回收')));
+});
 test('旧stopReason3明确保留为历史，当前弃物不反推停战或清除Long统计',()=>{
  const current={stopReason:0,discardCount:Long.MAX_UNSIGNED_VALUE,lastDiscardReason:'bag_full',totalDropCount:Long.MAX_UNSIGNED_VALUE};
  const text=model.autoRecycleReportLines(current).join('\n');assert(text.includes('未记录停止'));assert(text.includes(Long.MAX_UNSIGNED_VALUE.toString()));

@@ -32,27 +32,28 @@ type MiningAttemptRequest struct {
 
 // MiningAttemptReceipt 固定该次判定的最终状态。Ore 为空表示判定完成但没有出矿。
 type MiningAttemptReceipt struct {
-	EventID              string       `bson:"event_id"`                  // 原判定身份。
-	MapID                uint64       `bson:"map_id"`                    // 原矿图编号。
-	RuleVersion          uint64       `bson:"rule_version"`              // 判定引用的原规则版本。
-	ConfigHash           string       `bson:"config_hash"`               // 判定引用的原配置摘要。
-	Layer                uint32       `bson:"layer"`                     // 原矿层，决定矿种分布。
-	StartedAt            time.Time    `bson:"started_at"`                // 本轮真正开始等待的时刻。
-	At                   time.Time    `bson:"event_at"`                  // 执行判定及检查出矿绑定的时刻。
-	ToolID               string       `bson:"tool_id"`                   // 原锄头实例编号。
-	ToolItemID           uint32       `bson:"tool_item_id"`              // 对应的锄头定义编号。
-	ToolVersionBefore    int64        `bson:"tool_version_before"`       // 消耗前的锄头实例版本。
-	ToolVersionAfter     int64        `bson:"tool_version_after"`        // 消耗后的版本，耗尽时保留在原回执里。
-	DurabilityBeforeU    int64        `bson:"durability_before_u"`       // 消耗前的存储单位耐久。
-	DurabilityAfterU     int64        `bson:"durability_after_u"`        // 消耗后的存储单位耐久。
-	ToolExhausted        bool         `bson:"tool_exhausted"`            // 本轮是否耗尽并移除该锄头。
-	Ore                  *domain.Item `bson:"ore,omitempty"`             // 真正转入背包的原矿实例。
-	HostingSession       string       `bson:"hosting_session,omitempty"` // 离线托管原会话。
-	HostSeconds          int64        `bson:"host_seconds"`              // 本轮实际扣除的托管秒数。
-	RemainingHostSeconds int64        `bson:"remaining_host_seconds"`    // 首次提交后剩余的托管秒数。
+	EventID              string         `bson:"event_id"`                  // 原判定身份。
+	MapID                uint64         `bson:"map_id"`                    // 原矿图编号。
+	RuleVersion          uint64         `bson:"rule_version"`              // 判定引用的原规则版本。
+	ConfigHash           string         `bson:"config_hash"`               // 判定引用的原配置摘要。
+	Layer                uint32         `bson:"layer"`                     // 原矿层，决定矿种分布。
+	StartedAt            time.Time      `bson:"started_at"`                // 本轮真正开始等待的时刻。
+	At                   time.Time      `bson:"event_at"`                  // 执行判定及检查出矿绑定的时刻。
+	ToolID               string         `bson:"tool_id"`                   // 原锄头实例编号。
+	ToolItemID           uint32         `bson:"tool_item_id"`              // 对应的锄头定义编号。
+	ToolVersionBefore    int64          `bson:"tool_version_before"`       // 消耗前的锄头实例版本。
+	ToolVersionAfter     int64          `bson:"tool_version_after"`        // 消耗后的版本，耗尽时保留在原回执里。
+	DurabilityBeforeU    int64          `bson:"durability_before_u"`       // 消耗前的存储单位耐久。
+	DurabilityAfterU     int64          `bson:"durability_after_u"`        // 消耗后的存储单位耐久。
+	ToolExhausted        bool           `bson:"tool_exhausted"`            // 本轮是否耗尽并移除该锄头。
+	Ore                  *domain.Item   `bson:"ore,omitempty"`             // 本轮实际产出的原矿，含回收时用于审计的原件。
+	AutoRecycle          *domain.Wallet `bson:"auto_recycle,omitempty"`    // 已回收的原矿实际到账金额，空值表示没有回收。
+	HostingSession       string         `bson:"hosting_session,omitempty"` // 离线托管原会话。
+	HostSeconds          int64          `bson:"host_seconds"`              // 本轮实际扣除的托管秒数。
+	RemainingHostSeconds int64          `bson:"remaining_host_seconds"`    // 首次提交后剩余的托管秒数。
 }
 
-// ResolveMiningAttempt 原子扣工具、扣离线时间、发矿及保留审计。全部采用同一服务端来源序号。
+// ResolveMiningAttempt 在同一来源事务扣工具、扣离线时间，并发放原矿或结算自动回收。
 func (s *Store) ResolveMiningAttempt(ctx context.Context, auth Auth, q MiningAttemptRequest) (domain.Role, Operation, error) {
 	q.At, q.StartedAt = bossTime(q.At), bossTime(q.StartedAt)
 	if !lowerHex(q.EventID, 16) || !lowerHex(q.ToolID, 16) || !lowerHex(q.ConfigHash, 32) || q.ToolVersion <= 0 ||
@@ -120,7 +121,7 @@ func (s *Store) ResolveMiningAttempt(ctx context.Context, auth Auth, q MiningAtt
 			}
 			ore.Bound = !until.After(q.At)
 		}
-		next, details, err := applyMiningAttempt(role, q, layer.Layer, interval, tool, fixture.Mining.ToolWearU, ore)
+		next, details, err := applyMiningAttempt(role, q, layer.Layer, interval, tool, fixture, ore)
 		if err != nil {
 			return err
 		}

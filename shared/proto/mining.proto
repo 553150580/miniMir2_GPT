@@ -3,6 +3,7 @@ package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 
 import "assets.proto";
+import "common.proto";
 
 // 0查询、1开始、2停止。客户端只提交意图；每次实际挖矿由服务端调度及结算。
 message MiningIntent {
@@ -10,6 +11,12 @@ message MiningIntent {
   uint32 action = 2;
   // 开始时可以指定本背包的16字节锄头实例。留空时由服务端选择一个当前可用的工具。
   bytes tool_instance_id = 3;
+}
+
+// 保存本角色新采矿石的自动回收开关，沿原经济操作编号确认和重试。
+message SetMiningAutoRecycleRequest {
+  bool enabled = 1;
+  OperationContext operation = 2;
 }
 
 // 当前矿区附着的完整观察，由查询、开停和已确认判定返回。
@@ -26,4 +33,10 @@ message MiningState {
   ItemView last_ore = 8;
   uint64 attempts = 9;
   uint64 successes = 10;
+  // 本规则允许自动回收的矿石配置编号；空列表表示功能关闭。
+  repeated uint32 recycle_item_ids = 11;
+  bool auto_recycle_enabled = 12;
+  // 最近一次出矿已自动回收时，仅对应原绑定状态的钱包金额为正数。
+  int64 last_recycle_gold = 13;
+  int64 last_recycle_bound_gold = 14;
 }

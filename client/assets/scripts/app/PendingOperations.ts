@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -294,6 +294,11 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
             if (!version.unsigned || version.isZero()) return invalid('金币市场原版本无效');
             payload = { action, [idField]: bytes16(item[idField], stored), [versionField]: version, operation: operation(item.operation, stored) };
         }
+    } else if (id === 40045) {
+        // 重放明确提出的原设置，关闭操作也不能省略布尔值。
+        const item = record(input.value, ['enabled', 'operation']);
+        if (typeof item.enabled !== 'boolean') return invalid('矿石自动回收需要明确的开关状态');
+        payload = { enabled: item.enabled, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

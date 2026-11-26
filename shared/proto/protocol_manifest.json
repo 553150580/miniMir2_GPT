@@ -1272,6 +1272,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.9 金币挂单、撤单及托管领取"
+    },
+    {
+      "value": 40045,
+      "name": "MsgC2SSetMiningAutoRecycle",
+      "proto_message": "SetMiningAutoRecycleRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.25 独立矿石自动回收设置"
     }
   ],
   "error_codes": [

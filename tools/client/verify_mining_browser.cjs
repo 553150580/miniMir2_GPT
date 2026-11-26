@@ -1,4 +1,4 @@
-// 用真实 Creator 保存界面触屏验证隔离矿图、矿石纯度、NPC 收购和默认关闭。
+// 用真实 Creator 保存界面触屏验证矿石开采、回收、NPC 收购和默认关闭。
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -14,6 +14,7 @@ const itemDetails = safe + 'PopupView/Panels/ItemActions';
 const confirm = safe + 'PopupView/Panels/Confirm';
 const shop = safe + 'UIMgr/Panels/NpcShop';
 const action = safe + 'MapViewport/Actions/Auto';
+const mineInfo = safe + 'MapViewport/Actions/Attack';
 const hex = bytes => Buffer.from(bytes).toString('hex');
 const uiLabel = (page, nodePath) => page.evaluate(nodePath => cc.find(nodePath)?.getComponent(cc.Label)?.string, nodePath);
 const originalStyle = require('../../client/assets/resources/development/map-styles/manifest.json').styles.find(row => row.map_id === '7')?.frame;
@@ -23,6 +24,8 @@ function observation(value) {
     return { scene: value.scene_epoch.toString(), sequence: value.state_sequence.toString(), map: value.map_id.toString(),
         active: value.active, canStart: value.can_start, error: value.error_code,
         attempts: Number(value.attempts.toString()), successes: Number(value.successes.toString()),
+        recycleIds: value.recycle_item_ids, recycleEnabled: value.auto_recycle_enabled,
+        recycleGold: value.last_recycle_gold.toString(), recycleBoundGold: value.last_recycle_bound_gold.toString(),
         tool: value.tool && { item: value.tool.item_id, instance: hex(value.tool.instance_id), durability: value.tool.durability_u.toString() },
         ore: value.last_ore && { item: value.last_ore.item_id, instance: hex(value.last_ore.instance_id), purity: value.last_ore.ore_purity,
             bound: value.last_ore.bound } };
@@ -51,6 +54,10 @@ function observe(page, report) {
             if (frame?.id === 40026) {
                 const value = pb.VendorCommitRequest.decode(frame.body);
                 report.saleCommits.push({ request: frame.request, quote: hex(value.quote_id), op: hex(value.operation.op_id), npc: value.npc_id.toString() });
+            }
+            if (frame?.id === 40045) {
+                const value = pb.SetMiningAutoRecycleRequest.decode(frame.body);
+                report.policyRequests.push({ request: frame.request, enabled: value.enabled, op: hex(value.operation.op_id) });
             }
         });
         socket.on('framereceived', ({ payload }) => {
@@ -122,8 +129,23 @@ async function liveMining(page, session, predicate, timeout = 20000) {
         if (predicate === 'active') return active;
         if (predicate === 'ore') return active && value.lastOre?.orePurity >= 1 && attempts >= 1;
         if (predicate === 'stopped') return !active && attempts >= 1;
+        if (predicate === 'on' || predicate === 'off') return value.autoRecycleEnabled === (predicate === 'on');
+        if (predicate === 'paid') return active && value.autoRecycleEnabled &&
+            (value.lastRecycleGold?.isZero() === false || value.lastRecycleBoundGold?.isZero() === false);
         return null;
     }, { session, predicate }, timeout);
+}
+
+// 矿区启用回收后，沿矿况已有按钮打开可操作详情；旧候选沿原只读面板。
+async function openMiningDetails(page) {
+    const panel = expected.miningRecycle ? itemDetails : details;
+    await touch(page, mineInfo);
+    await label(page, panel + '/Title', '矿况');
+    return panel;
+}
+
+async function miningDetails(page, panel) {
+    return page.evaluate(panel => cc.find(panel + '/List').getComponent('List').items, panel);
 }
 
 async function verifyMine(page, session, report) {
@@ -172,13 +194,12 @@ async function verifyMine(page, session, report) {
     await page.waitForTimeout(3800);
     assert.equal(report.states.filter(row => row.map === String(expected.mineMap)).at(-1).attempts, report.stopped.attempts);
 
-    await touch(page, safe + 'MapViewport/Actions/Attack');
-    await label(page, details + '/Title', '矿况');
-    report.details = await page.evaluate(details => cc.find(details + '/List').getComponent('List').items, details);
+    const panel = await openMiningDetails(page);
+    report.details = await miningDetails(page, panel);
     assert(report.details.some(row => row.includes('锄头持久')) && report.details.some(row => row.includes('绑定矿石')) &&
         report.details.some(row => row.includes('纯度')));
     await page.screenshot({ path: path.join(output, '03-mine-details.png') });
-    await backdrop(page, details);
+    await backdrop(page, panel);
     await touch(page, safe + 'BottomHUD/Footer/Inventory');
     await wait(page, target => !!cc.find(target)?.activeInHierarchy, inventory);
     await visibleItem(page, inventory + '/List', report.ore.instance);
@@ -188,6 +209,8 @@ async function verifyMine(page, session, report) {
     await page.screenshot({ path: path.join(output, '04-mined-ore.png') });
     await backdrop(page, itemDetails);
     await backdrop(page, inventory);
+
+    if (expected.miningRecycle) await verifyAutoRecycle(page, session, report);
 
     await openMap(page);
     const back = await wait(page, ({ directory, map }) => {
@@ -206,6 +229,86 @@ async function verifyMine(page, session, report) {
     assert(report.destinations.some(row => row.destination === 3 && row.map === String(expected.mineMap)) &&
         report.destinations.some(row => row.destination === 2 && row.map === String(expected.normalMap)));
     await page.screenshot({ path: path.join(output, '05-returned.png') });
+}
+
+// 取自动回收的原永久操作及对应响应，不能把按钮状态或背包刷新当作提交证明。
+function confirmedPolicy(report, enabled) {
+    const request = report.policyRequests.filter(row => row.enabled === enabled);
+    assert.equal(request.length, 1);
+    const result = report.operationResults.find(row => row.request === request[0].request);
+    assert(result?.op === request[0].op && result.error === 0 && !result.pending);
+    return result.op;
+}
+
+// 同一角色先留矿，再开启自动回收。两种行为共享原工具和同一矿区来源流水。
+async function verifyAutoRecycle(page, session, report) {
+    const { names, itemIds } = expected.miningRecycle;
+    const panel = await openMiningDetails(page);
+    assert.equal(panel, itemDetails);
+    const actionPath = panel + '/Action1';
+    const auto = report.auto = { names, keptOriginals: [report.ore.instance, expected.town.fallback.instance, expected.town.unbound.instance] };
+    const known = await miningDetails(page, panel);
+    assert(known.includes('矿石自动回收 已关闭') && known.includes('回收矿种 ' + names.join('、')));
+    await label(page, actionPath + '/Label', '开启回收');
+    await touch(page, actionPath);
+    await label(page, confirm + '/Title', '开启矿石自动回收');
+    auto.confirmation = await uiLabel(page, confirm + '/Message');
+    assert(names.every(name => auto.confirmation.includes(name)) && auto.confirmation.includes('背包已有矿石照常保留') &&
+        auto.confirmation.includes('在线和离线挖矿均生效'));
+    await page.screenshot({ path: path.join(output, '08-auto-recycle-confirm.png') });
+    await touch(page, confirm + '/CancelButton');
+    await label(page, actionPath + '/Label', '开启回收');
+    assert.equal(report.policyRequests.length, 0);
+    auto.canceled = true;
+    await touch(page, actionPath);
+    await label(page, confirm + '/Title', '开启矿石自动回收');
+    await touch(page, confirm + '/ConfirmButton');
+    await liveMining(page, session, 'on');
+    await label(page, actionPath + '/Label', '关闭回收');
+    auto.enabled = confirmedPolicy(report, true);
+    auto.walletBefore = await observedWallet(page, session);
+    await backdrop(page, panel);
+
+    await touch(page, action);
+    await liveMining(page, session, 'paid', 85000);
+    await label(page, safe + 'MapViewport/Mission/Text', '已回收');
+    await touch(page, action);
+    await liveMining(page, session, 'stopped');
+    await label(page, action + '/Label', '开始挖矿');
+    await page.waitForTimeout(1200); // 观察原已受理轮次收尾。
+    auto.stopped = report.states.filter(row => row.map === String(expected.mineMap) && !row.active).at(-1);
+    assert(auto.stopped?.attempts > report.stopped.attempts && auto.stopped.recycleEnabled);
+    const receipts = new Map();
+    for (const row of report.states) {
+        if (row.map !== String(expected.mineMap) || !row.recycleEnabled || !row.ore || row.attempts <= report.stopped.attempts ||
+            BigInt(row.recycleGold) + BigInt(row.recycleBoundGold) <= 0n) continue;
+        assert(itemIds.includes(row.ore.item));
+        assert.equal(row.ore.bound ? row.recycleGold : row.recycleBoundGold, '0');
+        receipts.set(row.ore.instance, { ore: row.ore, gold: row.recycleGold, boundGold: row.recycleBoundGold });
+    }
+    auto.receipts = Array.from(receipts.values());
+    assert(auto.receipts.length >= 1);
+    auto.walletAfter = await observedWallet(page, session);
+    const want = { ...auto.walletBefore };
+    for (const key of ['gold', 'boundGold']) want[key] = (BigInt(want[key]) + auto.receipts.reduce((sum, row) => sum + BigInt(row[key]), 0n)).toString();
+    assert.deepEqual(auto.walletAfter, want);
+    const idsAfter = await page.evaluate(session => session.inventory.items.map(item =>
+        Array.from(item.instanceId, byte => byte.toString(16).padStart(2, '0')).join('')), session);
+    assert(auto.keptOriginals.every(id => idsAfter.includes(id)) && auto.receipts.every(row => !idsAfter.includes(row.ore.instance)));
+
+    await openMiningDetails(page);
+    auto.details = await miningDetails(page, panel);
+    assert(auto.details.includes('矿石自动回收 已开启'));
+    const latest = auto.stopped;
+    if (BigInt(latest.recycleGold) + BigInt(latest.recycleBoundGold) > 0n) {
+        assert(auto.details.includes(latest.ore.bound ? `本次回收 ${latest.recycleBoundGold}绑定金币` : `本次回收 ${latest.recycleGold}金币`));
+    }
+    await page.screenshot({ path: path.join(output, '09-auto-recycle-result.png') });
+    await touch(page, actionPath);
+    await liveMining(page, session, 'off');
+    await label(page, actionPath + '/Label', '开启回收');
+    auto.disabled = confirmedPolicy(report, false);
+    await backdrop(page, panel);
 }
 
 // 城镇接近和打开商店都派发真实触摸，只读取地形、NPC 原画像素与可视窗口来计算触点。
@@ -340,7 +443,7 @@ async function main() {
     const report = { passed: false, enabled: expected.enabled, clientBundleSha256: expected.clientBundleSha256,
         fixtureSha256: expected.fixtureSha256, viewport: { width: 390, height: 844 }, sockets: 0,
         pageErrors: [], commands: [], destinations: [], states: [], transitions: [],
-        quotes: [], quoteRequests: [], saleCommits: [], operationResults: [], sales: [] };
+        quotes: [], quoteRequests: [], saleCommits: [], operationResults: [], sales: [], policyRequests: [], auto: null };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
     const context = await browser.newContext({ viewport: report.viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
@@ -366,6 +469,7 @@ async function main() {
             assert.equal(report.commands.length, 0);
             assert.equal(report.states.length, 0);
             assert.deepEqual(report.quoteRequests, []);
+            assert.deepEqual(report.policyRequests, []);
             await page.screenshot({ path: path.join(output, '01-default-no-mine.png') });
         }
         assert.equal(report.sockets, 1);

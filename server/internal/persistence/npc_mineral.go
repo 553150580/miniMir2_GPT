@@ -16,9 +16,14 @@ func vendorSaleUnitPrice(fixture *devconfig.Fixture, shop *devconfig.NPCShop, it
 		}
 		return shop.SellPrice(item.ItemID)
 	}
+	return mineralBuybackUnitPrice(fixture, price, item)
+}
+
+// mineralBuybackUnitPrice 供矿区逐块自动回收与城镇收购复用同一纯度价格。
+func mineralBuybackUnitPrice(fixture *devconfig.Fixture, price devconfig.NPCMineralBuyback, item domain.Item) int64 {
 	// definition 用于区分可保存原纯度的单件矿石与其他物品。
 	definition, exists := fixture.Item(item.ItemID)
-	if !exists || !validSingleMiningOre(item, definition) || item.OriginalDurabilityU != 0 ||
+	if price.ItemID != item.ItemID || !exists || !validSingleMiningOre(item, definition) || item.OriginalDurabilityU != 0 ||
 		item.MaxDurabilityU != 0 || item.DurabilityU != 0 || price.Numerator == 0 || price.Denominator == 0 {
 		return 0
 	}

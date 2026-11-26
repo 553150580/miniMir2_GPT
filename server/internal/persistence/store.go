@@ -103,6 +103,7 @@ type Operation struct {
 	Settlement        *SettlementReceipt             `bson:"settlement,omitempty"`             // 战斗收益、托管扣时与磨损明细。
 	Mining            *MiningAttemptReceipt          `bson:"mining_attempt,omitempty"`         // 挖矿判定、锄头耗损及实际矿石。
 	AutoRecyclePolicy *domain.AutoRecyclePolicy      `bson:"auto_recycle_policy,omitempty"`    // 已提交的回收策略快照。
+	MiningAutoRecycle *bool                          `bson:"mining_auto_recycle,omitempty"`    // 首次确认的矿石回收开关，指针区分关闭与无回执。
 	Experience        *ExperienceGrantReceipt        `bson:"experience_grant,omitempty"`       // 经验派发及成长迁移明细。
 	Skill             *skillPlan                     `bson:"skill_plan,omitempty"`             // 首次应用后用于回放的技能资产计划。
 	Equipment         *EquipmentReceipt              `bson:"equipment,omitempty"`              // 装备相关操作产生的确定资产回执。

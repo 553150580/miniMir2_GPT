@@ -126,8 +126,9 @@ func miningDraw(seed string, bound uint32) uint32 {
 	}
 }
 
-// applyMiningAttempt 应用已经校验的原判定，独立打包矿石以保持每块纯度和来源。
-func applyMiningAttempt(role domain.Role, q MiningAttemptRequest, layer uint32, interval time.Duration, tool domain.Item, wear int64, ore *domain.Item) (domain.Role, MiningAttemptReceipt, error) {
+// applyMiningAttempt 应用原判定的工具、离线时间及单块出矿结果。
+func applyMiningAttempt(role domain.Role, q MiningAttemptRequest, layer uint32, interval time.Duration, tool domain.Item, fixture *devconfig.Fixture, ore *domain.Item) (domain.Role, MiningAttemptReceipt, error) {
+	wear := fixture.Mining.ToolWearU
 	if wear <= 0 {
 		return role, MiningAttemptReceipt{}, Fail(p.CodeOperationConflict, "锄头耐久消耗规则无效")
 	}
@@ -145,25 +146,31 @@ func applyMiningAttempt(role domain.Role, q MiningAttemptRequest, layer uint32, 
 		updated.DurabilityU, updated.Version = remaining, updated.Version+1
 		next.Items[position] = updated
 	}
-	if ore != nil {
+	next.LastMiningAt, next.SourceSeq, next.Revision = q.At, q.SourceSeq, role.Revision+1
+	next.HostingSeconds -= q.HostSeconds
+	if err := updateMiningReport(&next, q, interval); err != nil {
+		return role, MiningAttemptReceipt{}, err
+	}
+	recycled := applyMiningAutoRecycle(&next, fixture, ore, q.HostingSession != "")
+	if ore != nil && recycled == nil {
 		next.Items = append(next.Items, *ore)
+		if q.HostingSession != "" {
+			if err := recordMiningDrop(&next.Report, *ore); err != nil {
+				return role, MiningAttemptReceipt{}, err
+			}
+		}
 	}
 	if len(next.Items) < next.Capacity {
 		next.PickupStopped = false
 	}
-	next.LastMiningAt, next.SourceSeq, next.Revision = q.At, q.SourceSeq, role.Revision+1
-	next.HostingSeconds -= q.HostSeconds
-	if err := updateMiningReport(&next, q, interval, ore); err != nil {
-		return role, MiningAttemptReceipt{}, err
-	}
 	return next, MiningAttemptReceipt{EventID: q.EventID, MapID: q.MapID, RuleVersion: q.RuleVersion, ConfigHash: q.ConfigHash,
 		Layer: layer, StartedAt: q.StartedAt, At: q.At, ToolID: tool.ID, ToolItemID: tool.ItemID, ToolVersionBefore: tool.Version,
 		ToolVersionAfter: tool.Version + 1, DurabilityBeforeU: tool.DurabilityU, DurabilityAfterU: remaining, ToolExhausted: remaining == 0,
-		Ore: ore, HostingSession: q.HostingSession, HostSeconds: q.HostSeconds, RemainingHostSeconds: next.HostingSeconds}, nil
+		Ore: ore, AutoRecycle: recycled, HostingSession: q.HostingSession, HostSeconds: q.HostSeconds, RemainingHostSeconds: next.HostingSeconds}, nil
 }
 
-// updateMiningReport 把确已使用的托管秒数和实际入包矿石计入原会话的战报，不新增击杀或金币。
-func updateMiningReport(role *domain.Role, q MiningAttemptRequest, interval time.Duration, ore *domain.Item) error {
+// updateMiningReport 应用原会话使用时长和水位，出矿后再记录入包或回收。
+func updateMiningReport(role *domain.Role, q MiningAttemptRequest, interval time.Duration) error {
 	if q.HostingSession == "" {
 		return nil
 	}
@@ -180,19 +187,23 @@ func updateMiningReport(role *domain.Role, q MiningAttemptRequest, interval time
 	if err != nil {
 		return err
 	}
-	if ore != nil {
-		report.TotalDropCount, err = add(report.TotalDropCount, 1)
-		if err != nil {
-			return err
-		}
-		if len(report.Drops) < 100 {
-			report.Drops = append(slices.Clone(report.Drops), *ore)
-		}
-	}
 	if role.HostingSeconds < int64(interval/time.Second) && (report.StopReason == 0 || report.StopReason == 3) {
 		// 可用秒数不足整轮时停止，未扣的尾数仍留在角色余额。
 		report.StopReason = 1
 	}
 	role.Report = report
+	return nil
+}
+
+// recordMiningDrop 仅把实际进入背包的原矿计入同会话的掉落汇总与限量明细。
+func recordMiningDrop(report *domain.Report, ore domain.Item) error {
+	var err error
+	report.TotalDropCount, err = add(report.TotalDropCount, 1)
+	if err != nil {
+		return err
+	}
+	if len(report.Drops) < 100 {
+		report.Drops = append(slices.Clone(report.Drops), ore)
+	}
 	return nil
 }

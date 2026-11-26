@@ -20,13 +20,14 @@ var miningResourceKey = regexp.MustCompile(`^[A-Za-z0-9_/-]+$`) // 本包可加�
 
 // MiningConfig 固定一次挖矿执行所需的不可变规则。
 type MiningConfig struct {
-	IntervalMS int64              `json:"interval_ms"` // 相邻判定之间的服务端时长。
-	SuccessPPM uint32             `json:"success_ppm"` // 每次有效判定的出矿率。
-	ToolWearU  int64              `json:"tool_wear_u"` // 每次有效判定消耗的工具耐久存储单位。
-	Layers     []MiningLayer      `json:"layers"`      // 具备隔离地图映射的楼层。
-	Ores       []MiningOre        `json:"ores"`        // 四种矿石的物品映射及两层抽样权重。
-	Purity     []MiningPurityBand `json:"purity"`      // 按纯度升序的连续抽样档。
-	Tools      []MiningTool       `json:"tools"`       // 每个隔离楼层可使用的独立锄头。
+	IntervalMS  int64                    `json:"interval_ms"`            // 相邻判定之间的服务端时长。
+	SuccessPPM  uint32                   `json:"success_ppm"`            // 每次有效判定的出矿率。
+	ToolWearU   int64                    `json:"tool_wear_u"`            // 每次有效判定消耗的工具耐久存储单位。
+	Layers      []MiningLayer            `json:"layers"`                 // 具备隔离地图映射的楼层。
+	Ores        []MiningOre              `json:"ores"`                   // 四种矿石的物品映射及两层抽样权重。
+	Purity      []MiningPurityBand       `json:"purity"`                 // 按纯度升序的连续抽样档。
+	Tools       []MiningTool             `json:"tools"`                  // 每个隔离楼层可使用的独立锄头。
+	AutoRecycle *MiningAutoRecycleConfig `json:"auto_recycle,omitempty"` // 矿石自动回收可引用的商店价格和矿种范围。
 }
 
 // MiningLayer 保存工具和矿种抽样依据的永久楼层编号与准入条件。
@@ -143,7 +144,10 @@ func (f *Fixture) validateMining() error {
 	if err := validateMiningPurity(mining.Purity); err != nil {
 		return err
 	}
-	return f.validateMiningItems(layers)
+	if err := f.validateMiningItems(layers); err != nil {
+		return err
+	}
+	return f.validateMiningAutoRecycle()
 }
 
 // validateMiningPurity 保证纯度1至100恰好覆盖一次，档权重保持可精确抽样。

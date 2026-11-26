@@ -121,6 +121,10 @@ func (w *worker) finishMining(r *room, q persistence.MiningAttemptRequest, role 
 	if result.Ore != nil {
 		state.successes++
 		state.lastOre = result.Ore
+		state.lastRecycle = domain.Wallet{}
+		if result.AutoRecycle != nil {
+			state.lastRecycle = *result.AutoRecycle
+		}
 	}
 	// 每次确认后才开始下一轮，等待事务的时间不会被补跑。
 	state.startedAt, state.code = time.Time{}, 0

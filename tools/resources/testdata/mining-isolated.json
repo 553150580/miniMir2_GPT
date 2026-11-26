@@ -16,5 +16,6 @@
     }
   ],
   "ore_item_ids": {"copper": 910001, "iron": 910002, "gold": 910003, "black_iron": 910004},
-  "mineral_buyback": {"grocery": ["copper", "iron", "gold"]}
+  "mineral_buyback": {"grocery": ["copper", "iron", "gold"]},
+  "auto_recycle": {"shop_key": "grocery", "ore_keys": ["copper", "iron", "gold"]}
 }

@@ -130,6 +130,18 @@ def compile_mineral_buyback(rows, item_ids, selection, shop_keys):
     return buyback
 
 
+def compile_mining_auto_recycle(selection, item_ids, buyback):
+    """自动回收只选已定价矿种，沿用同一商店的逐块计价，不复制价格数值。"""
+    fields(selection, {'shop_key', 'ore_keys'}, '矿石自动回收')
+    shop, keys = selection['shop_key'], selection['ore_keys']
+    if type(shop) is not str or shop not in buyback or type(keys) is not list or not keys:
+        raise ValueError('矿石自动回收须选择已配置收购价的商店与矿种')
+    priced = {row['item_id'] for row in buyback[shop]}
+    if any(type(key) is not str or item_ids.get(key) not in priced for key in keys) or len(set(keys)) != len(keys):
+        raise ValueError('矿石自动回收须使用本店有价且不重复的矿种')
+    return {'shop_key': shop, 'item_ids': [item_ids[key] for key in keys]}
+
+
 def assemble_floor(row, public, styles):
     """校验实际地板清单和原风格引用，同时固定隔离矿区的独立坐标。"""
     geo = row['map']
@@ -174,7 +186,8 @@ def project(fixture, public, tables, assembly):
             or fixture.get('rule_version') != public.get('rule_version') or 'mining' in fixture or 'mining' in public):
         raise ValueError('矿区候选须源于同版本且缺省关闭的开发夹具与公开资源')
     required_assembly = {'layers', 'ore_item_ids'}
-    if type(assembly) is not dict or not required_assembly <= assembly.keys() <= required_assembly | {'mineral_buyback'}:
+    optional_assembly = {'mineral_buyback', 'auto_recycle'}
+    if type(assembly) is not dict or not required_assembly <= assembly.keys() <= required_assembly | optional_assembly:
         raise ValueError('隔离挖矿组装字段不完整或包含额外业务参数')
     timing, levels, bands = compile_rules(tables)
     ores, items = compile_ores(tables[TABLE_ORES], assembly['ore_item_ids'])
@@ -228,8 +241,11 @@ def project(fixture, public, tables, assembly):
         if key in buyback:
             entry['mineral_buyback'] = buyback[key]
         shops.append(entry)
-    server = {**fixture, 'mining': {**timing, 'layers': sorted(layers, key=lambda r: r['layer']), 'ores': ores, 'purity': bands,
-                                     'tools': sorted(tools, key=lambda r: r['layer'])}, 'npc_shops': shops,
+    mining = {**timing, 'layers': sorted(layers, key=lambda r: r['layer']), 'ores': ores, 'purity': bands,
+              'tools': sorted(tools, key=lambda r: r['layer'])}
+    if 'auto_recycle' in assembly:
+        mining['auto_recycle'] = compile_mining_auto_recycle(assembly['auto_recycle'], assembly['ore_item_ids'], buyback)
+    server = {**fixture, 'mining': mining, 'npc_shops': shops,
               'items': [*fixture['items'], *({'id': i, 'name': n, 'max_stack': 1} for i, n, _ in items)]}
     if any(row['id'] == 'mining' for row in public['map_regions']):
         raise ValueError('隔离矿区目录编号已被使用')

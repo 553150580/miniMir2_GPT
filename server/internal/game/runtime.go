@@ -840,7 +840,8 @@ func (w *worker) roomCommand(r *room, c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction,
+		p.MsgC2SSetMiningAutoRecycle:
 		w.asset(r, c.frame, c.at)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -1228,6 +1229,13 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 			return
 		}
 		q.Kind, q.Context, q.AutoRecycle, q.ApplyExisting = "set_auto_recycle", x.Operation, x.Policy, x.ApplyExisting
+	case p.MsgC2SSetMiningAutoRecycle:
+		var request pb.SetMiningAutoRecycleRequest // 只接收角色偏好与原经济操作身份，收购价由配置提供。
+		if proto.Unmarshal(f.Payload, &request) != nil || len(request.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.MiningAutoRecycle = persistence.AssetSetMiningAutoRecycle, request.Operation, request.Enabled
 	case p.MsgC2SSetItemLock:
 		// x 记录设置道具锁定请求。
 		var x pb.SetItemLockRequest
@@ -1354,7 +1362,7 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction:
+	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction, p.MsgC2SSetMiningAutoRecycle:
 		return true
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
 		return true
@@ -1368,6 +1376,11 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SSetMiningAutoRecycle:
+		var q pb.SetMiningAutoRecycleRequest
+		if proto.Unmarshal(f.Payload, &q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SGoldMarketAction:
 		var q pb.GoldMarketAction
 		if proto.Unmarshal(f.Payload, &q) == nil {

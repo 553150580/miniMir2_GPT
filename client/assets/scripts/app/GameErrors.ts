@@ -39,6 +39,7 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (messageId === 40044 && errorCode === CodeVendorFunds) return '原非绑定金币或元宝余额不足';
     if (messageId === 40044 && errorCode === CodeOperationConflict) return '原限价、委托或托管已变化，请刷新';
     if (messageId === 40044 && errorCode === CodeLineForbidden) return '当前角色或市场条件不允许此操作';
+    if (messageId === 40045 && errorCode === CodeLineForbidden) return '当前规则未开放矿石自动回收';
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';
         if (errorCode === CodeEquipmentChanged) return '当前矿层没有可用锄头，请检查背包';

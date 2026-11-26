@@ -30448,6 +30448,9 @@ $root.minimir = (function() {
              * @property {Long|null} [raw_experience] HostingReport raw_experience
              * @property {Long|null} [rejected_experience] HostingReport rejected_experience
              * @property {Long|null} [pooled_experience] HostingReport pooled_experience
+             * @property {Long|null} [mining_recycle_count] HostingReport mining_recycle_count
+             * @property {Long|null} [mining_recycle_gold] HostingReport mining_recycle_gold
+             * @property {Long|null} [mining_recycle_bound_gold] HostingReport mining_recycle_bound_gold
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -30617,6 +30620,30 @@ $root.minimir = (function() {
             HostingReport.prototype.pooled_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
             /**
+             * HostingReport mining_recycle_count.
+             * @member {Long} mining_recycle_count
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.mining_recycle_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingReport mining_recycle_gold.
+             * @member {Long} mining_recycle_gold
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.mining_recycle_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingReport mining_recycle_bound_gold.
+             * @member {Long} mining_recycle_bound_gold
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.mining_recycle_bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new HostingReport instance using the specified properties.
              * @function create
              * @memberof minimir.v1.HostingReport
@@ -30683,6 +30710,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 16, wireType 0 =*/128).int64(message.rejected_experience);
                 if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience") && (typeof message.pooled_experience === "object" ? message.pooled_experience.low || message.pooled_experience.high : message.pooled_experience !== 0))
                     writer.uint32(/* id 17, wireType 0 =*/136).int64(message.pooled_experience);
+                if (message.mining_recycle_count != null && $Object.hasOwnProperty.call(message, "mining_recycle_count") && (typeof message.mining_recycle_count === "object" ? message.mining_recycle_count.low || message.mining_recycle_count.high : message.mining_recycle_count !== 0))
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint64(message.mining_recycle_count);
+                if (message.mining_recycle_gold != null && $Object.hasOwnProperty.call(message, "mining_recycle_gold") && (typeof message.mining_recycle_gold === "object" ? message.mining_recycle_gold.low || message.mining_recycle_gold.high : message.mining_recycle_gold !== 0))
+                    writer.uint32(/* id 19, wireType 0 =*/152).int64(message.mining_recycle_gold);
+                if (message.mining_recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "mining_recycle_bound_gold") && (typeof message.mining_recycle_bound_gold === "object" ? message.mining_recycle_bound_gold.low || message.mining_recycle_bound_gold.high : message.mining_recycle_bound_gold !== 0))
+                    writer.uint32(/* id 20, wireType 0 =*/160).int64(message.mining_recycle_bound_gold);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -30889,6 +30922,33 @@ $root.minimir = (function() {
                                 delete message.pooled_experience;
                             continue;
                         }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.mining_recycle_count = value;
+                            else
+                                delete message.mining_recycle_count;
+                            continue;
+                        }
+                    case 19: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.mining_recycle_gold = value;
+                            else
+                                delete message.mining_recycle_gold;
+                            continue;
+                        }
+                    case 20: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.mining_recycle_bound_gold = value;
+                            else
+                                delete message.mining_recycle_bound_gold;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -30996,6 +31056,15 @@ $root.minimir = (function() {
                 if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience"))
                     if (!$util.isInteger(message.pooled_experience) && !(message.pooled_experience && $util.isInteger(message.pooled_experience.low) && $util.isInteger(message.pooled_experience.high)))
                         return "pooled_experience: integer|Long expected";
+                if (message.mining_recycle_count != null && $Object.hasOwnProperty.call(message, "mining_recycle_count"))
+                    if (!$util.isInteger(message.mining_recycle_count) && !(message.mining_recycle_count && $util.isInteger(message.mining_recycle_count.low) && $util.isInteger(message.mining_recycle_count.high)))
+                        return "mining_recycle_count: integer|Long expected";
+                if (message.mining_recycle_gold != null && $Object.hasOwnProperty.call(message, "mining_recycle_gold"))
+                    if (!$util.isInteger(message.mining_recycle_gold) && !(message.mining_recycle_gold && $util.isInteger(message.mining_recycle_gold.low) && $util.isInteger(message.mining_recycle_gold.high)))
+                        return "mining_recycle_gold: integer|Long expected";
+                if (message.mining_recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "mining_recycle_bound_gold"))
+                    if (!$util.isInteger(message.mining_recycle_bound_gold) && !(message.mining_recycle_bound_gold && $util.isInteger(message.mining_recycle_bound_gold.low) && $util.isInteger(message.mining_recycle_bound_gold.high)))
+                        return "mining_recycle_bound_gold: integer|Long expected";
                 return null;
             };
 
@@ -53100,6 +53169,244 @@ $root.minimir = (function() {
             return MiningIntent;
         })();
 
+        v1.SetMiningAutoRecycleRequest = (function() {
+
+            /**
+             * Properties of a SetMiningAutoRecycleRequest.
+             * @typedef {Object} minimir.v1.SetMiningAutoRecycleRequest.$Properties
+             * @property {boolean|null} [enabled] SetMiningAutoRecycleRequest enabled
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetMiningAutoRecycleRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetMiningAutoRecycleRequest.
+             * @memberof minimir.v1
+             * @interface ISetMiningAutoRecycleRequest
+             * @augments minimir.v1.SetMiningAutoRecycleRequest.$Properties
+             * @deprecated Use minimir.v1.SetMiningAutoRecycleRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetMiningAutoRecycleRequest.
+             * @typedef {minimir.v1.SetMiningAutoRecycleRequest.$Properties} minimir.v1.SetMiningAutoRecycleRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SetMiningAutoRecycleRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SetMiningAutoRecycleRequest.
+             * @constructor
+             * @param {minimir.v1.SetMiningAutoRecycleRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SetMiningAutoRecycleRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetMiningAutoRecycleRequest enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @instance
+             */
+            SetMiningAutoRecycleRequest.prototype.enabled = false;
+
+            /**
+             * SetMiningAutoRecycleRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @instance
+             */
+            SetMiningAutoRecycleRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SetMiningAutoRecycleRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetMiningAutoRecycleRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SetMiningAutoRecycleRequest} SetMiningAutoRecycleRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SetMiningAutoRecycleRequest.$Shape): minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape;
+             *   (properties?: minimir.v1.SetMiningAutoRecycleRequest.$Properties): minimir.v1.SetMiningAutoRecycleRequest;
+             * }}
+             */
+            SetMiningAutoRecycleRequest.create = function(properties) {
+                return new SetMiningAutoRecycleRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SetMiningAutoRecycleRequest message. Does not implicitly {@link minimir.v1.SetMiningAutoRecycleRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetMiningAutoRecycleRequest.$Properties} message SetMiningAutoRecycleRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetMiningAutoRecycleRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 1, wireType 0 =*/8).bool(message.enabled);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetMiningAutoRecycleRequest message, length delimited. Does not implicitly {@link minimir.v1.SetMiningAutoRecycleRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetMiningAutoRecycleRequest.$Properties} message SetMiningAutoRecycleRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetMiningAutoRecycleRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetMiningAutoRecycleRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape} SetMiningAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetMiningAutoRecycleRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SetMiningAutoRecycleRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetMiningAutoRecycleRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetMiningAutoRecycleRequest & minimir.v1.SetMiningAutoRecycleRequest.$Shape} SetMiningAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetMiningAutoRecycleRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SetMiningAutoRecycleRequest message.
+             * @function verify
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetMiningAutoRecycleRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SetMiningAutoRecycleRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SetMiningAutoRecycleRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetMiningAutoRecycleRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SetMiningAutoRecycleRequest";
+            };
+
+            return SetMiningAutoRecycleRequest;
+        })();
+
         v1.MiningState = (function() {
 
             /**
@@ -53115,6 +53422,10 @@ $root.minimir = (function() {
              * @property {minimir.v1.ItemView.$Properties|null} [last_ore] MiningState last_ore
              * @property {Long|null} [attempts] MiningState attempts
              * @property {Long|null} [successes] MiningState successes
+             * @property {Array.<number>|null} [recycle_item_ids] MiningState recycle_item_ids
+             * @property {boolean|null} [auto_recycle_enabled] MiningState auto_recycle_enabled
+             * @property {Long|null} [last_recycle_gold] MiningState last_recycle_gold
+             * @property {Long|null} [last_recycle_bound_gold] MiningState last_recycle_bound_gold
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -53140,6 +53451,7 @@ $root.minimir = (function() {
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
             var MiningState = function (properties) {
+                this.recycle_item_ids = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -53227,6 +53539,38 @@ $root.minimir = (function() {
             MiningState.prototype.successes = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * MiningState recycle_item_ids.
+             * @member {Array.<number>} recycle_item_ids
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.recycle_item_ids = $util.emptyArray;
+
+            /**
+             * MiningState auto_recycle_enabled.
+             * @member {boolean} auto_recycle_enabled
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.auto_recycle_enabled = false;
+
+            /**
+             * MiningState last_recycle_gold.
+             * @member {Long} last_recycle_gold
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.last_recycle_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MiningState last_recycle_bound_gold.
+             * @member {Long} last_recycle_bound_gold
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.last_recycle_bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new MiningState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.MiningState
@@ -53278,6 +53622,14 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.attempts);
                 if (message.successes != null && $Object.hasOwnProperty.call(message, "successes") && (typeof message.successes === "object" ? message.successes.low || message.successes.high : message.successes !== 0))
                     writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.successes);
+                if (message.recycle_item_ids != null && message.recycle_item_ids.length)
+                    writer.uint32(/* id 11, wireType 2 =*/90).uint32s(message.recycle_item_ids);
+                if (message.auto_recycle_enabled != null && $Object.hasOwnProperty.call(message, "auto_recycle_enabled") && message.auto_recycle_enabled !== false)
+                    writer.uint32(/* id 12, wireType 0 =*/96).bool(message.auto_recycle_enabled);
+                if (message.last_recycle_gold != null && $Object.hasOwnProperty.call(message, "last_recycle_gold") && (typeof message.last_recycle_gold === "object" ? message.last_recycle_gold.low || message.last_recycle_gold.high : message.last_recycle_gold !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).int64(message.last_recycle_gold);
+                if (message.last_recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "last_recycle_bound_gold") && (typeof message.last_recycle_bound_gold === "object" ? message.last_recycle_bound_gold.low || message.last_recycle_bound_gold.high : message.last_recycle_bound_gold !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).int64(message.last_recycle_bound_gold);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -53419,6 +53771,47 @@ $root.minimir = (function() {
                                 delete message.successes;
                             continue;
                         }
+                    case 11: {
+                            if (wireType === 2) {
+                                if (!(message.recycle_item_ids && message.recycle_item_ids.length))
+                                    message.recycle_item_ids = [];
+                                reader.uint32s(message.recycle_item_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.recycle_item_ids && message.recycle_item_ids.length))
+                                message.recycle_item_ids = [];
+                            message.recycle_item_ids.push(reader.uint32());
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.auto_recycle_enabled = value;
+                            else
+                                delete message.auto_recycle_enabled;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.last_recycle_gold = value;
+                            else
+                                delete message.last_recycle_gold;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.last_recycle_bound_gold = value;
+                            else
+                                delete message.last_recycle_bound_gold;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -53501,6 +53894,22 @@ $root.minimir = (function() {
                 if (message.successes != null && $Object.hasOwnProperty.call(message, "successes"))
                     if (!$util.isInteger(message.successes) && !(message.successes && $util.isInteger(message.successes.low) && $util.isInteger(message.successes.high)))
                         return "successes: integer|Long expected";
+                if (message.recycle_item_ids != null && $Object.hasOwnProperty.call(message, "recycle_item_ids")) {
+                    if (!$Array.isArray(message.recycle_item_ids))
+                        return "recycle_item_ids: array expected";
+                    for (var i = 0; i < message.recycle_item_ids.length; ++i)
+                        if (!$util.isInteger(message.recycle_item_ids[i]))
+                            return "recycle_item_ids: integer[] expected";
+                }
+                if (message.auto_recycle_enabled != null && $Object.hasOwnProperty.call(message, "auto_recycle_enabled"))
+                    if (typeof message.auto_recycle_enabled !== "boolean")
+                        return "auto_recycle_enabled: boolean expected";
+                if (message.last_recycle_gold != null && $Object.hasOwnProperty.call(message, "last_recycle_gold"))
+                    if (!$util.isInteger(message.last_recycle_gold) && !(message.last_recycle_gold && $util.isInteger(message.last_recycle_gold.low) && $util.isInteger(message.last_recycle_gold.high)))
+                        return "last_recycle_gold: integer|Long expected";
+                if (message.last_recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "last_recycle_bound_gold"))
+                    if (!$util.isInteger(message.last_recycle_bound_gold) && !(message.last_recycle_bound_gold && $util.isInteger(message.last_recycle_bound_gold.low) && $util.isInteger(message.last_recycle_bound_gold.high)))
+                        return "last_recycle_bound_gold: integer|Long expected";
                 return null;
             };
 

@@ -116,6 +116,10 @@ type Report struct {
 	DiscardCount       int64  `bson:"discard_count" json:"discard_count"`             // 未入包的丢弃条目数。
 	LastDiscardReason  string `bson:"last_discard_reason" json:"last_discard_reason"` // 最近一次未入包的原因。
 	TotalDropCount     int64  `bson:"total_drop_count" json:"total_drop_count"`       // 实际入包总数，可大于保留明细数量。
+
+	MiningRecycleCount     int64 `bson:"mining_recycle_count,omitempty" json:"mining_recycle_count,omitempty"`           // 本托管会话按矿石策略回收的原矿块数。
+	MiningRecycleGold      int64 `bson:"mining_recycle_gold,omitempty" json:"mining_recycle_gold,omitempty"`             // 计入托管总收益的采矿回收金币。
+	MiningRecycleBoundGold int64 `bson:"mining_recycle_bound_gold,omitempty" json:"mining_recycle_bound_gold,omitempty"` // 计入托管总收益的采矿回收绑定金币。
 }
 
 // Role 保存角色所需的状态。
@@ -152,6 +156,7 @@ type Role struct {
 	Capacity                     int               `bson:"capacity" json:"capacity"`                                                       // 背包允许的实例槽数量。
 	PickupStopped                bool              `bson:"pickup_stopped" json:"pickup_stopped"`                                           // 上次入包失败后保留的拾取停止标记。
 	AutoRecycle                  AutoRecyclePolicy `bson:"auto_recycle" json:"auto_recycle"`                                               // 玩家最后确认的自动回收设置。
+	MiningAutoRecycle            bool              `bson:"mining_auto_recycle,omitempty" json:"mining_auto_recycle,omitempty"`             // 玩家独立确认的矿石自动回收开关。
 	LastDiscardItem              uint32            `bson:"last_discard_item_id" json:"last_discard_item_id"`                               // 最近丢弃掉落的配置编号。
 	LastDiscardBound             bool              `bson:"last_discard_bound" json:"last_discard_bound"`                                   // 最近丢弃掉落原本的绑定状态。
 	HostingSeconds               int64             `bson:"hosting_seconds" json:"hosting_seconds"`                                         // 当前允许继续离线托管的剩余整秒。
@@ -247,6 +252,9 @@ func (r Role) HostingReport() *pb.HostingReport {
 	p.RawExperience = r.Report.RawExperience
 	p.RejectedExperience = r.Report.RejectedExperience
 	p.PooledExperience = r.Report.PooledExperience
+	p.MiningRecycleCount = uint64(r.Report.MiningRecycleCount)
+	p.MiningRecycleGold = r.Report.MiningRecycleGold
+	p.MiningRecycleBoundGold = r.Report.MiningRecycleBoundGold
 	// i 接收遍历掉落集合时当前的元素。
 	for _, i := range r.Report.Drops {
 		p.Drops = append(p.Drops, i.Proto())

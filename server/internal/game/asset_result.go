@@ -136,6 +136,10 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 	w.assets(r)
 	if err == nil && result.ErrorCode == 0 {
 		w.equipmentRecycleResult(r, receipt)
+		if q.Kind == persistence.AssetSetMiningAutoRecycle {
+			// 重放原成功操作也只展示当前角色偏好，旧回执不会覆盖后来保存的开关。
+			w.sendMiningState(r, 0, r.mining.code)
+		}
 		if receipt.GoldMarket != nil && receipt.GoldMarket.Action == 1 {
 			w.wakeGoldMarket(w.roomStore(r).Cfg.RunID)
 		}
