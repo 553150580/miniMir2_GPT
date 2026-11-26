@@ -193,53 +193,6 @@ func (s *Store) ensureMirrorDay(ctx context.Context, r domain.Role, scope string
 	return day, err
 }
 
-// selectMirrorDefenses 从真实索引中按等级、角色摘要和日旋转有界选取；候选不接受任何客户端角色号。
-func (s *Store) selectMirrorDefenses(ctx context.Context, r domain.Role, scope, pivot string, cfg *devconfig.MirrorArenaConfig) ([]mirrorPoolEntry, error) {
-	f := &s.Cfg.Fixture
-	low := uint32(1)
-	if r.Level > cfg.MaxLevelGap {
-		low = r.Level - cfg.MaxLevelGap
-	}
-	high := min(uint64(math.MaxUint32), uint64(r.Level)+uint64(cfg.MaxLevelGap))
-	filter := bson.M{"scope": scope, "account_id": bson.M{"$ne": r.AccountID}, "rule_version": f.RuleVersion, "config_hash": f.Hash}
-	if cfg.MatchPolicy == devconfig.MirrorArenaMatchSameJobLevelWindow {
-		filter["job"] = r.Job
-	}
-	var entries []mirrorPoolEntry
-	segments := []struct{ level, selector any }{
-		{r.Level, bson.M{"$gte": pivot}},
-		{bson.M{"$gt": r.Level, "$lte": high}, nil},
-		{bson.M{"$gte": low, "$lt": r.Level}, nil},
-		{r.Level, bson.M{"$lt": pivot}},
-	}
-	for _, segment := range segments {
-		left := int(cfg.OpponentLimit) - len(entries)
-		if left <= 0 {
-			break
-		}
-		filter["level"] = segment.level
-		delete(filter, "selector")
-		if segment.selector != nil {
-			filter["selector"] = segment.selector
-		}
-		cursor, err := s.DB.Collection(mirrorPoolCollection).Find(ctx, filter,
-			options.Find().SetSort(bson.D{{Key: "level", Value: 1}, {Key: "selector", Value: 1}}).SetLimit(int64(left)))
-		if err != nil {
-			return nil, err
-		}
-		var rows []mirrorPoolEntry
-		if err := cursor.All(ctx, &rows); err != nil {
-			return nil, err
-		}
-		for _, row := range rows {
-			if row.RoleID != r.ID && row.AccountID != r.AccountID && cfg.AllowsMatch(r.Job, r.Level, row.Job, row.Level) {
-				entries = append(entries, row)
-			}
-		}
-	}
-	return entries, nil
-}
-
 func (s *Store) mirrorHistory(ctx context.Context, field string, r domain.Role, limit uint32) ([]MirrorSummary, error) {
 	filter := bson.M{field: r.ID, "origin": r.Origin, "finished_at": bson.M{"$exists": true}}
 	project := bson.M{"_id": 1, "offer_id": 1, "attacker_role_id": 1, "defender_role_id": 1, "attacker_name": 1,
