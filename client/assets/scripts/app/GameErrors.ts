@@ -39,6 +39,12 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (messageId === 40044 && errorCode === CodeVendorFunds) return '原非绑定金币或元宝余额不足';
     if (messageId === 40044 && errorCode === CodeOperationConflict) return '原限价、委托或托管已变化，请刷新';
     if (messageId === 40044 && errorCode === CodeLineForbidden) return '当前角色或市场条件不允许此操作';
+    if (messageId === 20028 || messageId === 20029) {
+        if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';
+        if (errorCode === CodeEquipmentChanged) return '当前矿层没有可用锄头，请检查背包';
+        if (errorCode === CodeVendorFunds) return '托管时长不足一轮，已停止挖矿';
+        if (errorCode === CodeLineForbidden) return '当前地图或角色条件不允许挖矿';
+    }
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
     if (errorCode === CodeWarehouseFull) return '背包或仓库没有空位，原物品保持原处';
     if (errorCode === CodeWarehouseChanged) return '原仓库、物品或版本已变化，请重新查询';

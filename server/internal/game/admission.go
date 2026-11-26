@@ -161,6 +161,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	r.PetBornReady = nil
 	r.Baseline = w.e.baseline.Add(1)
 	r.HostSession = ""
+	r.mining.startedAt = time.Time{} // 新会话的下一轮须重新计满，保留原矿层和锄头。
 	r.LastTick = now
 	r.AwaitUntil = now.Add(10 * time.Second)
 	m, known := w.currentMap(r)

@@ -21894,6 +21894,7 @@ $root.minimir = (function() {
              * @property {Long|null} [durability_u] ItemView durability_u
              * @property {Long|null} [max_durability_u] ItemView max_durability_u
              * @property {Long|null} [original_durability_u] ItemView original_durability_u
+             * @property {number|null} [ore_purity] ItemView ore_purity
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -22030,6 +22031,14 @@ $root.minimir = (function() {
             ItemView.prototype.original_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * ItemView ore_purity.
+             * @member {number} ore_purity
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.ore_purity = 0;
+
+            /**
              * Creates a new ItemView instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ItemView
@@ -22087,6 +22096,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.max_durability_u);
                 if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u") && (typeof message.original_durability_u === "object" ? message.original_durability_u.low || message.original_durability_u.high : message.original_durability_u !== 0))
                     writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.original_durability_u);
+                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity") && message.ore_purity !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.ore_purity);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -22261,6 +22272,15 @@ $root.minimir = (function() {
                                 delete message.original_durability_u;
                             continue;
                         }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.ore_purity = value;
+                            else
+                                delete message.ore_purity;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -22348,6 +22368,9 @@ $root.minimir = (function() {
                 if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u"))
                     if (!$util.isInteger(message.original_durability_u) && !(message.original_durability_u && $util.isInteger(message.original_durability_u.low) && $util.isInteger(message.original_durability_u.high)))
                         return "original_durability_u: integer|Long expected";
+                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity"))
+                    if (!$util.isInteger(message.ore_purity))
+                        return "ore_purity: integer expected";
                 return null;
             };
 
@@ -52813,6 +52836,689 @@ $root.minimir = (function() {
             };
 
             return GoldMarketAction;
+        })();
+
+        v1.MiningIntent = (function() {
+
+            /**
+             * Properties of a MiningIntent.
+             * @typedef {Object} minimir.v1.MiningIntent.$Properties
+             * @property {Long|null} [scene_epoch] MiningIntent scene_epoch
+             * @property {number|null} [action] MiningIntent action
+             * @property {Uint8Array|null} [tool_instance_id] MiningIntent tool_instance_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MiningIntent.
+             * @memberof minimir.v1
+             * @interface IMiningIntent
+             * @augments minimir.v1.MiningIntent.$Properties
+             * @deprecated Use minimir.v1.MiningIntent.$Properties instead.
+             */
+
+            /**
+             * Shape of a MiningIntent.
+             * @typedef {minimir.v1.MiningIntent.$Properties} minimir.v1.MiningIntent.$Shape
+             */
+
+            /**
+             * Constructs a new MiningIntent.
+             * @memberof minimir.v1
+             * @classdesc Represents a MiningIntent.
+             * @constructor
+             * @param {minimir.v1.MiningIntent.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MiningIntent = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MiningIntent scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MiningIntent
+             * @instance
+             */
+            MiningIntent.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MiningIntent action.
+             * @member {number} action
+             * @memberof minimir.v1.MiningIntent
+             * @instance
+             */
+            MiningIntent.prototype.action = 0;
+
+            /**
+             * MiningIntent tool_instance_id.
+             * @member {Uint8Array} tool_instance_id
+             * @memberof minimir.v1.MiningIntent
+             * @instance
+             */
+            MiningIntent.prototype.tool_instance_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new MiningIntent instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {minimir.v1.MiningIntent.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MiningIntent} MiningIntent instance
+             * @type {{
+             *   (properties: minimir.v1.MiningIntent.$Shape): minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape;
+             *   (properties?: minimir.v1.MiningIntent.$Properties): minimir.v1.MiningIntent;
+             * }}
+             */
+            MiningIntent.create = function(properties) {
+                return new MiningIntent(properties);
+            };
+
+            /**
+             * Encodes the specified MiningIntent message. Does not implicitly {@link minimir.v1.MiningIntent.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {minimir.v1.MiningIntent.$Properties} message MiningIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MiningIntent.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.action);
+                if (message.tool_instance_id != null && $Object.hasOwnProperty.call(message, "tool_instance_id") && message.tool_instance_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.tool_instance_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MiningIntent message, length delimited. Does not implicitly {@link minimir.v1.MiningIntent.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {minimir.v1.MiningIntent.$Properties} message MiningIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MiningIntent.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MiningIntent message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape} MiningIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MiningIntent.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MiningIntent();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.tool_instance_id = value;
+                            else
+                                delete message.tool_instance_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MiningIntent message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape} MiningIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MiningIntent.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MiningIntent message.
+             * @function verify
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MiningIntent.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.tool_instance_id != null && $Object.hasOwnProperty.call(message, "tool_instance_id"))
+                    if (!(message.tool_instance_id && typeof message.tool_instance_id.length === "number" || $util.isString(message.tool_instance_id)))
+                        return "tool_instance_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MiningIntent
+             * @function getTypeUrl
+             * @memberof minimir.v1.MiningIntent
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MiningIntent.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MiningIntent";
+            };
+
+            return MiningIntent;
+        })();
+
+        v1.MiningState = (function() {
+
+            /**
+             * Properties of a MiningState.
+             * @typedef {Object} minimir.v1.MiningState.$Properties
+             * @property {Long|null} [scene_epoch] MiningState scene_epoch
+             * @property {Long|null} [map_id] MiningState map_id
+             * @property {Long|null} [state_sequence] MiningState state_sequence
+             * @property {boolean|null} [can_start] MiningState can_start
+             * @property {boolean|null} [active] MiningState active
+             * @property {number|null} [error_code] MiningState error_code
+             * @property {minimir.v1.ItemView.$Properties|null} [tool] MiningState tool
+             * @property {minimir.v1.ItemView.$Properties|null} [last_ore] MiningState last_ore
+             * @property {Long|null} [attempts] MiningState attempts
+             * @property {Long|null} [successes] MiningState successes
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MiningState.
+             * @memberof minimir.v1
+             * @interface IMiningState
+             * @augments minimir.v1.MiningState.$Properties
+             * @deprecated Use minimir.v1.MiningState.$Properties instead.
+             */
+
+            /**
+             * Shape of a MiningState.
+             * @typedef {minimir.v1.MiningState.$Properties} minimir.v1.MiningState.$Shape
+             */
+
+            /**
+             * Constructs a new MiningState.
+             * @memberof minimir.v1
+             * @classdesc Represents a MiningState.
+             * @constructor
+             * @param {minimir.v1.MiningState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MiningState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MiningState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MiningState map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MiningState state_sequence.
+             * @member {Long} state_sequence
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.state_sequence = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MiningState can_start.
+             * @member {boolean} can_start
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.can_start = false;
+
+            /**
+             * MiningState active.
+             * @member {boolean} active
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.active = false;
+
+            /**
+             * MiningState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.error_code = 0;
+
+            /**
+             * MiningState tool.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} tool
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.tool = null;
+
+            /**
+             * MiningState last_ore.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} last_ore
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.last_ore = null;
+
+            /**
+             * MiningState attempts.
+             * @member {Long} attempts
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.attempts = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MiningState successes.
+             * @member {Long} successes
+             * @memberof minimir.v1.MiningState
+             * @instance
+             */
+            MiningState.prototype.successes = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new MiningState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {minimir.v1.MiningState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MiningState} MiningState instance
+             * @type {{
+             *   (properties: minimir.v1.MiningState.$Shape): minimir.v1.MiningState & minimir.v1.MiningState.$Shape;
+             *   (properties?: minimir.v1.MiningState.$Properties): minimir.v1.MiningState;
+             * }}
+             */
+            MiningState.create = function(properties) {
+                return new MiningState(properties);
+            };
+
+            /**
+             * Encodes the specified MiningState message. Does not implicitly {@link minimir.v1.MiningState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {minimir.v1.MiningState.$Properties} message MiningState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MiningState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.map_id);
+                if (message.state_sequence != null && $Object.hasOwnProperty.call(message, "state_sequence") && (typeof message.state_sequence === "object" ? message.state_sequence.low || message.state_sequence.high : message.state_sequence !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.state_sequence);
+                if (message.can_start != null && $Object.hasOwnProperty.call(message, "can_start") && message.can_start !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.can_start);
+                if (message.active != null && $Object.hasOwnProperty.call(message, "active") && message.active !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.active);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.error_code);
+                if (message.tool != null && $Object.hasOwnProperty.call(message, "tool"))
+                    $root.minimir.v1.ItemView.encode(message.tool, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.last_ore != null && $Object.hasOwnProperty.call(message, "last_ore"))
+                    $root.minimir.v1.ItemView.encode(message.last_ore, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.attempts != null && $Object.hasOwnProperty.call(message, "attempts") && (typeof message.attempts === "object" ? message.attempts.low || message.attempts.high : message.attempts !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.attempts);
+                if (message.successes != null && $Object.hasOwnProperty.call(message, "successes") && (typeof message.successes === "object" ? message.successes.low || message.successes.high : message.successes !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.successes);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MiningState message, length delimited. Does not implicitly {@link minimir.v1.MiningState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {minimir.v1.MiningState.$Properties} message MiningState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MiningState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MiningState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MiningState & minimir.v1.MiningState.$Shape} MiningState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MiningState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MiningState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.state_sequence = value;
+                            else
+                                delete message.state_sequence;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.can_start = value;
+                            else
+                                delete message.can_start;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.active = value;
+                            else
+                                delete message.active;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.tool = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.tool);
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            message.last_ore = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.last_ore);
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.attempts = value;
+                            else
+                                delete message.attempts;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.successes = value;
+                            else
+                                delete message.successes;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MiningState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MiningState & minimir.v1.MiningState.$Shape} MiningState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MiningState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MiningState message.
+             * @function verify
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MiningState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.state_sequence != null && $Object.hasOwnProperty.call(message, "state_sequence"))
+                    if (!$util.isInteger(message.state_sequence) && !(message.state_sequence && $util.isInteger(message.state_sequence.low) && $util.isInteger(message.state_sequence.high)))
+                        return "state_sequence: integer|Long expected";
+                if (message.can_start != null && $Object.hasOwnProperty.call(message, "can_start"))
+                    if (typeof message.can_start !== "boolean")
+                        return "can_start: boolean expected";
+                if (message.active != null && $Object.hasOwnProperty.call(message, "active"))
+                    if (typeof message.active !== "boolean")
+                        return "active: boolean expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.tool != null && $Object.hasOwnProperty.call(message, "tool")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.tool, _depth + 1);
+                    if (error)
+                        return "tool." + error;
+                }
+                if (message.last_ore != null && $Object.hasOwnProperty.call(message, "last_ore")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.last_ore, _depth + 1);
+                    if (error)
+                        return "last_ore." + error;
+                }
+                if (message.attempts != null && $Object.hasOwnProperty.call(message, "attempts"))
+                    if (!$util.isInteger(message.attempts) && !(message.attempts && $util.isInteger(message.attempts.low) && $util.isInteger(message.attempts.high)))
+                        return "attempts: integer|Long expected";
+                if (message.successes != null && $Object.hasOwnProperty.call(message, "successes"))
+                    if (!$util.isInteger(message.successes) && !(message.successes && $util.isInteger(message.successes.low) && $util.isInteger(message.successes.high)))
+                        return "successes: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MiningState
+             * @function getTypeUrl
+             * @memberof minimir.v1.MiningState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MiningState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MiningState";
+            };
+
+            return MiningState;
         })();
 
         return v1;

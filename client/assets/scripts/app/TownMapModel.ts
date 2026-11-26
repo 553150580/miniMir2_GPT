@@ -5,8 +5,10 @@ import type { HeadProfile } from './EntityHeadAnchor';
 export interface TownDirectoryMapRow {
     readonly mapId: string;
     readonly label: string;
-    readonly destination: 1 | 2;
+    readonly destination: 1 | 2 | 3;
     readonly current: boolean;
+    readonly minimumLevel?: number; // 矿区可提前展示，但等级不足时没有可提交的入场操作。
+    readonly levelLocked?: boolean;
 }
 export interface TownDirectoryRegion {
     readonly regionId: string;
@@ -22,7 +24,7 @@ export interface TownNpc {
     readonly profile: 'player_male' | 'player_female';
 }
 
-export function townDirectoryRegions(gameplay: any, current: string): TownDirectoryRegion[] {
+export function townDirectoryRegions(gameplay: any, current: string, roleLevel?: number): TownDirectoryRegion[] {
     const townIds = gameplay?.town_travel?.destination_map_ids, catalog = gameplay?.map_catalog, regions = gameplay?.map_regions;
     if (!Array.isArray(townIds) || !Array.isArray(catalog) || !Array.isArray(regions) || !regions.length) throw new Error('地图目录尚未完整同步');
     const seen = new Set<string>(), seenRegions = new Set<string>(), result: TownDirectoryRegion[] = [];
@@ -34,10 +36,12 @@ export function townDirectoryRegions(gameplay: any, current: string): TownDirect
         for (const value of region.map_ids) {
             if (typeof value !== 'string') throw new Error('地图目录ID必须为十进制字符串');
             const mapId = travelInteger(value, true), entry = catalog.find(map => map.id === mapId);
-            if (seen.has(mapId) || !entry || ![1, 2].includes(entry.scene_kind) || typeof entry.name !== 'string' || !entry.name.trim()
-                || (entry.scene_kind === 2 && (entry.compact_town !== true || !townIds.includes(mapId)))) throw new Error('地图目录目标无效');
+            if (seen.has(mapId) || !entry || ![1, 2, 7].includes(entry.scene_kind) || typeof entry.name !== 'string' || !entry.name.trim()
+                || (entry.scene_kind === 2 && (entry.compact_town !== true || !townIds.includes(mapId)))
+                || (entry.scene_kind === 7 && (!Number.isSafeInteger(entry.minimum_level) || entry.minimum_level < 1))) throw new Error('地图目录目标无效');
             seen.add(mapId);
-            maps.push({ mapId, label: entry.name, destination: entry.scene_kind === 2 ? 1 : 2, current: mapId === current });
+            maps.push({ mapId, label: entry.name, destination: entry.scene_kind === 2 ? 1 : entry.scene_kind === 7 ? 3 : 2, current: mapId === current,
+                ...(entry.scene_kind === 7 ? { minimumLevel: entry.minimum_level, levelLocked: roleLevel !== undefined && roleLevel < entry.minimum_level } : {}) });
         }
         result.push({ regionId: region.id, label: region.name, maps });
     }

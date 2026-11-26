@@ -1,0 +1,19 @@
+{
+  "layers": [
+    {
+      "layer": 1,
+      "map": {"id": 202601, "display_name": "比奇矿区一层", "resource_key": "development/maps/personal-map", "width": 13, "height": 13, "player_spawn": {"x": 6, "y": 6}, "blocked": [{"x": 4, "y": 5}, {"x": 8, "y": 7}]},
+      "floor_map_id": 1,
+      "floor_style_map_id": 7,
+      "tool": {"item_id": 910011, "name": "一层试用锄头", "durability_u": 12, "shop_key": "grocery", "offer_id": 910011, "gold_price": 50}
+    },
+    {
+      "layer": 2,
+      "map": {"id": 202602, "display_name": "比奇矿区二层", "resource_key": "development/maps/personal-map", "width": 13, "height": 13, "player_spawn": {"x": 5, "y": 5}, "blocked": [{"x": 3, "y": 6}, {"x": 8, "y": 9}]},
+      "floor_map_id": 1,
+      "floor_style_map_id": 7,
+      "tool": {"item_id": 910012, "name": "二层试用锄头", "durability_u": 16, "shop_key": "grocery", "offer_id": 910012, "gold_price": 80}
+    }
+  ],
+  "ore_item_ids": {"copper": 910001, "iron": 910002, "gold": 910003, "black_iron": 910004}
+}

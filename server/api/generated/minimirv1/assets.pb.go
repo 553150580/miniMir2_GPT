@@ -115,8 +115,10 @@ type ItemView struct {
 	DurabilityU         uint64 `protobuf:"varint,11,opt,name=durability_u,json=durabilityU,proto3" json:"durability_u,omitempty"`
 	MaxDurabilityU      uint64 `protobuf:"varint,12,opt,name=max_durability_u,json=maxDurabilityU,proto3" json:"max_durability_u,omitempty"`
 	OriginalDurabilityU uint64 `protobuf:"varint,13,opt,name=original_durability_u,json=originalDurabilityU,proto3" json:"original_durability_u,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	// 原矿石实例纯度1–100；0表示该物品没有矿石纯度。
+	OrePurity     uint32 `protobuf:"varint,14,opt,name=ore_purity,json=orePurity,proto3" json:"ore_purity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ItemView) Reset() {
@@ -236,6 +238,13 @@ func (x *ItemView) GetMaxDurabilityU() uint64 {
 func (x *ItemView) GetOriginalDurabilityU() uint64 {
 	if x != nil {
 		return x.OriginalDurabilityU
+	}
+	return 0
+}
+
+func (x *ItemView) GetOrePurity() uint32 {
+	if x != nil {
+		return x.OrePurity
 	}
 	return 0
 }
@@ -3317,7 +3326,7 @@ const file_assets_proto_rawDesc = "" +
 	"bound_gold\x18\x02 \x01(\x03R\tboundGold\x12#\n" +
 	"\ryuanbao_units\x18\x03 \x01(\x03R\fyuanbaoUnits\x12.\n" +
 	"\x13bound_yuanbao_units\x18\x04 \x01(\x03R\x11boundYuanbaoUnits\x12\x1a\n" +
-	"\brevision\x18\x05 \x01(\x04R\brevision\"\xb1\x03\n" +
+	"\brevision\x18\x05 \x01(\x04R\brevision\"\xd0\x03\n" +
 	"\bItemView\x12\x1f\n" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x17\n" +
@@ -3334,7 +3343,9 @@ const file_assets_proto_rawDesc = "" +
 	" \x01(\rR\x11recycleBlockFlags\x12!\n" +
 	"\fdurability_u\x18\v \x01(\x04R\vdurabilityU\x12(\n" +
 	"\x10max_durability_u\x18\f \x01(\x04R\x0emaxDurabilityU\x122\n" +
-	"\x15original_durability_u\x18\r \x01(\x04R\x13originalDurabilityU\"L\n" +
+	"\x15original_durability_u\x18\r \x01(\x04R\x13originalDurabilityU\x12\x1d\n" +
+	"\n" +
+	"ore_purity\x18\x0e \x01(\rR\torePurity\"L\n" +
 	"\fEquippedItem\x12\x12\n" +
 	"\x04slot\x18\x01 \x01(\rR\x04slot\x12(\n" +
 	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"?\n" +

@@ -86,6 +86,14 @@ func CanTrade(item domain.Item, definition devconfig.Item) bool {
 	if definition.IsEquipment && item.Quality < 2 {
 		return false
 	}
+	if item.SourceKind == "mining" {
+		// 保留单块的原纯度。非绑定矿石可申请上架，任意纯度都适用同一交易规则。
+		return !definition.IsEquipment && !definition.Stackable && item.Quantity == 1 &&
+			item.OrePurity >= 1 && item.OrePurity <= 100 && lowerHex(item.SourceID, 16)
+	}
+	if item.OrePurity != 0 {
+		return false
+	}
 	switch item.SourceKind {
 	case "monster_drop", "personal_boss", "world_boss", "world_boss_timeout", "dungeon", "npc_shop",
 		"skill_recycle", "task_reward", "codex_reward":

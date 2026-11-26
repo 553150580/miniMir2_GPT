@@ -527,6 +527,10 @@ func (w *worker) step(r *room, now time.Time) {
 	if w.progressMapTravel(r, now) {
 		return
 	}
+	if mapTemplate.SceneKindValue() == devconfig.SceneKindMining {
+		w.stepMining(r, now)
+		return
+	}
 	if mapTemplate.SceneKindValue() == devconfig.SceneKindTown {
 		// 来源城镇不运行离线战斗或扣托管；既有状态/恢复已在上方按真实时钟推进。
 		if offline {

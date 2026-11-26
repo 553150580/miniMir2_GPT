@@ -11,6 +11,7 @@ interface WorldMapEntry {
     readonly width?: number; readonly height?: number; readonly safe_zones?: readonly unknown[];
     readonly compact_town?: boolean;
     readonly floor_map_id?: string;
+    readonly floor_style_map_id?: string; // 独立矿区引用已有同尺寸原地表样式。
     readonly blocked?: readonly { x: number; y: number }[];
     readonly player_spawn?: { x: number; y: number };
     readonly monster_definition_ids?: readonly number[];
@@ -32,7 +33,7 @@ export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | s
     }
     const ordinary = gameplay.map_catalog, challenges = gameplay.challenge_maps ?? [];
     if (!Array.isArray(ordinary) || !ordinary.length || ordinary[0]?.scene_kind !== 1 || !Array.isArray(challenges)) throw new Error('地图目录缺少首项个人地图');
-    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4, 5, 6].includes(entry?.scene_kind)))
+    if (ordinary.some(entry => ![1, 2, 7].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4, 5, 6].includes(entry?.scene_kind)))
         throw new Error('地图目录场景分类不匹配');
     const catalog = [...ordinary, ...challenges];
     const ids = new Set<string>();
@@ -46,6 +47,15 @@ export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | s
     }
     const selected = requested === undefined ? catalog[0] : catalog.find((entry: WorldMapEntry) => entry.id === requested);
     if (!selected) throw new Error('地图目录没有请求的地图'); return selected;
+}
+
+// 独立矿图沿用已投影的地表纹理；尺寸和资产归属须与其原地图一致。
+export function miningFloorStyleMap(gameplay: any, selected: WorldMapEntry): WorldMapEntry | undefined {
+    if (selected.scene_kind !== 7 || selected.floor_style_map_id === undefined) return undefined;
+    const source = selectWorldMap(gameplay, selected.floor_style_map_id);
+    if (source.scene_kind !== 1 || source.width !== selected.width || source.height !== selected.height ||
+        source.resource_key !== selected.resource_key) throw new Error('矿区地表样式与来源地图不匹配');
+    return source;
 }
 
 export function effectFrameKeys(value: any): string[] {
@@ -204,6 +214,8 @@ export class WorldAssets {
             const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
             const sharedChallenge = result.sharedCombatActors;
             const mirrorArena = selected.scene_kind === 6;
+            const mining = selected.scene_kind === 7;
+            const miningStyle = miningFloorStyleMap(result.gameplay, selected);
             // 开发神兽资源可独立导入。原开发清单和骷髅帧无需重新生成。
             const shinsuPath = 'development/pets/shinsu/profile';
             const needsShinsu = result.gameplay.pet_profiles?.some((row: any) => row.profile === 'pet_shinsu'
@@ -232,8 +244,8 @@ export class WorldAssets {
             } else {
                 const floor = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
                 if (!floor) throw new Error('地图缺少地板数据');
-                const challenge = selected.scene_kind >= 3;
-                const sharedFloor = challenge || selected.scene_kind === 1 && selected.floor_map_id !== undefined;
+                const challenge = selected.scene_kind >= 3 && !mining;
+                const sharedFloor = challenge || mining || selected.scene_kind === 1 && selected.floor_map_id !== undefined;
                 if (sharedFloor && (selected.floor_map_id !== String(floor.id) || !Array.isArray(selected.blocked) || !selected.player_spawn))
                     throw new Error('地图与地板身份不匹配');
                 result.map = sharedFloor ? Object.freeze({ ...floor, id: selected.id, name: selected.name, scene_kind: selected.scene_kind,
@@ -248,7 +260,7 @@ export class WorldAssets {
                 const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
                 // 新开阔挂机图独立裁切。同一份历史清单仍核对城镇17格地台和旧个人图。
                 const openField = selected.resource_key === 'development/maps/personal-map';
-                const floorMatches = openField ? (selected.scene_kind === 1 || challenge) && floor.collision_basis === 'open_personal_field'
+                const floorMatches = openField ? (selected.scene_kind === 1 || challenge || mining) && floor.collision_basis === 'open_personal_field'
                     && floor.background === 'maps/personal-map.png' && Array.isArray(floor.blocked) && !floor.blocked.length
                     && Array.isArray(floor.props) && !floor.props.length && floor.source_fronts_rendered === false
                     : ['width', 'height', 'tile_width', 'tile_height', 'projection', 'soil_thickness_px', 'surface_width', 'surface_height',
@@ -264,9 +276,9 @@ export class WorldAssets {
             const floor = async (): Promise<SpriteFrame | null> => {
                 if (result.sourceMap) return result.background;
                 let floorPath = selected.resource_key;
-                if (selected.scene_kind <= 2 && resources.getInfoWithPath(regionalMapStylesPath, JsonAsset)) {
+                if ((selected.scene_kind <= 2 || miningStyle) && resources.getInfoWithPath(regionalMapStylesPath, JsonAsset)) {
                     const styles = result.own(await load<JsonAsset>(regionalMapStylesPath, JsonAsset)).json;
-                    const style = regionalMapStyle(styles, selected);
+                    const style = regionalMapStyle(styles, miningStyle ?? selected);
                     if (style) floorPath = result.regionalFloor = style.frame;
                 }
                 const frame = result.own(await load<SpriteFrame>(`${floorPath}/spriteFrame`, SpriteFrame));
@@ -295,13 +307,13 @@ export class WorldAssets {
             if (result.sceneKind === 2 || sharedChallenge) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             const challengeMonsterIds = new Set<number>((result.gameplay.challenge_maps ?? [])
                 .flatMap((entry: WorldMapEntry) => entry.monster_definition_ids ?? []));
-            const monstersForMap = () => selected.monster_definition_ids === undefined
+            const monstersForMap = () => mining ? [] : selected.monster_definition_ids === undefined
                 ? result.gameplay.monster_profiles.filter((row: any) => !String(row.profile).startsWith('monster_m1_')
                     && (result.sceneKind >= 3 || !challengeMonsterIds.has(row.definition_id)))
                 : result.gameplay.monster_profiles.filter((row: any) => selected.monster_definition_ids!.includes(row.definition_id));
             // 本机原版资源仅随拥有对应怪物的普通图和首领图加载。
             if (monstersForMap().some((row: any) => String(row.profile).startsWith('monster_m1_'))
-                || result.sceneKind >= 3 && !mirrorArena && selected.monster_definition_ids !== undefined) {
+                || result.sceneKind >= 3 && !mirrorArena && !mining && selected.monster_definition_ids !== undefined) {
                 const extras = result.own(await load<JsonAsset>('development/original-monsters/actors', JsonAsset)).json as any;
                 if (extras?.schema_version !== 1 || !extras.profiles || !extras.frames
                     || !extras.challenge_profiles

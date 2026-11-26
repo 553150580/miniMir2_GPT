@@ -45,7 +45,8 @@ export function assetId(value: Uint8Array): string {
     return Array.from(value, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 export function sourceName(value: string | undefined): string {
-    return ({ npc_shop: 'NPC书店', initial: '开发初始补给', initial_grant: '开发初始补给', monster_drop: '怪物掉落', skill_recycle: '拆书所得' } as Record<string, string>)[value ?? ''] ?? '未知来源';
+    return ({ npc_shop: 'NPC书店', initial: '开发初始补给', initial_grant: '开发初始补给', monster_drop: '怪物掉落', skill_recycle: '拆书所得',
+        mining: '挖矿所得' } as Record<string, string>)[value ?? ''] ?? '未知来源';
 }
 function frozenItem(item: SkillAssetItem): FrozenItem {
     return { id: assetId(item.instanceId), itemId: item.itemId, version: assetInteger(item.version).toString(), quantity: assetInteger(item.quantity).toString(),

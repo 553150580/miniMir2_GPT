@@ -8369,6 +8369,9 @@ export namespace minimir {
             /** ItemView original_durability_u. */
             original_durability_u: Long;
 
+            /** ItemView ore_purity. */
+            ore_purity: number;
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -8470,6 +8473,9 @@ export namespace minimir {
 
                 /** ItemView original_durability_u */
                 original_durability_u?: (Long|null);
+
+                /** ItemView ore_purity */
+                ore_purity?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -19799,6 +19805,264 @@ export namespace minimir {
 
             /** Shape of a GoldMarketAction. */
             type $Shape = minimir.v1.GoldMarketAction.$Properties;
+        }
+
+        /**
+         * Properties of a MiningIntent.
+         * @deprecated Use minimir.v1.MiningIntent.$Properties instead.
+         */
+        interface IMiningIntent extends minimir.v1.MiningIntent.$Properties {
+        }
+
+        /** Represents a MiningIntent. */
+        class MiningIntent {
+
+            /**
+             * Constructs a new MiningIntent.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MiningIntent.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MiningIntent scene_epoch. */
+            scene_epoch: Long;
+
+            /** MiningIntent action. */
+            action: number;
+
+            /** MiningIntent tool_instance_id. */
+            tool_instance_id: Uint8Array;
+
+            /**
+             * Creates a new MiningIntent instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MiningIntent instance
+             */
+            static create(properties: minimir.v1.MiningIntent.$Shape): minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape;
+            static create(properties?: minimir.v1.MiningIntent.$Properties): minimir.v1.MiningIntent;
+
+            /**
+             * Encodes the specified MiningIntent message. Does not implicitly {@link minimir.v1.MiningIntent.verify|verify} messages.
+             * @param message MiningIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MiningIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MiningIntent message, length delimited. Does not implicitly {@link minimir.v1.MiningIntent.verify|verify} messages.
+             * @param message MiningIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MiningIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MiningIntent message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape} MiningIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape;
+
+            /**
+             * Decodes a MiningIntent message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape} MiningIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MiningIntent & minimir.v1.MiningIntent.$Shape;
+
+            /**
+             * Verifies a MiningIntent message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MiningIntent
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MiningIntent {
+
+            /** Properties of a MiningIntent. */
+            interface $Properties {
+
+                /** MiningIntent scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MiningIntent action */
+                action?: (number|null);
+
+                /** MiningIntent tool_instance_id */
+                tool_instance_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MiningIntent. */
+            type $Shape = minimir.v1.MiningIntent.$Properties;
+        }
+
+        /**
+         * Properties of a MiningState.
+         * @deprecated Use minimir.v1.MiningState.$Properties instead.
+         */
+        interface IMiningState extends minimir.v1.MiningState.$Properties {
+        }
+
+        /** Represents a MiningState. */
+        class MiningState {
+
+            /**
+             * Constructs a new MiningState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MiningState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MiningState scene_epoch. */
+            scene_epoch: Long;
+
+            /** MiningState map_id. */
+            map_id: Long;
+
+            /** MiningState state_sequence. */
+            state_sequence: Long;
+
+            /** MiningState can_start. */
+            can_start: boolean;
+
+            /** MiningState active. */
+            active: boolean;
+
+            /** MiningState error_code. */
+            error_code: number;
+
+            /** MiningState tool. */
+            tool?: (minimir.v1.ItemView.$Properties|null);
+
+            /** MiningState last_ore. */
+            last_ore?: (minimir.v1.ItemView.$Properties|null);
+
+            /** MiningState attempts. */
+            attempts: Long;
+
+            /** MiningState successes. */
+            successes: Long;
+
+            /**
+             * Creates a new MiningState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MiningState instance
+             */
+            static create(properties: minimir.v1.MiningState.$Shape): minimir.v1.MiningState & minimir.v1.MiningState.$Shape;
+            static create(properties?: minimir.v1.MiningState.$Properties): minimir.v1.MiningState;
+
+            /**
+             * Encodes the specified MiningState message. Does not implicitly {@link minimir.v1.MiningState.verify|verify} messages.
+             * @param message MiningState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MiningState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MiningState message, length delimited. Does not implicitly {@link minimir.v1.MiningState.verify|verify} messages.
+             * @param message MiningState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MiningState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MiningState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MiningState & minimir.v1.MiningState.$Shape} MiningState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MiningState & minimir.v1.MiningState.$Shape;
+
+            /**
+             * Decodes a MiningState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MiningState & minimir.v1.MiningState.$Shape} MiningState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MiningState & minimir.v1.MiningState.$Shape;
+
+            /**
+             * Verifies a MiningState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MiningState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MiningState {
+
+            /** Properties of a MiningState. */
+            interface $Properties {
+
+                /** MiningState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MiningState map_id */
+                map_id?: (Long|null);
+
+                /** MiningState state_sequence */
+                state_sequence?: (Long|null);
+
+                /** MiningState can_start */
+                can_start?: (boolean|null);
+
+                /** MiningState active */
+                active?: (boolean|null);
+
+                /** MiningState error_code */
+                error_code?: (number|null);
+
+                /** MiningState tool */
+                tool?: (minimir.v1.ItemView.$Properties|null);
+
+                /** MiningState last_ore */
+                last_ore?: (minimir.v1.ItemView.$Properties|null);
+
+                /** MiningState attempts */
+                attempts?: (Long|null);
+
+                /** MiningState successes */
+                successes?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MiningState. */
+            type $Shape = minimir.v1.MiningState.$Properties;
         }
     }
 }

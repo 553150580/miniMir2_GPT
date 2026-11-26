@@ -58,6 +58,7 @@ type Item struct {
 	ID                  string `bson:"instance_id" json:"instance_id"`                                         // 同一配置可对应多件物品，本字段唯一标识其中一个实例。
 	ItemID              uint32 `bson:"item_id" json:"item_id"`                                                 // 配置目录中的物品定义号。
 	Quantity            int64  `bson:"quantity" json:"quantity"`                                               // 当前堆叠数量。
+	OrePurity           uint32 `bson:"ore_purity,omitempty" json:"ore_purity,omitempty"`                       // 原矿的纯度整数，零表示没有纯度属性。
 	Bound               bool   `bson:"bound" json:"bound"`                                                     // 限制转移并决定回收收入的绑定状态。
 	Version             int64  `bson:"version" json:"version"`                                                 // 该实例的乐观并发版本。
 	DurabilityU         int64  `bson:"durability_u,omitempty" json:"durability_u,omitempty"`                   // 当前耐久，使用约定的定点存储单位。
@@ -75,7 +76,7 @@ type Item struct {
 // i 是调用该方法的道具实例。
 func (i Item) Proto() *pb.ItemView {
 	// wire 保存当前处理所用的线协议。
-	wire := &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags()}
+	wire := &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags(), OrePurity: i.OrePurity}
 	if i.HasValidDurability() {
 		wire.DurabilityU = uint64(i.DurabilityU)
 		wire.MaxDurabilityU = uint64(i.MaxDurabilityU)
@@ -154,6 +155,7 @@ type Role struct {
 	LastDiscardItem              uint32            `bson:"last_discard_item_id" json:"last_discard_item_id"`                               // 最近丢弃掉落的配置编号。
 	LastDiscardBound             bool              `bson:"last_discard_bound" json:"last_discard_bound"`                                   // 最近丢弃掉落原本的绑定状态。
 	HostingSeconds               int64             `bson:"hosting_seconds" json:"hosting_seconds"`                                         // 当前允许继续离线托管的剩余整秒。
+	LastMiningAt                 time.Time         `bson:"last_mining_at,omitempty" json:"-"`                                              // 最近已确认出矿判定的服务器时刻，阻止换层或重连缩短间隔。
 	ClaimDay                     string            `bson:"claim_day" json:"-"`                                                             // 最近记录领取额度的业务日。
 	ClaimedSeconds               int64             `bson:"claimed_seconds" json:"-"`                                                       // 该业务日已领取的托管秒数。
 	NoEquipmentKills             int               `bson:"no_equipment_kills" json:"-"`                                                    // 为装备掉落保底跟踪的连续未掉装备次数。

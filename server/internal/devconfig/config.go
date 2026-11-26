@@ -328,6 +328,8 @@ type Fixture struct {
 	RoleCards *RoleCardConfig `json:"role_cards,omitempty"`
 	// Payment 固定隔离验收使用的现金双卡商品。缺省规则不装配此目录。
 	Payment *PaymentConfig `json:"payment,omitempty"`
+	// Mining 是显式隔离装配的挖矿候选，缺省不开放。
+	Mining *MiningConfig `json:"mining,omitempty"`
 	// ItemMarket 包含已装配的道具竞购与共享佣金规则。历史配置缺省关闭。
 	ItemMarket *ItemMarketConfig `json:"item_market,omitempty"`
 	// GoldMarket 包含已装配的金币撮合规则，当前默认夹具省略并关闭。
@@ -591,6 +593,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateGoldMarket(); err != nil {
+		return err
+	}
+	if err := f.validateMining(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

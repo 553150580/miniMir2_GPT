@@ -250,7 +250,7 @@ session.connection.onStatus(message => { session.lastError = message; session.re
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
     try {
-        if (!Number.isInteger(value.playerHandle) || value.playerHandle < 1 || value.playerHandle > 0xffffffff || ![1, 2, 3, 4, 5].includes(value.sceneKind)) throw new Error('入场缺少有效玩家身份或地图类型');
+        if (!Number.isInteger(value.playerHandle) || value.playerHandle < 1 || value.playerHandle > 0xffffffff || ![1, 2, 3, 4, 5, 7].includes(value.sceneKind)) throw new Error('入场缺少有效玩家身份或地图类型');
         travelInteger(value.sceneEpoch, true); travelInteger(value.baselineId, true); travelInteger(value.roomId, true); travelInteger(value.resourceVersion, true);
         const sameConnection = session.entry && session.entryBinding === packet.binding.toString() && session.entryConnection === session.connection.generation;
         if (sameConnection && BigInt(value.sceneEpoch.toString()) <= BigInt(session.entry.sceneEpoch.toString())) {
@@ -266,9 +266,10 @@ function acceptEntry(packet: Packet): void {
             && session.bossTransition.accept(transitionId, value, session.entry));
         const dungeon = !!(sameConnection && transitionId && !forced && !boss && !session.teleport.blocksInput && !session.travel.active
             && session.dungeonTransition.accept(transitionId, value, session.entry));
-        if ((value.sceneKind >= 3 && !boss && !dungeon) || (transitionId && !forced && !boss && !dungeon)) throw new Error('新地图入场缺少匹配的服务端迁移结果');
+        if (([3, 4, 5].includes(value.sceneKind) && !boss && !dungeon) || (transitionId && !forced && !boss && !dungeon)) throw new Error('新地图入场缺少匹配的服务端迁移结果');
         if (sameConnection && session.teleport.blocksInput && !forced) throw new Error('新地图入场不匹配服务端瞬移身份');
         const travelling = !forced && session.travel.acceptsEntry(identity);
+        if (sameConnection && value.sceneKind === 7 && !travelling) throw new Error('矿区入场不匹配原旅行提交身份');
         if (sameConnection && session.travel.active && !travelling && !forced) throw new Error('新地图入场不匹配旅行提交身份');
         if (travelling && value.sceneKind !== session.travel.plan?.targetSceneKind) throw new Error('新地图入场类型不匹配旅行计划');
         if (forced) session.teleport.attach(identity, value.position);

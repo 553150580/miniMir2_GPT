@@ -79,6 +79,8 @@ const (
 	MsgC2SMirrorArenaRequest uint16 = 20025
 	MsgS2CMirrorArenaState uint16 = 20026
 	MsgS2CMirrorArenaCombatFrame uint16 = 20027
+	MsgC2SMiningIntent uint16 = 20028
+	MsgS2CMiningState uint16 = 20029
 	MsgC2SWarehouseQuery uint16 = 40020
 	MsgS2CWarehousePage uint16 = 40021
 	MsgC2SWarehouseAction uint16 = 40022

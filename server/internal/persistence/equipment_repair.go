@@ -32,7 +32,15 @@ type RepairPlan struct {
 // InitializeItemDurability 按装备定义为首次生成或旧格式未初始化的实例补齐耐久。
 // item 记录道具，f 记录开发测试配置。
 func InitializeItemDurability(item domain.Item, f *devconfig.Fixture) domain.Item {
-	if f.EquipmentDurability == nil || item.OriginalDurabilityU != 0 || item.MaxDurabilityU != 0 || item.DurabilityU != 0 {
+	if f == nil || item.OriginalDurabilityU != 0 || item.MaxDurabilityU != 0 || item.DurabilityU != 0 {
+		return item
+	}
+	// 锄头以独立工具定义初始化，依然属于非战斗装备的背包物品。
+	if tool, ok := f.MiningTool(item.ItemID); ok {
+		item.OriginalDurabilityU, item.MaxDurabilityU, item.DurabilityU = tool.DurabilityU, tool.DurabilityU, tool.DurabilityU
+		return item
+	}
+	if f.EquipmentDurability == nil {
 		return item
 	}
 	// def 保存由道具取得的“def”，ok 表明查询、校验或类型转换是否成功。
@@ -48,7 +56,7 @@ func InitializeItemDurability(item domain.Item, f *devconfig.Fixture) domain.Ite
 // hydrateRoleDurability 补齐背包与穿戴中的旧格式耐久字段，保留已初始过的损坏状态。
 // r 记录角色，f 记录开发测试配置。
 func hydrateRoleDurability(r domain.Role, f *devconfig.Fixture) domain.Role {
-	if f.EquipmentDurability == nil {
+	if f.EquipmentDurability == nil && f.Mining == nil {
 		return r
 	}
 	// itemsCopied 保存当前处理所用的道具集合“copied”，equippedCopied 保存当前处理所用的已穿戴装备“copied”。

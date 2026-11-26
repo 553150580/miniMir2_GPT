@@ -32,6 +32,7 @@ GROUP_PREFIXES = {
     'mirror-arena': ('MirrorArena',),
     'market': ('ItemMarket', 'GoldMarket'),
     'payments': ('Payment',),
+    'mining': ('Mining',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -40,6 +41,8 @@ MARKET_PERSISTENCE_CASES = (
 )
 # 支付另验订单归属和幂等履约，测试组使用与现金卡工作簿一致的隔离运行配置。
 PAYMENT_PERSISTENCE_CASES = ('TestPaymentOrderAuthorityMongo', 'TestPaymentGrantMongo')
+# 挖矿联机与原矿来源、扣费、工具耐久共享同一份隔离投影。
+MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSourceAndPurity')
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -72,6 +75,7 @@ def suites():
         groups[match[0]].append(name)
     groups['market'].extend(MARKET_PERSISTENCE_CASES)
     groups['payments'].extend(PAYMENT_PERSISTENCE_CASES)
+    groups['mining'].extend(MINING_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -111,9 +115,23 @@ def run_batch(output, group, cases, timeout):
             subprocess.run([*cash_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
             environment['MINIMIR_CASH_CARD_TEST_FIXTURE'] = str(fixture)
             report['payment_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
+        if group == 'mining':
+            # 只在当前验收批次生成可加载配置，默认试玩与发布仍读取原配置。
+            assembly = destination / 'mining-assembly.json'
+            fixture = destination / 'mining-fixture.json'
+            public = destination / 'mining-gameplay.json'
+            assembly.write_bytes((ROOT / 'tools/resources/testdata/mining-isolated.json').read_bytes())
+            mining_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_mining.py'),
+                             '--assembly', str(assembly), '--fixture-out', str(fixture), '--public-out', str(public)]
+            subprocess.run(mining_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*mining_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_MINING_TEST_FIXTURE'] = str(fixture)
+            report['mining_assembly_sha256'] = hashlib.sha256(assembly.read_bytes()).hexdigest()
+            report['mining_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
+            report['mining_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group in ('market', 'payments'):
+        if group in ('market', 'payments', 'mining'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

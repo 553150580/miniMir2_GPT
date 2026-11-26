@@ -335,7 +335,7 @@ func (w *worker) activateWorldAt(r *room, target *worldState, point devconfig.Po
 		old.PetPosition, old.PetLife = pet.Pos, pet.Life
 	}
 	r.worldState = target
-	if mapChanged && old == r.PersonalWorld && m.SceneKindValue() == devconfig.SceneKindTown {
+	if mapChanged && old == r.PersonalWorld && (m.SceneKindValue() == devconfig.SceneKindTown || m.SceneKindValue() == devconfig.SceneKindMining) {
 		r.SavedPersonal = old
 	}
 	if target == r.PersonalWorld {

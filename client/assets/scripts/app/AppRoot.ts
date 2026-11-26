@@ -23,6 +23,8 @@ import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
 import { GameHosting } from './GameHosting';
+import { GameMining } from './GameMining';
+import { miningSceneKind } from './MiningModel';
 import { GameRoleCards } from './GameRoleCards';
 import { GameItemMarket } from './GameItemMarket';
 import { GameGoldMarket } from './GameGoldMarket';
@@ -103,6 +105,7 @@ export class AppRoot extends Component {
     private hud?: GameHUD;
     private messages?: GameMessages;
     private hosting?: GameHosting;
+    private mining?: GameMining;
     private roleCards?: GameRoleCards;
     private itemMarket?: GameItemMarket;
     private goldMarket?: GameGoldMarket;
@@ -491,6 +494,14 @@ export class AppRoot extends Component {
         const safe = this.node.getChildByName('Safe')!;
         this.hud = safe.getComponent(GameHUD)!;
         this.messages = safe.getComponent(GameMessages)!;
+        this.mining = new GameMining(session.connection, () => {
+            const entry = session.entry, identity = currentEntryIdentity();
+            if (!identity || entry?.sceneKind !== miningSceneKind || !session.ready || this.attaching || this.leaving ||
+                session.travel.active || session.teleport.blocksInput || !this.isWorldCurrent() || !isCurrentEntry(identity)) return null;
+            return { key: attachmentKey(identity), binding: identity.binding.toString(), sceneEpoch: entry.sceneEpoch, mapId: entry.roomId,
+                inventoryRevision: session.inventory?.revision };
+        }, () => this.refreshGame(), id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name);
+        this.cleanups.push(() => this.mining?.dispose());
         this.itemActions = new GameItemActions(safe, this.popup, error => this.error(error));
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
@@ -697,11 +708,19 @@ export class AppRoot extends Component {
         if (session.entry?.resourceVersion.greaterThanOrEqual(Long.fromInt(24, true))) this.text('BottomHUD/Footer/Map/Label', '地图');
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
-        this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); }, Toggle.EventType.TOGGLE);
+        this.button('MapViewport/Actions/Auto', () => {
+            if (session.entry?.sceneKind === miningSceneKind) return this.mining?.toggle();
+            this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked;
+            return this.autoState();
+        }, Toggle.EventType.TOGGLE);
         this.button('MapViewport/Actions/Count', () => { this.count = this.count === 1 ? 4 : this.count === 4 ? 8 : 1; return this.autoState(); });
         this.button('BottomHUD/Skills/RedPotion', () => this.usePotion(35));
         this.button('BottomHUD/Skills/BluePotion', () => this.usePotion(36));
-        this.button('MapViewport/Actions/Attack', () => this.basicAttack());
+        this.button('MapViewport/Actions/Attack', () => {
+            if (session.entry?.sceneKind !== miningSceneKind) return this.basicAttack();
+            this.combatStatus?.showLiveDetails('矿况', () => session.entry?.sceneKind === miningSceneKind
+                ? this.mining?.details() ?? null : null);
+        });
         this.optionalButton('MapViewport/Actions/TargetDetails', () => this.openTargetDetails());
         this.button('BottomHUD/Skills/BasicAttack', () => {
             if (session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle)?.hp.isZero()) return this.basicAttack();
@@ -1026,14 +1045,14 @@ export class AppRoot extends Component {
         this.ensureNotLeaving();
         if (!session.ready || !this.isWorldCurrent() || this.attaching) throw new Error('当前地图尚未就绪');
         const player = session.baseline?.entities.find((value: any) => value.entityHandle === session.entry.playerHandle);
-        if (!player || player.hp.isZero()) throw new Error('角色存活时才能往返城镇');
+        if (!player || player.hp.isZero()) throw new Error('角色存活时才能切换地图');
         if (this.economicBusy || this.unresolved || session.pending?.get(roleIdentity())) throw new Error('上一笔资产操作须先沿原身份核对');
     }
     private usesMapDirectory(): boolean { return (this.world?.gameplay.rule_version ?? 0) >= 24; }
     private openMapDirectory(): void | Promise<void> {
         if (!this.usesMapDirectory() || session.travel.phase === 'uncertain') return this.travelMap();
         this.validateTravel();
-        const rows = townDirectoryRegions(this.world!.gameplay, session.entry.roomId.toString());
+        const rows = townDirectoryRegions(this.world!.gameplay, session.entry.roomId.toString(), session.inventory?.level ?? session.role?.level);
         this.ui!.open('TownDirectory'); this.townDirectory!.show(rows);
     }
     private closeMapDirectory(): void {
@@ -1050,8 +1069,9 @@ export class AppRoot extends Component {
         if (this.world!.gameplay.town_travel?.enabled !== true) throw new Error('城镇往返尚未开放');
         if (session.travel.active) throw new Error('上一旅行计划尚未确定，请等待原计划状态或重新连接');
         const source = this.travelContext(), entry = session.entry, id = Array.from(newOperationId(), byte => byte.toString(16).padStart(2, '0')).join('');
-        if (selection && !townDirectoryRegions(this.world!.gameplay, entry.roomId.toString()).some(region => region.maps.some(row => row.mapId === selection.mapId
-            && row.destination === selection.destination && !row.current))) throw new Error('原地图选项已变化');
+        if (selection && !townDirectoryRegions(this.world!.gameplay, entry.roomId.toString(), session.inventory?.level ?? session.role?.level)
+            .some(region => region.maps.some(row => row.mapId === selection.mapId && row.destination === selection.destination && !row.current && !row.levelLocked)))
+            throw new Error('原地图选项已变化');
         const destination = selection?.destination ?? (entry.sceneKind === 2 ? 2 : 1);
         const targetMapId = selection ? Long.fromString(selection.mapId, true) : undefined;
         const scope = { id, generation: session.travel.begin(source, id, destination, targetMapId), ui: ++this.travelUiSequence };
@@ -1314,15 +1334,17 @@ export class AppRoot extends Component {
         this.mirrorArena?.refresh(this.world.gameplay.mirror_arena);
         const baseline = session.baseline;
         const town = session.entry?.sceneKind === 2;
-        const challenge = session.entry?.sceneKind >= 3;
+        const mining = session.entry?.sceneKind === miningSceneKind ? this.mining : undefined;
+        const challenge = session.entry?.sceneKind >= 3 && session.entry.sceneKind !== miningSceneKind;
+        this.mining?.refresh();
         if (this.ui?.top?.name === 'BossChallenge') {
             const dungeon = this.find('UIMgr/Panels/BossChallenge/Dungeon').getComponent(Button)!;
             dungeon.interactable = session.ready && !this.attaching && !challenge;
             this.boss?.render();
         }
         if (session.inventory) this.tasksCodex?.observe(session.inventory.revision);
-        this.auto = !town && !!session.hosting?.autoBattleEnabled;
-        if (baseline && !town && !challenge) {
+        this.auto = !town && !mining && !!session.hosting?.autoBattleEnabled;
+        if (baseline && !town && !challenge && !mining) {
             const observed = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
             if (observed) this.count = observed;
         }
@@ -1341,12 +1363,20 @@ export class AppRoot extends Component {
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
             bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice, warehouseNotice: session.warehouseNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
-            auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
-            objectiveOverride: session.entry?.sceneKind === 5 ? session.dungeonTransition.objective : undefined,
+            auto: mining?.active ?? this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
+            objectiveOverride: mining?.objective ?? (session.entry?.sceneKind === 5 ? session.dungeonTransition.objective : undefined),
             quickSkillLabel: quick ? skillQuickStateLabel(skills, quick) : undefined };
         this.hud?.refresh(presentation);
-        this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !this.attaching;
-        this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !challenge && !this.attaching;
+        const primaryAction = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!;
+        primaryAction.interactable = session.ready && !town && !this.attaching && (mining ? mining.canToggle && !session.travel.active : true);
+        const monsterCount = this.find('MapViewport/Actions/Count');
+        monsterCount.active = !mining;
+        monsterCount.getComponent(Button)!.interactable = session.ready && !town && !challenge && !mining && !this.attaching;
+        if (mining) {
+            this.text('MapViewport/Actions/Auto/Label', mining.actionText);
+            this.text('MapViewport/Actions/Attack/Label', '矿况');
+            if (primaryAction.isChecked !== mining.active) primaryAction.setIsCheckedWithoutNotify(mining.active);
+        }
         const travel = this.find('BottomHUD/Footer/Map').getComponent(Button)!;
         travel.interactable = !challenge && ((session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled));
         this.text('BottomHUD/Footer/Map/Label', this.usesMapDirectory() ? '地图' : session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
@@ -1359,7 +1389,7 @@ export class AppRoot extends Component {
             if (arrival) this.world.presentTeleportArrival(arrival);
         }
         const skillBlocked = !!quick && !!skillUseBlock(skills, quick);
-        this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready
+        this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(!mining && session.ready
             && ((!skillBlocked && (!this.pendingSkillMode || this.pendingSkillMode.skillId !== quick?.definition.id)) || player?.hp.isZero()));
         const targetDetails = this.node?.getChildByPath?.('Safe/MapViewport/Actions/TargetDetails')?.getComponent(Button);
         if (targetDetails) targetDetails.node.active = targetDetails.interactable = !!(session.ready && this.selectedWorldEntity());
@@ -1449,12 +1479,15 @@ export class AppRoot extends Component {
             const skill = definition?.kind === 'book' ? skillRows(this.skillSnapshot()).find(row => row.definition.book_item_id === item.itemId) : undefined;
             const selected = (act: () => Promise<void>) => (): Promise<void> => { this.selectedItem = item; return act(); };
             const player = definition?.kind === 'potion' ? this.potionSnapshot().player : null;
+            const mining = session.entry?.sceneKind === miningSceneKind ? this.mining : undefined;
             return inventoryItemActionView({ item, definition, ready: !blockedReason, blockedReason, equipment: this.equipmentSnapshot(),
-                assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0' }, {
+                assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0',
+                miningReason: mining?.toolBlock }, {
                 equip: selected(() => this.changeEquipment(false)), recycle: selected(() => this.recycleSelectedInventory()),
                 lock: selected(() => this.setItemLock()), usePotion: () => this.usePotion(item.itemId, new Uint8Array(item.instanceId)),
                 learn: () => this.learnSkill(skill, new Uint8Array(item.instanceId)),
                 recycleBook: () => this.previewPreparedSkillAsset(prepareBookRecycle(this.skillAssetsSnapshot(), item)),
+                mine: mining ? () => mining.useTool(new Uint8Array(item.instanceId)) : undefined,
             });
         });
     }

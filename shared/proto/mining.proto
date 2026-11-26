@@ -1,0 +1,29 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "assets.proto";
+
+// 0查询、1开始、2停止。客户端只提交意图；每次实际挖矿由服务端调度及结算。
+message MiningIntent {
+  uint64 scene_epoch = 1;
+  uint32 action = 2;
+  // 开始时可以指定本背包的16字节锄头实例。留空时由服务端选择一个当前可用的工具。
+  bytes tool_instance_id = 3;
+}
+
+// 当前矿区附着的完整观察，由查询、开停和已确认判定返回。
+message MiningState {
+  uint64 scene_epoch = 1;
+  uint64 map_id = 2;
+  uint64 state_sequence = 3;
+  bool can_start = 4;
+  bool active = 5;
+  uint32 error_code = 6;
+  // 当前/最近使用的锄头，持久保留原存储单位。工具耗尽并移除时允许省略。
+  ItemView tool = 7;
+  // 当前场景最近一次已确认出矿，保留原实例纯度和绑定状态。
+  ItemView last_ore = 8;
+  uint64 attempts = 9;
+  uint64 successes = 10;
+}

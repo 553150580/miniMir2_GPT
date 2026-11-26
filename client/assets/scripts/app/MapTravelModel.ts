@@ -49,7 +49,8 @@ export class MapTravelModel {
     get active(): boolean { return !['idle', 'complete', 'cancelled', 'expired'].includes(this.phase); }
     get blocksInput(): boolean { return this.commitDispatched && this.active; }
     begin(value: TravelContext, id: string, destination: number, destinationMap?: TravelInteger): number {
-        if (this.active || !/^[a-f0-9]{32}$/.test(id) || ![1, 2].includes(destination)) throw new Error('旅行请求正在处理中或身份无效');
+        if (this.active || !/^[a-f0-9]{32}$/.test(id) || ![1, 2, 3].includes(destination) || destination === 3 && destinationMap === undefined)
+            throw new Error('旅行请求正在处理中或身份无效');
         this.destinationMap = destinationMap === undefined ? undefined : travelInteger(destinationMap, true);
         this.source = context(value); this.identifier = id; this.destination = destination; this.preparedPlan = undefined; this.committedScene = undefined; this.attached = undefined;
         this.commitDispatched = false;
@@ -66,7 +67,8 @@ export class MapTravelModel {
         const targetMapId = travelInteger(plan.targetMapId, true);
         if (this.phase !== 'planning' || !this.matches(current) || plan.travelId !== this.identifier || travelInteger(plan.fromSceneEpoch) !== this.source!.scene
             || (this.destinationMap !== undefined && targetMapId !== this.destinationMap)
-            || plan.targetSceneKind !== (this.destination === 1 ? 2 : 1) || !plan.position || ![plan.position.x, plan.position.y].every(n => Number.isSafeInteger(n) && n >= 0)) throw new Error('旅行计划与原请求身份不匹配');
+            || plan.targetSceneKind !== (this.destination === 1 ? 2 : this.destination === 2 ? 1 : 7)
+            || !plan.position || ![plan.position.x, plan.position.y].every(n => Number.isSafeInteger(n) && n >= 0)) throw new Error('旅行计划与原请求身份不匹配');
         const expires = travelInteger(plan.expiresAtUnixMs, true);
         if (BigInt(expires) > 9223372036854775807n || !Number.isSafeInteger(nowMs) || nowMs < 0 || BigInt(expires) <= BigInt(nowMs)) throw new Error('旅行计划已经过期');
         this.preparedPlan = Object.freeze({ ...plan, fromSceneEpoch: travelInteger(plan.fromSceneEpoch), targetMapId, expiresAtUnixMs: expires, position: Object.freeze({ ...plan.position }) });

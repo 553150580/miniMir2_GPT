@@ -26,10 +26,11 @@ message EnterWorldAck {
   // 只用于挑战场景，省略时新场默认开启并保持健康续接的原开关。
   optional bool challenge_auto_battle_enabled = 4;
 }
-// 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
+// 同owner旅行接受已配置城镇、个人地图或矿区，不接受客户端地图坐标。
 message MapTravelPrepare {
   uint64 scene_epoch = 1;
   string travel_id = 2;
+  // 1城镇、2个人挂机地图、3矿区。
   uint32 destination = 3;
   // 地图列表选择目录ID。返回个人图时只能选原个人现场；旧客户端省略此字段。
   uint64 target_map_id = 4;

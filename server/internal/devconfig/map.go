@@ -154,7 +154,7 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		return false
 	}
 	switch kind {
-	case SceneKindPersonal, SceneKindPersonalBoss, SceneKindWorldBoss, SceneKindDungeon, SceneKindMirrorArena:
+	case SceneKindPersonal, SceneKindPersonalBoss, SceneKindWorldBoss, SceneKindDungeon, SceneKindMirrorArena, SceneKindMining:
 	case SceneKindTown:
 		if !m.CompactTown {
 			return false
@@ -242,6 +242,9 @@ func (f *Fixture) MapByID(id uint64) (*MapTemplate, bool) {
 		if f.Maps[i].ID == id {
 			return &f.Maps[i], true
 		}
+	}
+	if layer, ok := f.MiningLayer(id); ok {
+		return &layer.Map, true
 	}
 	return nil, false
 }

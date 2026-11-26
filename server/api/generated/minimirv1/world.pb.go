@@ -253,12 +253,13 @@ func (x *EnterWorldAck) GetChallengeAutoBattleEnabled() bool {
 	return false
 }
 
-// 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
+// 同owner旅行接受已配置城镇、个人地图或矿区，不接受客户端地图坐标。
 type MapTravelPrepare struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	SceneEpoch  uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
-	TravelId    string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
-	Destination uint32                 `protobuf:"varint,3,opt,name=destination,proto3" json:"destination,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	TravelId   string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	// 1城镇、2个人挂机地图、3矿区。
+	Destination uint32 `protobuf:"varint,3,opt,name=destination,proto3" json:"destination,omitempty"`
 	// 地图列表选择目录ID。返回个人图时只能选原个人现场；旧客户端省略此字段。
 	TargetMapId   uint64 `protobuf:"varint,4,opt,name=target_map_id,json=targetMapId,proto3" json:"target_map_id,omitempty"`
 	unknownFields protoimpl.UnknownFields

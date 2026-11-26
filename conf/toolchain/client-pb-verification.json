@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 154,
+  "message_count": 156,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -159,10 +159,12 @@
     "GoldMarketOrderView",
     "GoldMarketEscrowView",
     "GoldMarketState",
-    "GoldMarketAction"
+    "GoldMarketAction",
+    "MiningIntent",
+    "MiningState"
   ],
-  "int64_field_count": 389,
-  "int64_boundary_cases": 1334,
+  "int64_field_count": 395,
+  "int64_boundary_cases": 1352,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -2497,9 +2499,45 @@
       "field": "escrow_version",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MiningIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "state_sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "attempts",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MiningState",
+      "field": "successes",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 68,
+  "bytes_field_count": 69,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2840,6 +2878,11 @@
       "message": "GoldMarketAction",
       "field": "escrow_id",
       "repeated": false
+    },
+    {
+      "message": "MiningIntent",
+      "field": "tool_instance_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -2856,11 +2899,11 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "9babe5e3430e6bd8ebe3cc7037f7840408d05557fe09e481599c509695a226c6"
+      "sha256": "6fdd7861d93cab67613efd4a51194aae6d8dcbfabfc5f4d5a3502175fbe92144"
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "b1508f2a19322c8bfd6d84e50af9a96198af326b781dc5a4f613175d9420a977"
+      "sha256": "9b7c957fc2e9b699daa6ddfad723d5ba9fe6840e22cfc674ab9ff2ed93bb1322"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -2893,18 +2936,22 @@
     {
       "path": "shared/proto/gold_market.proto",
       "sha256": "3e8fd27656f8c0dd6fbedbedc73977afc1ff98bb50b55f7d14f7e7e229674f78"
+    },
+    {
+      "path": "shared/proto/mining.proto",
+      "sha256": "3c23f19868fe3b840f3aff3387fb85f8b0a9f29480f795b984969d85ad04f2e9"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "407e33405056d277bb8c5c30c88d5ca00d4dd86b106cd0a14cafd1c8b7350d34",
-      "bytes": 2764635
+      "sha256": "9ce7f0b2c0a1d051dccba08507b21076de2a0a23e9faca4ab7fc9cdeb1da3fb6",
+      "bytes": 2800382
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "ff9dc463623fd3283aa5960a257b53c7357b3e7524ba39d4e15787172540631c",
-      "bytes": 856254
+      "sha256": "bff4af0ac5aa2e362d5f1141029e4c0f70c483a20ef323c5b737647c09cd2d7f",
+      "bytes": 866887
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

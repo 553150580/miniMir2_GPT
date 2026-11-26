@@ -31,6 +31,8 @@ const (
 	travelToTown uint32 = 1
 	// travelToPersonal 表示返回该角色保存的个人现场。
 	travelToPersonal uint32 = 2
+	// travelToMining 表示进入已登记的独享矿层。
+	travelToMining uint32 = 3
 )
 
 // 只保存一个休眠个人现场，不复制角色、钱包、宠物或永久提交所有者。
@@ -181,10 +183,11 @@ func (w *worker) prepareMapTravel(r *room, frame wire.Frame) {
 // prepareMapTravelAt 验证目标场景、授权和配置，创建有期限的计划及原身份快照。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，frame 记录协议帧，now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
+	f := &w.roomStore(r).Cfg.Fixture
 	// q 记录地图地图切换准备。
 	var q pb.MapTravelPrepare
 	if proto.Unmarshal(frame.Payload, &q) != nil || !validTravelID(q.TravelId) || q.SceneEpoch == 0 ||
-		(q.Destination != travelToTown && q.Destination != travelToPersonal) {
+		(q.Destination != travelToTown && q.Destination != travelToPersonal && (q.Destination != travelToMining || f.Mining == nil)) {
 		w.travelFailure(r, frame, p.CodeInvalidArgument)
 		return
 	}
@@ -208,8 +211,6 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 		}
 		return
 	}
-	// f 保存当前处理所用的开发测试配置。
-	f := &w.e.Store.Cfg.Fixture
 	if !r.Ready || q.SceneEpoch != r.Scene || r.Scene == math.MaxUint64 || r.Player.HP <= 0 || !validTravelRules(f.TownTravel) {
 		w.travelFailure(r, frame, p.CodeLineForbidden)
 		return
@@ -240,7 +241,14 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 	var target *devconfig.MapTemplate
 	// position 记录位置，使用点位表示。
 	var position devconfig.Point
-	if q.Destination == travelToTown {
+	if q.Destination == travelToMining {
+		target, ok = w.selectMiningDestination(r, current, q.TargetMapId)
+		if !ok {
+			w.travelFailure(r, frame, p.CodeLineForbidden)
+			return
+		}
+		position = target.PlayerSpawn
+	} else if q.Destination == travelToTown {
 		// mapID 标识当前业务使用的地图。
 		mapID := q.TargetMapId
 		if f.RuleVersion < 24 && mapID == 0 {
@@ -252,7 +260,8 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 		// fromTown 表示当前规则允许已验证城镇间互转，原个人世界仍匹配已保存的返回现场。
 		fromTown := f.RuleVersion >= 24 && current.SceneKindValue() == devconfig.SceneKindTown && f.TownDestination(r.MapID) &&
 			r.SavedPersonal != nil && r.SavedPersonal == r.PersonalWorld && (r.SavedPersonal.MapID == f.Map.ID || f.OrdinaryMonsterRosterEnabled())
-		if (!fromPersonal && !fromTown) || !f.TownDestination(mapID) || mapID == r.MapID {
+		fromMine := miningMap(f, r.MapID) && r.SavedPersonal != nil && r.SavedPersonal == r.PersonalWorld
+		if (!fromPersonal && !fromTown && !fromMine) || !f.TownDestination(mapID) || mapID == r.MapID {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
 		}
@@ -269,7 +278,8 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 			return
 		}
 	} else {
-		if current.SceneKindValue() != devconfig.SceneKindTown || !f.TownDestination(r.MapID) || r.SavedPersonal == nil ||
+		fromTown := current.SceneKindValue() == devconfig.SceneKindTown && f.TownDestination(r.MapID)
+		if !fromTown && !miningMap(f, r.MapID) || r.SavedPersonal == nil ||
 			q.TargetMapId != 0 && q.TargetMapId != r.SavedPersonal.MapID {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
@@ -544,6 +554,16 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 			r.PersonalWorld = r.currentWorld()
 		}
 		destinationWorld.Auto, destinationWorld.Destination, destinationWorld.Navigation = false, nil, navigationState{}
+	} else if plan.Destination == travelToMining {
+		destinationWorld = r.allocateWorld(plan.TargetMapID, math.MaxUint64)
+		if destinationWorld == nil {
+			plan.Phase = travelCancelled
+			w.sendTravelState(r, plan, plan.Request)
+			return false
+		}
+		// 矿图仅在活动时保留。换图提交阶段先注册目标，以便核对世界身份。
+		r.TravelPersonalWorld = destinationWorld
+		defer func() { r.TravelPersonalWorld = nil }()
 	} else if newPersonal {
 		destinationWorld = r.allocateWorld(plan.TargetMapID, math.MaxUint64)
 		if destinationWorld == nil || !populateOrdinaryMonsters(f, destinationWorld, target, r.PersonalWorld, now) {
@@ -571,6 +591,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		r.adoptOrdinaryWorld(destinationWorld)
 		plan.Personal = nil // 终态重放不应持有已经弃用的普通现场。
 	}
+	r.mining = roomMining{}
 	plan.Position = r.Player.Pos // 城镇出生格被占时同步服务端最终分配的落点。
 	r.Scene, r.Baseline = r.Scene+1, baseline
 	r.TravelHistory = nil                // 实际换scene后，旧scene请求已有身份门禁；当前终态plan仍可查询。

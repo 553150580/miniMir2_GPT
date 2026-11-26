@@ -7,10 +7,12 @@ import { canRecycleBook, pageMergeGroup, sourceName } from './SkillAssetsModel';
 import type { SkillAssetDefinition, SkillAssetItem, SkillAssetsSnapshot } from './SkillAssetsModel';
 import type { SkillRow } from './SkillModel';
 import type { CastingSupplyConfig } from './CastingSupplyModel';
+import { miningDurability, orePurityText } from './MiningModel';
+import type { MiningItem } from './MiningModel';
 
 interface InventoryActionDefinition extends EquipmentDefinition, SkillAssetDefinition { readonly use_enabled?: boolean; }
 interface InventoryActionInput {
-    readonly item: SkillAssetItem & RecycleItem;
+    readonly item: SkillAssetItem & RecycleItem & Pick<MiningItem, 'orePurity' | 'durabilityU' | 'maxDurabilityU'>;
     readonly definition: InventoryActionDefinition | undefined;
     readonly ready: boolean;
     readonly blockedReason: string;
@@ -19,6 +21,7 @@ interface InventoryActionInput {
     readonly supply?: CastingSupplyConfig;
     readonly skill?: SkillRow;
     readonly playerAlive: boolean;
+    readonly miningReason?: string;
 }
 interface InventoryActions {
     equip(): Promise<void>;
@@ -27,6 +30,7 @@ interface InventoryActions {
     usePotion(): Promise<void>;
     learn(): Promise<void>;
     recycleBook(): Promise<void>;
+    mine?(): Promise<void>;
 }
 
 // 使用当前角色与背包数据生成操作；处理器由上层绑定同一个原实例。
@@ -61,6 +65,17 @@ export function inventoryItemActionView(input: InventoryActionInput, handlers: I
         case 'skill_page':
             add('合并书页', handlers.lock, pageMergeGroup(item, assets.inventory?.items ?? [], assets.definitions).reason);
             break;
+        case 'mining_ore': {
+            const purity = orePurityText(item.orePurity);
+            if (purity) lines.push(purity);
+            break;
+        }
+        case 'mining_tool': {
+            const durability = miningDurability(item);
+            if (durability) lines.push(durability);
+            if (handlers.mine) add('使用此锄头', handlers.mine, input.miningReason);
+            break;
+        }
     }
     if (!input.ready && input.blockedReason) lines.push(input.blockedReason);
     return { title: definition?.name ?? '物品详情', lines, actions };

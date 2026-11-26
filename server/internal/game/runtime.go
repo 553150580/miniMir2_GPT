@@ -171,7 +171,8 @@ type room struct {
 	PetBornReady          *petBornAttachment        // 宠物新生事实所需的已确认观察连接身份。
 	Travel                *mapTravelPlan            // 当前或最近一次的换图计划及终态。
 	TravelHistory         *mapTravelHistory         // 在当前会话和场景内拒绝旧换图编号的已接受历史。
-	SavedPersonal         *personalWorld            // 切往城镇时停驻的个人现场标记。
+	SavedPersonal         *personalWorld            // 切往城镇或矿区时停驻的普通个人现场。
+	mining                roomMining                // 当前矿层内的开停状态和原判定观察。
 	TownNavigation        [2]*townNavigationRequest // 玩家和宠物各自的城镇寻路引用。
 	Scene                 uint64                    // 客户端观察的场景代次，与内部世界执行身份分开。
 	Baseline              uint64                    // 当前连接等待确认的场景基线编号。
@@ -590,6 +591,7 @@ func (w *worker) command(c command) {
 			r.Manual = false
 			r.LastTick = time.Now()
 			r.HostSession = domain.ID()
+			r.mining.startedAt = time.Time{} // 离线从完整的下一轮开始计费。
 			// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown {
 				r.HostSession = ""
@@ -612,6 +614,10 @@ func (w *worker) command(c command) {
 			return
 		}
 		w.failure(r, c.frame, p.CodeLineRecovering)
+		return
+	}
+	if miningMap(&w.roomStore(r).Cfg.Fixture, r.MapID) && blocksMiningBattleCommand(c.frame.ID, r.mining.active) {
+		w.failure(r, c.frame, p.CodeLineForbidden)
 		return
 	}
 	if c.frame.ID == p.MsgC2SMirrorArenaRequest {
@@ -672,6 +678,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			w.deathNotice(r)
 		}
 		w.sendSyncReady(r, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
+		w.sendMiningState(r, 0, r.mining.code)
 		w.resumePersonalBoss(r, time.Now())
 		w.resumeWorldBossObservation(r, time.Now())
 		w.resumeDungeonObservation(r, time.Now())
@@ -701,6 +708,8 @@ func (w *worker) roomCommand(r *room, c command) {
 		return
 	}
 	switch c.frame.ID {
+	case p.MsgC2SMiningIntent:
+		w.miningCommand(r, c.frame, time.Now())
 	case p.MsgC2SAutoTargetIntent:
 		w.autoTargetIntent(r, c.frame)
 	case p.MsgC2SSkillModeIntent:

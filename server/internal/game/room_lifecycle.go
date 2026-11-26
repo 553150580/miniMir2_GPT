@@ -59,7 +59,7 @@ func (w *worker) retainRoom(r *room) bool {
 		len(r.Wear.open) != 0 || len(r.Wear.inflight) != 0 || r.eventCount() != 0 {
 		return true
 	}
-	if !r.Auto || r.Role.HostingSeconds <= 0 || r.Player.HP <= 0 {
+	if !r.Auto && !r.mining.active || r.Role.HostingSeconds <= 0 || r.Player.HP <= 0 {
 		return false
 	}
 	// 城镇离线照常保留重连窗口，但没有挂机计费或自动战斗。

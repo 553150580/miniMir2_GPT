@@ -70,10 +70,11 @@ func (w *worker) selectOrdinaryDestination(r *room, current *devconfig.MapTempla
 	}
 	fromPersonal := current.SceneKindValue() == devconfig.SceneKindPersonal && r.currentWorld() == personal && r.SavedPersonal == nil
 	fromTown := current.SceneKindValue() == devconfig.SceneKindTown && f.TownDestination(current.ID) && r.SavedPersonal == personal
-	if !fromPersonal && !fromTown {
+	fromMine := miningMap(f, current.ID) && r.SavedPersonal == personal
+	if !fromPersonal && !fromTown && !fromMine {
 		return nil, devconfig.Point{}, false
 	}
-	if fromTown && requested == 0 {
+	if (fromTown || fromMine) && requested == 0 {
 		requested = personal.MapID
 	}
 	target, ok := f.MapByID(requested)

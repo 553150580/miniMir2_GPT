@@ -101,6 +101,7 @@ type Operation struct {
 	Binding           *BindingReceipt                `bson:"binding_use,omitempty"`            // 安全区绑定变更的地图和材料来源。
 	Recycling         *EquipmentRecyclingReceipt     `bson:"equipment_recycling,omitempty"`    // 自动或批量回收的资产增减。
 	Settlement        *SettlementReceipt             `bson:"settlement,omitempty"`             // 战斗收益、托管扣时与磨损明细。
+	Mining            *MiningAttemptReceipt          `bson:"mining_attempt,omitempty"`         // 挖矿判定、锄头耗损及实际矿石。
 	AutoRecyclePolicy *domain.AutoRecyclePolicy      `bson:"auto_recycle_policy,omitempty"`    // 已提交的回收策略快照。
 	Experience        *ExperienceGrantReceipt        `bson:"experience_grant,omitempty"`       // 经验派发及成长迁移明细。
 	Skill             *skillPlan                     `bson:"skill_plan,omitempty"`             // 首次应用后用于回放的技能资产计划。

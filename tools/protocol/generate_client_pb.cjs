@@ -24,6 +24,7 @@ run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbjs'), [
   'shared/proto/common.proto', 'shared/proto/account.proto', 'shared/proto/world.proto', 'shared/proto/assets.proto',
   'shared/proto/tasks_codex.proto', 'shared/proto/personal_boss.proto', 'shared/proto/world_boss.proto', 'shared/proto/dungeon_party.proto',
   'shared/proto/mirror_arena.proto', 'shared/proto/role_card.proto', 'shared/proto/item_market.proto', 'shared/proto/gold_market.proto',
+  'shared/proto/mining.proto',
 ]);
 run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbts'), ['-o', 'client/assets/scripts/generated/protobuf/client_pb.d.ts', 'client/assets/scripts/generated/protobuf/client_pb.js']);
 run(path.join(root, 'tools/protocol/verify_client_pb.cjs'), ['--report', 'conf/toolchain/client-pb-verification.json']);
