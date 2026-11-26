@@ -1,0 +1,29 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+// 背包、穿戴、报价和回执共用的权威实例快照。
+message ItemView {
+  bytes instance_id = 1;
+  uint32 item_id = 2;
+  int64 quantity = 3;
+  bool bound = 4;
+  uint64 version = 5;
+  // 来源与品质属于物品实例，旧实例空来源保持未知。
+  string source_kind = 6;
+  string source_id = 7;
+  uint32 quality = 8;
+  bool locked = 9;
+  // 强保护位：1 锁定、2 未确认培养、4 资产占用、8 穿戴中。
+  uint32 recycle_block_flags = 10;
+  // 耐久单位为 1/1000，原始上限非零时当前值 0 表示损坏。
+  uint64 durability_u = 11;
+  uint64 max_durability_u = 12;
+  uint64 original_durability_u = 13;
+  // 矿石纯度为 1 至 100，0 表示无纯度。
+  uint32 ore_purity = 14;
+  // 装备取得时的原初始幸运，培养后仍保留原值。
+  uint32 initial_luck = 15;
+  // 服务端校验的当前幸运，旧实例使用其原初始幸运。
+  uint32 current_luck = 16;
+}

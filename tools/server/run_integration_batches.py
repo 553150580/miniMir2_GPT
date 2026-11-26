@@ -35,6 +35,7 @@ GROUP_PREFIXES = {
     'mining': ('Mining',),
     'forge': ('Forge',),
     'luck': ('Lucky',),
+    'weapon-oil': ('WeaponOil',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -48,6 +49,7 @@ MINING_PERSISTENCE_CASES = ('TestMiningSettlementMongo', 'TestMiningAssetsKeepSo
 # 打造专项核对原报价和原材料、两个金币钱包及真实结算回执。
 FORGE_PERSISTENCE_CASES = ('TestForgeSettlementMongo',)
 LUCK_PERSISTENCE_CASES = ('TestLuckDropSettlementMongo',)
+WEAPON_OIL_PERSISTENCE_CASES = ('TestWeaponOilSettlementMongo',)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -83,6 +85,7 @@ def suites():
     groups['mining'].extend(MINING_PERSISTENCE_CASES)
     groups['forge'].extend(FORGE_PERSISTENCE_CASES)
     groups['luck'].extend(LUCK_PERSISTENCE_CASES)
+    groups['weapon-oil'].extend(WEAPON_OIL_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -169,9 +172,25 @@ def run_batch(output, group, cases, timeout):
             for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('forge_assembly', forge_assembly),
                                     ('fixture', fixture), ('public', public)):
                 report[f'luck_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        if group == 'weapon-oil':
+            # 隔离原武器培养规则及原三项前置配置，便于同源重放全部材料。
+            export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_luck_oil.py')]
+            for arg, source in (('assembly', 'luck-oil'), ('luck-assembly', 'combat-luck'),
+                                ('mining-assembly', 'mining'), ('forge-assembly', 'forge')):
+                path = destination / f'{source}-assembly.json'
+                path.write_bytes((ROOT / f'tools/resources/testdata/{source}-isolated.json').read_bytes())
+                export.extend(['--' + arg, str(path)])
+                report['weapon_oil_' + source.replace('-', '_') + '_assembly_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            fixture, public = destination / 'luck-oil-fixture.json', destination / 'luck-oil-gameplay.json'
+            export.extend(['--fixture-out', str(fixture), '--public-out', str(public)])
+            subprocess.run(export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_LUCK_OIL_TEST_FIXTURE'] = str(fixture)
+            report['weapon_oil_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
+            report['weapon_oil_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
-        if group in ('market', 'payments', 'mining', 'forge', 'luck'):
+        if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

@@ -2,6 +2,8 @@ syntax = "proto3";
 package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 
+import "item_view.proto";
+
 // 永久ID采用128位字节；长度由服务端校验，高频实体使用场景内uint32句柄。
 message RoleKey { bytes role_id = 1; uint64 origin_server_id = 2; }
 message GridPoint { sint32 x = 1; sint32 y = 2; }
@@ -24,6 +26,19 @@ message OperationResult {
   ItemMarketReceipt item_market = 10;
   GoldMarketReceipt gold_market = 11;
   ForgeReceipt forge = 12;
+  WeaponOilReceipt weapon_oil = 13;
+}
+// 只在实际扣除一瓶祝福油后出现。失败与回退也返回原武器及消耗前的原油堆。
+message WeaponOilReceipt {
+  bytes quote_id = 1;
+  ItemView weapon = 2;
+  ItemView oil = 3;
+  bool equipped = 4;
+  uint32 before_luck = 5;
+  bool success = 6;
+  bool guaranteed = 7;
+  uint32 pity_used = 8;
+  uint32 pity_after = 9;
 }
 // 首次创建的装备身份和原绑定状态，原回执重放时保持不变。
 message ForgeOutput {

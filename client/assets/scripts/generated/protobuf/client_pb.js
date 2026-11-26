@@ -808,6 +808,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.ItemMarketReceipt.$Properties|null} [item_market] OperationResult item_market
              * @property {minimir.v1.GoldMarketReceipt.$Properties|null} [gold_market] OperationResult gold_market
              * @property {minimir.v1.ForgeReceipt.$Properties|null} [forge] OperationResult forge
+             * @property {minimir.v1.WeaponOilReceipt.$Properties|null} [weapon_oil] OperationResult weapon_oil
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -936,6 +937,14 @@ $root.minimir = (function() {
             OperationResult.prototype.forge = null;
 
             /**
+             * OperationResult weapon_oil.
+             * @member {minimir.v1.WeaponOilReceipt.$Properties|null|undefined} weapon_oil
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.weapon_oil = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -991,6 +1000,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.GoldMarketReceipt.encode(message.gold_market, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
                 if (message.forge != null && $Object.hasOwnProperty.call(message, "forge"))
                     $root.minimir.v1.ForgeReceipt.encode(message.forge, writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
+                if (message.weapon_oil != null && $Object.hasOwnProperty.call(message, "weapon_oil"))
+                    $root.minimir.v1.WeaponOilReceipt.encode(message.weapon_oil, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1135,6 +1146,12 @@ $root.minimir = (function() {
                             message.forge = $root.minimir.v1.ForgeReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.forge);
                             continue;
                         }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            message.weapon_oil = $root.minimir.v1.WeaponOilReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon_oil);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1233,6 +1250,11 @@ $root.minimir = (function() {
                     if (error)
                         return "forge." + error;
                 }
+                if (message.weapon_oil != null && $Object.hasOwnProperty.call(message, "weapon_oil")) {
+                    var error = $root.minimir.v1.WeaponOilReceipt.verify(message.weapon_oil, _depth + 1);
+                    if (error)
+                        return "weapon_oil." + error;
+                }
                 return null;
             };
 
@@ -1251,6 +1273,404 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.WeaponOilReceipt = (function() {
+
+            /**
+             * Properties of a WeaponOilReceipt.
+             * @typedef {Object} minimir.v1.WeaponOilReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] WeaponOilReceipt quote_id
+             * @property {minimir.v1.ItemView.$Properties|null} [weapon] WeaponOilReceipt weapon
+             * @property {minimir.v1.ItemView.$Properties|null} [oil] WeaponOilReceipt oil
+             * @property {boolean|null} [equipped] WeaponOilReceipt equipped
+             * @property {number|null} [before_luck] WeaponOilReceipt before_luck
+             * @property {boolean|null} [success] WeaponOilReceipt success
+             * @property {boolean|null} [guaranteed] WeaponOilReceipt guaranteed
+             * @property {number|null} [pity_used] WeaponOilReceipt pity_used
+             * @property {number|null} [pity_after] WeaponOilReceipt pity_after
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WeaponOilReceipt.
+             * @memberof minimir.v1
+             * @interface IWeaponOilReceipt
+             * @augments minimir.v1.WeaponOilReceipt.$Properties
+             * @deprecated Use minimir.v1.WeaponOilReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a WeaponOilReceipt.
+             * @typedef {minimir.v1.WeaponOilReceipt.$Properties} minimir.v1.WeaponOilReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new WeaponOilReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a WeaponOilReceipt.
+             * @constructor
+             * @param {minimir.v1.WeaponOilReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WeaponOilReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WeaponOilReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WeaponOilReceipt weapon.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} weapon
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.weapon = null;
+
+            /**
+             * WeaponOilReceipt oil.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} oil
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.oil = null;
+
+            /**
+             * WeaponOilReceipt equipped.
+             * @member {boolean} equipped
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.equipped = false;
+
+            /**
+             * WeaponOilReceipt before_luck.
+             * @member {number} before_luck
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.before_luck = 0;
+
+            /**
+             * WeaponOilReceipt success.
+             * @member {boolean} success
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.success = false;
+
+            /**
+             * WeaponOilReceipt guaranteed.
+             * @member {boolean} guaranteed
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.guaranteed = false;
+
+            /**
+             * WeaponOilReceipt pity_used.
+             * @member {number} pity_used
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.pity_used = 0;
+
+            /**
+             * WeaponOilReceipt pity_after.
+             * @member {number} pity_after
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @instance
+             */
+            WeaponOilReceipt.prototype.pity_after = 0;
+
+            /**
+             * Creates a new WeaponOilReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {minimir.v1.WeaponOilReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WeaponOilReceipt} WeaponOilReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.WeaponOilReceipt.$Shape): minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape;
+             *   (properties?: minimir.v1.WeaponOilReceipt.$Properties): minimir.v1.WeaponOilReceipt;
+             * }}
+             */
+            WeaponOilReceipt.create = function(properties) {
+                return new WeaponOilReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified WeaponOilReceipt message. Does not implicitly {@link minimir.v1.WeaponOilReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {minimir.v1.WeaponOilReceipt.$Properties} message WeaponOilReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon"))
+                    $root.minimir.v1.ItemView.encode(message.weapon, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil"))
+                    $root.minimir.v1.ItemView.encode(message.oil, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped") && message.equipped !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.equipped);
+                if (message.before_luck != null && $Object.hasOwnProperty.call(message, "before_luck") && message.before_luck !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.before_luck);
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success") && message.success !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.success);
+                if (message.guaranteed != null && $Object.hasOwnProperty.call(message, "guaranteed") && message.guaranteed !== false)
+                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.guaranteed);
+                if (message.pity_used != null && $Object.hasOwnProperty.call(message, "pity_used") && message.pity_used !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.pity_used);
+                if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after") && message.pity_after !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.pity_after);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WeaponOilReceipt message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {minimir.v1.WeaponOilReceipt.$Properties} message WeaponOilReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WeaponOilReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape} WeaponOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WeaponOilReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.weapon = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.oil = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.oil);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.equipped = value;
+                            else
+                                delete message.equipped;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.before_luck = value;
+                            else
+                                delete message.before_luck;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.success = value;
+                            else
+                                delete message.success;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.guaranteed = value;
+                            else
+                                delete message.guaranteed;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pity_used = value;
+                            else
+                                delete message.pity_used;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pity_after = value;
+                            else
+                                delete message.pity_after;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WeaponOilReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape} WeaponOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WeaponOilReceipt message.
+             * @function verify
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WeaponOilReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.weapon, _depth + 1);
+                    if (error)
+                        return "weapon." + error;
+                }
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.oil, _depth + 1);
+                    if (error)
+                        return "oil." + error;
+                }
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped"))
+                    if (typeof message.equipped !== "boolean")
+                        return "equipped: boolean expected";
+                if (message.before_luck != null && $Object.hasOwnProperty.call(message, "before_luck"))
+                    if (!$util.isInteger(message.before_luck))
+                        return "before_luck: integer expected";
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success"))
+                    if (typeof message.success !== "boolean")
+                        return "success: boolean expected";
+                if (message.guaranteed != null && $Object.hasOwnProperty.call(message, "guaranteed"))
+                    if (typeof message.guaranteed !== "boolean")
+                        return "guaranteed: boolean expected";
+                if (message.pity_used != null && $Object.hasOwnProperty.call(message, "pity_used"))
+                    if (!$util.isInteger(message.pity_used))
+                        return "pity_used: integer expected";
+                if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after"))
+                    if (!$util.isInteger(message.pity_after))
+                        return "pity_after: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WeaponOilReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.WeaponOilReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WeaponOilReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WeaponOilReceipt";
+            };
+
+            return WeaponOilReceipt;
         })();
 
         v1.ForgeOutput = (function() {
@@ -6102,6 +6522,567 @@ $root.minimir = (function() {
             };
 
             return ConfigVersion;
+        })();
+
+        v1.ItemView = (function() {
+
+            /**
+             * Properties of an ItemView.
+             * @typedef {Object} minimir.v1.ItemView.$Properties
+             * @property {Uint8Array|null} [instance_id] ItemView instance_id
+             * @property {number|null} [item_id] ItemView item_id
+             * @property {Long|null} [quantity] ItemView quantity
+             * @property {boolean|null} [bound] ItemView bound
+             * @property {Long|null} [version] ItemView version
+             * @property {string|null} [source_kind] ItemView source_kind
+             * @property {string|null} [source_id] ItemView source_id
+             * @property {number|null} [quality] ItemView quality
+             * @property {boolean|null} [locked] ItemView locked
+             * @property {number|null} [recycle_block_flags] ItemView recycle_block_flags
+             * @property {Long|null} [durability_u] ItemView durability_u
+             * @property {Long|null} [max_durability_u] ItemView max_durability_u
+             * @property {Long|null} [original_durability_u] ItemView original_durability_u
+             * @property {number|null} [ore_purity] ItemView ore_purity
+             * @property {number|null} [initial_luck] ItemView initial_luck
+             * @property {number|null} [current_luck] ItemView current_luck
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemView.
+             * @memberof minimir.v1
+             * @interface IItemView
+             * @augments minimir.v1.ItemView.$Properties
+             * @deprecated Use minimir.v1.ItemView.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemView.
+             * @typedef {minimir.v1.ItemView.$Properties} minimir.v1.ItemView.$Shape
+             */
+
+            /**
+             * Constructs a new ItemView.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemView.
+             * @constructor
+             * @param {minimir.v1.ItemView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemView instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * ItemView item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.item_id = 0;
+
+            /**
+             * ItemView quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ItemView bound.
+             * @member {boolean} bound
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.bound = false;
+
+            /**
+             * ItemView version.
+             * @member {Long} version
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView source_kind.
+             * @member {string} source_kind
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.source_kind = "";
+
+            /**
+             * ItemView source_id.
+             * @member {string} source_id
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.source_id = "";
+
+            /**
+             * ItemView quality.
+             * @member {number} quality
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.quality = 0;
+
+            /**
+             * ItemView locked.
+             * @member {boolean} locked
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.locked = false;
+
+            /**
+             * ItemView recycle_block_flags.
+             * @member {number} recycle_block_flags
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.recycle_block_flags = 0;
+
+            /**
+             * ItemView durability_u.
+             * @member {Long} durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView max_durability_u.
+             * @member {Long} max_durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.max_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView original_durability_u.
+             * @member {Long} original_durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.original_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView ore_purity.
+             * @member {number} ore_purity
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.ore_purity = 0;
+
+            /**
+             * ItemView initial_luck.
+             * @member {number} initial_luck
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.initial_luck = 0;
+
+            /**
+             * ItemView current_luck.
+             * @member {number} current_luck
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.current_luck = 0;
+
+            /**
+             * Creates a new ItemView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {minimir.v1.ItemView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemView} ItemView instance
+             * @type {{
+             *   (properties: minimir.v1.ItemView.$Shape): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
+             *   (properties?: minimir.v1.ItemView.$Properties): minimir.v1.ItemView;
+             * }}
+             */
+            ItemView.create = function(properties) {
+                return new ItemView(properties);
+            };
+
+            /**
+             * Encodes the specified ItemView message. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {minimir.v1.ItemView.$Properties} message ItemView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound") && message.bound !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.bound);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.version);
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind") && message.source_kind !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.source_kind);
+                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id") && message.source_id !== "")
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.source_id);
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.quality);
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked") && message.locked !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.locked);
+                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags") && message.recycle_block_flags !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.recycle_block_flags);
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u") && (typeof message.durability_u === "object" ? message.durability_u.low || message.durability_u.high : message.durability_u !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.durability_u);
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u") && (typeof message.max_durability_u === "object" ? message.max_durability_u.low || message.max_durability_u.high : message.max_durability_u !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.max_durability_u);
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u") && (typeof message.original_durability_u === "object" ? message.original_durability_u.low || message.original_durability_u.high : message.original_durability_u !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.original_durability_u);
+                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity") && message.ore_purity !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.ore_purity);
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck") && message.initial_luck !== 0)
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.initial_luck);
+                if (message.current_luck != null && $Object.hasOwnProperty.call(message, "current_luck") && message.current_luck !== 0)
+                    writer.uint32(/* id 16, wireType 0 =*/128).uint32(message.current_luck);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemView message, length delimited. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {minimir.v1.ItemView.$Properties} message ItemView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.bound = value;
+                            else
+                                delete message.bound;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.source_kind = value;
+                            else
+                                delete message.source_kind;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.source_id = value;
+                            else
+                                delete message.source_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.quality = value;
+                            else
+                                delete message.quality;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.locked = value;
+                            else
+                                delete message.locked;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.recycle_block_flags = value;
+                            else
+                                delete message.recycle_block_flags;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.durability_u = value;
+                            else
+                                delete message.durability_u;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_durability_u = value;
+                            else
+                                delete message.max_durability_u;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.original_durability_u = value;
+                            else
+                                delete message.original_durability_u;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.ore_purity = value;
+                            else
+                                delete message.ore_purity;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.initial_luck = value;
+                            else
+                                delete message.initial_luck;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.current_luck = value;
+                            else
+                                delete message.current_luck;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemView message.
+             * @function verify
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound"))
+                    if (typeof message.bound !== "boolean")
+                        return "bound: boolean expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind"))
+                    if (!$util.isString(message.source_kind))
+                        return "source_kind: string expected";
+                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id"))
+                    if (!$util.isString(message.source_id))
+                        return "source_id: string expected";
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
+                    if (!$util.isInteger(message.quality))
+                        return "quality: integer expected";
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked"))
+                    if (typeof message.locked !== "boolean")
+                        return "locked: boolean expected";
+                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags"))
+                    if (!$util.isInteger(message.recycle_block_flags))
+                        return "recycle_block_flags: integer expected";
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u"))
+                    if (!$util.isInteger(message.durability_u) && !(message.durability_u && $util.isInteger(message.durability_u.low) && $util.isInteger(message.durability_u.high)))
+                        return "durability_u: integer|Long expected";
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u"))
+                    if (!$util.isInteger(message.max_durability_u) && !(message.max_durability_u && $util.isInteger(message.max_durability_u.low) && $util.isInteger(message.max_durability_u.high)))
+                        return "max_durability_u: integer|Long expected";
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u"))
+                    if (!$util.isInteger(message.original_durability_u) && !(message.original_durability_u && $util.isInteger(message.original_durability_u.low) && $util.isInteger(message.original_durability_u.high)))
+                        return "original_durability_u: integer|Long expected";
+                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity"))
+                    if (!$util.isInteger(message.ore_purity))
+                        return "ore_purity: integer expected";
+                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck"))
+                    if (!$util.isInteger(message.initial_luck))
+                        return "initial_luck: integer expected";
+                if (message.current_luck != null && $Object.hasOwnProperty.call(message, "current_luck"))
+                    if (!$util.isInteger(message.current_luck))
+                        return "current_luck: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemView
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemView";
+            };
+
+            return ItemView;
         })();
 
         v1.LocalLoginRequest = (function() {
@@ -22580,544 +23561,6 @@ $root.minimir = (function() {
             };
 
             return WalletState;
-        })();
-
-        v1.ItemView = (function() {
-
-            /**
-             * Properties of an ItemView.
-             * @typedef {Object} minimir.v1.ItemView.$Properties
-             * @property {Uint8Array|null} [instance_id] ItemView instance_id
-             * @property {number|null} [item_id] ItemView item_id
-             * @property {Long|null} [quantity] ItemView quantity
-             * @property {boolean|null} [bound] ItemView bound
-             * @property {Long|null} [version] ItemView version
-             * @property {string|null} [source_kind] ItemView source_kind
-             * @property {string|null} [source_id] ItemView source_id
-             * @property {number|null} [quality] ItemView quality
-             * @property {boolean|null} [locked] ItemView locked
-             * @property {number|null} [recycle_block_flags] ItemView recycle_block_flags
-             * @property {Long|null} [durability_u] ItemView durability_u
-             * @property {Long|null} [max_durability_u] ItemView max_durability_u
-             * @property {Long|null} [original_durability_u] ItemView original_durability_u
-             * @property {number|null} [ore_purity] ItemView ore_purity
-             * @property {number|null} [initial_luck] ItemView initial_luck
-             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
-             */
-
-            /**
-             * Properties of an ItemView.
-             * @memberof minimir.v1
-             * @interface IItemView
-             * @augments minimir.v1.ItemView.$Properties
-             * @deprecated Use minimir.v1.ItemView.$Properties instead.
-             */
-
-            /**
-             * Shape of an ItemView.
-             * @typedef {minimir.v1.ItemView.$Properties} minimir.v1.ItemView.$Shape
-             */
-
-            /**
-             * Constructs a new ItemView.
-             * @memberof minimir.v1
-             * @classdesc Represents an ItemView.
-             * @constructor
-             * @param {minimir.v1.ItemView.$Properties=} [properties] Properties to set
-             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
-             */
-            var ItemView = function (properties) {
-                if (properties)
-                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
-                            this[keys[i]] = properties[keys[i]];
-            };
-
-            /**
-             * ItemView instance_id.
-             * @member {Uint8Array} instance_id
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.instance_id = $util.newBuffer([]);
-
-            /**
-             * ItemView item_id.
-             * @member {number} item_id
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.item_id = 0;
-
-            /**
-             * ItemView quantity.
-             * @member {Long} quantity
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-
-            /**
-             * ItemView bound.
-             * @member {boolean} bound
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.bound = false;
-
-            /**
-             * ItemView version.
-             * @member {Long} version
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-
-            /**
-             * ItemView source_kind.
-             * @member {string} source_kind
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.source_kind = "";
-
-            /**
-             * ItemView source_id.
-             * @member {string} source_id
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.source_id = "";
-
-            /**
-             * ItemView quality.
-             * @member {number} quality
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.quality = 0;
-
-            /**
-             * ItemView locked.
-             * @member {boolean} locked
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.locked = false;
-
-            /**
-             * ItemView recycle_block_flags.
-             * @member {number} recycle_block_flags
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.recycle_block_flags = 0;
-
-            /**
-             * ItemView durability_u.
-             * @member {Long} durability_u
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-
-            /**
-             * ItemView max_durability_u.
-             * @member {Long} max_durability_u
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.max_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-
-            /**
-             * ItemView original_durability_u.
-             * @member {Long} original_durability_u
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.original_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-
-            /**
-             * ItemView ore_purity.
-             * @member {number} ore_purity
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.ore_purity = 0;
-
-            /**
-             * ItemView initial_luck.
-             * @member {number} initial_luck
-             * @memberof minimir.v1.ItemView
-             * @instance
-             */
-            ItemView.prototype.initial_luck = 0;
-
-            /**
-             * Creates a new ItemView instance using the specified properties.
-             * @function create
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {minimir.v1.ItemView.$Properties=} [properties] Properties to set
-             * @returns {minimir.v1.ItemView} ItemView instance
-             * @type {{
-             *   (properties: minimir.v1.ItemView.$Shape): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
-             *   (properties?: minimir.v1.ItemView.$Properties): minimir.v1.ItemView;
-             * }}
-             */
-            ItemView.create = function(properties) {
-                return new ItemView(properties);
-            };
-
-            /**
-             * Encodes the specified ItemView message. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
-             * @function encode
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {minimir.v1.ItemView.$Properties} message ItemView message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            ItemView.encode = function (message, writer, _depth) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (_depth === $undefined)
-                    _depth = 0;
-                if (_depth > $util.recursionLimit)
-                    throw $Error("max depth exceeded");
-                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
-                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
-                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
-                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
-                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
-                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
-                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound") && message.bound !== false)
-                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.bound);
-                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
-                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.version);
-                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind") && message.source_kind !== "")
-                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.source_kind);
-                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id") && message.source_id !== "")
-                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.source_id);
-                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
-                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.quality);
-                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked") && message.locked !== false)
-                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.locked);
-                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags") && message.recycle_block_flags !== 0)
-                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.recycle_block_flags);
-                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u") && (typeof message.durability_u === "object" ? message.durability_u.low || message.durability_u.high : message.durability_u !== 0))
-                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.durability_u);
-                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u") && (typeof message.max_durability_u === "object" ? message.max_durability_u.low || message.max_durability_u.high : message.max_durability_u !== 0))
-                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.max_durability_u);
-                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u") && (typeof message.original_durability_u === "object" ? message.original_durability_u.low || message.original_durability_u.high : message.original_durability_u !== 0))
-                    writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.original_durability_u);
-                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity") && message.ore_purity !== 0)
-                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.ore_purity);
-                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck") && message.initial_luck !== 0)
-                    writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.initial_luck);
-                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
-                    for (var i = 0; i < message.$unknowns.length; ++i)
-                        writer.raw(message.$unknowns[i]);
-                return writer;
-            };
-
-            /**
-             * Encodes the specified ItemView message, length delimited. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {minimir.v1.ItemView.$Properties} message ItemView message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            ItemView.encodeDelimited = function(message, writer) {
-                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
-            };
-
-            /**
-             * Decodes an ItemView message from the specified reader or buffer.
-             * @function decode
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            ItemView.decode = function (reader, length, _end, _depth, _target) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                if (_depth === $undefined)
-                    _depth = 0;
-                if (_depth > $Reader.recursionLimit)
-                    throw $Error("max depth exceeded");
-                var end, message, value;
-                if (length === $undefined)
-                    end = reader.len;
-                else {
-                    end = reader.pos + length;
-                    if (end > reader.len)
-                        throw $RangeError("index out of range");
-                    length = reader.len;
-                    reader.len = end;
-                }
-                message = _target || new $root.minimir.v1.ItemView();
-                while (reader.pos < end) {
-                    var start = reader.pos;
-                    var tag = reader.tag();
-                    if (tag === _end) {
-                        _end = $undefined;
-                        break;
-                    }
-                    var wireType = tag & 7;
-                    switch (tag >>>= 3) {
-                    case 1: {
-                            if (wireType !== 2)
-                                break;
-                            if ((value = reader.bytes()).length)
-                                message.instance_id = value;
-                            else
-                                delete message.instance_id;
-                            continue;
-                        }
-                    case 2: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.uint32())
-                                message.item_id = value;
-                            else
-                                delete message.item_id;
-                            continue;
-                        }
-                    case 3: {
-                            if (wireType !== 0)
-                                break;
-                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
-                                message.quantity = value;
-                            else
-                                delete message.quantity;
-                            continue;
-                        }
-                    case 4: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.bool())
-                                message.bound = value;
-                            else
-                                delete message.bound;
-                            continue;
-                        }
-                    case 5: {
-                            if (wireType !== 0)
-                                break;
-                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
-                                message.version = value;
-                            else
-                                delete message.version;
-                            continue;
-                        }
-                    case 6: {
-                            if (wireType !== 2)
-                                break;
-                            if ((value = reader.stringVerify()).length)
-                                message.source_kind = value;
-                            else
-                                delete message.source_kind;
-                            continue;
-                        }
-                    case 7: {
-                            if (wireType !== 2)
-                                break;
-                            if ((value = reader.stringVerify()).length)
-                                message.source_id = value;
-                            else
-                                delete message.source_id;
-                            continue;
-                        }
-                    case 8: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.uint32())
-                                message.quality = value;
-                            else
-                                delete message.quality;
-                            continue;
-                        }
-                    case 9: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.bool())
-                                message.locked = value;
-                            else
-                                delete message.locked;
-                            continue;
-                        }
-                    case 10: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.uint32())
-                                message.recycle_block_flags = value;
-                            else
-                                delete message.recycle_block_flags;
-                            continue;
-                        }
-                    case 11: {
-                            if (wireType !== 0)
-                                break;
-                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
-                                message.durability_u = value;
-                            else
-                                delete message.durability_u;
-                            continue;
-                        }
-                    case 12: {
-                            if (wireType !== 0)
-                                break;
-                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
-                                message.max_durability_u = value;
-                            else
-                                delete message.max_durability_u;
-                            continue;
-                        }
-                    case 13: {
-                            if (wireType !== 0)
-                                break;
-                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
-                                message.original_durability_u = value;
-                            else
-                                delete message.original_durability_u;
-                            continue;
-                        }
-                    case 14: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.uint32())
-                                message.ore_purity = value;
-                            else
-                                delete message.ore_purity;
-                            continue;
-                        }
-                    case 15: {
-                            if (wireType !== 0)
-                                break;
-                            if (value = reader.uint32())
-                                message.initial_luck = value;
-                            else
-                                delete message.initial_luck;
-                            continue;
-                        }
-                    }
-                    reader.skipType(wireType, _depth, tag);
-                    if (!reader.discardUnknown) {
-                        $util.makeProp(message, "$unknowns", false);
-                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
-                    }
-                }
-                if (length !== $undefined) {
-                    if (reader.pos !== end)
-                        throw $RangeError("index out of range");
-                    reader.len = length;
-                }
-                if (_end !== $undefined)
-                    throw $Error("missing end group");
-                return message;
-            };
-
-            /**
-             * Decodes an ItemView message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            ItemView.decodeDelimited = function(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.size());
-            };
-
-            /**
-             * Verifies an ItemView message.
-             * @function verify
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            ItemView.verify = function (message, _depth) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (_depth === $undefined)
-                    _depth = 0;
-                if (_depth > $util.recursionLimit)
-                    return "max depth exceeded";
-                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
-                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
-                        return "instance_id: buffer expected";
-                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
-                    if (!$util.isInteger(message.item_id))
-                        return "item_id: integer expected";
-                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
-                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
-                        return "quantity: integer|Long expected";
-                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound"))
-                    if (typeof message.bound !== "boolean")
-                        return "bound: boolean expected";
-                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
-                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
-                        return "version: integer|Long expected";
-                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind"))
-                    if (!$util.isString(message.source_kind))
-                        return "source_kind: string expected";
-                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id"))
-                    if (!$util.isString(message.source_id))
-                        return "source_id: string expected";
-                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
-                    if (!$util.isInteger(message.quality))
-                        return "quality: integer expected";
-                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked"))
-                    if (typeof message.locked !== "boolean")
-                        return "locked: boolean expected";
-                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags"))
-                    if (!$util.isInteger(message.recycle_block_flags))
-                        return "recycle_block_flags: integer expected";
-                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u"))
-                    if (!$util.isInteger(message.durability_u) && !(message.durability_u && $util.isInteger(message.durability_u.low) && $util.isInteger(message.durability_u.high)))
-                        return "durability_u: integer|Long expected";
-                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u"))
-                    if (!$util.isInteger(message.max_durability_u) && !(message.max_durability_u && $util.isInteger(message.max_durability_u.low) && $util.isInteger(message.max_durability_u.high)))
-                        return "max_durability_u: integer|Long expected";
-                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u"))
-                    if (!$util.isInteger(message.original_durability_u) && !(message.original_durability_u && $util.isInteger(message.original_durability_u.low) && $util.isInteger(message.original_durability_u.high)))
-                        return "original_durability_u: integer|Long expected";
-                if (message.ore_purity != null && $Object.hasOwnProperty.call(message, "ore_purity"))
-                    if (!$util.isInteger(message.ore_purity))
-                        return "ore_purity: integer expected";
-                if (message.initial_luck != null && $Object.hasOwnProperty.call(message, "initial_luck"))
-                    if (!$util.isInteger(message.initial_luck))
-                        return "initial_luck: integer expected";
-                return null;
-            };
-
-            /**
-             * Gets the type url for ItemView
-             * @function getTypeUrl
-             * @memberof minimir.v1.ItemView
-             * @static
-             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-             * @returns {string} The type url
-             */
-            ItemView.getTypeUrl = function(prefix) {
-                if (prefix === $undefined)
-                    prefix = "type.googleapis.com";
-                return prefix + "/minimir.v1.ItemView";
-            };
-
-            return ItemView;
         })();
 
         v1.EquippedItem = (function() {
@@ -55969,6 +56412,1440 @@ $root.minimir = (function() {
             };
 
             return ForgeCommitRequest;
+        })();
+
+        v1.WeaponOilItemRef = (function() {
+
+            /**
+             * Properties of a WeaponOilItemRef.
+             * @typedef {Object} minimir.v1.WeaponOilItemRef.$Properties
+             * @property {Uint8Array|null} [instance_id] WeaponOilItemRef instance_id
+             * @property {Long|null} [version] WeaponOilItemRef version
+             * @property {boolean|null} [equipped] WeaponOilItemRef equipped
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WeaponOilItemRef.
+             * @memberof minimir.v1
+             * @interface IWeaponOilItemRef
+             * @augments minimir.v1.WeaponOilItemRef.$Properties
+             * @deprecated Use minimir.v1.WeaponOilItemRef.$Properties instead.
+             */
+
+            /**
+             * Shape of a WeaponOilItemRef.
+             * @typedef {minimir.v1.WeaponOilItemRef.$Properties} minimir.v1.WeaponOilItemRef.$Shape
+             */
+
+            /**
+             * Constructs a new WeaponOilItemRef.
+             * @memberof minimir.v1
+             * @classdesc Represents a WeaponOilItemRef.
+             * @constructor
+             * @param {minimir.v1.WeaponOilItemRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WeaponOilItemRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WeaponOilItemRef instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @instance
+             */
+            WeaponOilItemRef.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * WeaponOilItemRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @instance
+             */
+            WeaponOilItemRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WeaponOilItemRef equipped.
+             * @member {boolean} equipped
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @instance
+             */
+            WeaponOilItemRef.prototype.equipped = false;
+
+            /**
+             * Creates a new WeaponOilItemRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {minimir.v1.WeaponOilItemRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WeaponOilItemRef} WeaponOilItemRef instance
+             * @type {{
+             *   (properties: minimir.v1.WeaponOilItemRef.$Shape): minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape;
+             *   (properties?: minimir.v1.WeaponOilItemRef.$Properties): minimir.v1.WeaponOilItemRef;
+             * }}
+             */
+            WeaponOilItemRef.create = function(properties) {
+                return new WeaponOilItemRef(properties);
+            };
+
+            /**
+             * Encodes the specified WeaponOilItemRef message. Does not implicitly {@link minimir.v1.WeaponOilItemRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {minimir.v1.WeaponOilItemRef.$Properties} message WeaponOilItemRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilItemRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped") && message.equipped !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.equipped);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WeaponOilItemRef message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilItemRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {minimir.v1.WeaponOilItemRef.$Properties} message WeaponOilItemRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilItemRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WeaponOilItemRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape} WeaponOilItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilItemRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WeaponOilItemRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.equipped = value;
+                            else
+                                delete message.equipped;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WeaponOilItemRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape} WeaponOilItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilItemRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WeaponOilItemRef message.
+             * @function verify
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WeaponOilItemRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped"))
+                    if (typeof message.equipped !== "boolean")
+                        return "equipped: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WeaponOilItemRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.WeaponOilItemRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WeaponOilItemRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WeaponOilItemRef";
+            };
+
+            return WeaponOilItemRef;
+        })();
+
+        v1.WeaponOilQuoteRequest = (function() {
+
+            /**
+             * Properties of a WeaponOilQuoteRequest.
+             * @typedef {Object} minimir.v1.WeaponOilQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] WeaponOilQuoteRequest scene_epoch
+             * @property {minimir.v1.WeaponOilItemRef.$Properties|null} [weapon] WeaponOilQuoteRequest weapon
+             * @property {boolean|null} [allow_bound] WeaponOilQuoteRequest allow_bound
+             * @property {Uint8Array|null} [ui_session_id] WeaponOilQuoteRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WeaponOilQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IWeaponOilQuoteRequest
+             * @augments minimir.v1.WeaponOilQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.WeaponOilQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a WeaponOilQuoteRequest.
+             * @typedef {minimir.v1.WeaponOilQuoteRequest.$Properties} minimir.v1.WeaponOilQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new WeaponOilQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a WeaponOilQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.WeaponOilQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WeaponOilQuoteRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WeaponOilQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @instance
+             */
+            WeaponOilQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WeaponOilQuoteRequest weapon.
+             * @member {minimir.v1.WeaponOilItemRef.$Properties|null|undefined} weapon
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @instance
+             */
+            WeaponOilQuoteRequest.prototype.weapon = null;
+
+            /**
+             * WeaponOilQuoteRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @instance
+             */
+            WeaponOilQuoteRequest.prototype.allow_bound = false;
+
+            /**
+             * WeaponOilQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @instance
+             */
+            WeaponOilQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new WeaponOilQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {minimir.v1.WeaponOilQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WeaponOilQuoteRequest} WeaponOilQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.WeaponOilQuoteRequest.$Shape): minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.WeaponOilQuoteRequest.$Properties): minimir.v1.WeaponOilQuoteRequest;
+             * }}
+             */
+            WeaponOilQuoteRequest.create = function(properties) {
+                return new WeaponOilQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified WeaponOilQuoteRequest message. Does not implicitly {@link minimir.v1.WeaponOilQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {minimir.v1.WeaponOilQuoteRequest.$Properties} message WeaponOilQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon"))
+                    $root.minimir.v1.WeaponOilItemRef.encode(message.weapon, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.allow_bound);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WeaponOilQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {minimir.v1.WeaponOilQuoteRequest.$Properties} message WeaponOilQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WeaponOilQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape} WeaponOilQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WeaponOilQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.weapon = $root.minimir.v1.WeaponOilItemRef.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WeaponOilQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape} WeaponOilQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WeaponOilQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WeaponOilQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon")) {
+                    var error = $root.minimir.v1.WeaponOilItemRef.verify(message.weapon, _depth + 1);
+                    if (error)
+                        return "weapon." + error;
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WeaponOilQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.WeaponOilQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WeaponOilQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WeaponOilQuoteRequest";
+            };
+
+            return WeaponOilQuoteRequest;
+        })();
+
+        v1.WeaponOilQuote = (function() {
+
+            /**
+             * Properties of a WeaponOilQuote.
+             * @typedef {Object} minimir.v1.WeaponOilQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] WeaponOilQuote quote_id
+             * @property {Long|null} [scene_epoch] WeaponOilQuote scene_epoch
+             * @property {minimir.v1.ItemView.$Properties|null} [weapon] WeaponOilQuote weapon
+             * @property {minimir.v1.ItemView.$Properties|null} [oil] WeaponOilQuote oil
+             * @property {boolean|null} [equipped] WeaponOilQuote equipped
+             * @property {boolean|null} [allow_bound] WeaponOilQuote allow_bound
+             * @property {number|null} [current_luck] WeaponOilQuote current_luck
+             * @property {number|null} [success_luck] WeaponOilQuote success_luck
+             * @property {number|null} [failure_luck] WeaponOilQuote failure_luck
+             * @property {number|null} [success_ppm] WeaponOilQuote success_ppm
+             * @property {number|null} [pity_used] WeaponOilQuote pity_used
+             * @property {number|null} [pity_after] WeaponOilQuote pity_after
+             * @property {boolean|null} [guaranteed] WeaponOilQuote guaranteed
+             * @property {boolean|null} [output_bound] WeaponOilQuote output_bound
+             * @property {Long|null} [expires_at_unix_ms] WeaponOilQuote expires_at_unix_ms
+             * @property {Long|null} [role_revision] WeaponOilQuote role_revision
+             * @property {Uint8Array|null} [ui_session_id] WeaponOilQuote ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WeaponOilQuote.
+             * @memberof minimir.v1
+             * @interface IWeaponOilQuote
+             * @augments minimir.v1.WeaponOilQuote.$Properties
+             * @deprecated Use minimir.v1.WeaponOilQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a WeaponOilQuote.
+             * @typedef {minimir.v1.WeaponOilQuote.$Properties} minimir.v1.WeaponOilQuote.$Shape
+             */
+
+            /**
+             * Constructs a new WeaponOilQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a WeaponOilQuote.
+             * @constructor
+             * @param {minimir.v1.WeaponOilQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WeaponOilQuote = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WeaponOilQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WeaponOilQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WeaponOilQuote weapon.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} weapon
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.weapon = null;
+
+            /**
+             * WeaponOilQuote oil.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} oil
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.oil = null;
+
+            /**
+             * WeaponOilQuote equipped.
+             * @member {boolean} equipped
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.equipped = false;
+
+            /**
+             * WeaponOilQuote allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.allow_bound = false;
+
+            /**
+             * WeaponOilQuote current_luck.
+             * @member {number} current_luck
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.current_luck = 0;
+
+            /**
+             * WeaponOilQuote success_luck.
+             * @member {number} success_luck
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.success_luck = 0;
+
+            /**
+             * WeaponOilQuote failure_luck.
+             * @member {number} failure_luck
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.failure_luck = 0;
+
+            /**
+             * WeaponOilQuote success_ppm.
+             * @member {number} success_ppm
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.success_ppm = 0;
+
+            /**
+             * WeaponOilQuote pity_used.
+             * @member {number} pity_used
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.pity_used = 0;
+
+            /**
+             * WeaponOilQuote pity_after.
+             * @member {number} pity_after
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.pity_after = 0;
+
+            /**
+             * WeaponOilQuote guaranteed.
+             * @member {boolean} guaranteed
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.guaranteed = false;
+
+            /**
+             * WeaponOilQuote output_bound.
+             * @member {boolean} output_bound
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.output_bound = false;
+
+            /**
+             * WeaponOilQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WeaponOilQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WeaponOilQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WeaponOilQuote
+             * @instance
+             */
+            WeaponOilQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new WeaponOilQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {minimir.v1.WeaponOilQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WeaponOilQuote} WeaponOilQuote instance
+             * @type {{
+             *   (properties: minimir.v1.WeaponOilQuote.$Shape): minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape;
+             *   (properties?: minimir.v1.WeaponOilQuote.$Properties): minimir.v1.WeaponOilQuote;
+             * }}
+             */
+            WeaponOilQuote.create = function(properties) {
+                return new WeaponOilQuote(properties);
+            };
+
+            /**
+             * Encodes the specified WeaponOilQuote message. Does not implicitly {@link minimir.v1.WeaponOilQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {minimir.v1.WeaponOilQuote.$Properties} message WeaponOilQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon"))
+                    $root.minimir.v1.ItemView.encode(message.weapon, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil"))
+                    $root.minimir.v1.ItemView.encode(message.oil, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped") && message.equipped !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.equipped);
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.allow_bound);
+                if (message.current_luck != null && $Object.hasOwnProperty.call(message, "current_luck") && message.current_luck !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.current_luck);
+                if (message.success_luck != null && $Object.hasOwnProperty.call(message, "success_luck") && message.success_luck !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.success_luck);
+                if (message.failure_luck != null && $Object.hasOwnProperty.call(message, "failure_luck") && message.failure_luck !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.failure_luck);
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm") && message.success_ppm !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.success_ppm);
+                if (message.pity_used != null && $Object.hasOwnProperty.call(message, "pity_used") && message.pity_used !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.pity_used);
+                if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after") && message.pity_after !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.pity_after);
+                if (message.guaranteed != null && $Object.hasOwnProperty.call(message, "guaranteed") && message.guaranteed !== false)
+                    writer.uint32(/* id 13, wireType 0 =*/104).bool(message.guaranteed);
+                if (message.output_bound != null && $Object.hasOwnProperty.call(message, "output_bound") && message.output_bound !== false)
+                    writer.uint32(/* id 14, wireType 0 =*/112).bool(message.output_bound);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.expires_at_unix_ms);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 16, wireType 0 =*/128).uint64(message.role_revision);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 17, wireType 2 =*/138).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WeaponOilQuote message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {minimir.v1.WeaponOilQuote.$Properties} message WeaponOilQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WeaponOilQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape} WeaponOilQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WeaponOilQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.weapon = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.oil = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.oil);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.equipped = value;
+                            else
+                                delete message.equipped;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.current_luck = value;
+                            else
+                                delete message.current_luck;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.success_luck = value;
+                            else
+                                delete message.success_luck;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.failure_luck = value;
+                            else
+                                delete message.failure_luck;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.success_ppm = value;
+                            else
+                                delete message.success_ppm;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pity_used = value;
+                            else
+                                delete message.pity_used;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pity_after = value;
+                            else
+                                delete message.pity_after;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.guaranteed = value;
+                            else
+                                delete message.guaranteed;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.output_bound = value;
+                            else
+                                delete message.output_bound;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 17: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WeaponOilQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape} WeaponOilQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WeaponOilQuote message.
+             * @function verify
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WeaponOilQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.weapon, _depth + 1);
+                    if (error)
+                        return "weapon." + error;
+                }
+                if (message.oil != null && $Object.hasOwnProperty.call(message, "oil")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.oil, _depth + 1);
+                    if (error)
+                        return "oil." + error;
+                }
+                if (message.equipped != null && $Object.hasOwnProperty.call(message, "equipped"))
+                    if (typeof message.equipped !== "boolean")
+                        return "equipped: boolean expected";
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.current_luck != null && $Object.hasOwnProperty.call(message, "current_luck"))
+                    if (!$util.isInteger(message.current_luck))
+                        return "current_luck: integer expected";
+                if (message.success_luck != null && $Object.hasOwnProperty.call(message, "success_luck"))
+                    if (!$util.isInteger(message.success_luck))
+                        return "success_luck: integer expected";
+                if (message.failure_luck != null && $Object.hasOwnProperty.call(message, "failure_luck"))
+                    if (!$util.isInteger(message.failure_luck))
+                        return "failure_luck: integer expected";
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm"))
+                    if (!$util.isInteger(message.success_ppm))
+                        return "success_ppm: integer expected";
+                if (message.pity_used != null && $Object.hasOwnProperty.call(message, "pity_used"))
+                    if (!$util.isInteger(message.pity_used))
+                        return "pity_used: integer expected";
+                if (message.pity_after != null && $Object.hasOwnProperty.call(message, "pity_after"))
+                    if (!$util.isInteger(message.pity_after))
+                        return "pity_after: integer expected";
+                if (message.guaranteed != null && $Object.hasOwnProperty.call(message, "guaranteed"))
+                    if (typeof message.guaranteed !== "boolean")
+                        return "guaranteed: boolean expected";
+                if (message.output_bound != null && $Object.hasOwnProperty.call(message, "output_bound"))
+                    if (typeof message.output_bound !== "boolean")
+                        return "output_bound: boolean expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WeaponOilQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.WeaponOilQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WeaponOilQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WeaponOilQuote";
+            };
+
+            return WeaponOilQuote;
+        })();
+
+        v1.WeaponOilCommitRequest = (function() {
+
+            /**
+             * Properties of a WeaponOilCommitRequest.
+             * @typedef {Object} minimir.v1.WeaponOilCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] WeaponOilCommitRequest quote_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] WeaponOilCommitRequest operation
+             * @property {Uint8Array|null} [ui_session_id] WeaponOilCommitRequest ui_session_id
+             * @property {minimir.v1.WeaponOilItemRef.$Properties|null} [weapon] WeaponOilCommitRequest weapon
+             * @property {boolean|null} [allow_bound] WeaponOilCommitRequest allow_bound
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WeaponOilCommitRequest.
+             * @memberof minimir.v1
+             * @interface IWeaponOilCommitRequest
+             * @augments minimir.v1.WeaponOilCommitRequest.$Properties
+             * @deprecated Use minimir.v1.WeaponOilCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a WeaponOilCommitRequest.
+             * @typedef {minimir.v1.WeaponOilCommitRequest.$Properties} minimir.v1.WeaponOilCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new WeaponOilCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a WeaponOilCommitRequest.
+             * @constructor
+             * @param {minimir.v1.WeaponOilCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WeaponOilCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WeaponOilCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * WeaponOilCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.operation = null;
+
+            /**
+             * WeaponOilCommitRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * WeaponOilCommitRequest weapon.
+             * @member {minimir.v1.WeaponOilItemRef.$Properties|null|undefined} weapon
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.weapon = null;
+
+            /**
+             * WeaponOilCommitRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @instance
+             */
+            WeaponOilCommitRequest.prototype.allow_bound = false;
+
+            /**
+             * Creates a new WeaponOilCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {minimir.v1.WeaponOilCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WeaponOilCommitRequest} WeaponOilCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.WeaponOilCommitRequest.$Shape): minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape;
+             *   (properties?: minimir.v1.WeaponOilCommitRequest.$Properties): minimir.v1.WeaponOilCommitRequest;
+             * }}
+             */
+            WeaponOilCommitRequest.create = function(properties) {
+                return new WeaponOilCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified WeaponOilCommitRequest message. Does not implicitly {@link minimir.v1.WeaponOilCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {minimir.v1.WeaponOilCommitRequest.$Properties} message WeaponOilCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ui_session_id);
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon"))
+                    $root.minimir.v1.WeaponOilItemRef.encode(message.weapon, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.allow_bound);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WeaponOilCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {minimir.v1.WeaponOilCommitRequest.$Properties} message WeaponOilCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WeaponOilCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WeaponOilCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape} WeaponOilCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WeaponOilCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.weapon = $root.minimir.v1.WeaponOilItemRef.decode(reader, reader.size(), $undefined, _depth + 1, message.weapon);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WeaponOilCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape} WeaponOilCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WeaponOilCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WeaponOilCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WeaponOilCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.weapon != null && $Object.hasOwnProperty.call(message, "weapon")) {
+                    var error = $root.minimir.v1.WeaponOilItemRef.verify(message.weapon, _depth + 1);
+                    if (error)
+                        return "weapon." + error;
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WeaponOilCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.WeaponOilCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WeaponOilCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WeaponOilCommitRequest";
+            };
+
+            return WeaponOilCommitRequest;
         })();
 
         return v1;

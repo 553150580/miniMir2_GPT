@@ -110,6 +110,9 @@ const (
 	MsgC2SForgeQuote uint16 = 40046
 	MsgS2CForgeQuote uint16 = 40047
 	MsgC2SForgeCommit uint16 = 40048
+	MsgC2SWeaponOilQuote uint16 = 40049
+	MsgS2CWeaponOilQuote uint16 = 40050
+	MsgC2SWeaponOilCommit uint16 = 40051
 )
 
 const (
@@ -166,4 +169,7 @@ const (
 	CodeForgeUnavailable uint32 = 3950
 	CodeForgeQuoteChanged uint32 = 3951
 	CodeForgeInputs uint32 = 3952
+	CodeWeaponOilUnavailable uint32 = 3953
+	CodeWeaponOilQuoteChanged uint32 = 3954
+	CodeWeaponOilInputs uint32 = 3955
 )

@@ -301,6 +301,8 @@ type Fixture struct {
 	CombatTiming CombatTiming `json:"combat_timing"`
 	// CombatLuck 保存工作簿投影的幸运贡献和显式配置的目标抵抗。
 	CombatLuck *CombatLuckConfig `json:"combat_luck,omitempty"`
+	// LuckOil 保存武器祝福油规则。旧规则缺省时不开放培养。
+	LuckOil *LuckOilConfig `json:"luck_oil,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -610,6 +612,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateCombatLuck(); err != nil {
+		return err
+	}
+	if err := f.validateLuckOil(); err != nil {
 		return err
 	}
 	if err := f.validateHostingTimePrices(); err != nil {

@@ -4,8 +4,8 @@ import type { PotionItem } from './PotionModel';
 import { assetInteger, sourceName } from './SkillAssetsModel';
 
 export interface EquipmentItem extends PotionItem {
-    quality?: number; sourceKind?: string; locked?: boolean; recycleBlockFlags?: number;
-    initialLuck?: number;
+    quality?: number; sourceKind?: string; sourceId?: string; locked?: boolean; recycleBlockFlags?: number;
+    initialLuck?: number; currentLuck?: number;
     durabilityU?: Parameters<typeof assetInteger>[0]; maxDurabilityU?: Parameters<typeof assetInteger>[0];
     originalDurabilityU?: Parameters<typeof assetInteger>[0];
 }
@@ -36,6 +36,13 @@ function original(snapshot: EquipmentSnapshot, id: Uint8Array, unequip: boolean,
 }
 export function equipmentSlotName(slot: number): string {
     return ['武器', '衣服', '头盔', '项链', '左手镯', '右手镯', '左戒指', '右戒指', '腰带', '鞋子'][slot] ?? '装备部位';
+}
+
+// 旧角色快照只含初始值。已培养的武器从权威当前幸运读取，不覆盖初始生成历史。
+export function equipmentCurrentLuck(item: EquipmentItem): number {
+    const initial = item.initialLuck ?? 0, current = item.currentLuck ?? 0;
+    const knownInitial = Number.isInteger(initial) && initial >= 0 && initial <= 3 ? initial : 0;
+    return Number.isInteger(current) && current >= knownInitial && current <= 9 ? current : knownInitial;
 }
 export function equipmentActionReason(snapshot: EquipmentSnapshot, item: EquipmentItem | null | undefined, unequip: boolean, slot?: number): string {
     if (!snapshot.ready || !snapshot.scope || !snapshot.roleIdentity) return '角色场景尚未就绪';
@@ -99,9 +106,10 @@ export function equipmentDetailLines(definition: EquipmentDefinition | undefined
     const stage = definition.equipment_stage;
     const stageKnown = Number.isSafeInteger(stage) && stage! >= 0 && Number.isSafeInteger(definition.required_level) && definition.required_level! >= 1
         && stage === Math.floor((definition.required_level! - 1) / 10);
+    const luck = equipmentCurrentLuck(item);
     return [worn ? '已穿戴装备' : '背包装备', equipmentSlotName(definition.equip_slot ?? -1), `数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品',
         `品质 ${item.quality ?? '未知'}`, `来源 ${sourceName(item.sourceKind)}`, ...[equipmentDurabilityText(item)].filter(Boolean),
-        ...(item.initialLuck && Number.isInteger(item.initialLuck) && item.initialLuck >= 1 && item.initialLuck <= 3 ? [`幸运+${item.initialLuck}`] : []),
+        ...(luck ? [`幸运+${luck}`] : []),
         stageKnown ? `装备阶段 T${stage! + 1}` : '装备阶段尚未同步', ...equipmentLevelLines(definition, level, job), ...equipmentBaseAttributeLines(definition),
         ...(item.locked ? ['装备已锁定，回收受保护'] : []), ...((item.recycleBlockFlags ?? 0) & 6 ? ['装备正在处理或有未确认结果'] : [])];
 }

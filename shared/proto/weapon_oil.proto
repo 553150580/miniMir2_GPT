@@ -1,0 +1,52 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+import "item_view.proto";
+
+// 原武器必须位于请求指示的背包或当前穿戴位置。
+message WeaponOilItemRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  bool equipped = 3;
+}
+
+// 当前界面会话独立于连接和场景；每次重新打开由客户端创建新身份。
+message WeaponOilQuoteRequest {
+  uint64 scene_epoch = 1;
+  WeaponOilItemRef weapon = 2;
+  bool allow_bound = 3;
+  bytes ui_session_id = 4;
+}
+
+// 报价列出这次实际消耗的原堆、成功回退和生效后的最终绑定。
+message WeaponOilQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  ItemView weapon = 3;
+  ItemView oil = 4;
+  bool equipped = 5;
+  bool allow_bound = 6;
+  uint32 current_luck = 7;
+  uint32 success_luck = 8;
+  uint32 failure_luck = 9;
+  uint32 success_ppm = 10;
+  // 累计值为本次投入前已消耗的瓶数，达到阈值后的下一瓶才必成。
+  uint32 pity_used = 11;
+  uint32 pity_after = 12;
+  bool guaranteed = 13;
+  bool output_bound = 14;
+  uint64 expires_at_unix_ms = 15;
+  uint64 role_revision = 16;
+  bytes ui_session_id = 17;
+}
+
+// 核对原报价和原武器，结算只采用服务端持有的材料、规则与随机值。
+message WeaponOilCommitRequest {
+  bytes quote_id = 1;
+  OperationContext operation = 2;
+  bytes ui_session_id = 3;
+  WeaponOilItemRef weapon = 4;
+  bool allow_bound = 5;
+}

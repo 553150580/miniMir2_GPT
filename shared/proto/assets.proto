@@ -2,6 +2,7 @@ syntax = "proto3";
 package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
 import "common.proto";
+import public "item_view.proto";
 
 message WalletState {
   int64 gold = 1;
@@ -9,28 +10,6 @@ message WalletState {
   int64 yuanbao_units = 3;
   int64 bound_yuanbao_units = 4;
   uint64 revision = 5;
-}
-message ItemView {
-  bytes instance_id = 1;
-  uint32 item_id = 2;
-  int64 quantity = 3;
-  bool bound = 4;
-  uint64 version = 5;
-  // 来源与品质属于物品实例，旧实例空来源保持未知，不反推成掉落。
-  string source_kind = 6;
-  string source_id = 7;
-  uint32 quality = 8;
-  bool locked = 9;
-  // 强保护位：1锁定，2未确认培养结果，4资产占用，8穿戴中；客户端不可覆盖。
-  uint32 recycle_block_flags = 10;
-  // 1/1000显示单位；原始上限为非零时才有耐久，当前值0表示损坏。
-  uint64 durability_u = 11;
-  uint64 max_durability_u = 12;
-  uint64 original_durability_u = 13;
-  // 原矿石实例纯度1–100；0表示该物品没有矿石纯度。
-  uint32 ore_purity = 14;
-  // 装备实例的初始幸运；未触发时为零，后续幸运培养使用独立字段。
-  uint32 initial_luck = 15;
 }
 message EquippedItem { uint32 slot = 1; ItemView item = 2; }
 // 已学技能属于永久成长；短冷却、施法与治疗队列不保存在此处。

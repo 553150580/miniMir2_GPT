@@ -4,12 +4,13 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 163,
+  "message_count": 164,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "WeaponOilReceipt",
     "ForgeOutput",
     "ForgeReceipt",
     "GoldMarketReceipt",
@@ -25,6 +26,7 @@
     "HeartbeatResult",
     "Batch",
     "ConfigVersion",
+    "ItemView",
     "LocalLoginRequest",
     "LoginResult",
     "ServerDirectoryRequest",
@@ -74,7 +76,6 @@
     "DeathNotice",
     "ReviveChoice",
     "WalletState",
-    "ItemView",
     "EquippedItem",
     "LearnedSkill",
     "InventoryResult",
@@ -488,6 +489,36 @@
     {
       "message": "ConfigVersion",
       "field": "resource_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "max_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "original_durability_u",
       "type": "uint64",
       "cases": 3
     },
@@ -1196,36 +1227,6 @@
     {
       "message": "WalletState",
       "field": "revision",
-      "type": "uint64",
-      "cases": 3
-    },
-    {
-      "message": "ItemView",
-      "field": "quantity",
-      "type": "int64",
-      "cases": 4
-    },
-    {
-      "message": "ItemView",
-      "field": "version",
-      "type": "uint64",
-      "cases": 3
-    },
-    {
-      "message": "ItemView",
-      "field": "durability_u",
-      "type": "uint64",
-      "cases": 3
-    },
-    {
-      "message": "ItemView",
-      "field": "max_durability_u",
-      "type": "uint64",
-      "cases": 3
-    },
-    {
-      "message": "ItemView",
-      "field": "original_durability_u",
       "type": "uint64",
       "cases": 3
     },
@@ -2628,7 +2629,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 74,
+  "bytes_field_count": 75,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -2643,6 +2644,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "WeaponOilReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -2696,6 +2702,11 @@
       "repeated": true
     },
     {
+      "message": "ItemView",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
       "message": "LoginResult",
       "field": "account_id",
       "repeated": false
@@ -2713,11 +2724,6 @@
     {
       "message": "ReviveChoice",
       "field": "death_id",
-      "repeated": false
-    },
-    {
-      "message": "ItemView",
-      "field": "instance_id",
       "repeated": false
     },
     {
@@ -3007,7 +3013,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "aa0dfffab131da7725283e58ad7f809b59e082be5e59366d984d4453627ce9f8"
+      "sha256": "54a888fdebb55eb2030bac72376929743353999631bccf6daf4cded0e6448022"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3019,7 +3025,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "ec1152f3a2a98b7e3e685d3f5b6a26d639c3d2361bf12d6f2083cbcf104cc17c"
+      "sha256": "7ee1ced78ec752ac549317e3af368b068af636db9380ccdfafcb65ae1d76770c"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -3065,13 +3071,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "2827a143d15c77a391cf7521285d50168cfda9716f2e3d9adaa01d9bfba9aba2",
-      "bytes": 2926437
+      "sha256": "d60d104430c5c0613cef5547be7807d0a07c904c6a5844e716535221269a50d9",
+      "bytes": 3022443
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "72726b7f3d29673bac64d0d42825db9fb436bbca73f6487b89427404438f2746",
-      "bytes": 905533
+      "sha256": "32270eff953a4155521ce116085151050eae2fbaa86377fdf7c079a66ffbfd5b",
+      "bytes": 935048
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

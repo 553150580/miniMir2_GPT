@@ -1320,6 +1320,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.7/4.25 图纸打造的原报价与结果"
+    },
+    {
+      "value": 40049,
+      "name": "MsgC2SWeaponOilQuote",
+      "proto_message": "WeaponOilQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.6/4.7 原武器祝福油投入与回退预览"
+    },
+    {
+      "value": 40050,
+      "name": "MsgS2CWeaponOilQuote",
+      "proto_message": "WeaponOilQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.6/4.7 原武器祝福油投入与回退预览"
+    },
+    {
+      "value": 40051,
+      "name": "MsgC2SWeaponOilCommit",
+      "proto_message": "WeaponOilCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.6/4.7 原祝福油报价的扣瓶、绑定与幸运结算"
     }
   ],
   "error_codes": [
@@ -1745,6 +1781,30 @@
       "display_zh": "图纸、黑铁矿或绑定权限不满足本次打造条件",
       "status": "draft",
       "source_ref": "最终策划案4.7/4.25",
+      "active_in_scope": true
+    },
+    {
+      "value": 3953,
+      "name": "CodeWeaponOilUnavailable",
+      "display_zh": "当前不可用祝福油",
+      "status": "draft",
+      "source_ref": "最终策划案4.6/4.7",
+      "active_in_scope": true
+    },
+    {
+      "value": 3954,
+      "name": "CodeWeaponOilQuoteChanged",
+      "display_zh": "祝福油报价或投入已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.6/4.7",
+      "active_in_scope": true
+    },
+    {
+      "value": 3955,
+      "name": "CodeWeaponOilInputs",
+      "display_zh": "武器、祝福油或绑定权限不满足本次条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.6/4.7",
       "active_in_scope": true
     }
   ]

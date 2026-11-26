@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -303,6 +303,16 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         // 仅保留最初确认的报价和操作编号，重连不会重新选择原料或重新抽样。
         const item = record(input.value, ['quoteId', 'operation']);
         payload = { quoteId: bytes16(item.quoteId, stored), operation: operation(item.operation, stored) };
+    } else if (id === 40051) {
+        // 重连只能复核已提交的原报价、原界面会话、原武器位置和绑定授权。
+        const item = record(input.value, ['quoteId', 'uiSessionId', 'weapon', 'allowBound', 'operation']);
+        const weapon = record(item.weapon, ['instanceId', 'version', 'equipped']);
+        const version = longValue(weapon.version, stored);
+        if (typeof item.allowBound !== 'boolean' || typeof weapon.equipped !== 'boolean' || !version.unsigned ||
+            version.isZero() || BigInt(version.toString()) >= 0x7fffffffffffffffn) return invalid('祝福油需要原武器位置、版本及明确授权');
+        payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
+            weapon: { instanceId: bytes16(weapon.instanceId, stored), version, equipped: weapon.equipped }, allowBound: item.allowBound,
+            operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

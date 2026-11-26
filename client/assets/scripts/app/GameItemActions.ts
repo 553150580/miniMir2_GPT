@@ -14,6 +14,7 @@ export interface ItemActionView {
     readonly lines: readonly string[];
     readonly actions: readonly ItemAction[];
     readonly options?: readonly { readonly label: string; readonly key: string; readonly enabled: boolean; readonly choose: () => void }[];
+    readonly optionsFirst?: boolean;
     readonly quantity?: { readonly value: string; readonly minus?: () => void; readonly plus?: () => void };
 }
 
@@ -58,9 +59,10 @@ export class GameItemActions {
         this.label('Message', view ? '点击背景返回' : '请返回列表重新选择');
         const description = detailLines(view?.lines ?? ['当前场景或原物品已变化']);
         const options = view?.options ?? [];
-        const key = JSON.stringify([description, options.map(option => [option.key, option.label, option.enabled])]);
+        const key = JSON.stringify([view?.optionsFirst, description, options.map(option => [option.key, option.label, option.enabled])]);
         if (key !== this.rendered) {
-            this.list.setItems([...description, ...options.map(({ key, label }) => ({ key, label }))], (node, row) => {
+            const choices = options.map(({ key, label }) => ({ key, label }));
+            this.list.setItems(view?.optionsFirst ? [...choices, ...description] : [...description, ...choices], (node, row) => {
                 node.getChildByName('Text')!.getComponent(Label)!.string = typeof row === 'string' ? row : (row as { label: string }).label;
             }, !!this.rendered);
             this.rendered = key;
@@ -80,7 +82,7 @@ export class GameItemActions {
     private chooseOption = (index: number, row: unknown): void => {
         if (this.busy || this.popup.top !== this.panel) return;
         const view = this.read?.();
-        const option = view?.options?.[index - detailLines(view.lines).length];
+        const option = view?.options?.[view.optionsFirst ? index : index - detailLines(view.lines).length];
         if (!option?.enabled || option.key !== (row as { key?: string } | undefined)?.key) return;
         option.choose();
         this.refresh();

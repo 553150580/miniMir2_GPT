@@ -51,6 +51,9 @@ import { GameItemActions } from './GameItemActions';
 import { GameForge } from './GameForge';
 import { forgeReceipt, forgeRecipeFor } from './ForgeModel';
 import type { ForgeReceipt, ForgeSnapshot } from './ForgeModel';
+import { GameWeaponOil } from './GameWeaponOil';
+import { weaponOilItemId, weaponOilReceipt } from './WeaponOilModel';
+import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { inventoryItemActionView } from './InventoryItemActions';
 import { GameRoleEquipment } from './GameRoleEquipment';
 import { npcShopForRole, npcShopSnapshot } from './NpcShopCatalog';
@@ -71,7 +74,7 @@ import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
 import { inventoryCapacityText } from './InventoryDisplay';
 import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
-import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentDurabilityText, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
+import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentCurrentLuck, equipmentDetailLines, equipmentDurabilityText, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
@@ -126,6 +129,7 @@ export class AppRoot extends Component {
     private combatStatus?: GameCombatStatus;
     private itemActions?: GameItemActions;
     private forge?: GameForge;
+    private weaponOil?: GameWeaponOil;
     private roleEquipment?: GameRoleEquipment;
     private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
@@ -516,6 +520,10 @@ export class AppRoot extends Component {
             current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(40046, request), submit: quoteId => this.economic(40048, { quoteId }) });
+        this.weaponOil = new GameWeaponOil({ snapshot: () => this.weaponOilSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
+            confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
+            quote: request => session.connection.request(40049, request), submit: request => this.economic(40051, request) });
         this.roleEquipment = new GameRoleEquipment(this.find('UIMgr/Panels/Role'));
         this.cleanups.push(() => this.itemActions?.dispose());
         if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
@@ -1497,6 +1505,7 @@ export class AppRoot extends Component {
             const mining = session.entry?.sceneKind === miningSceneKind ? this.mining : undefined;
             const forge = this.forge, forgeSnapshot = definition?.kind === 'forge_blueprint' ? this.forgeSnapshot() : null;
             const recipe = forgeSnapshot && forgeRecipeFor(forgeSnapshot, item.itemId);
+            const oil = definition?.kind === 'equipment' && definition.equip_slot === 0 ? this.weaponOilSnapshot() : null;
             return inventoryItemActionView({ item, definition, ready: !blockedReason, blockedReason, equipment: this.equipmentSnapshot(),
                 assets: this.skillAssetsSnapshot(), supply: gameplay.casting_supply, skill, playerAlive: !!player && player.hp.toString() !== '0',
                 miningReason: mining?.toolBlock, forgeReason: forgeSnapshot?.blocked ? '目前不能使用此图纸' : '' }, {
@@ -1506,6 +1515,7 @@ export class AppRoot extends Component {
                 recycleBook: () => this.previewPreparedSkillAsset(prepareBookRecycle(this.skillAssetsSnapshot(), item)),
                 mine: mining ? () => mining.useTool(new Uint8Array(item.instanceId)) : undefined,
                 forge: forge && recipe ? () => forge.open(item) : undefined,
+                weaponOil: oil && !oil.blocked && this.weaponOil ? () => this.weaponOil!.open({ instanceId: item.instanceId, equipped: false }) : undefined,
             });
         });
     }
@@ -1522,6 +1532,20 @@ export class AppRoot extends Component {
             items: inventory.items, catalog: gameplay.items, recipes: gameplay.forge_recipes, blocked };
     }
 
+    // 培养会话绑定当前附着及下层面板，覆盖确认窗不改变两者。
+    private weaponOilSnapshot(): WeaponOilSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, gameplay = this.world?.gameplay;
+        const parent = this.ui?.top?.name, oilItemId = weaponOilItemId(gameplay?.luck_oil);
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory ||
+            (parent !== 'Role' && parent !== 'Inventory') || !oilItemId || !Array.isArray(gameplay?.items)) return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || entry.sceneKind === 4 || entry.sceneKind === 5 ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: `${attachmentKey(identity)}:${parent}`, role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision,
+            items: inventory.items, equipped: inventory.equipped, catalog: gameplay.items, oilItemId, blocked };
+    }
+
     private selectEquippedSlot(slot: number): void {
         const entry = session.inventory?.equipped.find((value: EquippedSelection) => value.slot === slot);
         if (!session.ready || !entry || this.ui?.top?.name !== 'Role') return;
@@ -1529,6 +1553,19 @@ export class AppRoot extends Component {
         this.selectedEquipped = entry;
         this.refreshInventoryContext();
         const definition = this.world?.gameplay.items.find((row: any) => row.item_id === entry.item.itemId);
+        if (slot === 0 && definition?.kind === 'equipment' && this.weaponOilSnapshot() && this.weaponOil && this.itemActions) {
+            this.itemActions.open(() => {
+                const snapshot = this.weaponOilSnapshot();
+                if (!snapshot || !scope || !isCurrentEntry(scope)) return null;
+                const current = session.inventory?.equipped.find((value: EquippedSelection) =>
+                    value.slot === slot && recycleItemKey(value.item.instanceId) === key)?.item;
+                if (!current) return null;
+                return { title: definition.name, lines: equipmentDetailLines(definition, current, session.inventory?.level, session.role?.job, true),
+                    actions: [{ label: '祝福油培养', enabled: !snapshot.blocked,
+                        run: () => this.weaponOil!.open({ instanceId: current.instanceId, equipped: true }) }] };
+            });
+            return;
+        }
         if (definition?.kind === 'equipment' && this.combatStatus) {
             this.combatStatus.showLiveDetails(definition.name, () => {
                 if (this.disposed || !scope || !isCurrentEntry(scope)) return null;
@@ -2095,6 +2132,7 @@ export class AppRoot extends Component {
         let marketReceipt: ItemMarketReceipt | undefined;
         let goldMarketReceipt: GoldMarketReceipt | undefined;
         let forged: ForgeReceipt | undefined;
+        let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
         if (!result.errorCode) try {
             if (pending.id === 40007) hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest);
             if (pending.id === 40037) cardPurchase = validateRoleCardPurchaseReceipt(result.roleCardPurchase, pending.value as unknown as RoleCardBuyRequest);
@@ -2104,6 +2142,10 @@ export class AppRoot extends Component {
             if (pending.id === 40048) {
                 const quoteId = pending.value.quoteId as Uint8Array;
                 forged = this.forge?.reconcile(quoteId, result.forge) ?? forgeReceipt(quoteId, result.forge);
+            }
+            if (pending.id === 40051) {
+                const request = pending.value as unknown as WeaponOilCommitRequest;
+                oiled = { request, result: this.weaponOil?.reconcile(request, result.weaponOil) ?? weaponOilReceipt(request, result.weaponOil) };
             }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
@@ -2122,6 +2164,11 @@ export class AppRoot extends Component {
         if (forged) {
             this.forge?.accept(role, forged);
             this.status(forged.success ? '打造成功，装备已入包' : '打造未成功，原图纸已保留');
+            return;
+        }
+        if (oiled) {
+            this.weaponOil?.accept(role, oiled.request, oiled.result);
+            this.status(`祝福油已结算，原武器幸运+${equipmentCurrentLuck(oiled.result.weapon)}`);
             return;
         }
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();

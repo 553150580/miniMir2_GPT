@@ -97,167 +97,6 @@ func (x *WalletState) GetRevision() uint64 {
 	return 0
 }
 
-type ItemView struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	InstanceId []byte                 `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	ItemId     uint32                 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
-	Quantity   int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	Bound      bool                   `protobuf:"varint,4,opt,name=bound,proto3" json:"bound,omitempty"`
-	Version    uint64                 `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
-	// 来源与品质属于物品实例，旧实例空来源保持未知，不反推成掉落。
-	SourceKind string `protobuf:"bytes,6,opt,name=source_kind,json=sourceKind,proto3" json:"source_kind,omitempty"`
-	SourceId   string `protobuf:"bytes,7,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
-	Quality    uint32 `protobuf:"varint,8,opt,name=quality,proto3" json:"quality,omitempty"`
-	Locked     bool   `protobuf:"varint,9,opt,name=locked,proto3" json:"locked,omitempty"`
-	// 强保护位：1锁定，2未确认培养结果，4资产占用，8穿戴中；客户端不可覆盖。
-	RecycleBlockFlags uint32 `protobuf:"varint,10,opt,name=recycle_block_flags,json=recycleBlockFlags,proto3" json:"recycle_block_flags,omitempty"`
-	// 1/1000显示单位；原始上限为非零时才有耐久，当前值0表示损坏。
-	DurabilityU         uint64 `protobuf:"varint,11,opt,name=durability_u,json=durabilityU,proto3" json:"durability_u,omitempty"`
-	MaxDurabilityU      uint64 `protobuf:"varint,12,opt,name=max_durability_u,json=maxDurabilityU,proto3" json:"max_durability_u,omitempty"`
-	OriginalDurabilityU uint64 `protobuf:"varint,13,opt,name=original_durability_u,json=originalDurabilityU,proto3" json:"original_durability_u,omitempty"`
-	// 原矿石实例纯度1–100；0表示该物品没有矿石纯度。
-	OrePurity uint32 `protobuf:"varint,14,opt,name=ore_purity,json=orePurity,proto3" json:"ore_purity,omitempty"`
-	// 装备实例的初始幸运；未触发时为零，后续幸运培养使用独立字段。
-	InitialLuck   uint32 `protobuf:"varint,15,opt,name=initial_luck,json=initialLuck,proto3" json:"initial_luck,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ItemView) Reset() {
-	*x = ItemView{}
-	mi := &file_assets_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ItemView) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ItemView) ProtoMessage() {}
-
-func (x *ItemView) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ItemView.ProtoReflect.Descriptor instead.
-func (*ItemView) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ItemView) GetInstanceId() []byte {
-	if x != nil {
-		return x.InstanceId
-	}
-	return nil
-}
-
-func (x *ItemView) GetItemId() uint32 {
-	if x != nil {
-		return x.ItemId
-	}
-	return 0
-}
-
-func (x *ItemView) GetQuantity() int64 {
-	if x != nil {
-		return x.Quantity
-	}
-	return 0
-}
-
-func (x *ItemView) GetBound() bool {
-	if x != nil {
-		return x.Bound
-	}
-	return false
-}
-
-func (x *ItemView) GetVersion() uint64 {
-	if x != nil {
-		return x.Version
-	}
-	return 0
-}
-
-func (x *ItemView) GetSourceKind() string {
-	if x != nil {
-		return x.SourceKind
-	}
-	return ""
-}
-
-func (x *ItemView) GetSourceId() string {
-	if x != nil {
-		return x.SourceId
-	}
-	return ""
-}
-
-func (x *ItemView) GetQuality() uint32 {
-	if x != nil {
-		return x.Quality
-	}
-	return 0
-}
-
-func (x *ItemView) GetLocked() bool {
-	if x != nil {
-		return x.Locked
-	}
-	return false
-}
-
-func (x *ItemView) GetRecycleBlockFlags() uint32 {
-	if x != nil {
-		return x.RecycleBlockFlags
-	}
-	return 0
-}
-
-func (x *ItemView) GetDurabilityU() uint64 {
-	if x != nil {
-		return x.DurabilityU
-	}
-	return 0
-}
-
-func (x *ItemView) GetMaxDurabilityU() uint64 {
-	if x != nil {
-		return x.MaxDurabilityU
-	}
-	return 0
-}
-
-func (x *ItemView) GetOriginalDurabilityU() uint64 {
-	if x != nil {
-		return x.OriginalDurabilityU
-	}
-	return 0
-}
-
-func (x *ItemView) GetOrePurity() uint32 {
-	if x != nil {
-		return x.OrePurity
-	}
-	return 0
-}
-
-func (x *ItemView) GetInitialLuck() uint32 {
-	if x != nil {
-		return x.InitialLuck
-	}
-	return 0
-}
-
 type EquippedItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Slot          uint32                 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
@@ -268,7 +107,7 @@ type EquippedItem struct {
 
 func (x *EquippedItem) Reset() {
 	*x = EquippedItem{}
-	mi := &file_assets_proto_msgTypes[2]
+	mi := &file_assets_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -280,7 +119,7 @@ func (x *EquippedItem) String() string {
 func (*EquippedItem) ProtoMessage() {}
 
 func (x *EquippedItem) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[2]
+	mi := &file_assets_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -293,7 +132,7 @@ func (x *EquippedItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EquippedItem.ProtoReflect.Descriptor instead.
 func (*EquippedItem) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{2}
+	return file_assets_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *EquippedItem) GetSlot() uint32 {
@@ -321,7 +160,7 @@ type LearnedSkill struct {
 
 func (x *LearnedSkill) Reset() {
 	*x = LearnedSkill{}
-	mi := &file_assets_proto_msgTypes[3]
+	mi := &file_assets_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -333,7 +172,7 @@ func (x *LearnedSkill) String() string {
 func (*LearnedSkill) ProtoMessage() {}
 
 func (x *LearnedSkill) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[3]
+	mi := &file_assets_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -346,7 +185,7 @@ func (x *LearnedSkill) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LearnedSkill.ProtoReflect.Descriptor instead.
 func (*LearnedSkill) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{3}
+	return file_assets_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *LearnedSkill) GetSkillId() uint32 {
@@ -382,7 +221,7 @@ type InventoryResult struct {
 
 func (x *InventoryResult) Reset() {
 	*x = InventoryResult{}
-	mi := &file_assets_proto_msgTypes[4]
+	mi := &file_assets_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -394,7 +233,7 @@ func (x *InventoryResult) String() string {
 func (*InventoryResult) ProtoMessage() {}
 
 func (x *InventoryResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[4]
+	mi := &file_assets_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -407,7 +246,7 @@ func (x *InventoryResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InventoryResult.ProtoReflect.Descriptor instead.
 func (*InventoryResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{4}
+	return file_assets_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *InventoryResult) GetItems() []*ItemView {
@@ -492,7 +331,7 @@ type SetSkillSlotsRequest struct {
 
 func (x *SetSkillSlotsRequest) Reset() {
 	*x = SetSkillSlotsRequest{}
-	mi := &file_assets_proto_msgTypes[5]
+	mi := &file_assets_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -504,7 +343,7 @@ func (x *SetSkillSlotsRequest) String() string {
 func (*SetSkillSlotsRequest) ProtoMessage() {}
 
 func (x *SetSkillSlotsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[5]
+	mi := &file_assets_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -517,7 +356,7 @@ func (x *SetSkillSlotsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetSkillSlotsRequest.ProtoReflect.Descriptor instead.
 func (*SetSkillSlotsRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{5}
+	return file_assets_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *SetSkillSlotsRequest) GetSkillSlotIds() []uint32 {
@@ -562,7 +401,7 @@ type ProgressionState struct {
 
 func (x *ProgressionState) Reset() {
 	*x = ProgressionState{}
-	mi := &file_assets_proto_msgTypes[6]
+	mi := &file_assets_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -574,7 +413,7 @@ func (x *ProgressionState) String() string {
 func (*ProgressionState) ProtoMessage() {}
 
 func (x *ProgressionState) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[6]
+	mi := &file_assets_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -587,7 +426,7 @@ func (x *ProgressionState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProgressionState.ProtoReflect.Descriptor instead.
 func (*ProgressionState) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{6}
+	return file_assets_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ProgressionState) GetFormatVersion() uint32 {
@@ -698,7 +537,7 @@ type ExperienceGrantResult struct {
 
 func (x *ExperienceGrantResult) Reset() {
 	*x = ExperienceGrantResult{}
-	mi := &file_assets_proto_msgTypes[7]
+	mi := &file_assets_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -710,7 +549,7 @@ func (x *ExperienceGrantResult) String() string {
 func (*ExperienceGrantResult) ProtoMessage() {}
 
 func (x *ExperienceGrantResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[7]
+	mi := &file_assets_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -723,7 +562,7 @@ func (x *ExperienceGrantResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExperienceGrantResult.ProtoReflect.Descriptor instead.
 func (*ExperienceGrantResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{7}
+	return file_assets_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ExperienceGrantResult) GetRole() *RoleKey {
@@ -848,7 +687,7 @@ type AutoRecyclePolicy struct {
 
 func (x *AutoRecyclePolicy) Reset() {
 	*x = AutoRecyclePolicy{}
-	mi := &file_assets_proto_msgTypes[8]
+	mi := &file_assets_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -860,7 +699,7 @@ func (x *AutoRecyclePolicy) String() string {
 func (*AutoRecyclePolicy) ProtoMessage() {}
 
 func (x *AutoRecyclePolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[8]
+	mi := &file_assets_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -873,7 +712,7 @@ func (x *AutoRecyclePolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AutoRecyclePolicy.ProtoReflect.Descriptor instead.
 func (*AutoRecyclePolicy) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{8}
+	return file_assets_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AutoRecyclePolicy) GetEnabled() bool {
@@ -937,7 +776,7 @@ type SetAutoRecycleRequest struct {
 
 func (x *SetAutoRecycleRequest) Reset() {
 	*x = SetAutoRecycleRequest{}
-	mi := &file_assets_proto_msgTypes[9]
+	mi := &file_assets_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -949,7 +788,7 @@ func (x *SetAutoRecycleRequest) String() string {
 func (*SetAutoRecycleRequest) ProtoMessage() {}
 
 func (x *SetAutoRecycleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[9]
+	mi := &file_assets_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -962,7 +801,7 @@ func (x *SetAutoRecycleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAutoRecycleRequest.ProtoReflect.Descriptor instead.
 func (*SetAutoRecycleRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{9}
+	return file_assets_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *SetAutoRecycleRequest) GetPolicy() *AutoRecyclePolicy {
@@ -998,7 +837,7 @@ type SetItemLockRequest struct {
 
 func (x *SetItemLockRequest) Reset() {
 	*x = SetItemLockRequest{}
-	mi := &file_assets_proto_msgTypes[10]
+	mi := &file_assets_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1010,7 +849,7 @@ func (x *SetItemLockRequest) String() string {
 func (*SetItemLockRequest) ProtoMessage() {}
 
 func (x *SetItemLockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[10]
+	mi := &file_assets_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1023,7 +862,7 @@ func (x *SetItemLockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetItemLockRequest.ProtoReflect.Descriptor instead.
 func (*SetItemLockRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{10}
+	return file_assets_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *SetItemLockRequest) GetItemInstanceId() []byte {
@@ -1075,7 +914,7 @@ type EquipmentRecycleResult struct {
 
 func (x *EquipmentRecycleResult) Reset() {
 	*x = EquipmentRecycleResult{}
-	mi := &file_assets_proto_msgTypes[11]
+	mi := &file_assets_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1087,7 +926,7 @@ func (x *EquipmentRecycleResult) String() string {
 func (*EquipmentRecycleResult) ProtoMessage() {}
 
 func (x *EquipmentRecycleResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[11]
+	mi := &file_assets_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1100,7 +939,7 @@ func (x *EquipmentRecycleResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EquipmentRecycleResult.ProtoReflect.Descriptor instead.
 func (*EquipmentRecycleResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{11}
+	return file_assets_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *EquipmentRecycleResult) GetRole() *RoleKey {
@@ -1195,7 +1034,7 @@ type EquipRequest struct {
 
 func (x *EquipRequest) Reset() {
 	*x = EquipRequest{}
-	mi := &file_assets_proto_msgTypes[12]
+	mi := &file_assets_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1207,7 +1046,7 @@ func (x *EquipRequest) String() string {
 func (*EquipRequest) ProtoMessage() {}
 
 func (x *EquipRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[12]
+	mi := &file_assets_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1220,7 +1059,7 @@ func (x *EquipRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EquipRequest.ProtoReflect.Descriptor instead.
 func (*EquipRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{12}
+	return file_assets_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *EquipRequest) GetItemInstanceId() []byte {
@@ -1268,7 +1107,7 @@ type RecycleRequest struct {
 
 func (x *RecycleRequest) Reset() {
 	*x = RecycleRequest{}
-	mi := &file_assets_proto_msgTypes[13]
+	mi := &file_assets_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1280,7 +1119,7 @@ func (x *RecycleRequest) String() string {
 func (*RecycleRequest) ProtoMessage() {}
 
 func (x *RecycleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[13]
+	mi := &file_assets_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1293,7 +1132,7 @@ func (x *RecycleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RecycleRequest.ProtoReflect.Descriptor instead.
 func (*RecycleRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{13}
+	return file_assets_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RecycleRequest) GetItemInstanceIds() [][]byte {
@@ -1323,7 +1162,7 @@ type UseItemRequest struct {
 
 func (x *UseItemRequest) Reset() {
 	*x = UseItemRequest{}
-	mi := &file_assets_proto_msgTypes[14]
+	mi := &file_assets_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1335,7 +1174,7 @@ func (x *UseItemRequest) String() string {
 func (*UseItemRequest) ProtoMessage() {}
 
 func (x *UseItemRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[14]
+	mi := &file_assets_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1348,7 +1187,7 @@ func (x *UseItemRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UseItemRequest.ProtoReflect.Descriptor instead.
 func (*UseItemRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{14}
+	return file_assets_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UseItemRequest) GetItemInstanceId() []byte {
@@ -1390,7 +1229,7 @@ type LearnSkillRequest struct {
 
 func (x *LearnSkillRequest) Reset() {
 	*x = LearnSkillRequest{}
-	mi := &file_assets_proto_msgTypes[15]
+	mi := &file_assets_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1402,7 +1241,7 @@ func (x *LearnSkillRequest) String() string {
 func (*LearnSkillRequest) ProtoMessage() {}
 
 func (x *LearnSkillRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[15]
+	mi := &file_assets_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1415,7 +1254,7 @@ func (x *LearnSkillRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LearnSkillRequest.ProtoReflect.Descriptor instead.
 func (*LearnSkillRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{15}
+	return file_assets_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *LearnSkillRequest) GetItemInstanceId() []byte {
@@ -1452,7 +1291,7 @@ type SetCastingSupplyRequest struct {
 
 func (x *SetCastingSupplyRequest) Reset() {
 	*x = SetCastingSupplyRequest{}
-	mi := &file_assets_proto_msgTypes[16]
+	mi := &file_assets_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1464,7 +1303,7 @@ func (x *SetCastingSupplyRequest) String() string {
 func (*SetCastingSupplyRequest) ProtoMessage() {}
 
 func (x *SetCastingSupplyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[16]
+	mi := &file_assets_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1477,7 +1316,7 @@ func (x *SetCastingSupplyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetCastingSupplyRequest.ProtoReflect.Descriptor instead.
 func (*SetCastingSupplyRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{16}
+	return file_assets_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *SetCastingSupplyRequest) GetItemInstanceId() []byte {
@@ -1527,7 +1366,7 @@ type CastWithMaterialRequest struct {
 
 func (x *CastWithMaterialRequest) Reset() {
 	*x = CastWithMaterialRequest{}
-	mi := &file_assets_proto_msgTypes[17]
+	mi := &file_assets_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1539,7 +1378,7 @@ func (x *CastWithMaterialRequest) String() string {
 func (*CastWithMaterialRequest) ProtoMessage() {}
 
 func (x *CastWithMaterialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[17]
+	mi := &file_assets_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1552,7 +1391,7 @@ func (x *CastWithMaterialRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CastWithMaterialRequest.ProtoReflect.Descriptor instead.
 func (*CastWithMaterialRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{17}
+	return file_assets_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CastWithMaterialRequest) GetSceneEpoch() uint64 {
@@ -1636,7 +1475,7 @@ type ItemConsumption struct {
 
 func (x *ItemConsumption) Reset() {
 	*x = ItemConsumption{}
-	mi := &file_assets_proto_msgTypes[18]
+	mi := &file_assets_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1648,7 +1487,7 @@ func (x *ItemConsumption) String() string {
 func (*ItemConsumption) ProtoMessage() {}
 
 func (x *ItemConsumption) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[18]
+	mi := &file_assets_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1661,7 +1500,7 @@ func (x *ItemConsumption) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ItemConsumption.ProtoReflect.Descriptor instead.
 func (*ItemConsumption) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{18}
+	return file_assets_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ItemConsumption) GetInstanceId() []byte {
@@ -1700,7 +1539,7 @@ type SkillAssetPreviewRequest struct {
 
 func (x *SkillAssetPreviewRequest) Reset() {
 	*x = SkillAssetPreviewRequest{}
-	mi := &file_assets_proto_msgTypes[19]
+	mi := &file_assets_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1712,7 +1551,7 @@ func (x *SkillAssetPreviewRequest) String() string {
 func (*SkillAssetPreviewRequest) ProtoMessage() {}
 
 func (x *SkillAssetPreviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[19]
+	mi := &file_assets_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1725,7 +1564,7 @@ func (x *SkillAssetPreviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillAssetPreviewRequest.ProtoReflect.Descriptor instead.
 func (*SkillAssetPreviewRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{19}
+	return file_assets_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *SkillAssetPreviewRequest) GetKind() uint32 {
@@ -1773,7 +1612,7 @@ type SkillMaterialView struct {
 
 func (x *SkillMaterialView) Reset() {
 	*x = SkillMaterialView{}
-	mi := &file_assets_proto_msgTypes[20]
+	mi := &file_assets_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1785,7 +1624,7 @@ func (x *SkillMaterialView) String() string {
 func (*SkillMaterialView) ProtoMessage() {}
 
 func (x *SkillMaterialView) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[20]
+	mi := &file_assets_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1798,7 +1637,7 @@ func (x *SkillMaterialView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillMaterialView.ProtoReflect.Descriptor instead.
 func (*SkillMaterialView) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{20}
+	return file_assets_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *SkillMaterialView) GetItem() *ItemView {
@@ -1829,7 +1668,7 @@ type SkillNumericComparison struct {
 
 func (x *SkillNumericComparison) Reset() {
 	*x = SkillNumericComparison{}
-	mi := &file_assets_proto_msgTypes[21]
+	mi := &file_assets_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1841,7 +1680,7 @@ func (x *SkillNumericComparison) String() string {
 func (*SkillNumericComparison) ProtoMessage() {}
 
 func (x *SkillNumericComparison) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[21]
+	mi := &file_assets_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1854,7 +1693,7 @@ func (x *SkillNumericComparison) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillNumericComparison.ProtoReflect.Descriptor instead.
 func (*SkillNumericComparison) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{21}
+	return file_assets_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *SkillNumericComparison) GetKey() string {
@@ -1915,7 +1754,7 @@ type SkillAssetPreview struct {
 
 func (x *SkillAssetPreview) Reset() {
 	*x = SkillAssetPreview{}
-	mi := &file_assets_proto_msgTypes[22]
+	mi := &file_assets_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1927,7 +1766,7 @@ func (x *SkillAssetPreview) String() string {
 func (*SkillAssetPreview) ProtoMessage() {}
 
 func (x *SkillAssetPreview) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[22]
+	mi := &file_assets_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1940,7 +1779,7 @@ func (x *SkillAssetPreview) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillAssetPreview.ProtoReflect.Descriptor instead.
 func (*SkillAssetPreview) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{22}
+	return file_assets_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SkillAssetPreview) GetPreviewId() []byte {
@@ -2058,7 +1897,7 @@ type SkillAssetCommitRequest struct {
 
 func (x *SkillAssetCommitRequest) Reset() {
 	*x = SkillAssetCommitRequest{}
-	mi := &file_assets_proto_msgTypes[23]
+	mi := &file_assets_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2070,7 +1909,7 @@ func (x *SkillAssetCommitRequest) String() string {
 func (*SkillAssetCommitRequest) ProtoMessage() {}
 
 func (x *SkillAssetCommitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[23]
+	mi := &file_assets_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2083,7 +1922,7 @@ func (x *SkillAssetCommitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillAssetCommitRequest.ProtoReflect.Descriptor instead.
 func (*SkillAssetCommitRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{23}
+	return file_assets_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *SkillAssetCommitRequest) GetPreviewId() []byte {
@@ -2110,7 +1949,7 @@ type ClaimHostingTimeRequest struct {
 
 func (x *ClaimHostingTimeRequest) Reset() {
 	*x = ClaimHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[24]
+	mi := &file_assets_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2122,7 +1961,7 @@ func (x *ClaimHostingTimeRequest) String() string {
 func (*ClaimHostingTimeRequest) ProtoMessage() {}
 
 func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[24]
+	mi := &file_assets_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2135,7 +1974,7 @@ func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*ClaimHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{24}
+	return file_assets_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ClaimHostingTimeRequest) GetBenefitKind() uint32 {
@@ -2163,7 +2002,7 @@ type HostingQuoteRequest struct {
 
 func (x *HostingQuoteRequest) Reset() {
 	*x = HostingQuoteRequest{}
-	mi := &file_assets_proto_msgTypes[25]
+	mi := &file_assets_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2175,7 +2014,7 @@ func (x *HostingQuoteRequest) String() string {
 func (*HostingQuoteRequest) ProtoMessage() {}
 
 func (x *HostingQuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[25]
+	mi := &file_assets_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2188,7 +2027,7 @@ func (x *HostingQuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingQuoteRequest.ProtoReflect.Descriptor instead.
 func (*HostingQuoteRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{25}
+	return file_assets_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *HostingQuoteRequest) GetSceneEpoch() uint64 {
@@ -2216,7 +2055,7 @@ type BuyHostingTimeRequest struct {
 
 func (x *BuyHostingTimeRequest) Reset() {
 	*x = BuyHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[26]
+	mi := &file_assets_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2228,7 +2067,7 @@ func (x *BuyHostingTimeRequest) String() string {
 func (*BuyHostingTimeRequest) ProtoMessage() {}
 
 func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[26]
+	mi := &file_assets_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2241,7 +2080,7 @@ func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuyHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*BuyHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{26}
+	return file_assets_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *BuyHostingTimeRequest) GetRequestedSeconds() uint32 {
@@ -2296,7 +2135,7 @@ type HostingReport struct {
 
 func (x *HostingReport) Reset() {
 	*x = HostingReport{}
-	mi := &file_assets_proto_msgTypes[27]
+	mi := &file_assets_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2308,7 +2147,7 @@ func (x *HostingReport) String() string {
 func (*HostingReport) ProtoMessage() {}
 
 func (x *HostingReport) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[27]
+	mi := &file_assets_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2321,7 +2160,7 @@ func (x *HostingReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingReport.ProtoReflect.Descriptor instead.
 func (*HostingReport) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{27}
+	return file_assets_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *HostingReport) GetHostingSessionId() []byte {
@@ -2477,7 +2316,7 @@ type WarehouseQuery struct {
 
 func (x *WarehouseQuery) Reset() {
 	*x = WarehouseQuery{}
-	mi := &file_assets_proto_msgTypes[28]
+	mi := &file_assets_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2489,7 +2328,7 @@ func (x *WarehouseQuery) String() string {
 func (*WarehouseQuery) ProtoMessage() {}
 
 func (x *WarehouseQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[28]
+	mi := &file_assets_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2502,7 +2341,7 @@ func (x *WarehouseQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseQuery.ProtoReflect.Descriptor instead.
 func (*WarehouseQuery) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{28}
+	return file_assets_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *WarehouseQuery) GetScope() uint32 {
@@ -2536,7 +2375,7 @@ type WarehouseItem struct {
 
 func (x *WarehouseItem) Reset() {
 	*x = WarehouseItem{}
-	mi := &file_assets_proto_msgTypes[29]
+	mi := &file_assets_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2548,7 +2387,7 @@ func (x *WarehouseItem) String() string {
 func (*WarehouseItem) ProtoMessage() {}
 
 func (x *WarehouseItem) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[29]
+	mi := &file_assets_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2561,7 +2400,7 @@ func (x *WarehouseItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseItem.ProtoReflect.Descriptor instead.
 func (*WarehouseItem) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{29}
+	return file_assets_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *WarehouseItem) GetSlot() uint64 {
@@ -2595,7 +2434,7 @@ type WarehousePage struct {
 
 func (x *WarehousePage) Reset() {
 	*x = WarehousePage{}
-	mi := &file_assets_proto_msgTypes[30]
+	mi := &file_assets_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2607,7 +2446,7 @@ func (x *WarehousePage) String() string {
 func (*WarehousePage) ProtoMessage() {}
 
 func (x *WarehousePage) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[30]
+	mi := &file_assets_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2620,7 +2459,7 @@ func (x *WarehousePage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehousePage.ProtoReflect.Descriptor instead.
 func (*WarehousePage) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{30}
+	return file_assets_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *WarehousePage) GetRole() *RoleKey {
@@ -2706,7 +2545,7 @@ type WarehouseAction struct {
 
 func (x *WarehouseAction) Reset() {
 	*x = WarehouseAction{}
-	mi := &file_assets_proto_msgTypes[31]
+	mi := &file_assets_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2718,7 +2557,7 @@ func (x *WarehouseAction) String() string {
 func (*WarehouseAction) ProtoMessage() {}
 
 func (x *WarehouseAction) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[31]
+	mi := &file_assets_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2731,7 +2570,7 @@ func (x *WarehouseAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseAction.ProtoReflect.Descriptor instead.
 func (*WarehouseAction) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{31}
+	return file_assets_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *WarehouseAction) GetScope() uint32 {
@@ -2815,7 +2654,7 @@ type WarehouseItemChange struct {
 
 func (x *WarehouseItemChange) Reset() {
 	*x = WarehouseItemChange{}
-	mi := &file_assets_proto_msgTypes[32]
+	mi := &file_assets_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2827,7 +2666,7 @@ func (x *WarehouseItemChange) String() string {
 func (*WarehouseItemChange) ProtoMessage() {}
 
 func (x *WarehouseItemChange) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[32]
+	mi := &file_assets_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2840,7 +2679,7 @@ func (x *WarehouseItemChange) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseItemChange.ProtoReflect.Descriptor instead.
 func (*WarehouseItemChange) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{32}
+	return file_assets_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *WarehouseItemChange) GetSlot() uint64 {
@@ -2884,7 +2723,7 @@ type WarehouseActionResult struct {
 
 func (x *WarehouseActionResult) Reset() {
 	*x = WarehouseActionResult{}
-	mi := &file_assets_proto_msgTypes[33]
+	mi := &file_assets_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2896,7 +2735,7 @@ func (x *WarehouseActionResult) String() string {
 func (*WarehouseActionResult) ProtoMessage() {}
 
 func (x *WarehouseActionResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[33]
+	mi := &file_assets_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2909,7 +2748,7 @@ func (x *WarehouseActionResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseActionResult.ProtoReflect.Descriptor instead.
 func (*WarehouseActionResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{33}
+	return file_assets_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *WarehouseActionResult) GetRole() *RoleKey {
@@ -2998,7 +2837,7 @@ type VendorQuoteRequest struct {
 
 func (x *VendorQuoteRequest) Reset() {
 	*x = VendorQuoteRequest{}
-	mi := &file_assets_proto_msgTypes[34]
+	mi := &file_assets_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3010,7 +2849,7 @@ func (x *VendorQuoteRequest) String() string {
 func (*VendorQuoteRequest) ProtoMessage() {}
 
 func (x *VendorQuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[34]
+	mi := &file_assets_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3023,7 +2862,7 @@ func (x *VendorQuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorQuoteRequest.ProtoReflect.Descriptor instead.
 func (*VendorQuoteRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{34}
+	return file_assets_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *VendorQuoteRequest) GetSceneEpoch() uint64 {
@@ -3105,7 +2944,7 @@ type VendorQuoteResult struct {
 
 func (x *VendorQuoteResult) Reset() {
 	*x = VendorQuoteResult{}
-	mi := &file_assets_proto_msgTypes[35]
+	mi := &file_assets_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3117,7 +2956,7 @@ func (x *VendorQuoteResult) String() string {
 func (*VendorQuoteResult) ProtoMessage() {}
 
 func (x *VendorQuoteResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[35]
+	mi := &file_assets_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3130,7 +2969,7 @@ func (x *VendorQuoteResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorQuoteResult.ProtoReflect.Descriptor instead.
 func (*VendorQuoteResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{35}
+	return file_assets_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *VendorQuoteResult) GetQuoteId() []byte {
@@ -3292,7 +3131,7 @@ type VendorCommitRequest struct {
 
 func (x *VendorCommitRequest) Reset() {
 	*x = VendorCommitRequest{}
-	mi := &file_assets_proto_msgTypes[36]
+	mi := &file_assets_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3304,7 +3143,7 @@ func (x *VendorCommitRequest) String() string {
 func (*VendorCommitRequest) ProtoMessage() {}
 
 func (x *VendorCommitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[36]
+	mi := &file_assets_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3317,7 +3156,7 @@ func (x *VendorCommitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorCommitRequest.ProtoReflect.Descriptor instead.
 func (*VendorCommitRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{36}
+	return file_assets_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *VendorCommitRequest) GetOperation() *OperationContext {
@@ -3353,34 +3192,14 @@ var File_assets_proto protoreflect.FileDescriptor
 const file_assets_proto_rawDesc = "" +
 	"\n" +
 	"\fassets.proto\x12\n" +
-	"minimir.v1\x1a\fcommon.proto\"\xb1\x01\n" +
+	"minimir.v1\x1a\fcommon.proto\x1a\x0fitem_view.proto\"\xb1\x01\n" +
 	"\vWalletState\x12\x12\n" +
 	"\x04gold\x18\x01 \x01(\x03R\x04gold\x12\x1d\n" +
 	"\n" +
 	"bound_gold\x18\x02 \x01(\x03R\tboundGold\x12#\n" +
 	"\ryuanbao_units\x18\x03 \x01(\x03R\fyuanbaoUnits\x12.\n" +
 	"\x13bound_yuanbao_units\x18\x04 \x01(\x03R\x11boundYuanbaoUnits\x12\x1a\n" +
-	"\brevision\x18\x05 \x01(\x04R\brevision\"\xf3\x03\n" +
-	"\bItemView\x12\x1f\n" +
-	"\vinstance_id\x18\x01 \x01(\fR\n" +
-	"instanceId\x12\x17\n" +
-	"\aitem_id\x18\x02 \x01(\rR\x06itemId\x12\x1a\n" +
-	"\bquantity\x18\x03 \x01(\x03R\bquantity\x12\x14\n" +
-	"\x05bound\x18\x04 \x01(\bR\x05bound\x12\x18\n" +
-	"\aversion\x18\x05 \x01(\x04R\aversion\x12\x1f\n" +
-	"\vsource_kind\x18\x06 \x01(\tR\n" +
-	"sourceKind\x12\x1b\n" +
-	"\tsource_id\x18\a \x01(\tR\bsourceId\x12\x18\n" +
-	"\aquality\x18\b \x01(\rR\aquality\x12\x16\n" +
-	"\x06locked\x18\t \x01(\bR\x06locked\x12.\n" +
-	"\x13recycle_block_flags\x18\n" +
-	" \x01(\rR\x11recycleBlockFlags\x12!\n" +
-	"\fdurability_u\x18\v \x01(\x04R\vdurabilityU\x12(\n" +
-	"\x10max_durability_u\x18\f \x01(\x04R\x0emaxDurabilityU\x122\n" +
-	"\x15original_durability_u\x18\r \x01(\x04R\x13originalDurabilityU\x12\x1d\n" +
-	"\n" +
-	"ore_purity\x18\x0e \x01(\rR\torePurity\x12!\n" +
-	"\finitial_luck\x18\x0f \x01(\rR\vinitialLuck\"L\n" +
+	"\brevision\x18\x05 \x01(\x04R\brevision\"L\n" +
 	"\fEquippedItem\x12\x12\n" +
 	"\x04slot\x18\x01 \x01(\rR\x04slot\x12(\n" +
 	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"?\n" +
@@ -3681,7 +3500,7 @@ const file_assets_proto_rawDesc = "" +
 	"\bquote_id\x18\x02 \x01(\fR\aquoteId\x12\x1f\n" +
 	"\vscene_epoch\x18\x03 \x01(\x04R\n" +
 	"sceneEpoch\x12\x15\n" +
-	"\x06npc_id\x18\x04 \x01(\x04R\x05npcIdB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\x06npc_id\x18\x04 \x01(\x04R\x05npcIdB!Z\x1fminimir/api/generated/minimirv1P\x01b\x06proto3"
 
 var (
 	file_assets_proto_rawDescOnce sync.Once
@@ -3695,60 +3514,60 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_assets_proto_goTypes = []any{
 	(*WalletState)(nil),              // 0: minimir.v1.WalletState
-	(*ItemView)(nil),                 // 1: minimir.v1.ItemView
-	(*EquippedItem)(nil),             // 2: minimir.v1.EquippedItem
-	(*LearnedSkill)(nil),             // 3: minimir.v1.LearnedSkill
-	(*InventoryResult)(nil),          // 4: minimir.v1.InventoryResult
-	(*SetSkillSlotsRequest)(nil),     // 5: minimir.v1.SetSkillSlotsRequest
-	(*ProgressionState)(nil),         // 6: minimir.v1.ProgressionState
-	(*ExperienceGrantResult)(nil),    // 7: minimir.v1.ExperienceGrantResult
-	(*AutoRecyclePolicy)(nil),        // 8: minimir.v1.AutoRecyclePolicy
-	(*SetAutoRecycleRequest)(nil),    // 9: minimir.v1.SetAutoRecycleRequest
-	(*SetItemLockRequest)(nil),       // 10: minimir.v1.SetItemLockRequest
-	(*EquipmentRecycleResult)(nil),   // 11: minimir.v1.EquipmentRecycleResult
-	(*EquipRequest)(nil),             // 12: minimir.v1.EquipRequest
-	(*RecycleRequest)(nil),           // 13: minimir.v1.RecycleRequest
-	(*UseItemRequest)(nil),           // 14: minimir.v1.UseItemRequest
-	(*LearnSkillRequest)(nil),        // 15: minimir.v1.LearnSkillRequest
-	(*SetCastingSupplyRequest)(nil),  // 16: minimir.v1.SetCastingSupplyRequest
-	(*CastWithMaterialRequest)(nil),  // 17: minimir.v1.CastWithMaterialRequest
-	(*ItemConsumption)(nil),          // 18: minimir.v1.ItemConsumption
-	(*SkillAssetPreviewRequest)(nil), // 19: minimir.v1.SkillAssetPreviewRequest
-	(*SkillMaterialView)(nil),        // 20: minimir.v1.SkillMaterialView
-	(*SkillNumericComparison)(nil),   // 21: minimir.v1.SkillNumericComparison
-	(*SkillAssetPreview)(nil),        // 22: minimir.v1.SkillAssetPreview
-	(*SkillAssetCommitRequest)(nil),  // 23: minimir.v1.SkillAssetCommitRequest
-	(*ClaimHostingTimeRequest)(nil),  // 24: minimir.v1.ClaimHostingTimeRequest
-	(*HostingQuoteRequest)(nil),      // 25: minimir.v1.HostingQuoteRequest
-	(*BuyHostingTimeRequest)(nil),    // 26: minimir.v1.BuyHostingTimeRequest
-	(*HostingReport)(nil),            // 27: minimir.v1.HostingReport
-	(*WarehouseQuery)(nil),           // 28: minimir.v1.WarehouseQuery
-	(*WarehouseItem)(nil),            // 29: minimir.v1.WarehouseItem
-	(*WarehousePage)(nil),            // 30: minimir.v1.WarehousePage
-	(*WarehouseAction)(nil),          // 31: minimir.v1.WarehouseAction
-	(*WarehouseItemChange)(nil),      // 32: minimir.v1.WarehouseItemChange
-	(*WarehouseActionResult)(nil),    // 33: minimir.v1.WarehouseActionResult
-	(*VendorQuoteRequest)(nil),       // 34: minimir.v1.VendorQuoteRequest
-	(*VendorQuoteResult)(nil),        // 35: minimir.v1.VendorQuoteResult
-	(*VendorCommitRequest)(nil),      // 36: minimir.v1.VendorCommitRequest
+	(*EquippedItem)(nil),             // 1: minimir.v1.EquippedItem
+	(*LearnedSkill)(nil),             // 2: minimir.v1.LearnedSkill
+	(*InventoryResult)(nil),          // 3: minimir.v1.InventoryResult
+	(*SetSkillSlotsRequest)(nil),     // 4: minimir.v1.SetSkillSlotsRequest
+	(*ProgressionState)(nil),         // 5: minimir.v1.ProgressionState
+	(*ExperienceGrantResult)(nil),    // 6: minimir.v1.ExperienceGrantResult
+	(*AutoRecyclePolicy)(nil),        // 7: minimir.v1.AutoRecyclePolicy
+	(*SetAutoRecycleRequest)(nil),    // 8: minimir.v1.SetAutoRecycleRequest
+	(*SetItemLockRequest)(nil),       // 9: minimir.v1.SetItemLockRequest
+	(*EquipmentRecycleResult)(nil),   // 10: minimir.v1.EquipmentRecycleResult
+	(*EquipRequest)(nil),             // 11: minimir.v1.EquipRequest
+	(*RecycleRequest)(nil),           // 12: minimir.v1.RecycleRequest
+	(*UseItemRequest)(nil),           // 13: minimir.v1.UseItemRequest
+	(*LearnSkillRequest)(nil),        // 14: minimir.v1.LearnSkillRequest
+	(*SetCastingSupplyRequest)(nil),  // 15: minimir.v1.SetCastingSupplyRequest
+	(*CastWithMaterialRequest)(nil),  // 16: minimir.v1.CastWithMaterialRequest
+	(*ItemConsumption)(nil),          // 17: minimir.v1.ItemConsumption
+	(*SkillAssetPreviewRequest)(nil), // 18: minimir.v1.SkillAssetPreviewRequest
+	(*SkillMaterialView)(nil),        // 19: minimir.v1.SkillMaterialView
+	(*SkillNumericComparison)(nil),   // 20: minimir.v1.SkillNumericComparison
+	(*SkillAssetPreview)(nil),        // 21: minimir.v1.SkillAssetPreview
+	(*SkillAssetCommitRequest)(nil),  // 22: minimir.v1.SkillAssetCommitRequest
+	(*ClaimHostingTimeRequest)(nil),  // 23: minimir.v1.ClaimHostingTimeRequest
+	(*HostingQuoteRequest)(nil),      // 24: minimir.v1.HostingQuoteRequest
+	(*BuyHostingTimeRequest)(nil),    // 25: minimir.v1.BuyHostingTimeRequest
+	(*HostingReport)(nil),            // 26: minimir.v1.HostingReport
+	(*WarehouseQuery)(nil),           // 27: minimir.v1.WarehouseQuery
+	(*WarehouseItem)(nil),            // 28: minimir.v1.WarehouseItem
+	(*WarehousePage)(nil),            // 29: minimir.v1.WarehousePage
+	(*WarehouseAction)(nil),          // 30: minimir.v1.WarehouseAction
+	(*WarehouseItemChange)(nil),      // 31: minimir.v1.WarehouseItemChange
+	(*WarehouseActionResult)(nil),    // 32: minimir.v1.WarehouseActionResult
+	(*VendorQuoteRequest)(nil),       // 33: minimir.v1.VendorQuoteRequest
+	(*VendorQuoteResult)(nil),        // 34: minimir.v1.VendorQuoteResult
+	(*VendorCommitRequest)(nil),      // 35: minimir.v1.VendorCommitRequest
+	(*ItemView)(nil),                 // 36: minimir.v1.ItemView
 	(*OperationContext)(nil),         // 37: minimir.v1.OperationContext
 	(*RoleKey)(nil),                  // 38: minimir.v1.RoleKey
 	(*GridPoint)(nil),                // 39: minimir.v1.GridPoint
 }
 var file_assets_proto_depIdxs = []int32{
-	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
-	1,  // 1: minimir.v1.InventoryResult.items:type_name -> minimir.v1.ItemView
-	2,  // 2: minimir.v1.InventoryResult.equipped:type_name -> minimir.v1.EquippedItem
-	3,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
-	8,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
-	6,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
+	36, // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
+	36, // 1: minimir.v1.InventoryResult.items:type_name -> minimir.v1.ItemView
+	1,  // 2: minimir.v1.InventoryResult.equipped:type_name -> minimir.v1.EquippedItem
+	2,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
+	7,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
+	5,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
 	37, // 6: minimir.v1.SetSkillSlotsRequest.operation:type_name -> minimir.v1.OperationContext
 	38, // 7: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
-	6,  // 8: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
-	8,  // 9: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
+	5,  // 8: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
+	7,  // 9: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
 	37, // 10: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
 	37, // 11: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
 	38, // 12: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
@@ -3759,25 +3578,25 @@ var file_assets_proto_depIdxs = []int32{
 	37, // 17: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
 	39, // 18: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
 	37, // 19: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
-	18, // 20: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
-	1,  // 21: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
+	17, // 20: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
+	36, // 21: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
 	0,  // 22: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
-	20, // 23: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
-	1,  // 24: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
-	21, // 25: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
+	19, // 23: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
+	36, // 24: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
+	20, // 25: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
 	37, // 26: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
 	37, // 27: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
 	37, // 28: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
 	0,  // 29: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
-	1,  // 30: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
-	1,  // 31: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
+	36, // 30: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
+	36, // 31: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
 	38, // 32: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
-	29, // 33: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
+	28, // 33: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
 	37, // 34: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
-	1,  // 35: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
-	1,  // 36: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
+	36, // 35: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
+	36, // 36: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
 	38, // 37: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
-	32, // 38: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
+	31, // 38: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
 	37, // 39: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
 	40, // [40:40] is the sub-list for method output_type
 	40, // [40:40] is the sub-list for method input_type
@@ -3792,13 +3611,14 @@ func file_assets_proto_init() {
 		return
 	}
 	file_common_proto_init()
+	file_item_view_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   37,
+			NumMessages:   36,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

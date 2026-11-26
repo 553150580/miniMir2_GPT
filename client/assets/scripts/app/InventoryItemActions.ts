@@ -33,6 +33,7 @@ interface InventoryActions {
     recycleBook(): Promise<void>;
     mine?(): Promise<void>;
     forge?(): void;
+    weaponOil?(): void;
 }
 
 // 使用当前角色与背包数据生成操作；处理器由上层绑定同一个原实例。
@@ -83,5 +84,6 @@ export function inventoryItemActionView(input: InventoryActionInput, handlers: I
             break;
     }
     if (!input.ready && input.blockedReason) lines.push(input.blockedReason);
-    return { title: definition?.name ?? '物品详情', lines, actions };
+    return { title: definition?.name ?? '物品详情', lines, actions,
+        ...(handlers.weaponOil ? { optionsFirst: true, options: [{ key: 'weapon-oil', label: '祝福油培养', enabled: input.ready, choose: handlers.weaponOil }] } : {}) };
 }

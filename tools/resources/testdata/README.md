@@ -13,3 +13,5 @@ Windows 上可用 `./tools/dev.ps1 python3 -B tools/server/run_integration_batch
 Windows 可用 `./tools/dev.ps1 python3 -B tools/server/run_integration_batches.py --group forge` 复验，验收脚本保存两个组装文件和两份候选目录的摘要。默认试玩配置仍不开放图纸打造。
 
 `combat-luck-isolated.json` 显式给普通怪物模板 1 和职业 1 设置 20% 幸运抵抗，仅作隔离验证。武器、翅膀和其他装备的幸运分档、原攻击区间处理以及已确定装备掉落的初始幸运概率与权重来自唯一玩法工作簿。候选可继承隔离矿区及打造，客户端公开目录沿原字节，默认试玩仍关闭。
+
+`luck-oil-isolated.json` 为武器培养专项声明候选油物品编号和堆叠上限。成功率、失败回退及保底条件来自唯一玩法工作簿。使用 `./tools/dev.ps1 python3 tools/server/run_integration_batches.py --group weapon-oil` 重新装配前置目录和这份隔离规则，逐字节核对后进入独立 MongoDB。初始库存由专项提供，正式常规来源继续待核验。

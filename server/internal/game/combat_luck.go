@@ -19,7 +19,11 @@ func equipmentLuck(r *room, fixture *devconfig.Fixture, wingLuck uint32) uint32 
 	var seen uint16
 	for _, worn := range r.Role.Equipped {
 		item := worn.Item
-		if worn.Slot > 9 || item.InitialLuck == 0 || item.Quantity != 1 || item.Quality > 4 || item.Version <= 0 || item.Version == math.MaxInt64 ||
+		value := item.InitialLuck
+		if worn.Slot == devconfig.WeaponSlot {
+			value = item.EffectiveLuck()
+		}
+		if worn.Slot > 9 || value == 0 || item.Quantity != 1 || item.Quality > 4 || item.Version <= 0 || item.Version == math.MaxInt64 ||
 			fixture.EquipmentDurability != nil && item.OriginalDurabilityU > 0 && (!item.HasValidDurability() || item.DurabilityU <= r.Wear.loss(item, worn.Slot)) {
 			continue
 		}
@@ -30,9 +34,9 @@ func equipmentLuck(r *room, fixture *devconfig.Fixture, wingLuck uint32) uint32 
 		}
 		seen |= bit
 		if worn.Slot == devconfig.WeaponSlot {
-			total += luckContribution(rules.WeaponWingPPM, item.InitialLuck)
+			total += luckContribution(rules.WeaponWingPPM, value)
 		} else {
-			total += luckContribution(rules.OtherPPM, item.InitialLuck)
+			total += luckContribution(rules.OtherPPM, value)
 		}
 	}
 	return min(total, luckMillion)

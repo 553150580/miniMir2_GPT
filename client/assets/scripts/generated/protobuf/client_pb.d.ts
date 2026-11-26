@@ -380,6 +380,9 @@ export namespace minimir {
             /** OperationResult forge. */
             forge?: (minimir.v1.ForgeReceipt.$Properties|null);
 
+            /** OperationResult weapon_oil. */
+            weapon_oil?: (minimir.v1.WeaponOilReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -479,12 +482,159 @@ export namespace minimir {
                 /** OperationResult forge */
                 forge?: (minimir.v1.ForgeReceipt.$Properties|null);
 
+                /** OperationResult weapon_oil */
+                weapon_oil?: (minimir.v1.WeaponOilReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a WeaponOilReceipt.
+         * @deprecated Use minimir.v1.WeaponOilReceipt.$Properties instead.
+         */
+        interface IWeaponOilReceipt extends minimir.v1.WeaponOilReceipt.$Properties {
+        }
+
+        /** Represents a WeaponOilReceipt. */
+        class WeaponOilReceipt {
+
+            /**
+             * Constructs a new WeaponOilReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WeaponOilReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WeaponOilReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** WeaponOilReceipt weapon. */
+            weapon?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WeaponOilReceipt oil. */
+            oil?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WeaponOilReceipt equipped. */
+            equipped: boolean;
+
+            /** WeaponOilReceipt before_luck. */
+            before_luck: number;
+
+            /** WeaponOilReceipt success. */
+            success: boolean;
+
+            /** WeaponOilReceipt guaranteed. */
+            guaranteed: boolean;
+
+            /** WeaponOilReceipt pity_used. */
+            pity_used: number;
+
+            /** WeaponOilReceipt pity_after. */
+            pity_after: number;
+
+            /**
+             * Creates a new WeaponOilReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WeaponOilReceipt instance
+             */
+            static create(properties: minimir.v1.WeaponOilReceipt.$Shape): minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape;
+            static create(properties?: minimir.v1.WeaponOilReceipt.$Properties): minimir.v1.WeaponOilReceipt;
+
+            /**
+             * Encodes the specified WeaponOilReceipt message. Does not implicitly {@link minimir.v1.WeaponOilReceipt.verify|verify} messages.
+             * @param message WeaponOilReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WeaponOilReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WeaponOilReceipt message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilReceipt.verify|verify} messages.
+             * @param message WeaponOilReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WeaponOilReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WeaponOilReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape} WeaponOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape;
+
+            /**
+             * Decodes a WeaponOilReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape} WeaponOilReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WeaponOilReceipt & minimir.v1.WeaponOilReceipt.$Shape;
+
+            /**
+             * Verifies a WeaponOilReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WeaponOilReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WeaponOilReceipt {
+
+            /** Properties of a WeaponOilReceipt. */
+            interface $Properties {
+
+                /** WeaponOilReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WeaponOilReceipt weapon */
+                weapon?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WeaponOilReceipt oil */
+                oil?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WeaponOilReceipt equipped */
+                equipped?: (boolean|null);
+
+                /** WeaponOilReceipt before_luck */
+                before_luck?: (number|null);
+
+                /** WeaponOilReceipt success */
+                success?: (boolean|null);
+
+                /** WeaponOilReceipt guaranteed */
+                guaranteed?: (boolean|null);
+
+                /** WeaponOilReceipt pity_used */
+                pity_used?: (number|null);
+
+                /** WeaponOilReceipt pity_after */
+                pity_after?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WeaponOilReceipt. */
+            type $Shape = minimir.v1.WeaponOilReceipt.$Properties;
         }
 
         /**
@@ -2345,6 +2495,192 @@ export namespace minimir {
 
             /** Shape of a ConfigVersion. */
             type $Shape = minimir.v1.ConfigVersion.$Properties;
+        }
+
+        /**
+         * Properties of an ItemView.
+         * @deprecated Use minimir.v1.ItemView.$Properties instead.
+         */
+        interface IItemView extends minimir.v1.ItemView.$Properties {
+        }
+
+        /** Represents an ItemView. */
+        class ItemView {
+
+            /**
+             * Constructs a new ItemView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemView instance_id. */
+            instance_id: Uint8Array;
+
+            /** ItemView item_id. */
+            item_id: number;
+
+            /** ItemView quantity. */
+            quantity: Long;
+
+            /** ItemView bound. */
+            bound: boolean;
+
+            /** ItemView version. */
+            version: Long;
+
+            /** ItemView source_kind. */
+            source_kind: string;
+
+            /** ItemView source_id. */
+            source_id: string;
+
+            /** ItemView quality. */
+            quality: number;
+
+            /** ItemView locked. */
+            locked: boolean;
+
+            /** ItemView recycle_block_flags. */
+            recycle_block_flags: number;
+
+            /** ItemView durability_u. */
+            durability_u: Long;
+
+            /** ItemView max_durability_u. */
+            max_durability_u: Long;
+
+            /** ItemView original_durability_u. */
+            original_durability_u: Long;
+
+            /** ItemView ore_purity. */
+            ore_purity: number;
+
+            /** ItemView initial_luck. */
+            initial_luck: number;
+
+            /** ItemView current_luck. */
+            current_luck: number;
+
+            /**
+             * Creates a new ItemView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemView instance
+             */
+            static create(properties: minimir.v1.ItemView.$Shape): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
+            static create(properties?: minimir.v1.ItemView.$Properties): minimir.v1.ItemView;
+
+            /**
+             * Encodes the specified ItemView message. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
+             * @param message ItemView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemView message, length delimited. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
+             * @param message ItemView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
+
+            /**
+             * Decodes an ItemView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
+
+            /**
+             * Verifies an ItemView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemView {
+
+            /** Properties of an ItemView. */
+            interface $Properties {
+
+                /** ItemView instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** ItemView item_id */
+                item_id?: (number|null);
+
+                /** ItemView quantity */
+                quantity?: (Long|null);
+
+                /** ItemView bound */
+                bound?: (boolean|null);
+
+                /** ItemView version */
+                version?: (Long|null);
+
+                /** ItemView source_kind */
+                source_kind?: (string|null);
+
+                /** ItemView source_id */
+                source_id?: (string|null);
+
+                /** ItemView quality */
+                quality?: (number|null);
+
+                /** ItemView locked */
+                locked?: (boolean|null);
+
+                /** ItemView recycle_block_flags */
+                recycle_block_flags?: (number|null);
+
+                /** ItemView durability_u */
+                durability_u?: (Long|null);
+
+                /** ItemView max_durability_u */
+                max_durability_u?: (Long|null);
+
+                /** ItemView original_durability_u */
+                original_durability_u?: (Long|null);
+
+                /** ItemView ore_purity */
+                ore_purity?: (number|null);
+
+                /** ItemView initial_luck */
+                initial_luck?: (number|null);
+
+                /** ItemView current_luck */
+                current_luck?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemView. */
+            type $Shape = minimir.v1.ItemView.$Properties;
         }
 
         /**
@@ -8573,186 +8909,6 @@ export namespace minimir {
 
             /** Shape of a WalletState. */
             type $Shape = minimir.v1.WalletState.$Properties;
-        }
-
-        /**
-         * Properties of an ItemView.
-         * @deprecated Use minimir.v1.ItemView.$Properties instead.
-         */
-        interface IItemView extends minimir.v1.ItemView.$Properties {
-        }
-
-        /** Represents an ItemView. */
-        class ItemView {
-
-            /**
-             * Constructs a new ItemView.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: minimir.v1.ItemView.$Properties);
-
-            /** Unknown fields preserved while decoding when enabled */
-            $unknowns?: Uint8Array[];
-
-            /** ItemView instance_id. */
-            instance_id: Uint8Array;
-
-            /** ItemView item_id. */
-            item_id: number;
-
-            /** ItemView quantity. */
-            quantity: Long;
-
-            /** ItemView bound. */
-            bound: boolean;
-
-            /** ItemView version. */
-            version: Long;
-
-            /** ItemView source_kind. */
-            source_kind: string;
-
-            /** ItemView source_id. */
-            source_id: string;
-
-            /** ItemView quality. */
-            quality: number;
-
-            /** ItemView locked. */
-            locked: boolean;
-
-            /** ItemView recycle_block_flags. */
-            recycle_block_flags: number;
-
-            /** ItemView durability_u. */
-            durability_u: Long;
-
-            /** ItemView max_durability_u. */
-            max_durability_u: Long;
-
-            /** ItemView original_durability_u. */
-            original_durability_u: Long;
-
-            /** ItemView ore_purity. */
-            ore_purity: number;
-
-            /** ItemView initial_luck. */
-            initial_luck: number;
-
-            /**
-             * Creates a new ItemView instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns ItemView instance
-             */
-            static create(properties: minimir.v1.ItemView.$Shape): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
-            static create(properties?: minimir.v1.ItemView.$Properties): minimir.v1.ItemView;
-
-            /**
-             * Encodes the specified ItemView message. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
-             * @param message ItemView message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            static encode(message: minimir.v1.ItemView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified ItemView message, length delimited. Does not implicitly {@link minimir.v1.ItemView.verify|verify} messages.
-             * @param message ItemView message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            static encodeDelimited(message: minimir.v1.ItemView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes an ItemView message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
-
-            /**
-             * Decodes an ItemView message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns {minimir.v1.ItemView & minimir.v1.ItemView.$Shape} ItemView
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemView & minimir.v1.ItemView.$Shape;
-
-            /**
-             * Verifies an ItemView message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Gets the type url for ItemView
-             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-             * @returns The type url
-             */
-            static getTypeUrl(prefix?: string): string;
-        }
-
-        namespace ItemView {
-
-            /** Properties of an ItemView. */
-            interface $Properties {
-
-                /** ItemView instance_id */
-                instance_id?: (Uint8Array|null);
-
-                /** ItemView item_id */
-                item_id?: (number|null);
-
-                /** ItemView quantity */
-                quantity?: (Long|null);
-
-                /** ItemView bound */
-                bound?: (boolean|null);
-
-                /** ItemView version */
-                version?: (Long|null);
-
-                /** ItemView source_kind */
-                source_kind?: (string|null);
-
-                /** ItemView source_id */
-                source_id?: (string|null);
-
-                /** ItemView quality */
-                quality?: (number|null);
-
-                /** ItemView locked */
-                locked?: (boolean|null);
-
-                /** ItemView recycle_block_flags */
-                recycle_block_flags?: (number|null);
-
-                /** ItemView durability_u */
-                durability_u?: (Long|null);
-
-                /** ItemView max_durability_u */
-                max_durability_u?: (Long|null);
-
-                /** ItemView original_durability_u */
-                original_durability_u?: (Long|null);
-
-                /** ItemView ore_purity */
-                ore_purity?: (number|null);
-
-                /** ItemView initial_luck */
-                initial_luck?: (number|null);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
-            }
-
-            /** Shape of an ItemView. */
-            type $Shape = minimir.v1.ItemView.$Properties;
         }
 
         /**
@@ -20975,6 +21131,540 @@ export namespace minimir {
 
             /** Shape of a ForgeCommitRequest. */
             type $Shape = minimir.v1.ForgeCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a WeaponOilItemRef.
+         * @deprecated Use minimir.v1.WeaponOilItemRef.$Properties instead.
+         */
+        interface IWeaponOilItemRef extends minimir.v1.WeaponOilItemRef.$Properties {
+        }
+
+        /** Represents a WeaponOilItemRef. */
+        class WeaponOilItemRef {
+
+            /**
+             * Constructs a new WeaponOilItemRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WeaponOilItemRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WeaponOilItemRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** WeaponOilItemRef version. */
+            version: Long;
+
+            /** WeaponOilItemRef equipped. */
+            equipped: boolean;
+
+            /**
+             * Creates a new WeaponOilItemRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WeaponOilItemRef instance
+             */
+            static create(properties: minimir.v1.WeaponOilItemRef.$Shape): minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape;
+            static create(properties?: minimir.v1.WeaponOilItemRef.$Properties): minimir.v1.WeaponOilItemRef;
+
+            /**
+             * Encodes the specified WeaponOilItemRef message. Does not implicitly {@link minimir.v1.WeaponOilItemRef.verify|verify} messages.
+             * @param message WeaponOilItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WeaponOilItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WeaponOilItemRef message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilItemRef.verify|verify} messages.
+             * @param message WeaponOilItemRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WeaponOilItemRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WeaponOilItemRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape} WeaponOilItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape;
+
+            /**
+             * Decodes a WeaponOilItemRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape} WeaponOilItemRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WeaponOilItemRef & minimir.v1.WeaponOilItemRef.$Shape;
+
+            /**
+             * Verifies a WeaponOilItemRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WeaponOilItemRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WeaponOilItemRef {
+
+            /** Properties of a WeaponOilItemRef. */
+            interface $Properties {
+
+                /** WeaponOilItemRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** WeaponOilItemRef version */
+                version?: (Long|null);
+
+                /** WeaponOilItemRef equipped */
+                equipped?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WeaponOilItemRef. */
+            type $Shape = minimir.v1.WeaponOilItemRef.$Properties;
+        }
+
+        /**
+         * Properties of a WeaponOilQuoteRequest.
+         * @deprecated Use minimir.v1.WeaponOilQuoteRequest.$Properties instead.
+         */
+        interface IWeaponOilQuoteRequest extends minimir.v1.WeaponOilQuoteRequest.$Properties {
+        }
+
+        /** Represents a WeaponOilQuoteRequest. */
+        class WeaponOilQuoteRequest {
+
+            /**
+             * Constructs a new WeaponOilQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WeaponOilQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WeaponOilQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** WeaponOilQuoteRequest weapon. */
+            weapon?: (minimir.v1.WeaponOilItemRef.$Properties|null);
+
+            /** WeaponOilQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** WeaponOilQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new WeaponOilQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WeaponOilQuoteRequest instance
+             */
+            static create(properties: minimir.v1.WeaponOilQuoteRequest.$Shape): minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.WeaponOilQuoteRequest.$Properties): minimir.v1.WeaponOilQuoteRequest;
+
+            /**
+             * Encodes the specified WeaponOilQuoteRequest message. Does not implicitly {@link minimir.v1.WeaponOilQuoteRequest.verify|verify} messages.
+             * @param message WeaponOilQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WeaponOilQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WeaponOilQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilQuoteRequest.verify|verify} messages.
+             * @param message WeaponOilQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WeaponOilQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WeaponOilQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape} WeaponOilQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape;
+
+            /**
+             * Decodes a WeaponOilQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape} WeaponOilQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WeaponOilQuoteRequest & minimir.v1.WeaponOilQuoteRequest.$Shape;
+
+            /**
+             * Verifies a WeaponOilQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WeaponOilQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WeaponOilQuoteRequest {
+
+            /** Properties of a WeaponOilQuoteRequest. */
+            interface $Properties {
+
+                /** WeaponOilQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WeaponOilQuoteRequest weapon */
+                weapon?: (minimir.v1.WeaponOilItemRef.$Properties|null);
+
+                /** WeaponOilQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** WeaponOilQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WeaponOilQuoteRequest. */
+            type $Shape = minimir.v1.WeaponOilQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a WeaponOilQuote.
+         * @deprecated Use minimir.v1.WeaponOilQuote.$Properties instead.
+         */
+        interface IWeaponOilQuote extends minimir.v1.WeaponOilQuote.$Properties {
+        }
+
+        /** Represents a WeaponOilQuote. */
+        class WeaponOilQuote {
+
+            /**
+             * Constructs a new WeaponOilQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WeaponOilQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WeaponOilQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** WeaponOilQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** WeaponOilQuote weapon. */
+            weapon?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WeaponOilQuote oil. */
+            oil?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WeaponOilQuote equipped. */
+            equipped: boolean;
+
+            /** WeaponOilQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** WeaponOilQuote current_luck. */
+            current_luck: number;
+
+            /** WeaponOilQuote success_luck. */
+            success_luck: number;
+
+            /** WeaponOilQuote failure_luck. */
+            failure_luck: number;
+
+            /** WeaponOilQuote success_ppm. */
+            success_ppm: number;
+
+            /** WeaponOilQuote pity_used. */
+            pity_used: number;
+
+            /** WeaponOilQuote pity_after. */
+            pity_after: number;
+
+            /** WeaponOilQuote guaranteed. */
+            guaranteed: boolean;
+
+            /** WeaponOilQuote output_bound. */
+            output_bound: boolean;
+
+            /** WeaponOilQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** WeaponOilQuote role_revision. */
+            role_revision: Long;
+
+            /** WeaponOilQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new WeaponOilQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WeaponOilQuote instance
+             */
+            static create(properties: minimir.v1.WeaponOilQuote.$Shape): minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape;
+            static create(properties?: minimir.v1.WeaponOilQuote.$Properties): minimir.v1.WeaponOilQuote;
+
+            /**
+             * Encodes the specified WeaponOilQuote message. Does not implicitly {@link minimir.v1.WeaponOilQuote.verify|verify} messages.
+             * @param message WeaponOilQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WeaponOilQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WeaponOilQuote message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilQuote.verify|verify} messages.
+             * @param message WeaponOilQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WeaponOilQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WeaponOilQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape} WeaponOilQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape;
+
+            /**
+             * Decodes a WeaponOilQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape} WeaponOilQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WeaponOilQuote & minimir.v1.WeaponOilQuote.$Shape;
+
+            /**
+             * Verifies a WeaponOilQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WeaponOilQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WeaponOilQuote {
+
+            /** Properties of a WeaponOilQuote. */
+            interface $Properties {
+
+                /** WeaponOilQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WeaponOilQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WeaponOilQuote weapon */
+                weapon?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WeaponOilQuote oil */
+                oil?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WeaponOilQuote equipped */
+                equipped?: (boolean|null);
+
+                /** WeaponOilQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** WeaponOilQuote current_luck */
+                current_luck?: (number|null);
+
+                /** WeaponOilQuote success_luck */
+                success_luck?: (number|null);
+
+                /** WeaponOilQuote failure_luck */
+                failure_luck?: (number|null);
+
+                /** WeaponOilQuote success_ppm */
+                success_ppm?: (number|null);
+
+                /** WeaponOilQuote pity_used */
+                pity_used?: (number|null);
+
+                /** WeaponOilQuote pity_after */
+                pity_after?: (number|null);
+
+                /** WeaponOilQuote guaranteed */
+                guaranteed?: (boolean|null);
+
+                /** WeaponOilQuote output_bound */
+                output_bound?: (boolean|null);
+
+                /** WeaponOilQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** WeaponOilQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** WeaponOilQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WeaponOilQuote. */
+            type $Shape = minimir.v1.WeaponOilQuote.$Properties;
+        }
+
+        /**
+         * Properties of a WeaponOilCommitRequest.
+         * @deprecated Use minimir.v1.WeaponOilCommitRequest.$Properties instead.
+         */
+        interface IWeaponOilCommitRequest extends minimir.v1.WeaponOilCommitRequest.$Properties {
+        }
+
+        /** Represents a WeaponOilCommitRequest. */
+        class WeaponOilCommitRequest {
+
+            /**
+             * Constructs a new WeaponOilCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WeaponOilCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WeaponOilCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** WeaponOilCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** WeaponOilCommitRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** WeaponOilCommitRequest weapon. */
+            weapon?: (minimir.v1.WeaponOilItemRef.$Properties|null);
+
+            /** WeaponOilCommitRequest allow_bound. */
+            allow_bound: boolean;
+
+            /**
+             * Creates a new WeaponOilCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WeaponOilCommitRequest instance
+             */
+            static create(properties: minimir.v1.WeaponOilCommitRequest.$Shape): minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape;
+            static create(properties?: minimir.v1.WeaponOilCommitRequest.$Properties): minimir.v1.WeaponOilCommitRequest;
+
+            /**
+             * Encodes the specified WeaponOilCommitRequest message. Does not implicitly {@link minimir.v1.WeaponOilCommitRequest.verify|verify} messages.
+             * @param message WeaponOilCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WeaponOilCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WeaponOilCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.WeaponOilCommitRequest.verify|verify} messages.
+             * @param message WeaponOilCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WeaponOilCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WeaponOilCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape} WeaponOilCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape;
+
+            /**
+             * Decodes a WeaponOilCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape} WeaponOilCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WeaponOilCommitRequest & minimir.v1.WeaponOilCommitRequest.$Shape;
+
+            /**
+             * Verifies a WeaponOilCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WeaponOilCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WeaponOilCommitRequest {
+
+            /** Properties of a WeaponOilCommitRequest. */
+            interface $Properties {
+
+                /** WeaponOilCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** WeaponOilCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** WeaponOilCommitRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** WeaponOilCommitRequest weapon */
+                weapon?: (minimir.v1.WeaponOilItemRef.$Properties|null);
+
+                /** WeaponOilCommitRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WeaponOilCommitRequest. */
+            type $Shape = minimir.v1.WeaponOilCommitRequest.$Properties;
         }
     }
 }
