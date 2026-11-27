@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 196,
+  "message_count": 203,
   "message_names": [
     "ItemView",
     "EquipmentRefineAffix",
@@ -13,6 +13,9 @@
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "MedalState",
+    "MedalFragmentSpend",
+    "MedalReceipt",
     "EquipmentRefineSpend",
     "EquipmentRefineReceipt",
     "RecycleRefineReceipt",
@@ -201,10 +204,14 @@
     "EquipmentRefineStoneRef",
     "EquipmentRefineQuoteRequest",
     "EquipmentRefineQuote",
-    "EquipmentRefineActionRequest"
+    "EquipmentRefineActionRequest",
+    "MedalFragmentRef",
+    "MedalQuoteRequest",
+    "MedalQuote",
+    "MedalCommitRequest"
   ],
-  "int64_field_count": 449,
-  "int64_boundary_cases": 1537,
+  "int64_field_count": 461,
+  "int64_boundary_cases": 1577,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -277,6 +284,24 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MedalState",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalFragmentSpend",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalFragmentSpend",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "EquipmentRefineSpend",
@@ -2899,9 +2924,63 @@
       "field": "role_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "MedalFragmentRef",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalFragmentRef",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MedalQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalQuoteRequest",
+      "field": "medal_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalQuote",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalQuote",
+      "field": "target_main_attack",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MedalQuote",
+      "field": "target_defense",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MedalQuote",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MedalQuote",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 112,
+  "bytes_field_count": 120,
   "bytes_checks": [
     {
       "message": "ItemView",
@@ -2926,6 +3005,16 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalFragmentSpend",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -3462,6 +3551,36 @@
       "message": "EquipmentRefineActionRequest",
       "field": "pending_id",
       "repeated": false
+    },
+    {
+      "message": "MedalFragmentRef",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalQuoteRequest",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalQuote",
+      "field": "ui_session_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalCommitRequest",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "MedalCommitRequest",
+      "field": "ui_session_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -3474,7 +3593,7 @@
     },
     {
       "path": "shared/proto/common.proto",
-      "sha256": "7aefe0a9552b6101a2da11cd2c95d968e8121479b041ea91d0214d695432df6c"
+      "sha256": "51525ac8ad9da75d2c4b4fe0667758c5f49dea04a752766c7661643e49da2be6"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3486,7 +3605,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "2af95fd6ccffb852e08e655d1d77399f6e6f43d3cca7600d6cf1c9b8d8c2c93d"
+      "sha256": "71457c43318aae62a8b6455af4ae1388511c902be8e8c25dfc2d81b01029c69d"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -3543,18 +3662,22 @@
     {
       "path": "shared/proto/equipment_refine.proto",
       "sha256": "afc0d2350d947a01f381b4a0f72b246bbe7e21c842abb1c7c1ede96432cc4a7e"
+    },
+    {
+      "path": "shared/proto/medal.proto",
+      "sha256": "659ed2caddb551356aa8472b08973faca564dd678004d3092c7f3cae007e6262"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "3e0088f9907422fe708b6c25e450c5d4dc5aea2fa56858f91a99a77e37b2968b",
-      "bytes": 3491263
+      "sha256": "0bda224b0be1d0542796859cf1802d29c339a61a9549a69b44560d525f16a886",
+      "bytes": 3600616
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "f0af820af47f02df1fe289b7f9b33a2778dbea2ca6e3de739e59bd325b066e46",
-      "bytes": 1091549
+      "sha256": "29facd87ade0c3cae37e4b8b5d644ef27cfb91e7d35523e92ef7f6d78c1d14e5",
+      "bytes": 1127624
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

@@ -126,6 +126,7 @@ type Operation struct {
 
 	EquipmentEnhancement *EquipmentEnhancementReceipt `bson:"equipment_enhancement,omitempty"` // 原部位的成功或失败及实际石头消费。
 	EquipmentRefine      *EquipmentRefineReceipt      `bson:"equipment_refine,omitempty"`      // 洗炼原装备、已付候选及确认动作。
+	Medal                *MedalCommitReceipt          `bson:"medal,omitempty"`                 // 原角色勋章升阶和确切碎片扣料。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -235,6 +236,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	if s.Cfg.Fixture.EquipmentRefine != nil {
 		indexes[equipmentRefineQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
+	}
+	if s.Cfg.Fixture.Medal != nil {
+		indexes[medalQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {
@@ -424,6 +428,9 @@ func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 	}
 	if err == nil && s.Cfg.Fixture.EquipmentEnhancement != nil {
 		role.EquipmentEnhancement, err = s.readRoleEquipmentEnhancement(ctx, role)
+	}
+	if err == nil && s.Cfg.Fixture.Medal != nil {
+		role.Medal, err = s.readRoleMedal(ctx, role)
 	}
 	return role, err
 }

@@ -1,0 +1,43 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 玩家按顺序选中的原碎片堆以及本次实际投入。
+message MedalFragmentRef {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  int64 quantity = 3;
+}
+
+// 版本为零表示角色尚未激活勋章。
+message MedalQuoteRequest {
+  uint64 scene_epoch = 1;
+  uint64 medal_version = 2;
+  repeated MedalFragmentRef fragments = 3;
+  bool allow_bound = 4;
+  bytes ui_session_id = 5;
+}
+
+// 绑定角色、场景、勋章版本和选定原堆的下一档报价。
+message MedalQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  MedalState medal = 3;
+  uint32 target_level = 4;
+  int64 target_main_attack = 5;
+  int64 target_defense = 6;
+  repeated MedalFragmentSpend fragments = 7;
+  bool allow_bound = 8;
+  uint64 expires_at_unix_ms = 9;
+  uint64 role_revision = 10;
+  bytes ui_session_id = 11;
+}
+
+// 提交已展示的报价，重连时可用原操作编号取回结算结果。
+message MedalCommitRequest {
+  bytes quote_id = 1;
+  OperationContext operation = 2;
+  bytes ui_session_id = 3;
+}

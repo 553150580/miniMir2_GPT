@@ -59,6 +59,7 @@ const codecs: Record<number, MessageType> = {
     40052: pb.WingQuoteRequest, 40053: pb.WingQuote, 40054: pb.WingActionRequest,
     40055: pb.EquipmentEnhancementQuoteRequest, 40056: pb.EquipmentEnhancementQuote, 40057: pb.EquipmentEnhancementCommitRequest,
     40058: pb.EquipmentRefineQuoteRequest, 40059: pb.EquipmentRefineQuote, 40060: pb.EquipmentRefineActionRequest,
+    40061: pb.MedalQuoteRequest, 40062: pb.MedalQuote, 40063: pb.MedalCommitRequest,
 };
 
 function variable(value: Long): number[] {
@@ -267,7 +268,7 @@ export class GameConnection {
         if (cancelNavigation && !assemble) return Promise.reject(new Error('导航取消必须等待匹配的完整基线'));
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            const queryResponses: Partial<Record<number, number>> = { 20012: 20014, 20015: 20016, 20017: 20020, 20018: 20020, 20021: 20022, 20025: 20026, 20028: 20029, 40035: 40036, 40039: 40040, 40042: 40043, 40046: 40047, 40049: 40050, 40052: 40053, 40055: 40056, 40058: 40059 };
+            const queryResponses: Partial<Record<number, number>> = { 20012: 20014, 20015: 20016, 20017: 20020, 20018: 20020, 20021: 20022, 20025: 20026, 20028: 20029, 40035: 40036, 40039: 40040, 40042: 40043, 40046: 40047, 40049: 40050, 40052: 40053, 40055: 40056, 40058: 40059, 40061: 40062 };
             const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 1 ? 2 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : id === 40024 ? 40025 : id === 40027 ? 40028 : id === 40032 ? 40033 : queryResponses[id] ?? 40005];
             this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {

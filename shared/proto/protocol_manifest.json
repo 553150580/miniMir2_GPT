@@ -1464,6 +1464,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.4/4.7 已付候选生成、覆盖、采纳和放弃"
+    },
+    {
+      "value": 40061,
+      "name": "MsgC2SMedalQuote",
+      "proto_message": "MedalQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.23 勋章独立等级与原堆投入报价"
+    },
+    {
+      "value": 40062,
+      "name": "MsgS2CMedalQuote",
+      "proto_message": "MedalQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.23 勋章独立等级与原堆投入报价"
+    },
+    {
+      "value": 40063,
+      "name": "MsgC2SMedalCommit",
+      "proto_message": "MedalCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.23 勋章必成升级、原堆扣减、永久回执"
     }
   ],
   "error_codes": [
@@ -1985,6 +2021,30 @@
       "display_zh": "洗炼石、金币、元宝或锁槽不满足本次条件",
       "status": "draft",
       "source_ref": "最终策划案4.4/4.7",
+      "active_in_scope": true
+    },
+    {
+      "value": 3973,
+      "name": "CodeMedalUnavailable",
+      "display_zh": "当前未开放勋章养成",
+      "status": "draft",
+      "source_ref": "最终策划案4.23",
+      "active_in_scope": true
+    },
+    {
+      "value": 3974,
+      "name": "CodeMedalQuoteChanged",
+      "display_zh": "勋章、碎片或报价已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.23",
+      "active_in_scope": true
+    },
+    {
+      "value": 3975,
+      "name": "CodeMedalInputs",
+      "display_zh": "角色等级或所选碎片不满足本次条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.23",
       "active_in_scope": true
     }
   ]

@@ -24,7 +24,7 @@ export class PendingOperationError extends Error {
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
 const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026,
-    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 30002]);
+    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 40063, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -377,6 +377,11 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
             payload.quoteId = bytes16(item.quoteId, stored);
             payload.allowBound = item.allowBound;
         } else payload.pendingId = bytes16(item.pendingId, stored);
+    } else if (id === 40063) {
+        // 勋章提交只保存原报价与操作上下文，重连继续对账原碎片清单。
+        const item = record(input.value, ['quoteId', 'uiSessionId', 'operation']);
+        payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
+            operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

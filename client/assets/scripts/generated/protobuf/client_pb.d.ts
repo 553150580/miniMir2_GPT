@@ -398,6 +398,9 @@ export namespace minimir {
             /** OperationResult recycle_refine. */
             recycle_refine?: (minimir.v1.RecycleRefineReceipt.$Properties|null);
 
+            /** OperationResult medal. */
+            medal?: (minimir.v1.MedalReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -515,12 +518,345 @@ export namespace minimir {
                 /** OperationResult recycle_refine */
                 recycle_refine?: (minimir.v1.RecycleRefineReceipt.$Properties|null);
 
+                /** OperationResult medal */
+                medal?: (minimir.v1.MedalReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a MedalState.
+         * @deprecated Use minimir.v1.MedalState.$Properties instead.
+         */
+        interface IMedalState extends minimir.v1.MedalState.$Properties {
+        }
+
+        /** Represents a MedalState. */
+        class MedalState {
+
+            /**
+             * Constructs a new MedalState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalState level. */
+            level: number;
+
+            /** MedalState version. */
+            version: Long;
+
+            /**
+             * Creates a new MedalState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalState instance
+             */
+            static create(properties: minimir.v1.MedalState.$Shape): minimir.v1.MedalState & minimir.v1.MedalState.$Shape;
+            static create(properties?: minimir.v1.MedalState.$Properties): minimir.v1.MedalState;
+
+            /**
+             * Encodes the specified MedalState message. Does not implicitly {@link minimir.v1.MedalState.verify|verify} messages.
+             * @param message MedalState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalState message, length delimited. Does not implicitly {@link minimir.v1.MedalState.verify|verify} messages.
+             * @param message MedalState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalState & minimir.v1.MedalState.$Shape} MedalState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalState & minimir.v1.MedalState.$Shape;
+
+            /**
+             * Decodes a MedalState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalState & minimir.v1.MedalState.$Shape} MedalState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalState & minimir.v1.MedalState.$Shape;
+
+            /**
+             * Verifies a MedalState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalState {
+
+            /** Properties of a MedalState. */
+            interface $Properties {
+
+                /** MedalState level */
+                level?: (number|null);
+
+                /** MedalState version */
+                version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalState. */
+            type $Shape = minimir.v1.MedalState.$Properties;
+        }
+
+        /**
+         * Properties of a MedalFragmentSpend.
+         * @deprecated Use minimir.v1.MedalFragmentSpend.$Properties instead.
+         */
+        interface IMedalFragmentSpend extends minimir.v1.MedalFragmentSpend.$Properties {
+        }
+
+        /** Represents a MedalFragmentSpend. */
+        class MedalFragmentSpend {
+
+            /**
+             * Constructs a new MedalFragmentSpend.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalFragmentSpend.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalFragmentSpend instance_id. */
+            instance_id: Uint8Array;
+
+            /** MedalFragmentSpend version. */
+            version: Long;
+
+            /** MedalFragmentSpend quantity. */
+            quantity: Long;
+
+            /** MedalFragmentSpend bound. */
+            bound: boolean;
+
+            /**
+             * Creates a new MedalFragmentSpend instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalFragmentSpend instance
+             */
+            static create(properties: minimir.v1.MedalFragmentSpend.$Shape): minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape;
+            static create(properties?: minimir.v1.MedalFragmentSpend.$Properties): minimir.v1.MedalFragmentSpend;
+
+            /**
+             * Encodes the specified MedalFragmentSpend message. Does not implicitly {@link minimir.v1.MedalFragmentSpend.verify|verify} messages.
+             * @param message MedalFragmentSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalFragmentSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalFragmentSpend message, length delimited. Does not implicitly {@link minimir.v1.MedalFragmentSpend.verify|verify} messages.
+             * @param message MedalFragmentSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalFragmentSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalFragmentSpend message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape} MedalFragmentSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape;
+
+            /**
+             * Decodes a MedalFragmentSpend message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape} MedalFragmentSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape;
+
+            /**
+             * Verifies a MedalFragmentSpend message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalFragmentSpend
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalFragmentSpend {
+
+            /** Properties of a MedalFragmentSpend. */
+            interface $Properties {
+
+                /** MedalFragmentSpend instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** MedalFragmentSpend version */
+                version?: (Long|null);
+
+                /** MedalFragmentSpend quantity */
+                quantity?: (Long|null);
+
+                /** MedalFragmentSpend bound */
+                bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalFragmentSpend. */
+            type $Shape = minimir.v1.MedalFragmentSpend.$Properties;
+        }
+
+        /**
+         * Properties of a MedalReceipt.
+         * @deprecated Use minimir.v1.MedalReceipt.$Properties instead.
+         */
+        interface IMedalReceipt extends minimir.v1.MedalReceipt.$Properties {
+        }
+
+        /** Represents a MedalReceipt. */
+        class MedalReceipt {
+
+            /**
+             * Constructs a new MedalReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** MedalReceipt before_level. */
+            before_level: number;
+
+            /** MedalReceipt medal. */
+            medal?: (minimir.v1.MedalState.$Properties|null);
+
+            /** MedalReceipt fragments. */
+            fragments: minimir.v1.MedalFragmentSpend.$Properties[];
+
+            /**
+             * Creates a new MedalReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalReceipt instance
+             */
+            static create(properties: minimir.v1.MedalReceipt.$Shape): minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape;
+            static create(properties?: minimir.v1.MedalReceipt.$Properties): minimir.v1.MedalReceipt;
+
+            /**
+             * Encodes the specified MedalReceipt message. Does not implicitly {@link minimir.v1.MedalReceipt.verify|verify} messages.
+             * @param message MedalReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalReceipt message, length delimited. Does not implicitly {@link minimir.v1.MedalReceipt.verify|verify} messages.
+             * @param message MedalReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape} MedalReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape;
+
+            /**
+             * Decodes a MedalReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape} MedalReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape;
+
+            /**
+             * Verifies a MedalReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalReceipt {
+
+            /** Properties of a MedalReceipt. */
+            interface $Properties {
+
+                /** MedalReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** MedalReceipt before_level */
+                before_level?: (number|null);
+
+                /** MedalReceipt medal */
+                medal?: (minimir.v1.MedalState.$Properties|null);
+
+                /** MedalReceipt fragments */
+                fragments?: (minimir.v1.MedalFragmentSpend.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalReceipt. */
+            type $Shape = minimir.v1.MedalReceipt.$Properties;
         }
 
         /**
@@ -10778,6 +11114,9 @@ export namespace minimir {
             /** InventoryResult equipment_enhancement_slots. */
             equipment_enhancement_slots: minimir.v1.EquipmentEnhancementSlot.$Properties[];
 
+            /** InventoryResult medal. */
+            medal?: (minimir.v1.MedalState.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -10876,6 +11215,9 @@ export namespace minimir {
 
                 /** InventoryResult equipment_enhancement_slots */
                 equipment_enhancement_slots?: (minimir.v1.EquipmentEnhancementSlot.$Properties[]|null);
+
+                /** InventoryResult medal */
+                medal?: (minimir.v1.MedalState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -25097,6 +25439,498 @@ export namespace minimir {
 
             /** Shape of an EquipmentRefineActionRequest. */
             type $Shape = minimir.v1.EquipmentRefineActionRequest.$Properties;
+        }
+
+        /**
+         * Properties of a MedalFragmentRef.
+         * @deprecated Use minimir.v1.MedalFragmentRef.$Properties instead.
+         */
+        interface IMedalFragmentRef extends minimir.v1.MedalFragmentRef.$Properties {
+        }
+
+        /** Represents a MedalFragmentRef. */
+        class MedalFragmentRef {
+
+            /**
+             * Constructs a new MedalFragmentRef.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalFragmentRef.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalFragmentRef instance_id. */
+            instance_id: Uint8Array;
+
+            /** MedalFragmentRef version. */
+            version: Long;
+
+            /** MedalFragmentRef quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new MedalFragmentRef instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalFragmentRef instance
+             */
+            static create(properties: minimir.v1.MedalFragmentRef.$Shape): minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape;
+            static create(properties?: minimir.v1.MedalFragmentRef.$Properties): minimir.v1.MedalFragmentRef;
+
+            /**
+             * Encodes the specified MedalFragmentRef message. Does not implicitly {@link minimir.v1.MedalFragmentRef.verify|verify} messages.
+             * @param message MedalFragmentRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalFragmentRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalFragmentRef message, length delimited. Does not implicitly {@link minimir.v1.MedalFragmentRef.verify|verify} messages.
+             * @param message MedalFragmentRef message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalFragmentRef.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalFragmentRef message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape} MedalFragmentRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape;
+
+            /**
+             * Decodes a MedalFragmentRef message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape} MedalFragmentRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape;
+
+            /**
+             * Verifies a MedalFragmentRef message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalFragmentRef
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalFragmentRef {
+
+            /** Properties of a MedalFragmentRef. */
+            interface $Properties {
+
+                /** MedalFragmentRef instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** MedalFragmentRef version */
+                version?: (Long|null);
+
+                /** MedalFragmentRef quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalFragmentRef. */
+            type $Shape = minimir.v1.MedalFragmentRef.$Properties;
+        }
+
+        /**
+         * Properties of a MedalQuoteRequest.
+         * @deprecated Use minimir.v1.MedalQuoteRequest.$Properties instead.
+         */
+        interface IMedalQuoteRequest extends minimir.v1.MedalQuoteRequest.$Properties {
+        }
+
+        /** Represents a MedalQuoteRequest. */
+        class MedalQuoteRequest {
+
+            /**
+             * Constructs a new MedalQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** MedalQuoteRequest medal_version. */
+            medal_version: Long;
+
+            /** MedalQuoteRequest fragments. */
+            fragments: minimir.v1.MedalFragmentRef.$Properties[];
+
+            /** MedalQuoteRequest allow_bound. */
+            allow_bound: boolean;
+
+            /** MedalQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new MedalQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalQuoteRequest instance
+             */
+            static create(properties: minimir.v1.MedalQuoteRequest.$Shape): minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.MedalQuoteRequest.$Properties): minimir.v1.MedalQuoteRequest;
+
+            /**
+             * Encodes the specified MedalQuoteRequest message. Does not implicitly {@link minimir.v1.MedalQuoteRequest.verify|verify} messages.
+             * @param message MedalQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.MedalQuoteRequest.verify|verify} messages.
+             * @param message MedalQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape} MedalQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape;
+
+            /**
+             * Decodes a MedalQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape} MedalQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape;
+
+            /**
+             * Verifies a MedalQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalQuoteRequest {
+
+            /** Properties of a MedalQuoteRequest. */
+            interface $Properties {
+
+                /** MedalQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MedalQuoteRequest medal_version */
+                medal_version?: (Long|null);
+
+                /** MedalQuoteRequest fragments */
+                fragments?: (minimir.v1.MedalFragmentRef.$Properties[]|null);
+
+                /** MedalQuoteRequest allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** MedalQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalQuoteRequest. */
+            type $Shape = minimir.v1.MedalQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a MedalQuote.
+         * @deprecated Use minimir.v1.MedalQuote.$Properties instead.
+         */
+        interface IMedalQuote extends minimir.v1.MedalQuote.$Properties {
+        }
+
+        /** Represents a MedalQuote. */
+        class MedalQuote {
+
+            /**
+             * Constructs a new MedalQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** MedalQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** MedalQuote medal. */
+            medal?: (minimir.v1.MedalState.$Properties|null);
+
+            /** MedalQuote target_level. */
+            target_level: number;
+
+            /** MedalQuote target_main_attack. */
+            target_main_attack: Long;
+
+            /** MedalQuote target_defense. */
+            target_defense: Long;
+
+            /** MedalQuote fragments. */
+            fragments: minimir.v1.MedalFragmentSpend.$Properties[];
+
+            /** MedalQuote allow_bound. */
+            allow_bound: boolean;
+
+            /** MedalQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** MedalQuote role_revision. */
+            role_revision: Long;
+
+            /** MedalQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new MedalQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalQuote instance
+             */
+            static create(properties: minimir.v1.MedalQuote.$Shape): minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape;
+            static create(properties?: minimir.v1.MedalQuote.$Properties): minimir.v1.MedalQuote;
+
+            /**
+             * Encodes the specified MedalQuote message. Does not implicitly {@link minimir.v1.MedalQuote.verify|verify} messages.
+             * @param message MedalQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalQuote message, length delimited. Does not implicitly {@link minimir.v1.MedalQuote.verify|verify} messages.
+             * @param message MedalQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape} MedalQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape;
+
+            /**
+             * Decodes a MedalQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape} MedalQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape;
+
+            /**
+             * Verifies a MedalQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalQuote {
+
+            /** Properties of a MedalQuote. */
+            interface $Properties {
+
+                /** MedalQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** MedalQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MedalQuote medal */
+                medal?: (minimir.v1.MedalState.$Properties|null);
+
+                /** MedalQuote target_level */
+                target_level?: (number|null);
+
+                /** MedalQuote target_main_attack */
+                target_main_attack?: (Long|null);
+
+                /** MedalQuote target_defense */
+                target_defense?: (Long|null);
+
+                /** MedalQuote fragments */
+                fragments?: (minimir.v1.MedalFragmentSpend.$Properties[]|null);
+
+                /** MedalQuote allow_bound */
+                allow_bound?: (boolean|null);
+
+                /** MedalQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** MedalQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** MedalQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalQuote. */
+            type $Shape = minimir.v1.MedalQuote.$Properties;
+        }
+
+        /**
+         * Properties of a MedalCommitRequest.
+         * @deprecated Use minimir.v1.MedalCommitRequest.$Properties instead.
+         */
+        interface IMedalCommitRequest extends minimir.v1.MedalCommitRequest.$Properties {
+        }
+
+        /** Represents a MedalCommitRequest. */
+        class MedalCommitRequest {
+
+            /**
+             * Constructs a new MedalCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MedalCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MedalCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** MedalCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** MedalCommitRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new MedalCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MedalCommitRequest instance
+             */
+            static create(properties: minimir.v1.MedalCommitRequest.$Shape): minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape;
+            static create(properties?: minimir.v1.MedalCommitRequest.$Properties): minimir.v1.MedalCommitRequest;
+
+            /**
+             * Encodes the specified MedalCommitRequest message. Does not implicitly {@link minimir.v1.MedalCommitRequest.verify|verify} messages.
+             * @param message MedalCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MedalCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MedalCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.MedalCommitRequest.verify|verify} messages.
+             * @param message MedalCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MedalCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MedalCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape} MedalCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape;
+
+            /**
+             * Decodes a MedalCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape} MedalCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape;
+
+            /**
+             * Verifies a MedalCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MedalCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MedalCommitRequest {
+
+            /** Properties of a MedalCommitRequest. */
+            interface $Properties {
+
+                /** MedalCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** MedalCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** MedalCommitRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MedalCommitRequest. */
+            type $Shape = minimir.v1.MedalCommitRequest.$Properties;
         }
     }
 }

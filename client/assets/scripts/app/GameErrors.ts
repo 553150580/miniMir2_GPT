@@ -10,6 +10,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeWingUnavailable, CodeWingQuoteChanged, CodeWingInputs,
     CodeEquipmentEnhancementUnavailable, CodeEquipmentEnhancementQuoteChanged, CodeEquipmentEnhancementInputs,
     CodeEquipmentRefineUnavailable, CodeEquipmentRefineChanged, CodeEquipmentRefineInputs,
+    CodeMedalUnavailable, CodeMedalQuoteChanged, CodeMedalInputs,
     CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -70,6 +71,11 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         if (errorCode === CodeEquipmentRefineUnavailable) return '当前角色或场景暂不可洗炼';
         if (errorCode === CodeEquipmentRefineChanged || errorCode === CodeOperationConflict) return '原装备、报价或候选已变化，请重新查看';
         if (errorCode === CodeEquipmentRefineInputs || errorCode === CodeVendorFunds) return '洗炼石、钱包余额或锁槽条件不足';
+    }
+    if (messageId === 40061 || messageId === 40062 || messageId === 40063) {
+        if (errorCode === CodeMedalUnavailable) return '当前规则、角色或场景未开放勋章培养';
+        if (errorCode === CodeMedalQuoteChanged || errorCode === CodeOperationConflict) return '勋章或碎片已变化，请重新报价';
+        if (errorCode === CodeMedalInputs) return '碎片、绑定选择或角色等级不满足条件';
     }
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';

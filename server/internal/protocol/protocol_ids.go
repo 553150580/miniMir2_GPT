@@ -122,6 +122,9 @@ const (
 	MsgC2SEquipmentRefineQuote uint16 = 40058
 	MsgS2CEquipmentRefineQuote uint16 = 40059
 	MsgC2SEquipmentRefineAction uint16 = 40060
+	MsgC2SMedalQuote uint16 = 40061
+	MsgS2CMedalQuote uint16 = 40062
+	MsgC2SMedalCommit uint16 = 40063
 )
 
 const (
@@ -190,4 +193,7 @@ const (
 	CodeEquipmentRefineUnavailable uint32 = 3970
 	CodeEquipmentRefineChanged uint32 = 3971
 	CodeEquipmentRefineInputs uint32 = 3972
+	CodeMedalUnavailable uint32 = 3973
+	CodeMedalQuoteChanged uint32 = 3974
+	CodeMedalInputs uint32 = 3975
 )

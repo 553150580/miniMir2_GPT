@@ -259,6 +259,13 @@ func (f *Fixture) ValidateEquipmentStats() error {
 				return errors.New("装备组合的部位强化属性或随机区间溢出")
 			}
 		}
+		if f.Medal != nil {
+			var valid bool
+			a, valid = f.ApplyMedalBonuses(a, uint32(len(f.Medal.Levels)))
+			if !valid {
+				return errors.New("装备组合与最高勋章叠加后的属性或随机区间溢出")
+			}
+		}
 		if !f.EquipmentArithmeticSafe(a) {
 			return errors.New("装备组合的MC/SC技能中间值溢出")
 		}

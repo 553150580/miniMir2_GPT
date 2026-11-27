@@ -1,0 +1,11 @@
+{
+  "fragment_item_id": 900061,
+  "fragment_max_stack": 99,
+  "world_boss_template_id": 2,
+  "world_boss_fragments": 6,
+  "levels": [
+    {"fragment_cost": 2, "main_attack": 1, "defense": 1},
+    {"fragment_cost": 3, "main_attack": 2, "defense": 1},
+    {"fragment_cost": 5, "main_attack": 3, "defense": 2}
+  ]
+}

@@ -68,6 +68,10 @@ type AssetRequest struct {
 	EquipmentRefineGate       uint32                           // 当前场景对首次洗炼写入的门禁。
 	EquipmentRefineAcceptedAt time.Time                        `json:"-"` // 首次确认到达游戏房间的时间，排队重试保持。
 
+	MedalCommit     *pb.MedalCommitRequest // 角色在原面板确认的勋章逐级报价。
+	MedalGate       uint32                 // 当前场景只对首次成长生效的门禁。
+	MedalAcceptedAt time.Time              `json:"-"` // 原确认到达游戏房间的时刻，排队和重试保持。
+
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
 	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
@@ -141,6 +145,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetEquipmentRefine && q.EquipmentRefineAcceptedAt.IsZero() {
 		q.EquipmentRefineAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetMedalCommit && q.MedalAcceptedAt.IsZero() {
+		q.MedalAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -203,7 +210,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -233,6 +240,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var wing *WingActionReceipt                        // 原翅膀的新状态和确切羽毛消费。
 		var enhancement *EquipmentEnhancementReceipt       // 原强化结果和每个已扣石堆。
 		var refine *EquipmentRefineReceipt                 // 原洗炼动作与已付结果的永久确认。
+		var medal *MedalCommitReceipt                      // 原勋章档案与确切碎片消费。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -276,6 +284,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetEquipmentRefine:
 			r, businessCode, refine, e = s.commitEquipmentRefine(tc, a, r, q, opID)
+			if e != nil {
+				return e
+			}
+		case AssetMedalCommit:
+			r, businessCode, medal, e = s.commitMedal(tc, a, r, q)
 			if e != nil {
 				return e
 			}
@@ -428,6 +441,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Wing = wing
 		op.EquipmentEnhancement = enhancement
 		op.EquipmentRefine = refine
+		op.Medal = medal
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -502,6 +516,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["equipment_refine"] = refine
 			audit["rule_version"] = refine.Rule
 			audit["config_hash"] = refine.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if medal != nil {
+			audit["medal"] = medal
+			audit["rule_version"] = medal.Rule
+			audit["config_hash"] = medal.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -597,6 +617,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			result.EquipmentEnhancement = receipt.EquipmentEnhancement.Proto()
 		}
 		result.EquipmentRefine = receipt.EquipmentRefine.Proto()
+		result.Medal = receipt.Medal.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 		result.RecycleRefine = receipt.Recycling.refineProto()
 	}

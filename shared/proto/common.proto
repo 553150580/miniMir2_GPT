@@ -32,6 +32,29 @@ message OperationResult {
   EquipmentEnhancementReceipt equipment_enhancement = 16;
   EquipmentRefineReceipt equipment_refine = 17;
   RecycleRefineReceipt recycle_refine = 18;
+  MedalReceipt medal = 19;
+}
+
+// 角色独立勋章的永久等级与版本；未激活时不发送状态。
+message MedalState {
+  uint32 level = 1;
+  uint64 version = 2;
+}
+
+// 原碎片堆确认时的版本、实际扣量和绑定状态。
+message MedalFragmentSpend {
+  bytes instance_id = 1;
+  uint64 version = 2;
+  int64 quantity = 3;
+  bool bound = 4;
+}
+
+// 必成升档的原回执，记录激活前或升档前的级别。
+message MedalReceipt {
+  bytes quote_id = 1;
+  uint32 before_level = 2;
+  MedalState medal = 3;
+  repeated MedalFragmentSpend fragments = 4;
 }
 // 洗炼确切消耗的原石堆，保留扣前版本、数量和绑定。
 message EquipmentRefineSpend {

@@ -151,7 +151,8 @@ func equipmentRoleArithmeticSafe(r domain.Role, f devconfig.Fixture) bool {
 			return false
 		}
 	}
-	return f.EquipmentArithmeticSafe(a)
+	a, ok = f.ApplyMedalBonuses(a, r.MedalLevel())
+	return ok && f.EquipmentArithmeticSafe(a)
 }
 
 // equipEquipment 执行换装或卸装，按实例版本、保护状态和背包容量生成新角色与回执。

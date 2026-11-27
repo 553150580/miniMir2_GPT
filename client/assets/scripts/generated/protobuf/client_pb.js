@@ -814,6 +814,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.EquipmentEnhancementReceipt.$Properties|null} [equipment_enhancement] OperationResult equipment_enhancement
              * @property {minimir.v1.EquipmentRefineReceipt.$Properties|null} [equipment_refine] OperationResult equipment_refine
              * @property {minimir.v1.RecycleRefineReceipt.$Properties|null} [recycle_refine] OperationResult recycle_refine
+             * @property {minimir.v1.MedalReceipt.$Properties|null} [medal] OperationResult medal
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -990,6 +991,14 @@ $root.minimir = (function() {
             OperationResult.prototype.recycle_refine = null;
 
             /**
+             * OperationResult medal.
+             * @member {minimir.v1.MedalReceipt.$Properties|null|undefined} medal
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.medal = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1057,6 +1066,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.EquipmentRefineReceipt.encode(message.equipment_refine, writer.uint32(/* id 17, wireType 2 =*/138).fork(), _depth + 1).ldelim();
                 if (message.recycle_refine != null && $Object.hasOwnProperty.call(message, "recycle_refine"))
                     $root.minimir.v1.RecycleRefineReceipt.encode(message.recycle_refine, writer.uint32(/* id 18, wireType 2 =*/146).fork(), _depth + 1).ldelim();
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
+                    $root.minimir.v1.MedalReceipt.encode(message.medal, writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1237,6 +1248,12 @@ $root.minimir = (function() {
                             message.recycle_refine = $root.minimir.v1.RecycleRefineReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.recycle_refine);
                             continue;
                         }
+                    case 19: {
+                            if (wireType !== 2)
+                                break;
+                            message.medal = $root.minimir.v1.MedalReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1365,6 +1382,11 @@ $root.minimir = (function() {
                     if (error)
                         return "recycle_refine." + error;
                 }
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal")) {
+                    var error = $root.minimir.v1.MedalReceipt.verify(message.medal, _depth + 1);
+                    if (error)
+                        return "medal." + error;
+                }
                 return null;
             };
 
@@ -1383,6 +1405,821 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.MedalState = (function() {
+
+            /**
+             * Properties of a MedalState.
+             * @typedef {Object} minimir.v1.MedalState.$Properties
+             * @property {number|null} [level] MedalState level
+             * @property {Long|null} [version] MedalState version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalState.
+             * @memberof minimir.v1
+             * @interface IMedalState
+             * @augments minimir.v1.MedalState.$Properties
+             * @deprecated Use minimir.v1.MedalState.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalState.
+             * @typedef {minimir.v1.MedalState.$Properties} minimir.v1.MedalState.$Shape
+             */
+
+            /**
+             * Constructs a new MedalState.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalState.
+             * @constructor
+             * @param {minimir.v1.MedalState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalState level.
+             * @member {number} level
+             * @memberof minimir.v1.MedalState
+             * @instance
+             */
+            MedalState.prototype.level = 0;
+
+            /**
+             * MedalState version.
+             * @member {Long} version
+             * @memberof minimir.v1.MedalState
+             * @instance
+             */
+            MedalState.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new MedalState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {minimir.v1.MedalState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalState} MedalState instance
+             * @type {{
+             *   (properties: minimir.v1.MedalState.$Shape): minimir.v1.MedalState & minimir.v1.MedalState.$Shape;
+             *   (properties?: minimir.v1.MedalState.$Properties): minimir.v1.MedalState;
+             * }}
+             */
+            MedalState.create = function(properties) {
+                return new MedalState(properties);
+            };
+
+            /**
+             * Encodes the specified MedalState message. Does not implicitly {@link minimir.v1.MedalState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {minimir.v1.MedalState.$Properties} message MedalState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level") && message.level !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.level);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalState message, length delimited. Does not implicitly {@link minimir.v1.MedalState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {minimir.v1.MedalState.$Properties} message MedalState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalState & minimir.v1.MedalState.$Shape} MedalState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level = value;
+                            else
+                                delete message.level;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalState & minimir.v1.MedalState.$Shape} MedalState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalState message.
+             * @function verify
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.level != null && $Object.hasOwnProperty.call(message, "level"))
+                    if (!$util.isInteger(message.level))
+                        return "level: integer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalState
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalState";
+            };
+
+            return MedalState;
+        })();
+
+        v1.MedalFragmentSpend = (function() {
+
+            /**
+             * Properties of a MedalFragmentSpend.
+             * @typedef {Object} minimir.v1.MedalFragmentSpend.$Properties
+             * @property {Uint8Array|null} [instance_id] MedalFragmentSpend instance_id
+             * @property {Long|null} [version] MedalFragmentSpend version
+             * @property {Long|null} [quantity] MedalFragmentSpend quantity
+             * @property {boolean|null} [bound] MedalFragmentSpend bound
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalFragmentSpend.
+             * @memberof minimir.v1
+             * @interface IMedalFragmentSpend
+             * @augments minimir.v1.MedalFragmentSpend.$Properties
+             * @deprecated Use minimir.v1.MedalFragmentSpend.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalFragmentSpend.
+             * @typedef {minimir.v1.MedalFragmentSpend.$Properties} minimir.v1.MedalFragmentSpend.$Shape
+             */
+
+            /**
+             * Constructs a new MedalFragmentSpend.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalFragmentSpend.
+             * @constructor
+             * @param {minimir.v1.MedalFragmentSpend.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalFragmentSpend = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalFragmentSpend instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @instance
+             */
+            MedalFragmentSpend.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * MedalFragmentSpend version.
+             * @member {Long} version
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @instance
+             */
+            MedalFragmentSpend.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalFragmentSpend quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @instance
+             */
+            MedalFragmentSpend.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MedalFragmentSpend bound.
+             * @member {boolean} bound
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @instance
+             */
+            MedalFragmentSpend.prototype.bound = false;
+
+            /**
+             * Creates a new MedalFragmentSpend instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {minimir.v1.MedalFragmentSpend.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalFragmentSpend} MedalFragmentSpend instance
+             * @type {{
+             *   (properties: minimir.v1.MedalFragmentSpend.$Shape): minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape;
+             *   (properties?: minimir.v1.MedalFragmentSpend.$Properties): minimir.v1.MedalFragmentSpend;
+             * }}
+             */
+            MedalFragmentSpend.create = function(properties) {
+                return new MedalFragmentSpend(properties);
+            };
+
+            /**
+             * Encodes the specified MedalFragmentSpend message. Does not implicitly {@link minimir.v1.MedalFragmentSpend.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {minimir.v1.MedalFragmentSpend.$Properties} message MedalFragmentSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalFragmentSpend.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound") && message.bound !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.bound);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalFragmentSpend message, length delimited. Does not implicitly {@link minimir.v1.MedalFragmentSpend.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {minimir.v1.MedalFragmentSpend.$Properties} message MedalFragmentSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalFragmentSpend.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalFragmentSpend message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape} MedalFragmentSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalFragmentSpend.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalFragmentSpend();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.bound = value;
+                            else
+                                delete message.bound;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalFragmentSpend message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalFragmentSpend & minimir.v1.MedalFragmentSpend.$Shape} MedalFragmentSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalFragmentSpend.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalFragmentSpend message.
+             * @function verify
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalFragmentSpend.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound"))
+                    if (typeof message.bound !== "boolean")
+                        return "bound: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalFragmentSpend
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalFragmentSpend
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalFragmentSpend.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalFragmentSpend";
+            };
+
+            return MedalFragmentSpend;
+        })();
+
+        v1.MedalReceipt = (function() {
+
+            /**
+             * Properties of a MedalReceipt.
+             * @typedef {Object} minimir.v1.MedalReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] MedalReceipt quote_id
+             * @property {number|null} [before_level] MedalReceipt before_level
+             * @property {minimir.v1.MedalState.$Properties|null} [medal] MedalReceipt medal
+             * @property {Array.<minimir.v1.MedalFragmentSpend.$Properties>|null} [fragments] MedalReceipt fragments
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalReceipt.
+             * @memberof minimir.v1
+             * @interface IMedalReceipt
+             * @augments minimir.v1.MedalReceipt.$Properties
+             * @deprecated Use minimir.v1.MedalReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalReceipt.
+             * @typedef {minimir.v1.MedalReceipt.$Properties} minimir.v1.MedalReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new MedalReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalReceipt.
+             * @constructor
+             * @param {minimir.v1.MedalReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalReceipt = function (properties) {
+                this.fragments = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.MedalReceipt
+             * @instance
+             */
+            MedalReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * MedalReceipt before_level.
+             * @member {number} before_level
+             * @memberof minimir.v1.MedalReceipt
+             * @instance
+             */
+            MedalReceipt.prototype.before_level = 0;
+
+            /**
+             * MedalReceipt medal.
+             * @member {minimir.v1.MedalState.$Properties|null|undefined} medal
+             * @memberof minimir.v1.MedalReceipt
+             * @instance
+             */
+            MedalReceipt.prototype.medal = null;
+
+            /**
+             * MedalReceipt fragments.
+             * @member {Array.<minimir.v1.MedalFragmentSpend.$Properties>} fragments
+             * @memberof minimir.v1.MedalReceipt
+             * @instance
+             */
+            MedalReceipt.prototype.fragments = $util.emptyArray;
+
+            /**
+             * Creates a new MedalReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {minimir.v1.MedalReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalReceipt} MedalReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.MedalReceipt.$Shape): minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape;
+             *   (properties?: minimir.v1.MedalReceipt.$Properties): minimir.v1.MedalReceipt;
+             * }}
+             */
+            MedalReceipt.create = function(properties) {
+                return new MedalReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified MedalReceipt message. Does not implicitly {@link minimir.v1.MedalReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {minimir.v1.MedalReceipt.$Properties} message MedalReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level") && message.before_level !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.before_level);
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
+                    $root.minimir.v1.MedalState.encode(message.medal, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.fragments != null && message.fragments.length)
+                    for (var i = 0; i < message.fragments.length; ++i)
+                        $root.minimir.v1.MedalFragmentSpend.encode(message.fragments[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalReceipt message, length delimited. Does not implicitly {@link minimir.v1.MedalReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {minimir.v1.MedalReceipt.$Properties} message MedalReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape} MedalReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.before_level = value;
+                            else
+                                delete message.before_level;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.medal = $root.minimir.v1.MedalState.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.fragments && message.fragments.length))
+                                message.fragments = [];
+                            message.fragments.push($root.minimir.v1.MedalFragmentSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalReceipt & minimir.v1.MedalReceipt.$Shape} MedalReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalReceipt message.
+             * @function verify
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level"))
+                    if (!$util.isInteger(message.before_level))
+                        return "before_level: integer expected";
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal")) {
+                    var error = $root.minimir.v1.MedalState.verify(message.medal, _depth + 1);
+                    if (error)
+                        return "medal." + error;
+                }
+                if (message.fragments != null && $Object.hasOwnProperty.call(message, "fragments")) {
+                    if (!$Array.isArray(message.fragments))
+                        return "fragments: array expected";
+                    for (var i = 0; i < message.fragments.length; ++i) {
+                        var error = $root.minimir.v1.MedalFragmentSpend.verify(message.fragments[i], _depth + 1);
+                        if (error)
+                            return "fragments." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalReceipt";
+            };
+
+            return MedalReceipt;
         })();
 
         v1.EquipmentRefineSpend = (function() {
@@ -28138,6 +28975,7 @@ $root.minimir = (function() {
              * @property {Array.<number>|null} [skill_slot_ids] InventoryResult skill_slot_ids
              * @property {minimir.v1.WingState.$Properties|null} [wing] InventoryResult wing
              * @property {Array.<minimir.v1.EquipmentEnhancementSlot.$Properties>|null} [equipment_enhancement_slots] InventoryResult equipment_enhancement_slots
+             * @property {minimir.v1.MedalState.$Properties|null} [medal] InventoryResult medal
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -28271,6 +29109,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.equipment_enhancement_slots = $util.emptyArray;
 
             /**
+             * InventoryResult medal.
+             * @member {minimir.v1.MedalState.$Properties|null|undefined} medal
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.medal = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -28330,6 +29176,8 @@ $root.minimir = (function() {
                 if (message.equipment_enhancement_slots != null && message.equipment_enhancement_slots.length)
                     for (var i = 0; i < message.equipment_enhancement_slots.length; ++i)
                         $root.minimir.v1.EquipmentEnhancementSlot.encode(message.equipment_enhancement_slots[i], writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
+                    $root.minimir.v1.MedalState.encode(message.medal, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -28487,6 +29335,12 @@ $root.minimir = (function() {
                             message.equipment_enhancement_slots.push($root.minimir.v1.EquipmentEnhancementSlot.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            message.medal = $root.minimir.v1.MedalState.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -28604,6 +29458,11 @@ $root.minimir = (function() {
                         if (error)
                             return "equipment_enhancement_slots." + error;
                     }
+                }
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal")) {
+                    var error = $root.minimir.v1.MedalState.verify(message.medal, _depth + 1);
+                    if (error)
+                        return "medal." + error;
                 }
                 return null;
             };
@@ -66849,6 +67708,1296 @@ $root.minimir = (function() {
             };
 
             return EquipmentRefineActionRequest;
+        })();
+
+        v1.MedalFragmentRef = (function() {
+
+            /**
+             * Properties of a MedalFragmentRef.
+             * @typedef {Object} minimir.v1.MedalFragmentRef.$Properties
+             * @property {Uint8Array|null} [instance_id] MedalFragmentRef instance_id
+             * @property {Long|null} [version] MedalFragmentRef version
+             * @property {Long|null} [quantity] MedalFragmentRef quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalFragmentRef.
+             * @memberof minimir.v1
+             * @interface IMedalFragmentRef
+             * @augments minimir.v1.MedalFragmentRef.$Properties
+             * @deprecated Use minimir.v1.MedalFragmentRef.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalFragmentRef.
+             * @typedef {minimir.v1.MedalFragmentRef.$Properties} minimir.v1.MedalFragmentRef.$Shape
+             */
+
+            /**
+             * Constructs a new MedalFragmentRef.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalFragmentRef.
+             * @constructor
+             * @param {minimir.v1.MedalFragmentRef.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalFragmentRef = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalFragmentRef instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.MedalFragmentRef
+             * @instance
+             */
+            MedalFragmentRef.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * MedalFragmentRef version.
+             * @member {Long} version
+             * @memberof minimir.v1.MedalFragmentRef
+             * @instance
+             */
+            MedalFragmentRef.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalFragmentRef quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.MedalFragmentRef
+             * @instance
+             */
+            MedalFragmentRef.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MedalFragmentRef instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {minimir.v1.MedalFragmentRef.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalFragmentRef} MedalFragmentRef instance
+             * @type {{
+             *   (properties: minimir.v1.MedalFragmentRef.$Shape): minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape;
+             *   (properties?: minimir.v1.MedalFragmentRef.$Properties): minimir.v1.MedalFragmentRef;
+             * }}
+             */
+            MedalFragmentRef.create = function(properties) {
+                return new MedalFragmentRef(properties);
+            };
+
+            /**
+             * Encodes the specified MedalFragmentRef message. Does not implicitly {@link minimir.v1.MedalFragmentRef.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {minimir.v1.MedalFragmentRef.$Properties} message MedalFragmentRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalFragmentRef.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalFragmentRef message, length delimited. Does not implicitly {@link minimir.v1.MedalFragmentRef.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {minimir.v1.MedalFragmentRef.$Properties} message MedalFragmentRef message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalFragmentRef.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalFragmentRef message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape} MedalFragmentRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalFragmentRef.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalFragmentRef();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalFragmentRef message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalFragmentRef & minimir.v1.MedalFragmentRef.$Shape} MedalFragmentRef
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalFragmentRef.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalFragmentRef message.
+             * @function verify
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalFragmentRef.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalFragmentRef
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalFragmentRef
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalFragmentRef.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalFragmentRef";
+            };
+
+            return MedalFragmentRef;
+        })();
+
+        v1.MedalQuoteRequest = (function() {
+
+            /**
+             * Properties of a MedalQuoteRequest.
+             * @typedef {Object} minimir.v1.MedalQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] MedalQuoteRequest scene_epoch
+             * @property {Long|null} [medal_version] MedalQuoteRequest medal_version
+             * @property {Array.<minimir.v1.MedalFragmentRef.$Properties>|null} [fragments] MedalQuoteRequest fragments
+             * @property {boolean|null} [allow_bound] MedalQuoteRequest allow_bound
+             * @property {Uint8Array|null} [ui_session_id] MedalQuoteRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IMedalQuoteRequest
+             * @augments minimir.v1.MedalQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.MedalQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalQuoteRequest.
+             * @typedef {minimir.v1.MedalQuoteRequest.$Properties} minimir.v1.MedalQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new MedalQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.MedalQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalQuoteRequest = function (properties) {
+                this.fragments = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @instance
+             */
+            MedalQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalQuoteRequest medal_version.
+             * @member {Long} medal_version
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @instance
+             */
+            MedalQuoteRequest.prototype.medal_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalQuoteRequest fragments.
+             * @member {Array.<minimir.v1.MedalFragmentRef.$Properties>} fragments
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @instance
+             */
+            MedalQuoteRequest.prototype.fragments = $util.emptyArray;
+
+            /**
+             * MedalQuoteRequest allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @instance
+             */
+            MedalQuoteRequest.prototype.allow_bound = false;
+
+            /**
+             * MedalQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @instance
+             */
+            MedalQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new MedalQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {minimir.v1.MedalQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalQuoteRequest} MedalQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.MedalQuoteRequest.$Shape): minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.MedalQuoteRequest.$Properties): minimir.v1.MedalQuoteRequest;
+             * }}
+             */
+            MedalQuoteRequest.create = function(properties) {
+                return new MedalQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified MedalQuoteRequest message. Does not implicitly {@link minimir.v1.MedalQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {minimir.v1.MedalQuoteRequest.$Properties} message MedalQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.medal_version != null && $Object.hasOwnProperty.call(message, "medal_version") && (typeof message.medal_version === "object" ? message.medal_version.low || message.medal_version.high : message.medal_version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.medal_version);
+                if (message.fragments != null && message.fragments.length)
+                    for (var i = 0; i < message.fragments.length; ++i)
+                        $root.minimir.v1.MedalFragmentRef.encode(message.fragments[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.allow_bound);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.MedalQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {minimir.v1.MedalQuoteRequest.$Properties} message MedalQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape} MedalQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.medal_version = value;
+                            else
+                                delete message.medal_version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.fragments && message.fragments.length))
+                                message.fragments = [];
+                            message.fragments.push($root.minimir.v1.MedalFragmentRef.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalQuoteRequest & minimir.v1.MedalQuoteRequest.$Shape} MedalQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.medal_version != null && $Object.hasOwnProperty.call(message, "medal_version"))
+                    if (!$util.isInteger(message.medal_version) && !(message.medal_version && $util.isInteger(message.medal_version.low) && $util.isInteger(message.medal_version.high)))
+                        return "medal_version: integer|Long expected";
+                if (message.fragments != null && $Object.hasOwnProperty.call(message, "fragments")) {
+                    if (!$Array.isArray(message.fragments))
+                        return "fragments: array expected";
+                    for (var i = 0; i < message.fragments.length; ++i) {
+                        var error = $root.minimir.v1.MedalFragmentRef.verify(message.fragments[i], _depth + 1);
+                        if (error)
+                            return "fragments." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalQuoteRequest";
+            };
+
+            return MedalQuoteRequest;
+        })();
+
+        v1.MedalQuote = (function() {
+
+            /**
+             * Properties of a MedalQuote.
+             * @typedef {Object} minimir.v1.MedalQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] MedalQuote quote_id
+             * @property {Long|null} [scene_epoch] MedalQuote scene_epoch
+             * @property {minimir.v1.MedalState.$Properties|null} [medal] MedalQuote medal
+             * @property {number|null} [target_level] MedalQuote target_level
+             * @property {Long|null} [target_main_attack] MedalQuote target_main_attack
+             * @property {Long|null} [target_defense] MedalQuote target_defense
+             * @property {Array.<minimir.v1.MedalFragmentSpend.$Properties>|null} [fragments] MedalQuote fragments
+             * @property {boolean|null} [allow_bound] MedalQuote allow_bound
+             * @property {Long|null} [expires_at_unix_ms] MedalQuote expires_at_unix_ms
+             * @property {Long|null} [role_revision] MedalQuote role_revision
+             * @property {Uint8Array|null} [ui_session_id] MedalQuote ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalQuote.
+             * @memberof minimir.v1
+             * @interface IMedalQuote
+             * @augments minimir.v1.MedalQuote.$Properties
+             * @deprecated Use minimir.v1.MedalQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalQuote.
+             * @typedef {minimir.v1.MedalQuote.$Properties} minimir.v1.MedalQuote.$Shape
+             */
+
+            /**
+             * Constructs a new MedalQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalQuote.
+             * @constructor
+             * @param {minimir.v1.MedalQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalQuote = function (properties) {
+                this.fragments = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * MedalQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalQuote medal.
+             * @member {minimir.v1.MedalState.$Properties|null|undefined} medal
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.medal = null;
+
+            /**
+             * MedalQuote target_level.
+             * @member {number} target_level
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.target_level = 0;
+
+            /**
+             * MedalQuote target_main_attack.
+             * @member {Long} target_main_attack
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.target_main_attack = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MedalQuote target_defense.
+             * @member {Long} target_defense
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.target_defense = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * MedalQuote fragments.
+             * @member {Array.<minimir.v1.MedalFragmentSpend.$Properties>} fragments
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.fragments = $util.emptyArray;
+
+            /**
+             * MedalQuote allow_bound.
+             * @member {boolean} allow_bound
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.allow_bound = false;
+
+            /**
+             * MedalQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MedalQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.MedalQuote
+             * @instance
+             */
+            MedalQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new MedalQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {minimir.v1.MedalQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalQuote} MedalQuote instance
+             * @type {{
+             *   (properties: minimir.v1.MedalQuote.$Shape): minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape;
+             *   (properties?: minimir.v1.MedalQuote.$Properties): minimir.v1.MedalQuote;
+             * }}
+             */
+            MedalQuote.create = function(properties) {
+                return new MedalQuote(properties);
+            };
+
+            /**
+             * Encodes the specified MedalQuote message. Does not implicitly {@link minimir.v1.MedalQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {minimir.v1.MedalQuote.$Properties} message MedalQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
+                    $root.minimir.v1.MedalState.encode(message.medal, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level") && message.target_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.target_level);
+                if (message.target_main_attack != null && $Object.hasOwnProperty.call(message, "target_main_attack") && (typeof message.target_main_attack === "object" ? message.target_main_attack.low || message.target_main_attack.high : message.target_main_attack !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.target_main_attack);
+                if (message.target_defense != null && $Object.hasOwnProperty.call(message, "target_defense") && (typeof message.target_defense === "object" ? message.target_defense.low || message.target_defense.high : message.target_defense !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.target_defense);
+                if (message.fragments != null && message.fragments.length)
+                    for (var i = 0; i < message.fragments.length; ++i)
+                        $root.minimir.v1.MedalFragmentSpend.encode(message.fragments[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound") && message.allow_bound !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.allow_bound);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.expires_at_unix_ms);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.role_revision);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 11, wireType 2 =*/90).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalQuote message, length delimited. Does not implicitly {@link minimir.v1.MedalQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {minimir.v1.MedalQuote.$Properties} message MedalQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape} MedalQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.medal = $root.minimir.v1.MedalState.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_level = value;
+                            else
+                                delete message.target_level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_main_attack = value;
+                            else
+                                delete message.target_main_attack;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_defense = value;
+                            else
+                                delete message.target_defense;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.fragments && message.fragments.length))
+                                message.fragments = [];
+                            message.fragments.push($root.minimir.v1.MedalFragmentSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.allow_bound = value;
+                            else
+                                delete message.allow_bound;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalQuote & minimir.v1.MedalQuote.$Shape} MedalQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalQuote message.
+             * @function verify
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.medal != null && $Object.hasOwnProperty.call(message, "medal")) {
+                    var error = $root.minimir.v1.MedalState.verify(message.medal, _depth + 1);
+                    if (error)
+                        return "medal." + error;
+                }
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level"))
+                    if (!$util.isInteger(message.target_level))
+                        return "target_level: integer expected";
+                if (message.target_main_attack != null && $Object.hasOwnProperty.call(message, "target_main_attack"))
+                    if (!$util.isInteger(message.target_main_attack) && !(message.target_main_attack && $util.isInteger(message.target_main_attack.low) && $util.isInteger(message.target_main_attack.high)))
+                        return "target_main_attack: integer|Long expected";
+                if (message.target_defense != null && $Object.hasOwnProperty.call(message, "target_defense"))
+                    if (!$util.isInteger(message.target_defense) && !(message.target_defense && $util.isInteger(message.target_defense.low) && $util.isInteger(message.target_defense.high)))
+                        return "target_defense: integer|Long expected";
+                if (message.fragments != null && $Object.hasOwnProperty.call(message, "fragments")) {
+                    if (!$Array.isArray(message.fragments))
+                        return "fragments: array expected";
+                    for (var i = 0; i < message.fragments.length; ++i) {
+                        var error = $root.minimir.v1.MedalFragmentSpend.verify(message.fragments[i], _depth + 1);
+                        if (error)
+                            return "fragments." + error;
+                    }
+                }
+                if (message.allow_bound != null && $Object.hasOwnProperty.call(message, "allow_bound"))
+                    if (typeof message.allow_bound !== "boolean")
+                        return "allow_bound: boolean expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalQuote";
+            };
+
+            return MedalQuote;
+        })();
+
+        v1.MedalCommitRequest = (function() {
+
+            /**
+             * Properties of a MedalCommitRequest.
+             * @typedef {Object} minimir.v1.MedalCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] MedalCommitRequest quote_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] MedalCommitRequest operation
+             * @property {Uint8Array|null} [ui_session_id] MedalCommitRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MedalCommitRequest.
+             * @memberof minimir.v1
+             * @interface IMedalCommitRequest
+             * @augments minimir.v1.MedalCommitRequest.$Properties
+             * @deprecated Use minimir.v1.MedalCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a MedalCommitRequest.
+             * @typedef {minimir.v1.MedalCommitRequest.$Properties} minimir.v1.MedalCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new MedalCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a MedalCommitRequest.
+             * @constructor
+             * @param {minimir.v1.MedalCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MedalCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MedalCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.MedalCommitRequest
+             * @instance
+             */
+            MedalCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * MedalCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.MedalCommitRequest
+             * @instance
+             */
+            MedalCommitRequest.prototype.operation = null;
+
+            /**
+             * MedalCommitRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.MedalCommitRequest
+             * @instance
+             */
+            MedalCommitRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new MedalCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {minimir.v1.MedalCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MedalCommitRequest} MedalCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.MedalCommitRequest.$Shape): minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape;
+             *   (properties?: minimir.v1.MedalCommitRequest.$Properties): minimir.v1.MedalCommitRequest;
+             * }}
+             */
+            MedalCommitRequest.create = function(properties) {
+                return new MedalCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified MedalCommitRequest message. Does not implicitly {@link minimir.v1.MedalCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {minimir.v1.MedalCommitRequest.$Properties} message MedalCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MedalCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.MedalCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {minimir.v1.MedalCommitRequest.$Properties} message MedalCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MedalCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MedalCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape} MedalCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MedalCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MedalCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MedalCommitRequest & minimir.v1.MedalCommitRequest.$Shape} MedalCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MedalCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MedalCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MedalCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MedalCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.MedalCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MedalCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MedalCommitRequest";
+            };
+
+            return MedalCommitRequest;
         })();
 
         return v1;

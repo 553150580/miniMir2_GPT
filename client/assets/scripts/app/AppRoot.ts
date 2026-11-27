@@ -63,6 +63,9 @@ import type { RecycleRefineRoll, RefineReceipt } from './EquipmentRefineReceipt'
 import type { EquipmentEnhancementCommit, EquipmentEnhancementReceipt, EquipmentEnhancementSnapshot } from './EquipmentEnhancementModel';
 import { validateWingReceipt, wingRules, wingSlotLabel } from './WingModel';
 import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
+import { GameMedal } from './GameMedal';
+import { medalRules, medalSlotLabel, validateMedalReceipt } from './MedalModel';
+import type { MedalCommitRequest, MedalReceipt, MedalSnapshot } from './MedalModel';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -92,11 +95,13 @@ import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
-import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied } from '../generated/protocol_ids';
+import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
+    MsgC2SMedalCommit, MsgC2SMedalQuote } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
 const roleWingRow = Object.freeze({ wing: true });
+const roleMedalRow = Object.freeze({ medal: true });
 let signInResume: { accountId: string; name: string; origin: string | undefined; role: string | null } | null = null;
 
 function selectedRoleIdentity(role: any): string {
@@ -145,6 +150,9 @@ export class AppRoot extends Component {
     private forge?: GameForge;
     private weaponOil?: GameWeaponOil;
     private wings?: GameWings;
+    private medal?: GameMedal;
+    private medalRulesSource?: unknown;
+    private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
     private equipmentEnhancementRulesSource?: unknown;
     private equipmentEnhancementRules?: ReturnType<typeof equipmentEnhancementRules>;
@@ -550,6 +558,12 @@ export class AppRoot extends Component {
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(40052, request), submit: request => this.economic(40054, request),
             openLuck: wing => this.weaponOil!.open({ wingId: wing.wingId }) });
+        this.medal = new GameMedal({ snapshot: () => this.medalSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read),
+            refresh: () => this.itemActions!.refresh(),
+            confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
+            quote: request => session.connection.request(MsgC2SMedalQuote, request),
+            submit: (request, expectedRevision) => this.economic(MsgC2SMedalCommit, request, expectedRevision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -1466,12 +1480,14 @@ export class AppRoot extends Component {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
             const wornItems = (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
             const enhancement = panel === 'Role' ? this.currentEnhancementState()?.slots : undefined;
-            // 角色专属翅膀单列在保存的装备清单中，不占用普通部位或耗材槽。
-            const items = panel === 'Inventory' ? session.inventory?.items ?? [] :
-                (session.inventory && this.currentWingRules() ? [roleWingRow, ...wornItems] : wornItems);
+            // 角色专属养成使用保存的装备清单条目，普通部位及耗材槽继续独立。
+            const growthRows = session.inventory && panel === 'Role'
+                ? [...(this.currentWingRules() ? [roleWingRow] : []), ...(this.currentMedalRules() ? [roleMedalRow] : [])] : [];
+            const items = panel === 'Inventory' ? session.inventory?.items ?? [] : [...growthRows, ...wornItems];
             list.setItems(items, (node, item: any) => {
                 const label = node.getChildByName('Text')!.getComponent(Label)!;
                 if (item === roleWingRow) { label.string = wingSlotLabel(session.inventory?.wing); return; }
+                if (item === roleMedalRow) { label.string = medalSlotLabel(session.inventory?.medal); return; }
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const name = definition?.name ?? item.itemId, ownership = item.bound ? '绑定' : '非绑定';
                 const durability = definition?.kind === 'equipment' ? equipmentDurabilityText(item) : '';
@@ -1487,6 +1503,7 @@ export class AppRoot extends Component {
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
                 if (panel === 'Role' && selected === roleWingRow) { this.wings?.open(); return; }
+                if (panel === 'Role' && selected === roleMedalRow) { this.medal?.open(); return; }
                 const currentItems = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
                 const item = currentItems.find((row: any) => selected?.instanceId instanceof Uint8Array && row.instanceId.toString() === selected.instanceId.toString());
                 if (panel === 'Inventory') this.selectedItem = item ?? null;
@@ -1606,6 +1623,27 @@ export class AppRoot extends Component {
     private currentWingRules() {
         const raw = this.world?.gameplay.wings;
         return raw ? wingRules(raw) : undefined;
+    }
+
+    private currentMedalRules() {
+        const raw = this.world?.gameplay.medal;
+        if (this.medalRulesSource !== raw) {
+            this.medalRulesSource = raw;
+            this.medalRules = medalRules(raw);
+        }
+        return this.medalRules;
+    }
+
+    // 只允许在当前角色的普通挂机图或城镇提交。报价、跨场景和重连共用原附着保护。
+    private medalSnapshot(): MedalSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, rules = this.currentMedalRules();
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || !rules || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: attachmentKey(identity), role, roleLevel: inventory.level, sceneEpoch: entry.sceneEpoch,
+            revision: inventory.revision, medal: inventory.medal, rules, inventory: inventory.items, blocked };
     }
 
     private wingSnapshot(): WingSnapshot | null {
@@ -2314,6 +2352,7 @@ export class AppRoot extends Component {
         let forged: ForgeReceipt | undefined;
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
         let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
+        let medal: { request: MedalCommitRequest; receipt: MedalReceipt } | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
@@ -2354,6 +2393,10 @@ export class AppRoot extends Component {
                 refined = { request, receipt: this.equipmentRefine?.reconcile(request, result.equipmentRefine) ??
                     validateRefineReceipt(request, result.equipmentRefine) };
             }
+            if (pending.id === MsgC2SMedalCommit) {
+                const request = pending.value as unknown as MedalCommitRequest;
+                medal = { request, receipt: this.medal?.reconcile(request, result.medal) ?? validateMedalReceipt(request, result.medal) };
+            }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2381,6 +2424,11 @@ export class AppRoot extends Component {
         if (wing) {
             this.wings?.accept(role, wing.request, wing.receipt);
             this.status(wing.request.action === 2 ? '翅膀外观已保存' : `翅膀已达 ${wing.receipt.wing.rank}阶`);
+            return;
+        }
+        if (medal) {
+            this.medal?.accept(role, medal.request, medal.receipt);
+            this.status(`勋章已达 ${medal.receipt.medal.level}级`);
             return;
         }
         if (enhanced) {

@@ -230,6 +230,11 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 			return devconfig.Fighter{}
 		}
 	}
+	a, medalValid := f.ApplyMedalBonuses(a, r.Role.MedalLevel())
+	if !medalValid {
+		w.isolateRoom(r)
+		return devconfig.Fighter{}
+	}
 	// skill 接收遍历技能集合时当前的元素。
 	for _, skill := range f.Skills {
 		// level 是角色记录的技能等级，learned 表示技能已习得。
