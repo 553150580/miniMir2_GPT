@@ -6,7 +6,18 @@
 
 版本及官方归档摘要统一维护在`conf/toolchain/windows-amd64.lock.json`。Go1.27.3、Python3.14.9、Node24.22.1、protoc36.2、Go PB插件1.36.12、gh2.103.2、.NET10.0.403均安装在`%LOCALAPPDATA%/minimir-toolchain/windows-amd64`。Pillow13.0.0及Mongo驱动使用独立venv与哈希锁；浏览器检查使用单独安装的Playwright1.64.1和本机Chrome。
 
+从 Windows 项目入口运行 Go 时，编译与模块缓存分别默认放在项目的 `.work/go-cache/build` 和 `.work/go-cache/mod`，由各阶段与其子进程复用。同一命令环境中显式设置的 `GOCACHE` 或 `GOMODCACHE` 优先。缓存可重建，锁定工具继续由原安装目录提供。
+
 Creator仍固定3.8.8，本机安装在`D:/Program Files/CocosCreator/3.8.8`，其它位置用`MINIMIR_CREATOR_APP`指定。race使用现有WinLibs GCC16.1.0；QEMU便携包通过已有7-Zip提取，不运行全局安装器。工具入口不修改系统Go/Python、全局PATH或Codex依赖。
+
+默认和候选客户端使用 `.work/creator-work/default` 和 `.work/creator-work/candidate`。工具逐项核对工程输入及构建摘要，输入相同则复用实包，有变化则在原工作槽同步差量并重建，沿用导入缓存。发布需要复核时才以 `--freeze` 将受控输入、构建输出和报告写入独立证据目录。正式试玩包沿原发布流程切换。
+
+```powershell
+./tools/dev.ps1 python3 -B tools/client/creator_workspace.py default
+./tools/dev.ps1 python3 -B tools/client/creator_workspace.py candidate --fixture .work/候选配置/fixture.json --public .work/候选配置/gameplay.json
+```
+
+隔离联机测试和压测优先使用项目 `.work/hosting-load` 中的临时 MongoDB 数据目录。工具默认选择该位置，测试数据库与原试玩角色库独立。
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/environment/bootstrap_windows.ps1 -InitializePython -BrowserTools

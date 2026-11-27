@@ -94,10 +94,11 @@ def prepare_project(directory, fixture):
     return report
 
 
-def build_project(directory, prepared):
+def build_project(directory, prepared, *, keep_import_cache=False):
     directory = work_path(directory)
     project = work_path(prepared['project'])
-    if project.parent != directory or files(project) != prepared['project_sha256']:
+    snapshot = input_snapshot if keep_import_cache else files
+    if project.parent != directory or snapshot(project) != prepared['project_sha256']:
         raise RuntimeError('独立工程输入已变化，拒绝构建旧资格证据')
     app = Path(os.environ.get('MINIMIR_CREATOR_EXECUTABLE', ''))
     if not app.is_file():

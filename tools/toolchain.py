@@ -1,4 +1,4 @@
-"""Windows 工具分发：版本来自平台锁，安装和缓存只在用户目录。"""
+"""Windows 工具分发，用户目录安装锁定工具，项目工作目录复用 Go 缓存。"""
 from pathlib import Path
 import json
 import os
@@ -35,6 +35,10 @@ def windows_main(arguments):
     env = os.environ.copy()
     for key in ('__PYVENV_LAUNCHER__', 'PYTHONHOME', 'PYTHONPATH', 'PYTHONUSERBASE'):
         env.pop(key, None)
+    # 让同一项目各阶段和嵌套测试共用缓存，避免继续占用系统盘。
+    go_cache = ROOT / '.work' / 'go-cache'
+    env['GOCACHE'] = env.get('GOCACHE') or str(go_cache / 'build')
+    env['GOMODCACHE'] = env.get('GOMODCACHE') or str(go_cache / 'mod')
     executables = {name: prefix / spec['executable'] for name, spec in lock['tools'].items()}
     executables.update({name: Path(os.path.expandvars(spec['executable'])) for name, spec in lock.get('host_tools', {}).items()})
     executables['python3'] = executables['python'] = python
@@ -50,7 +54,6 @@ def windows_main(arguments):
         'MINIMIR_TOOLCHAIN_ROOT': str(prefix), 'PYTHONUTF8': '1', 'PYTHONIOENCODING': 'utf-8',
         'MINIMIR_NODE_TOOLS_ROOT': str(prefix / 'node-tools'),
         'MINIMIR_NODE_TOOLS': str(prefix / 'node-tools'),
-        'GOMODCACHE': str(prefix / 'cache/go-mod'), 'GOCACHE': str(prefix / 'cache/go-build'),
         'GOPATH': str(prefix / 'cache/go-path'), 'GOBIN': str(prefix / 'go-tools/bin'),
         'GOTOOLCHAIN': 'local', 'GOPROXY': 'https://goproxy.cn,https://proxy.golang.org,direct',
         'CC': str(executables['gcc']),

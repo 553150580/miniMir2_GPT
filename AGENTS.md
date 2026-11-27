@@ -2,6 +2,7 @@
 
 - 玩法、数值、首发范围依据根目录《最终策划案.md》；服务端技术参考根目录《架构方案.md》。先读 `docs/架构适配与规则优先级.md`，按已登记差异实施。上级旧架构和参考工程不覆盖产品规则。
 - 所有工程命令优先通过 `./tools/dev`，使用 `conf/toolchain/` 已锁定的较新工具。系统旧Go/Python/MongoDB不是当前项目选用版本。不要直接修改全局工具或Codex捆绑依赖。
+- Windows 的 Go 缓存、Creator 临时工程和隔离联机数据库优先放在项目 `.work/`。后续构建复用固定工作槽，同输入沿用已验证产物，输入变化时更新该槽。需要供发布或回滚复核的证据单独保留。
 - Creator固定3.8.8。固定UI保存在可编辑scene/prefab，地图逻辑与UI布局分开。
 - 客户端美术、界面和触屏交互遵循 `client/AGENTS.md` 的用户最新约定；必备场景管理加载器。加载界面同样采用已保存的scene/prefab，生成工具不得覆盖既有布局。
 - 服务端工程在 `server/`，客户端Creator工程在 `client/`；公共协议在 `shared/proto/`，根目录config/docs/tools为公共输入和工具。`./tools/dev go ...`自动在server目录执行，其它命令默认项目根目录，可用`--cwd client`指定客户端工作目录。

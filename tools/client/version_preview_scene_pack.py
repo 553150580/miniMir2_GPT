@@ -12,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from creator_work_paths import local_creator_work
+from creator_work_paths import CREATOR_SLOTS, checked_child, creator_slot_lock, local_creator_work, workspace_creator_root
 
 
 MAIN_CONFIG = 'assets/main/config.json'
@@ -127,11 +127,13 @@ def verify_inventory(directory, expected):
         list(worker.map(verify, sorted(observed)))
 
 
-def materialize(creator_dir, prior_release):
+def materialize(creator_dir, prior_release, *, verify_only=False):
     """新建兼容副本，仅两份新内容实写，所有同字节文件均从原实构链接。"""
     source = creator_dir / 'client-project/build/web-mobile'
     creator_file = creator_dir / 'creator-report.json'
     output, metadata = creator_dir / PREVIEW_ROOT, creator_dir / SIDECAR
+    if verify_only and (not output.is_dir() or not metadata.is_file()):
+        raise ValueError('C 盘历史目录用于复核已有兼容副本，新封装请使用项目 Creator 工作槽或发布证据目录')
     report, independent, renamed = stage_plan(source, creator_file, prior_release, ROOT / 'client/build/web-mobile')
     source_files = json.loads(creator_file.read_bytes())['build_sha256']
     verify_inventory(source, source_files)
@@ -158,29 +160,44 @@ def materialize(creator_dir, prior_release):
     print(metadata, flush=True)
 
 
+def preview_directory(creator, root):
+    """仅项目内的固定槽和证据目录可写，旧本机应用数据目录仍可复核。"""
+    workspace = workspace_creator_root(root)
+    evidence = workspace_creator_root(root, evidence=True)
+    if creator.parent == workspace and creator.name in CREATOR_SLOTS:
+        return checked_child(workspace, creator), False
+    if creator.parent == evidence and not creator.name.startswith('.'):
+        return checked_child(evidence, creator), False
+    legacy = local_creator_work(root)
+    if legacy and creator != legacy and creator.is_relative_to(legacy):
+        return checked_child(legacy, creator), True
+    raise ValueError('需指定本项目的 Creator 工作槽、冻结证据或已有历史目录')
+
+
 def main():
-    """限定 Windows 工具链、本项目 C 盘隔离区和发布原证据。"""
+    """在项目 Creator 工作槽封装，或只读复核已冻结的旧包。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--creator-dir', type=Path, required=True)
     parser.add_argument('--prior-release', type=Path, required=True)
     args = parser.parse_args()
-    owned = local_creator_work(ROOT)
-    creator, previous = args.creator_dir.absolute(), args.prior_release.absolute()
     workspace = ROOT / '.work'
-    if (os.environ.get('MINIMIR_TOOLCHAIN_ACTIVE') != '1' or owned is None
-            or creator == owned or not creator.is_relative_to(owned)
-            or not previous.is_relative_to(workspace) or previous.name != 'published.json'
-            or creator.resolve(strict=True) != creator or previous.resolve(strict=True) != previous):
+    creator, previous = args.creator_dir.absolute(), args.prior_release.absolute()
+    if os.environ.get('MINIMIR_TOOLCHAIN_ACTIVE') != '1' or previous.name != 'published.json':
         parser.error('须使用锁定工具链、本项目独立 Creator 目录与原发布记录')
-    for relative in ('client-project/build/web-mobile', 'creator-report.json'):
-        path = creator / relative
-        if path.resolve(strict=True) != path:
-            parser.error('拒绝经重定向的 Creator 原构建')
-    for relative in (PREVIEW_ROOT, PREVIEW_ROOT + '.building', SIDECAR):
-        path = creator / relative
-        if path.is_symlink() or path.is_junction() or path.resolve() != path:
-            parser.error('拒绝经重定向的兼容副本路径')
-    materialize(creator, previous)
+    try:
+        creator, verify_only = preview_directory(creator, ROOT)
+        previous = checked_child(workspace, previous)
+        if not creator.is_dir() or not previous.is_file():
+            raise ValueError('缺少 Creator 构建或原发布记录')
+        for relative in ('client-project/build/web-mobile', 'creator-report.json', PREVIEW_ROOT, PREVIEW_ROOT + '.building', SIDECAR):
+            checked_child(creator, creator / relative)
+        if verify_only:
+            materialize(creator, previous, verify_only=True)
+        else:
+            with creator_slot_lock(creator):
+                materialize(creator, previous)
+    except (OSError, ValueError, RuntimeError) as exc:
+        parser.exit(1, f'{exc}\n')
 
 
 if __name__ == '__main__':
