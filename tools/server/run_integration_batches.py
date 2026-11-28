@@ -295,6 +295,8 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_MEDAL_TEST_FIXTURE'] = str(medal_fixture)
             for label, artifact in (('assembly', assembly), ('fixture', medal_fixture), ('public', medal_public)):
                 report[f'medal_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        if group == 'medal':
+            environment['MINIMIR_WORLD_BOSS_SUPPLY_REPORT_DIR'] = str(destination)
         if group in ('rebirth', 'body-training'):
             # 转生沿用已核对的前置进度，在同一夹具上验证胜利、扣费和重放。
             assembly = destination / 'rebirth-assembly.json'
