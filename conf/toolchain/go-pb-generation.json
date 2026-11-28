@@ -4,8 +4,9 @@
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
     "assets.proto": "93b22aa90f4026ba9200af9369eb981d195998b2fccf5dc9a7810bb78dd671d3",
+    "battle_pass.proto": "78de50636feee6081006c9f82a164c08b527aec04bb3bbad426b0688b18f9d74",
     "body_training.proto": "428ee87d4a7fc59d821950a7d789e1dc94f99b46fbdd746616d0c9049734c47c",
-    "common.proto": "0259d9692d722994e441850350d6f72f4721e397d489bae4a938342d3fd2835b",
+    "common.proto": "cebbe80bda3a4a0574fc579a1a6dc8220fd9e22c00cb0b2663782f9110b42c7f",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
     "equipment_enhancement.proto": "c3c618d899bf5d563ed542462c6e64054a90390743b80931b1de840df2e8601b",
     "equipment_refine.proto": "afc0d2350d947a01f381b4a0f72b246bbe7e21c842abb1c7c1ede96432cc4a7e",
@@ -30,8 +31,9 @@
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
     "server/api/generated/minimirv1/assets.pb.go": "d1d82e652ff1fc6c65879d8b906f30638ad6d86771ad58e1f19b27d2e18e0c96",
+    "server/api/generated/minimirv1/battle_pass.pb.go": "65af5fabbac9bd7f657f6e11115943b93c97f8f252b96b73b3aba7de83772429",
     "server/api/generated/minimirv1/body_training.pb.go": "e92aa3d8df041d569b8d292aec9e2a1bf3d0ad3481dd605ac56a8ef143a4b65f",
-    "server/api/generated/minimirv1/common.pb.go": "30f71196ed9abe6825d1b143829434355d28da7f326f78324b2e32f118cd50d9",
+    "server/api/generated/minimirv1/common.pb.go": "fe907c218fa90990d0464c2625963ba9fecb0441452a87ebf5e7912d4c7ca20d",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
     "server/api/generated/minimirv1/equipment_enhancement.pb.go": "339f4c909fddd5f4108677fe9a79a410358ca4956e2d0e2fd16820fb3b7d68a9",
     "server/api/generated/minimirv1/equipment_refine.pb.go": "ff58d91c277c855904fed6b88de13a998abb5159c5053c1507b736cb32a59e10",

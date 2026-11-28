@@ -1,0 +1,68 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 周期为空时读取当前周期，历史分页只返回游标之前的已参与周期。
+message BattlePassQuery {
+  uint64 scene_epoch = 1;
+  string season_start = 2;
+  string history_before = 3;
+}
+
+// 每行对应一个独立的绑定材料模板和总数量。
+message BattlePassMaterial {
+  uint32 item_id = 1;
+  int64 quantity = 2;
+}
+
+// 奖励使用绑定金币和绑定元宝最小单位。
+message BattlePassReward {
+  int64 bound_gold = 1;
+  int64 bound_yuanbao_units = 2;
+  repeated BattlePassMaterial materials = 3;
+}
+
+// 报价只显示现金。升级价差以该角色当前档位计算。
+message BattlePassTierView {
+  uint32 tier = 1;
+  int64 total_cash_fen = 2;
+  int64 upgrade_cash_fen = 3;
+  BattlePassReward daily = 4;
+  BattlePassReward season = 5;
+}
+
+// 已领取档为零时未发放过，日期从周期首日开始编号。
+message BattlePassDayView {
+  uint32 day = 1;
+  bool qualified = 2;
+  uint32 claimed_tier = 3;
+}
+
+// 日奖来自独立资格，一次奖在当前档位具备时开放。
+message BattlePassState {
+  uint64 scene_epoch = 1;
+  uint64 role_revision = 2;
+  uint64 rule_version = 3;
+  string season_start = 4;
+  string season_end = 5;
+  string operating_day = 6;
+  uint32 tier = 7;
+  uint32 season_claimed_tier = 8;
+  uint32 activity = 9;
+  uint32 activity_target = 10;
+  repeated BattlePassTierView tiers = 11;
+  repeated BattlePassDayView days = 12;
+  repeated string history = 13;
+  bool history_has_more = 14;
+}
+
+// 日期为零表示周期一次奖，确认前须核对已领档和当前应领奖档。
+message BattlePassClaimRequest {
+  OperationContext operation = 1;
+  string season_start = 2;
+  uint32 day = 3;
+  uint32 tier = 4;
+  uint32 claimed_tier = 5;
+}

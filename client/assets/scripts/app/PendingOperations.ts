@@ -24,7 +24,7 @@ export class PendingOperationError extends Error {
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
 const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026,
-    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 40063, 40066, 40069, 40070, 40073, 30002]);
+    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 40063, 40066, 40069, 40070, 40073, 40076, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -382,6 +382,13 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['quoteId', 'uiSessionId', 'operation']);
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
             operation: operation(item.operation, stored) };
+    } else if (id === 40076) {
+        const item = record(input.value, ['seasonStart', 'day', 'tier', 'claimedTier', 'operation']);
+        const day = uint32(item.day), tier = uint32(item.tier), claimedTier = uint32(item.claimedTier);
+        if (typeof item.seasonStart !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(item.seasonStart) || day > 30 || tier < 1 || tier > 3 || claimedTier >= tier) {
+            return invalid('战令未决请求缺少原周期或档位差额');
+        }
+        payload = { seasonStart: item.seasonStart, day, tier, claimedTier, operation: operation(item.operation, stored) };
     } else if (id === 40073) {
         const item = record(input.value, ['quoteId', 'productId', 'count', 'operation']);
         const productId = uint32(item.productId), count = uint32(item.count);

@@ -28,20 +28,21 @@ type PaymentCardGrant struct {
 
 // PaymentGrantReceipt 是已投放或现金卡已生效的永久结果，包含可核对的四钱包快照。
 type PaymentGrantReceipt struct {
-	OrderID        string            `bson:"order_id"`         // 服务端冻结的原订单。
-	AccountID      string            `bson:"account_id"`       // 支付受益账号。
-	OriginServerID uint64            `bson:"origin_server_id"` // 角色永久入口服。
-	Kind           payment.Kind      `bson:"kind"`             // 充值、现金特权卡或现金托管卡。
-	ProductID      uint32            `bson:"product_id"`       // 原配置中的商品身份。
-	RuleVersion    uint64            `bson:"rule_version"`     // 成交时已冻结的规则版本。
-	ConfigHash     string            `bson:"config_hash"`      // 原价格与权益来自相同配置快照。
-	AmountFen      int64             `bson:"amount_fen"`       // 支付的人民币分。
-	YuanbaoAdded   int64             `bson:"yuanbao_added"`    // 仅充值新增到角色的非绑定元宝最小单位。
-	WalletBefore   domain.Wallet     `bson:"wallet_before"`    // 原四钱包。
-	WalletAfter    domain.Wallet     `bson:"wallet_after"`     // 实际履约后的四钱包。
-	Card           *PaymentCardGrant `bson:"card,omitempty"`   // 仅现金购卡确认的角色卡期。
-	PaidAt         time.Time         `bson:"paid_at"`          // 渠道已确认的付款时刻。
-	GrantedAt      time.Time         `bson:"granted_at"`       // 权益或元宝首次实际入账的时刻。
+	OrderID        string                  `bson:"order_id"`              // 服务端冻结的原订单。
+	AccountID      string                  `bson:"account_id"`            // 支付受益账号。
+	OriginServerID uint64                  `bson:"origin_server_id"`      // 角色永久入口服。
+	Kind           payment.Kind            `bson:"kind"`                  // 充值、现金特权卡或现金托管卡。
+	ProductID      uint32                  `bson:"product_id"`            // 原配置中的商品身份。
+	RuleVersion    uint64                  `bson:"rule_version"`          // 成交时已冻结的规则版本。
+	ConfigHash     string                  `bson:"config_hash"`           // 原价格与权益来自相同配置快照。
+	AmountFen      int64                   `bson:"amount_fen"`            // 支付的人民币分。
+	YuanbaoAdded   int64                   `bson:"yuanbao_added"`         // 仅充值新增到角色的非绑定元宝最小单位。
+	WalletBefore   domain.Wallet           `bson:"wallet_before"`         // 原四钱包。
+	WalletAfter    domain.Wallet           `bson:"wallet_after"`          // 实际履约后的四钱包。
+	Card           *PaymentCardGrant       `bson:"card,omitempty"`        // 仅现金购卡确认的角色卡期。
+	BattlePass     *BattlePassPaymentGrant `bson:"battle_pass,omitempty"` // 仅现金战令确认的周期和档位。
+	PaidAt         time.Time               `bson:"paid_at"`               // 渠道已确认的付款时刻。
+	GrantedAt      time.Time               `bson:"granted_at"`            // 权益或元宝首次实际入账的时刻。
 }
 
 // FulfillPaymentOrder 使用持久订单作为唯一输入，当前运行服可为在线和离线角色履约。
@@ -86,7 +87,7 @@ func (s *Store) FulfillPaymentOrder(ctx context.Context, id string) (domain.Role
 			return err
 		}
 		at := bossTime(time.Now())
-		next, grant, err := applyPaymentGrant(role, order, at)
+		next, grant, err := s.applyPaymentGrant(tc, role, order, at)
 		if err != nil {
 			return err
 		}
@@ -152,11 +153,14 @@ func (s *Store) readPaymentGrant(ctx context.Context, order PaymentOrder, opID s
 		grant.RuleVersion != quote.RuleVersion || grant.ConfigHash != quote.ConfigHash {
 		return Operation{}, Fail(p.CodeOperationConflict, "原到账回执与冻结的支付条款不一致")
 	}
+	if quote.Kind == payment.KindBattlePass && (grant.BattlePass == nil || grant.BattlePass.Terms != quote.BattlePass || grant.BattlePass.Tier != quote.ProductID) {
+		return Operation{}, Fail(p.CodeOperationConflict, "原战令现金回执与冻结周期或档位不一致")
+	}
 	return op, nil
 }
 
 // applyPaymentGrant 依据冻结的支付条款计算首次到账，保持现有玩家及战斗流水水位。
-func applyPaymentGrant(role domain.Role, order PaymentOrder, at time.Time) (domain.Role, PaymentGrantReceipt, error) {
+func (s *Store) applyPaymentGrant(ctx context.Context, role domain.Role, order PaymentOrder, at time.Time) (domain.Role, PaymentGrantReceipt, error) {
 	quote := order.Quote
 	if order.Verification == nil || !quote.valid() || role.Revision <= 0 || role.Revision == math.MaxInt64 {
 		return role, PaymentGrantReceipt{}, Fail(p.CodeOperationConflict, "支付来源或角色版本异常")
@@ -165,6 +169,12 @@ func applyPaymentGrant(role domain.Role, order PaymentOrder, at time.Time) (doma
 		Kind: quote.Kind, ProductID: quote.ProductID, RuleVersion: quote.RuleVersion, ConfigHash: quote.ConfigHash,
 		AmountFen: quote.AmountFen, WalletBefore: role.Wallet, PaidAt: order.Verification.PaidAt, GrantedAt: at}
 	switch quote.Kind {
+	case payment.KindBattlePass:
+		entitlement, err := s.applyBattlePassPayment(ctx, role, order)
+		if err != nil {
+			return role, PaymentGrantReceipt{}, err
+		}
+		grant.BattlePass = entitlement
 	case payment.KindRecharge:
 		balance, err := add(role.Wallet.Yuanbao, quote.YuanbaoUnits)
 		if err != nil {

@@ -819,6 +819,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.BodyTrainingReceipt.$Properties|null} [body_training] OperationResult body_training
              * @property {minimir.v1.SoulReceipt.$Properties|null} [soul] OperationResult soul
              * @property {minimir.v1.GrowthShopReceipt.$Properties|null} [growth_shop] OperationResult growth_shop
+             * @property {minimir.v1.BattlePassReceipt.$Properties|null} [battle_pass] OperationResult battle_pass
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1035,6 +1036,14 @@ $root.minimir = (function() {
             OperationResult.prototype.growth_shop = null;
 
             /**
+             * OperationResult battle_pass.
+             * @member {minimir.v1.BattlePassReceipt.$Properties|null|undefined} battle_pass
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.battle_pass = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1112,6 +1121,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.SoulReceipt.encode(message.soul, writer.uint32(/* id 22, wireType 2 =*/178).fork(), _depth + 1).ldelim();
                 if (message.growth_shop != null && $Object.hasOwnProperty.call(message, "growth_shop"))
                     $root.minimir.v1.GrowthShopReceipt.encode(message.growth_shop, writer.uint32(/* id 23, wireType 2 =*/186).fork(), _depth + 1).ldelim();
+                if (message.battle_pass != null && $Object.hasOwnProperty.call(message, "battle_pass"))
+                    $root.minimir.v1.BattlePassReceipt.encode(message.battle_pass, writer.uint32(/* id 24, wireType 2 =*/194).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1322,6 +1333,12 @@ $root.minimir = (function() {
                             message.growth_shop = $root.minimir.v1.GrowthShopReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.growth_shop);
                             continue;
                         }
+                    case 24: {
+                            if (wireType !== 2)
+                                break;
+                            message.battle_pass = $root.minimir.v1.BattlePassReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.battle_pass);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1475,6 +1492,11 @@ $root.minimir = (function() {
                     if (error)
                         return "growth_shop." + error;
                 }
+                if (message.battle_pass != null && $Object.hasOwnProperty.call(message, "battle_pass")) {
+                    var error = $root.minimir.v1.BattlePassReceipt.verify(message.battle_pass, _depth + 1);
+                    if (error)
+                        return "battle_pass." + error;
+                }
                 return null;
             };
 
@@ -1493,6 +1515,367 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.BattlePassReceipt = (function() {
+
+            /**
+             * Properties of a BattlePassReceipt.
+             * @typedef {Object} minimir.v1.BattlePassReceipt.$Properties
+             * @property {string|null} [season_start] BattlePassReceipt season_start
+             * @property {number|null} [day] BattlePassReceipt day
+             * @property {number|null} [previous_tier] BattlePassReceipt previous_tier
+             * @property {number|null} [tier] BattlePassReceipt tier
+             * @property {Long|null} [bound_gold] BattlePassReceipt bound_gold
+             * @property {Long|null} [bound_yuanbao_units] BattlePassReceipt bound_yuanbao_units
+             * @property {Array.<minimir.v1.ItemView.$Properties>|null} [items] BattlePassReceipt items
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassReceipt.
+             * @memberof minimir.v1
+             * @interface IBattlePassReceipt
+             * @augments minimir.v1.BattlePassReceipt.$Properties
+             * @deprecated Use minimir.v1.BattlePassReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassReceipt.
+             * @typedef {minimir.v1.BattlePassReceipt.$Properties} minimir.v1.BattlePassReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassReceipt.
+             * @constructor
+             * @param {minimir.v1.BattlePassReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassReceipt = function (properties) {
+                this.items = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassReceipt season_start.
+             * @member {string} season_start
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.season_start = "";
+
+            /**
+             * BattlePassReceipt day.
+             * @member {number} day
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.day = 0;
+
+            /**
+             * BattlePassReceipt previous_tier.
+             * @member {number} previous_tier
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.previous_tier = 0;
+
+            /**
+             * BattlePassReceipt tier.
+             * @member {number} tier
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.tier = 0;
+
+            /**
+             * BattlePassReceipt bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassReceipt bound_yuanbao_units.
+             * @member {Long} bound_yuanbao_units
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassReceipt items.
+             * @member {Array.<minimir.v1.ItemView.$Properties>} items
+             * @memberof minimir.v1.BattlePassReceipt
+             * @instance
+             */
+            BattlePassReceipt.prototype.items = $util.emptyArray;
+
+            /**
+             * Creates a new BattlePassReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {minimir.v1.BattlePassReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassReceipt} BattlePassReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassReceipt.$Shape): minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape;
+             *   (properties?: minimir.v1.BattlePassReceipt.$Properties): minimir.v1.BattlePassReceipt;
+             * }}
+             */
+            BattlePassReceipt.create = function(properties) {
+                return new BattlePassReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassReceipt message. Does not implicitly {@link minimir.v1.BattlePassReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {minimir.v1.BattlePassReceipt.$Properties} message BattlePassReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start") && message.season_start !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.season_start);
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.day);
+                if (message.previous_tier != null && $Object.hasOwnProperty.call(message, "previous_tier") && message.previous_tier !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.previous_tier);
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier") && message.tier !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.tier);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.bound_gold);
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.bound_yuanbao_units);
+                if (message.items != null && message.items.length)
+                    for (var i = 0; i < message.items.length; ++i)
+                        $root.minimir.v1.ItemView.encode(message.items[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassReceipt message, length delimited. Does not implicitly {@link minimir.v1.BattlePassReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {minimir.v1.BattlePassReceipt.$Properties} message BattlePassReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape} BattlePassReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.season_start = value;
+                            else
+                                delete message.season_start;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.previous_tier = value;
+                            else
+                                delete message.previous_tier;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.tier = value;
+                            else
+                                delete message.tier;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_units = value;
+                            else
+                                delete message.bound_yuanbao_units;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.items && message.items.length))
+                                message.items = [];
+                            message.items.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape} BattlePassReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassReceipt message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start"))
+                    if (!$util.isString(message.season_start))
+                        return "season_start: string expected";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isInteger(message.day))
+                        return "day: integer expected";
+                if (message.previous_tier != null && $Object.hasOwnProperty.call(message, "previous_tier"))
+                    if (!$util.isInteger(message.previous_tier))
+                        return "previous_tier: integer expected";
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier"))
+                    if (!$util.isInteger(message.tier))
+                        return "tier: integer expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
+                        return "bound_yuanbao_units: integer|Long expected";
+                if (message.items != null && $Object.hasOwnProperty.call(message, "items")) {
+                    if (!$Array.isArray(message.items))
+                        return "items: array expected";
+                    for (var i = 0; i < message.items.length; ++i) {
+                        var error = $root.minimir.v1.ItemView.verify(message.items[i], _depth + 1);
+                        if (error)
+                            return "items." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassReceipt";
+            };
+
+            return BattlePassReceipt;
         })();
 
         v1.GrowthShopTerms = (function() {
@@ -76538,6 +76921,2185 @@ $root.minimir = (function() {
             };
 
             return GrowthShopCommitRequest;
+        })();
+
+        v1.BattlePassQuery = (function() {
+
+            /**
+             * Properties of a BattlePassQuery.
+             * @typedef {Object} minimir.v1.BattlePassQuery.$Properties
+             * @property {Long|null} [scene_epoch] BattlePassQuery scene_epoch
+             * @property {string|null} [season_start] BattlePassQuery season_start
+             * @property {string|null} [history_before] BattlePassQuery history_before
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassQuery.
+             * @memberof minimir.v1
+             * @interface IBattlePassQuery
+             * @augments minimir.v1.BattlePassQuery.$Properties
+             * @deprecated Use minimir.v1.BattlePassQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassQuery.
+             * @typedef {minimir.v1.BattlePassQuery.$Properties} minimir.v1.BattlePassQuery.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassQuery.
+             * @constructor
+             * @param {minimir.v1.BattlePassQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.BattlePassQuery
+             * @instance
+             */
+            BattlePassQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BattlePassQuery season_start.
+             * @member {string} season_start
+             * @memberof minimir.v1.BattlePassQuery
+             * @instance
+             */
+            BattlePassQuery.prototype.season_start = "";
+
+            /**
+             * BattlePassQuery history_before.
+             * @member {string} history_before
+             * @memberof minimir.v1.BattlePassQuery
+             * @instance
+             */
+            BattlePassQuery.prototype.history_before = "";
+
+            /**
+             * Creates a new BattlePassQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {minimir.v1.BattlePassQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassQuery} BattlePassQuery instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassQuery.$Shape): minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape;
+             *   (properties?: minimir.v1.BattlePassQuery.$Properties): minimir.v1.BattlePassQuery;
+             * }}
+             */
+            BattlePassQuery.create = function(properties) {
+                return new BattlePassQuery(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassQuery message. Does not implicitly {@link minimir.v1.BattlePassQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {minimir.v1.BattlePassQuery.$Properties} message BattlePassQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start") && message.season_start !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.season_start);
+                if (message.history_before != null && $Object.hasOwnProperty.call(message, "history_before") && message.history_before !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.history_before);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassQuery message, length delimited. Does not implicitly {@link minimir.v1.BattlePassQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {minimir.v1.BattlePassQuery.$Properties} message BattlePassQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape} BattlePassQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.season_start = value;
+                            else
+                                delete message.season_start;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.history_before = value;
+                            else
+                                delete message.history_before;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape} BattlePassQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassQuery message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start"))
+                    if (!$util.isString(message.season_start))
+                        return "season_start: string expected";
+                if (message.history_before != null && $Object.hasOwnProperty.call(message, "history_before"))
+                    if (!$util.isString(message.history_before))
+                        return "history_before: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassQuery";
+            };
+
+            return BattlePassQuery;
+        })();
+
+        v1.BattlePassMaterial = (function() {
+
+            /**
+             * Properties of a BattlePassMaterial.
+             * @typedef {Object} minimir.v1.BattlePassMaterial.$Properties
+             * @property {number|null} [item_id] BattlePassMaterial item_id
+             * @property {Long|null} [quantity] BattlePassMaterial quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassMaterial.
+             * @memberof minimir.v1
+             * @interface IBattlePassMaterial
+             * @augments minimir.v1.BattlePassMaterial.$Properties
+             * @deprecated Use minimir.v1.BattlePassMaterial.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassMaterial.
+             * @typedef {minimir.v1.BattlePassMaterial.$Properties} minimir.v1.BattlePassMaterial.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassMaterial.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassMaterial.
+             * @constructor
+             * @param {minimir.v1.BattlePassMaterial.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassMaterial = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassMaterial item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.BattlePassMaterial
+             * @instance
+             */
+            BattlePassMaterial.prototype.item_id = 0;
+
+            /**
+             * BattlePassMaterial quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.BattlePassMaterial
+             * @instance
+             */
+            BattlePassMaterial.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new BattlePassMaterial instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {minimir.v1.BattlePassMaterial.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassMaterial} BattlePassMaterial instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassMaterial.$Shape): minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape;
+             *   (properties?: minimir.v1.BattlePassMaterial.$Properties): minimir.v1.BattlePassMaterial;
+             * }}
+             */
+            BattlePassMaterial.create = function(properties) {
+                return new BattlePassMaterial(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassMaterial message. Does not implicitly {@link minimir.v1.BattlePassMaterial.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {minimir.v1.BattlePassMaterial.$Properties} message BattlePassMaterial message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassMaterial.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.item_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassMaterial message, length delimited. Does not implicitly {@link minimir.v1.BattlePassMaterial.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {minimir.v1.BattlePassMaterial.$Properties} message BattlePassMaterial message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassMaterial.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassMaterial message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape} BattlePassMaterial
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassMaterial.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassMaterial();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassMaterial message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape} BattlePassMaterial
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassMaterial.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassMaterial message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassMaterial.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassMaterial
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassMaterial
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassMaterial.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassMaterial";
+            };
+
+            return BattlePassMaterial;
+        })();
+
+        v1.BattlePassReward = (function() {
+
+            /**
+             * Properties of a BattlePassReward.
+             * @typedef {Object} minimir.v1.BattlePassReward.$Properties
+             * @property {Long|null} [bound_gold] BattlePassReward bound_gold
+             * @property {Long|null} [bound_yuanbao_units] BattlePassReward bound_yuanbao_units
+             * @property {Array.<minimir.v1.BattlePassMaterial.$Properties>|null} [materials] BattlePassReward materials
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassReward.
+             * @memberof minimir.v1
+             * @interface IBattlePassReward
+             * @augments minimir.v1.BattlePassReward.$Properties
+             * @deprecated Use minimir.v1.BattlePassReward.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassReward.
+             * @typedef {minimir.v1.BattlePassReward.$Properties} minimir.v1.BattlePassReward.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassReward.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassReward.
+             * @constructor
+             * @param {minimir.v1.BattlePassReward.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassReward = function (properties) {
+                this.materials = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassReward bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.BattlePassReward
+             * @instance
+             */
+            BattlePassReward.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassReward bound_yuanbao_units.
+             * @member {Long} bound_yuanbao_units
+             * @memberof minimir.v1.BattlePassReward
+             * @instance
+             */
+            BattlePassReward.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassReward materials.
+             * @member {Array.<minimir.v1.BattlePassMaterial.$Properties>} materials
+             * @memberof minimir.v1.BattlePassReward
+             * @instance
+             */
+            BattlePassReward.prototype.materials = $util.emptyArray;
+
+            /**
+             * Creates a new BattlePassReward instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {minimir.v1.BattlePassReward.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassReward} BattlePassReward instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassReward.$Shape): minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape;
+             *   (properties?: minimir.v1.BattlePassReward.$Properties): minimir.v1.BattlePassReward;
+             * }}
+             */
+            BattlePassReward.create = function(properties) {
+                return new BattlePassReward(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassReward message. Does not implicitly {@link minimir.v1.BattlePassReward.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {minimir.v1.BattlePassReward.$Properties} message BattlePassReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassReward.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.bound_gold);
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.bound_yuanbao_units);
+                if (message.materials != null && message.materials.length)
+                    for (var i = 0; i < message.materials.length; ++i)
+                        $root.minimir.v1.BattlePassMaterial.encode(message.materials[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassReward message, length delimited. Does not implicitly {@link minimir.v1.BattlePassReward.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {minimir.v1.BattlePassReward.$Properties} message BattlePassReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassReward.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassReward message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape} BattlePassReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassReward.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassReward();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_units = value;
+                            else
+                                delete message.bound_yuanbao_units;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.materials && message.materials.length))
+                                message.materials = [];
+                            message.materials.push($root.minimir.v1.BattlePassMaterial.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassReward message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape} BattlePassReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassReward.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassReward message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassReward.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
+                        return "bound_yuanbao_units: integer|Long expected";
+                if (message.materials != null && $Object.hasOwnProperty.call(message, "materials")) {
+                    if (!$Array.isArray(message.materials))
+                        return "materials: array expected";
+                    for (var i = 0; i < message.materials.length; ++i) {
+                        var error = $root.minimir.v1.BattlePassMaterial.verify(message.materials[i], _depth + 1);
+                        if (error)
+                            return "materials." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassReward
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassReward
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassReward.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassReward";
+            };
+
+            return BattlePassReward;
+        })();
+
+        v1.BattlePassTierView = (function() {
+
+            /**
+             * Properties of a BattlePassTierView.
+             * @typedef {Object} minimir.v1.BattlePassTierView.$Properties
+             * @property {number|null} [tier] BattlePassTierView tier
+             * @property {Long|null} [total_cash_fen] BattlePassTierView total_cash_fen
+             * @property {Long|null} [upgrade_cash_fen] BattlePassTierView upgrade_cash_fen
+             * @property {minimir.v1.BattlePassReward.$Properties|null} [daily] BattlePassTierView daily
+             * @property {minimir.v1.BattlePassReward.$Properties|null} [season] BattlePassTierView season
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassTierView.
+             * @memberof minimir.v1
+             * @interface IBattlePassTierView
+             * @augments minimir.v1.BattlePassTierView.$Properties
+             * @deprecated Use minimir.v1.BattlePassTierView.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassTierView.
+             * @typedef {minimir.v1.BattlePassTierView.$Properties} minimir.v1.BattlePassTierView.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassTierView.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassTierView.
+             * @constructor
+             * @param {minimir.v1.BattlePassTierView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassTierView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassTierView tier.
+             * @member {number} tier
+             * @memberof minimir.v1.BattlePassTierView
+             * @instance
+             */
+            BattlePassTierView.prototype.tier = 0;
+
+            /**
+             * BattlePassTierView total_cash_fen.
+             * @member {Long} total_cash_fen
+             * @memberof minimir.v1.BattlePassTierView
+             * @instance
+             */
+            BattlePassTierView.prototype.total_cash_fen = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassTierView upgrade_cash_fen.
+             * @member {Long} upgrade_cash_fen
+             * @memberof minimir.v1.BattlePassTierView
+             * @instance
+             */
+            BattlePassTierView.prototype.upgrade_cash_fen = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BattlePassTierView daily.
+             * @member {minimir.v1.BattlePassReward.$Properties|null|undefined} daily
+             * @memberof minimir.v1.BattlePassTierView
+             * @instance
+             */
+            BattlePassTierView.prototype.daily = null;
+
+            /**
+             * BattlePassTierView season.
+             * @member {minimir.v1.BattlePassReward.$Properties|null|undefined} season
+             * @memberof minimir.v1.BattlePassTierView
+             * @instance
+             */
+            BattlePassTierView.prototype.season = null;
+
+            /**
+             * Creates a new BattlePassTierView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {minimir.v1.BattlePassTierView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassTierView} BattlePassTierView instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassTierView.$Shape): minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape;
+             *   (properties?: minimir.v1.BattlePassTierView.$Properties): minimir.v1.BattlePassTierView;
+             * }}
+             */
+            BattlePassTierView.create = function(properties) {
+                return new BattlePassTierView(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassTierView message. Does not implicitly {@link minimir.v1.BattlePassTierView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {minimir.v1.BattlePassTierView.$Properties} message BattlePassTierView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassTierView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier") && message.tier !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.tier);
+                if (message.total_cash_fen != null && $Object.hasOwnProperty.call(message, "total_cash_fen") && (typeof message.total_cash_fen === "object" ? message.total_cash_fen.low || message.total_cash_fen.high : message.total_cash_fen !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.total_cash_fen);
+                if (message.upgrade_cash_fen != null && $Object.hasOwnProperty.call(message, "upgrade_cash_fen") && (typeof message.upgrade_cash_fen === "object" ? message.upgrade_cash_fen.low || message.upgrade_cash_fen.high : message.upgrade_cash_fen !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.upgrade_cash_fen);
+                if (message.daily != null && $Object.hasOwnProperty.call(message, "daily"))
+                    $root.minimir.v1.BattlePassReward.encode(message.daily, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.season != null && $Object.hasOwnProperty.call(message, "season"))
+                    $root.minimir.v1.BattlePassReward.encode(message.season, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassTierView message, length delimited. Does not implicitly {@link minimir.v1.BattlePassTierView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {minimir.v1.BattlePassTierView.$Properties} message BattlePassTierView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassTierView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassTierView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape} BattlePassTierView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassTierView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassTierView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.tier = value;
+                            else
+                                delete message.tier;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.total_cash_fen = value;
+                            else
+                                delete message.total_cash_fen;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.upgrade_cash_fen = value;
+                            else
+                                delete message.upgrade_cash_fen;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.daily = $root.minimir.v1.BattlePassReward.decode(reader, reader.size(), $undefined, _depth + 1, message.daily);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.season = $root.minimir.v1.BattlePassReward.decode(reader, reader.size(), $undefined, _depth + 1, message.season);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassTierView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape} BattlePassTierView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassTierView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassTierView message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassTierView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier"))
+                    if (!$util.isInteger(message.tier))
+                        return "tier: integer expected";
+                if (message.total_cash_fen != null && $Object.hasOwnProperty.call(message, "total_cash_fen"))
+                    if (!$util.isInteger(message.total_cash_fen) && !(message.total_cash_fen && $util.isInteger(message.total_cash_fen.low) && $util.isInteger(message.total_cash_fen.high)))
+                        return "total_cash_fen: integer|Long expected";
+                if (message.upgrade_cash_fen != null && $Object.hasOwnProperty.call(message, "upgrade_cash_fen"))
+                    if (!$util.isInteger(message.upgrade_cash_fen) && !(message.upgrade_cash_fen && $util.isInteger(message.upgrade_cash_fen.low) && $util.isInteger(message.upgrade_cash_fen.high)))
+                        return "upgrade_cash_fen: integer|Long expected";
+                if (message.daily != null && $Object.hasOwnProperty.call(message, "daily")) {
+                    var error = $root.minimir.v1.BattlePassReward.verify(message.daily, _depth + 1);
+                    if (error)
+                        return "daily." + error;
+                }
+                if (message.season != null && $Object.hasOwnProperty.call(message, "season")) {
+                    var error = $root.minimir.v1.BattlePassReward.verify(message.season, _depth + 1);
+                    if (error)
+                        return "season." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassTierView
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassTierView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassTierView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassTierView";
+            };
+
+            return BattlePassTierView;
+        })();
+
+        v1.BattlePassDayView = (function() {
+
+            /**
+             * Properties of a BattlePassDayView.
+             * @typedef {Object} minimir.v1.BattlePassDayView.$Properties
+             * @property {number|null} [day] BattlePassDayView day
+             * @property {boolean|null} [qualified] BattlePassDayView qualified
+             * @property {number|null} [claimed_tier] BattlePassDayView claimed_tier
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassDayView.
+             * @memberof minimir.v1
+             * @interface IBattlePassDayView
+             * @augments minimir.v1.BattlePassDayView.$Properties
+             * @deprecated Use minimir.v1.BattlePassDayView.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassDayView.
+             * @typedef {minimir.v1.BattlePassDayView.$Properties} minimir.v1.BattlePassDayView.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassDayView.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassDayView.
+             * @constructor
+             * @param {minimir.v1.BattlePassDayView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassDayView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassDayView day.
+             * @member {number} day
+             * @memberof minimir.v1.BattlePassDayView
+             * @instance
+             */
+            BattlePassDayView.prototype.day = 0;
+
+            /**
+             * BattlePassDayView qualified.
+             * @member {boolean} qualified
+             * @memberof minimir.v1.BattlePassDayView
+             * @instance
+             */
+            BattlePassDayView.prototype.qualified = false;
+
+            /**
+             * BattlePassDayView claimed_tier.
+             * @member {number} claimed_tier
+             * @memberof minimir.v1.BattlePassDayView
+             * @instance
+             */
+            BattlePassDayView.prototype.claimed_tier = 0;
+
+            /**
+             * Creates a new BattlePassDayView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {minimir.v1.BattlePassDayView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassDayView} BattlePassDayView instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassDayView.$Shape): minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape;
+             *   (properties?: minimir.v1.BattlePassDayView.$Properties): minimir.v1.BattlePassDayView;
+             * }}
+             */
+            BattlePassDayView.create = function(properties) {
+                return new BattlePassDayView(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassDayView message. Does not implicitly {@link minimir.v1.BattlePassDayView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {minimir.v1.BattlePassDayView.$Properties} message BattlePassDayView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassDayView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.day);
+                if (message.qualified != null && $Object.hasOwnProperty.call(message, "qualified") && message.qualified !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.qualified);
+                if (message.claimed_tier != null && $Object.hasOwnProperty.call(message, "claimed_tier") && message.claimed_tier !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.claimed_tier);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassDayView message, length delimited. Does not implicitly {@link minimir.v1.BattlePassDayView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {minimir.v1.BattlePassDayView.$Properties} message BattlePassDayView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassDayView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassDayView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape} BattlePassDayView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassDayView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassDayView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.qualified = value;
+                            else
+                                delete message.qualified;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.claimed_tier = value;
+                            else
+                                delete message.claimed_tier;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassDayView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape} BattlePassDayView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassDayView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassDayView message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassDayView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isInteger(message.day))
+                        return "day: integer expected";
+                if (message.qualified != null && $Object.hasOwnProperty.call(message, "qualified"))
+                    if (typeof message.qualified !== "boolean")
+                        return "qualified: boolean expected";
+                if (message.claimed_tier != null && $Object.hasOwnProperty.call(message, "claimed_tier"))
+                    if (!$util.isInteger(message.claimed_tier))
+                        return "claimed_tier: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassDayView
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassDayView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassDayView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassDayView";
+            };
+
+            return BattlePassDayView;
+        })();
+
+        v1.BattlePassState = (function() {
+
+            /**
+             * Properties of a BattlePassState.
+             * @typedef {Object} minimir.v1.BattlePassState.$Properties
+             * @property {Long|null} [scene_epoch] BattlePassState scene_epoch
+             * @property {Long|null} [role_revision] BattlePassState role_revision
+             * @property {Long|null} [rule_version] BattlePassState rule_version
+             * @property {string|null} [season_start] BattlePassState season_start
+             * @property {string|null} [season_end] BattlePassState season_end
+             * @property {string|null} [operating_day] BattlePassState operating_day
+             * @property {number|null} [tier] BattlePassState tier
+             * @property {number|null} [season_claimed_tier] BattlePassState season_claimed_tier
+             * @property {number|null} [activity] BattlePassState activity
+             * @property {number|null} [activity_target] BattlePassState activity_target
+             * @property {Array.<minimir.v1.BattlePassTierView.$Properties>|null} [tiers] BattlePassState tiers
+             * @property {Array.<minimir.v1.BattlePassDayView.$Properties>|null} [days] BattlePassState days
+             * @property {Array.<string>|null} [history] BattlePassState history
+             * @property {boolean|null} [history_has_more] BattlePassState history_has_more
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassState.
+             * @memberof minimir.v1
+             * @interface IBattlePassState
+             * @augments minimir.v1.BattlePassState.$Properties
+             * @deprecated Use minimir.v1.BattlePassState.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassState.
+             * @typedef {minimir.v1.BattlePassState.$Properties} minimir.v1.BattlePassState.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassState.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassState.
+             * @constructor
+             * @param {minimir.v1.BattlePassState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassState = function (properties) {
+                this.tiers = [];
+                this.days = [];
+                this.history = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BattlePassState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BattlePassState rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BattlePassState season_start.
+             * @member {string} season_start
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.season_start = "";
+
+            /**
+             * BattlePassState season_end.
+             * @member {string} season_end
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.season_end = "";
+
+            /**
+             * BattlePassState operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.operating_day = "";
+
+            /**
+             * BattlePassState tier.
+             * @member {number} tier
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.tier = 0;
+
+            /**
+             * BattlePassState season_claimed_tier.
+             * @member {number} season_claimed_tier
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.season_claimed_tier = 0;
+
+            /**
+             * BattlePassState activity.
+             * @member {number} activity
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.activity = 0;
+
+            /**
+             * BattlePassState activity_target.
+             * @member {number} activity_target
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.activity_target = 0;
+
+            /**
+             * BattlePassState tiers.
+             * @member {Array.<minimir.v1.BattlePassTierView.$Properties>} tiers
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.tiers = $util.emptyArray;
+
+            /**
+             * BattlePassState days.
+             * @member {Array.<minimir.v1.BattlePassDayView.$Properties>} days
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.days = $util.emptyArray;
+
+            /**
+             * BattlePassState history.
+             * @member {Array.<string>} history
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.history = $util.emptyArray;
+
+            /**
+             * BattlePassState history_has_more.
+             * @member {boolean} history_has_more
+             * @memberof minimir.v1.BattlePassState
+             * @instance
+             */
+            BattlePassState.prototype.history_has_more = false;
+
+            /**
+             * Creates a new BattlePassState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {minimir.v1.BattlePassState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassState} BattlePassState instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassState.$Shape): minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape;
+             *   (properties?: minimir.v1.BattlePassState.$Properties): minimir.v1.BattlePassState;
+             * }}
+             */
+            BattlePassState.create = function(properties) {
+                return new BattlePassState(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassState message. Does not implicitly {@link minimir.v1.BattlePassState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {minimir.v1.BattlePassState.$Properties} message BattlePassState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start") && message.season_start !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.season_start);
+                if (message.season_end != null && $Object.hasOwnProperty.call(message, "season_end") && message.season_end !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.season_end);
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.operating_day);
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier") && message.tier !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.tier);
+                if (message.season_claimed_tier != null && $Object.hasOwnProperty.call(message, "season_claimed_tier") && message.season_claimed_tier !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.season_claimed_tier);
+                if (message.activity != null && $Object.hasOwnProperty.call(message, "activity") && message.activity !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.activity);
+                if (message.activity_target != null && $Object.hasOwnProperty.call(message, "activity_target") && message.activity_target !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.activity_target);
+                if (message.tiers != null && message.tiers.length)
+                    for (var i = 0; i < message.tiers.length; ++i)
+                        $root.minimir.v1.BattlePassTierView.encode(message.tiers[i], writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.days != null && message.days.length)
+                    for (var i = 0; i < message.days.length; ++i)
+                        $root.minimir.v1.BattlePassDayView.encode(message.days[i], writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
+                if (message.history != null && message.history.length)
+                    for (var i = 0; i < message.history.length; ++i)
+                        writer.uint32(/* id 13, wireType 2 =*/106).string(message.history[i]);
+                if (message.history_has_more != null && $Object.hasOwnProperty.call(message, "history_has_more") && message.history_has_more !== false)
+                    writer.uint32(/* id 14, wireType 0 =*/112).bool(message.history_has_more);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassState message, length delimited. Does not implicitly {@link minimir.v1.BattlePassState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {minimir.v1.BattlePassState.$Properties} message BattlePassState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape} BattlePassState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.season_start = value;
+                            else
+                                delete message.season_start;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.season_end = value;
+                            else
+                                delete message.season_end;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.tier = value;
+                            else
+                                delete message.tier;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.season_claimed_tier = value;
+                            else
+                                delete message.season_claimed_tier;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.activity = value;
+                            else
+                                delete message.activity;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.activity_target = value;
+                            else
+                                delete message.activity_target;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.tiers && message.tiers.length))
+                                message.tiers = [];
+                            message.tiers.push($root.minimir.v1.BattlePassTierView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.days && message.days.length))
+                                message.days = [];
+                            message.days.push($root.minimir.v1.BattlePassDayView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.history && message.history.length))
+                                message.history = [];
+                            message.history.push(reader.stringVerify());
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.history_has_more = value;
+                            else
+                                delete message.history_has_more;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape} BattlePassState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassState message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start"))
+                    if (!$util.isString(message.season_start))
+                        return "season_start: string expected";
+                if (message.season_end != null && $Object.hasOwnProperty.call(message, "season_end"))
+                    if (!$util.isString(message.season_end))
+                        return "season_end: string expected";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier"))
+                    if (!$util.isInteger(message.tier))
+                        return "tier: integer expected";
+                if (message.season_claimed_tier != null && $Object.hasOwnProperty.call(message, "season_claimed_tier"))
+                    if (!$util.isInteger(message.season_claimed_tier))
+                        return "season_claimed_tier: integer expected";
+                if (message.activity != null && $Object.hasOwnProperty.call(message, "activity"))
+                    if (!$util.isInteger(message.activity))
+                        return "activity: integer expected";
+                if (message.activity_target != null && $Object.hasOwnProperty.call(message, "activity_target"))
+                    if (!$util.isInteger(message.activity_target))
+                        return "activity_target: integer expected";
+                if (message.tiers != null && $Object.hasOwnProperty.call(message, "tiers")) {
+                    if (!$Array.isArray(message.tiers))
+                        return "tiers: array expected";
+                    for (var i = 0; i < message.tiers.length; ++i) {
+                        var error = $root.minimir.v1.BattlePassTierView.verify(message.tiers[i], _depth + 1);
+                        if (error)
+                            return "tiers." + error;
+                    }
+                }
+                if (message.days != null && $Object.hasOwnProperty.call(message, "days")) {
+                    if (!$Array.isArray(message.days))
+                        return "days: array expected";
+                    for (var i = 0; i < message.days.length; ++i) {
+                        var error = $root.minimir.v1.BattlePassDayView.verify(message.days[i], _depth + 1);
+                        if (error)
+                            return "days." + error;
+                    }
+                }
+                if (message.history != null && $Object.hasOwnProperty.call(message, "history")) {
+                    if (!$Array.isArray(message.history))
+                        return "history: array expected";
+                    for (var i = 0; i < message.history.length; ++i)
+                        if (!$util.isString(message.history[i]))
+                            return "history: string[] expected";
+                }
+                if (message.history_has_more != null && $Object.hasOwnProperty.call(message, "history_has_more"))
+                    if (typeof message.history_has_more !== "boolean")
+                        return "history_has_more: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassState
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassState";
+            };
+
+            return BattlePassState;
+        })();
+
+        v1.BattlePassClaimRequest = (function() {
+
+            /**
+             * Properties of a BattlePassClaimRequest.
+             * @typedef {Object} minimir.v1.BattlePassClaimRequest.$Properties
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] BattlePassClaimRequest operation
+             * @property {string|null} [season_start] BattlePassClaimRequest season_start
+             * @property {number|null} [day] BattlePassClaimRequest day
+             * @property {number|null} [tier] BattlePassClaimRequest tier
+             * @property {number|null} [claimed_tier] BattlePassClaimRequest claimed_tier
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BattlePassClaimRequest.
+             * @memberof minimir.v1
+             * @interface IBattlePassClaimRequest
+             * @augments minimir.v1.BattlePassClaimRequest.$Properties
+             * @deprecated Use minimir.v1.BattlePassClaimRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a BattlePassClaimRequest.
+             * @typedef {minimir.v1.BattlePassClaimRequest.$Properties} minimir.v1.BattlePassClaimRequest.$Shape
+             */
+
+            /**
+             * Constructs a new BattlePassClaimRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a BattlePassClaimRequest.
+             * @constructor
+             * @param {minimir.v1.BattlePassClaimRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BattlePassClaimRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BattlePassClaimRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @instance
+             */
+            BattlePassClaimRequest.prototype.operation = null;
+
+            /**
+             * BattlePassClaimRequest season_start.
+             * @member {string} season_start
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @instance
+             */
+            BattlePassClaimRequest.prototype.season_start = "";
+
+            /**
+             * BattlePassClaimRequest day.
+             * @member {number} day
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @instance
+             */
+            BattlePassClaimRequest.prototype.day = 0;
+
+            /**
+             * BattlePassClaimRequest tier.
+             * @member {number} tier
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @instance
+             */
+            BattlePassClaimRequest.prototype.tier = 0;
+
+            /**
+             * BattlePassClaimRequest claimed_tier.
+             * @member {number} claimed_tier
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @instance
+             */
+            BattlePassClaimRequest.prototype.claimed_tier = 0;
+
+            /**
+             * Creates a new BattlePassClaimRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {minimir.v1.BattlePassClaimRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BattlePassClaimRequest} BattlePassClaimRequest instance
+             * @type {{
+             *   (properties: minimir.v1.BattlePassClaimRequest.$Shape): minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape;
+             *   (properties?: minimir.v1.BattlePassClaimRequest.$Properties): minimir.v1.BattlePassClaimRequest;
+             * }}
+             */
+            BattlePassClaimRequest.create = function(properties) {
+                return new BattlePassClaimRequest(properties);
+            };
+
+            /**
+             * Encodes the specified BattlePassClaimRequest message. Does not implicitly {@link minimir.v1.BattlePassClaimRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {minimir.v1.BattlePassClaimRequest.$Properties} message BattlePassClaimRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassClaimRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start") && message.season_start !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.season_start);
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.day);
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier") && message.tier !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.tier);
+                if (message.claimed_tier != null && $Object.hasOwnProperty.call(message, "claimed_tier") && message.claimed_tier !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.claimed_tier);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BattlePassClaimRequest message, length delimited. Does not implicitly {@link minimir.v1.BattlePassClaimRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {minimir.v1.BattlePassClaimRequest.$Properties} message BattlePassClaimRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BattlePassClaimRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BattlePassClaimRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape} BattlePassClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassClaimRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BattlePassClaimRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.season_start = value;
+                            else
+                                delete message.season_start;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.tier = value;
+                            else
+                                delete message.tier;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.claimed_tier = value;
+                            else
+                                delete message.claimed_tier;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BattlePassClaimRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape} BattlePassClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BattlePassClaimRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BattlePassClaimRequest message.
+             * @function verify
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BattlePassClaimRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.season_start != null && $Object.hasOwnProperty.call(message, "season_start"))
+                    if (!$util.isString(message.season_start))
+                        return "season_start: string expected";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isInteger(message.day))
+                        return "day: integer expected";
+                if (message.tier != null && $Object.hasOwnProperty.call(message, "tier"))
+                    if (!$util.isInteger(message.tier))
+                        return "tier: integer expected";
+                if (message.claimed_tier != null && $Object.hasOwnProperty.call(message, "claimed_tier"))
+                    if (!$util.isInteger(message.claimed_tier))
+                        return "claimed_tier: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BattlePassClaimRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.BattlePassClaimRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BattlePassClaimRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BattlePassClaimRequest";
+            };
+
+            return BattlePassClaimRequest;
         })();
 
         return v1;

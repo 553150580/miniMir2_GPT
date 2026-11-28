@@ -79,9 +79,9 @@ func (v *Verifier) Verify(ctx context.Context, order ExpectedOrder) (VerifiedPay
 	return VerifiedPayment{order: order, transactionID: actual.TransactionID, paidAt: actual.PaidAt.UTC().Truncate(time.Millisecond)}, nil
 }
 
-// supportedKind 保留首阶段已确认的充值及两类现金卡，不沿用元宝商品或战令入口。
+// supportedKind 校验平台可对账的四类独立现金商品。
 func supportedKind(kind Kind) bool {
-	return kind == KindRecharge || kind == KindPrivilegeCard || kind == KindHostingCard
+	return kind == KindRecharge || kind == KindPrivilegeCard || kind == KindHostingCard || kind == KindBattlePass
 }
 
 // channelID 约束渠道身份的长度及不可见字符，不对原字符串做会改变订单范围的归一化。

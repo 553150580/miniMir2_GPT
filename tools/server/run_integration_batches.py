@@ -43,7 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
-    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery', 'SoulBeast', 'GrowthShop'),
+    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery', 'SoulBeast', 'GrowthShop', 'BattlePass'),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -65,7 +65,7 @@ EQUIPMENT_ENHANCEMENT_PERSISTENCE_CASES = ('TestEnhanceEquipmentSlotSettlementMo
 EQUIPMENT_REFINE_PERSISTENCE_CASES = ('TestEquipmentRefineSettlementMongo', 'TestRefineRecycleSettlementMongo')
 MEDAL_PERSISTENCE_CASES = ('TestMedalSettlementMongo',)
 REBIRTH_PERSISTENCE_CASES = ('TestRebirthSettlementMongo',)
-BODY_TRAINING_PERSISTENCE_CASES = ('TestBodyTrainingSettlementMongo',)
+BODY_TRAINING_PERSISTENCE_CASES = ('TestBodyTrainingSettlementMongo', 'TestBattlePassHistoryMongo')
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -371,6 +371,18 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_GROWTH_SHOP_TEST_FIXTURE'] = str(shop_fixture)
             for label, path in (('assembly', shop_assembly), ('fixture', shop_fixture), ('public', shop_public)):
                 report[f'growth_shop_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            # 战令另复用同一奖表的角色材料与原任务的活跃门槛。
+            pass_assembly = destination / 'battle-pass-assembly.json'
+            pass_fixture, pass_public = destination / 'battle-pass-fixture.json', destination / 'battle-pass-gameplay.json'
+            pass_assembly.write_bytes((ROOT / 'tools/resources/testdata/battle-pass-isolated.json').read_bytes())
+            pass_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_battle_pass.py'), '--assembly', str(pass_assembly),
+                           '--base-fixture', str(shop_fixture), '--base-public', str(shop_public),
+                           '--fixture-out', str(pass_fixture), '--public-out', str(pass_public)]
+            subprocess.run(pass_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*pass_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_BATTLE_PASS_TEST_FIXTURE'] = str(pass_fixture)
+            for label, path in (('assembly', pass_assembly), ('fixture', pass_fixture), ('public', pass_public)):
+                report[f'battle_pass_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',

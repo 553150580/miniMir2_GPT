@@ -275,40 +275,48 @@ func claimTaskCodex(r domain.Role, f *devconfig.Fixture, q *pb.TaskCodexClaimReq
 
 // taskCodexReward 检查全部货币与物品空间，成功后才替换原钱包和背包。
 func taskCodexReward(r domain.Role, f *devconfig.Fixture, reward devconfig.TaskCodexReward, receipt *TaskCodexClaimReceipt, opID string) (domain.Role, uint32) {
-	next := r
-	gold, err := add(r.Wallet.BoundGold, reward.BoundGold)
-	if err != nil {
-		return r, Code(err)
-	}
-	yuanbao, err := add(r.Wallet.BoundYuanbao, reward.BoundYuanbaoUnits)
-	if err != nil {
-		return r, Code(err)
-	}
 	source := "task_reward"
 	if receipt.Kind == devconfig.TaskCodexMonster {
 		source = "codex_reward"
 	}
+	next, items, code := grantBoundRewards(r, f, reward, source, opID)
+	receipt.Items = items
+	return next, code
+}
+
+// grantBoundRewards 在装不下全部物品或绑定钱包溢出时保留原角色和背包。
+func grantBoundRewards(r domain.Role, f *devconfig.Fixture, reward devconfig.TaskCodexReward, source, opID string) (domain.Role, []domain.Item, uint32) {
+	gold, err := add(r.Wallet.BoundGold, reward.BoundGold)
+	if err != nil {
+		return r, nil, Code(err)
+	}
+	yuanbao, err := add(r.Wallet.BoundYuanbao, reward.BoundYuanbaoUnits)
+	if err != nil {
+		return r, nil, Code(err)
+	}
+	var items []domain.Item // 所有奖励成功装入后才作为本次确定差额返回。
 	for _, grant := range reward.Items {
 		itemDef, exists := f.Item(grant.ItemID)
 		if !exists || grant.Quantity <= 0 {
-			return r, p.CodeInvalidArgument
+			return r, nil, p.CodeInvalidArgument
 		}
 		stack := int64(1)
 		if itemDef.Stackable && itemDef.MaxStack > 1 {
 			stack = itemDef.MaxStack
 		}
-		if (grant.Quantity-1)/stack+1 > int64(r.Capacity-len(r.Items)-len(receipt.Items)) {
-			return r, p.CodeEquipmentBagFull
+		if (grant.Quantity-1)/stack+1 > int64(r.Capacity-len(r.Items)-len(items)) {
+			return r, nil, p.CodeEquipmentBagFull
 		}
 		for left := grant.Quantity; left > 0; left -= min(left, stack) {
 			item := domain.Item{ID: domain.ID(), ItemID: grant.ItemID, Quantity: min(left, stack), Bound: true, Version: 1,
 				SourceKind: source, SourceID: opID, Quality: itemDef.DropQuality}
-			receipt.Items = append(receipt.Items, InitializeItemDurability(item, f))
+			items = append(items, InitializeItemDurability(item, f))
 		}
 	}
-	if len(receipt.Items) > 0 {
-		next.Items = append(append([]domain.Item(nil), r.Items...), receipt.Items...)
+	next := r
+	if len(items) > 0 {
+		next.Items = append(append([]domain.Item(nil), r.Items...), items...)
 	}
 	next.Wallet.BoundGold, next.Wallet.BoundYuanbao = gold, yuanbao
-	return next, 0
+	return next, items, 0
 }

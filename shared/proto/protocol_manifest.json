@@ -1620,6 +1620,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.12/5.8 确认购买、绑定到账和原操作重放"
+    },
+    {
+      "value": 40074,
+      "name": "MsgC2SBattlePassQuery",
+      "proto_message": "BattlePassQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.10 战令当前周期和历史资格"
+    },
+    {
+      "value": 40075,
+      "name": "MsgS2CBattlePassState",
+      "proto_message": "BattlePassState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.10 档位总奖励、补差和当日资格"
+    },
+    {
+      "value": 40076,
+      "name": "MsgC2SBattlePassClaim",
+      "proto_message": "BattlePassClaimRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.10 每日与周期奖励只领取原差额"
     }
   ],
   "error_codes": [
@@ -2253,6 +2289,30 @@
       "display_zh": "此材料已超出今日可购数量",
       "status": "draft",
       "source_ref": "最终策划案4.12/5.8",
+      "active_in_scope": true
+    },
+    {
+      "value": 3987,
+      "name": "CodeBattlePassUnavailable",
+      "display_zh": "此战令周期或奖励尚未解锁",
+      "status": "draft",
+      "source_ref": "最终策划案4.10",
+      "active_in_scope": true
+    },
+    {
+      "value": 3988,
+      "name": "CodeBattlePassChanged",
+      "display_zh": "战令档位或领取进度已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.10",
+      "active_in_scope": true
+    },
+    {
+      "value": 3989,
+      "name": "CodeBattlePassPaymentPending",
+      "display_zh": "已有该档位步骤的支付订单等待确认",
+      "status": "draft",
+      "source_ref": "最终策划案4.10",
       "active_in_scope": true
     }
   ]

@@ -84,6 +84,8 @@ type AssetRequest struct {
 	GrowthShopCommit       *pb.GrowthShopCommitRequest   // 原商城确认的报价、商品和份数。
 	GrowthShopQuote        *GrowthShopQuote              // 房间在原附着签发的可信购买条款。
 	GrowthShopGate         bool                          // 仅首次确认受原场景门禁。
+	BattlePass             *pb.BattlePassClaimRequest    // 原周期、相对日和期待的领取差额。
+	BattlePassGate         bool                          // 只拒绝当前场景发起的新领取。
 
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
@@ -229,7 +231,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit, AssetBodyTrainingCommit, AssetSoulAction, AssetGrowthShopCommit:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit, AssetBodyTrainingCommit, AssetSoulAction, AssetGrowthShopCommit, AssetBattlePassClaim:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -264,6 +266,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var bodyTraining *BodyTrainingReceipt              // 炼体每次实际的扣款、成功与原等级。
 		var soul *domain.SoulReceipt                       // 角色魂兽、碎片变更或原首领附件结果。
 		var growthShop *GrowthShopReceipt                  // 商城原扣款、额度和绑定到账实例。
+		var battlePass *BattlePassReceipt                  // 真实已领取的原战令档位和到账差额。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -329,6 +332,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			r, soul, businessCode = commitSoulAction(r, s.Cfg.Fixture.Souls, q)
 		case AssetGrowthShopCommit:
 			r, growthShop, businessCode = commitGrowthShop(r, &s.Cfg.Fixture, q, time.Now())
+		case AssetBattlePassClaim:
+			r, battlePass, businessCode, e = s.claimBattlePass(tc, r, q, taskEventAt, opID)
+			if e != nil {
+				return e
+			}
 		case "warehouse":
 			if q.Warehouse == nil || !proto.Equal(q.Warehouse.Operation, q.Context) {
 				businessCode = p.CodeInvalidArgument
@@ -412,6 +420,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				}
 			}
 			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID, worldProgress)
+			if businessCode == 0 && q.TaskCodex.Kind == devconfig.TaskCodexDaily {
+				if e = s.recordBattlePassActivity(tc, r, taskEventAt); e != nil {
+					return e
+				}
+			}
 		case AssetChallengeRewardClaim:
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
 			if businessCode == p.CodeOperationConflict {
@@ -483,6 +496,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.BodyTraining = bodyTraining
 		op.Soul = soul
 		op.GrowthShop = growthShop
+		op.BattlePass = battlePass
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -589,6 +603,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["config_hash"] = growthShop.Quote.Config
 			audit["origin_server_id"] = r.Origin
 		}
+		if battlePass != nil {
+			audit["battle_pass"] = battlePass
+			audit["origin_server_id"] = r.Origin
+		}
 		if casting != nil {
 			audit["casting_use"] = casting
 			audit["source_seq"] = q.SourceSeq
@@ -687,6 +705,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.BodyTraining = receipt.BodyTraining.Proto()
 		result.Soul = receipt.Soul.Proto()
 		result.GrowthShop = receipt.GrowthShop.Proto()
+		result.BattlePass = receipt.BattlePass.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 		result.RecycleRefine = receipt.Recycling.refineProto()
 	}

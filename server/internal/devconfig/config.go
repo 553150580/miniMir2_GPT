@@ -333,6 +333,8 @@ type Fixture struct {
 	Souls *SoulRules `json:"soul_beasts,omitempty"`
 	// GrowthShop 保存独立的绑定材料商品，缺省时沿用原技能与 NPC 入口。
 	GrowthShop *GrowthShop `json:"growth_shop,omitempty"`
+	// BattlePass 保存有独立运营日历的战令档位，缺省时入口关闭。
+	BattlePass *BattlePassRules `json:"battle_pass,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -574,6 +576,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateTasksCodex(); err != nil {
+		return err
+	}
+	if err := f.validateBattlePass(); err != nil {
 		return err
 	}
 	// err 接收校验位移“foundation”过程中可能产生的错误，供后续失败分支处理。

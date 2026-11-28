@@ -37,6 +37,18 @@ message OperationResult {
   BodyTrainingReceipt body_training = 21;
   SoulReceipt soul = 22;
   GrowthShopReceipt growth_shop = 23;
+  BattlePassReceipt battle_pass = 24;
+}
+
+// 原战令领取记录已经结算过的最高档和本次实际到账差额。
+message BattlePassReceipt {
+  string season_start = 1;
+  uint32 day = 2;
+  uint32 previous_tier = 3;
+  uint32 tier = 4;
+  int64 bound_gold = 5;
+  int64 bound_yuanbao_units = 6;
+  repeated ItemView items = 7;
 }
 
 // 已确认报价固定原商品、币种、限购水位与到账条款。币种 1 为元宝，2 为绑定元宝。

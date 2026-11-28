@@ -131,6 +131,7 @@ type Operation struct {
 	BodyTraining         *BodyTrainingReceipt         `bson:"body_training,omitempty"`         // 原炼体扣款、等级和结果。
 	Soul                 *domain.SoulReceipt          `bson:"soul,omitempty"`                  // 角色收藏操作或原魂兽奖项。
 	GrowthShop           *GrowthShopReceipt           `bson:"growth_shop,omitempty"`           // 商城一次绑定材料原成交。
+	BattlePass           *BattlePassReceipt           `bson:"battle_pass,omitempty"`           // 战令已发放的原绑定差额。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -224,6 +225,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 		dungeonRewardCollection:   externalChallengeRewardIndexes(),
 		roleCardPeriodCollection:  roleCardPeriodIndexes(),
 		paymentOrderCollection:    paymentOrderIndexes(),
+	}
+	if s.Cfg.Fixture.BattlePass != nil {
+		indexes[battlePassSeasons] = battlePassIndexes()
 	}
 	if s.Cfg.Fixture.Forge != nil {
 		indexes[forgeQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}

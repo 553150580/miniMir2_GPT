@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 
 module.exports = function normalizeGrowthShopLayout(scene) {
+    require('./battle_pass_layout.cjs')(scene);
     const parent = scene[419], shop = scene[3175];
     assert.equal(parent._name, 'Page2');
     assert.equal(scene[parent._parent.__id__]._name, 'Pages');

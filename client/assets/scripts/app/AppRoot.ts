@@ -75,6 +75,9 @@ import type { SoulAction, SoulSnapshot } from './GameSoulBeasts';
 import { GameGrowthShop } from './GameGrowthShop';
 import { validateGrowthShopReceipt } from './GrowthShopProtocol';
 import type { GrowthShopCommit, GrowthShopReceipt } from './GrowthShopProtocol';
+import { GameBattlePass } from './GameBattlePass';
+import { validateBattlePassReceipt } from './BattlePassProtocol';
+import type { BattlePassClaim } from './BattlePassProtocol';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -106,7 +109,8 @@ import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './W
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
     MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote,
-    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction, MsgC2SGrowthShopCommit, MsgC2SGrowthShopQuery } from '../generated/protocol_ids';
+    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction, MsgC2SGrowthShopCommit, MsgC2SGrowthShopQuery,
+    MsgC2SBattlePassClaim, MsgC2SBattlePassQuery } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -166,6 +170,8 @@ export class AppRoot extends Component {
     private soulBeasts?: GameSoulBeasts;
     private growthShop?: GameGrowthShop; // 负责原目录、报价与购买确认。
     private growthShopEntry?: Node; // 功能页保存的商城入口。
+    private battlePass?: GameBattlePass; // 管理战令周期、历史页和原领取回执。
+    private battlePassEntry?: Node; // 功能面板成长页中保存的战令入口。
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -596,6 +602,12 @@ export class AppRoot extends Component {
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: this.itemActions.refresh,
             query: (sceneEpoch, productId, count) => session.connection.request(MsgC2SGrowthShopQuery, { sceneEpoch, productId, count }),
             submit: (request, revision) => this.economic(MsgC2SGrowthShopCommit, request, revision) });
+        this.battlePassEntry = safe.getChildByPath('UIMgr/Panels/Functions/Pages/Page1/BattlePass') ?? undefined;
+        this.battlePass = new GameBattlePass({ context: () => this.growthFunctionContext(this.battlePassEntry),
+            show: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: this.itemActions.refresh,
+            report: error => this.error(error), itemName: itemId => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === itemId)?.name ?? `物品 ${itemId}`,
+            query: (sceneEpoch, seasonStart, historyBefore) => session.connection.request(MsgC2SBattlePassQuery, { sceneEpoch, seasonStart, historyBefore }),
+            claim: (request, revision) => this.economic(MsgC2SBattlePassClaim, request, revision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -925,6 +937,7 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/RoleCards/Claim', () => this.roleCards?.claimDaily());
         this.button('UIMgr/Panels/Functions/Pages/Page2/ItemMarket', () => this.itemMarket?.open());
         if (this.growthShopEntry) this.button('UIMgr/Panels/Functions/Pages/Page2/GrowthShop', () => this.growthShop?.open());
+        if (this.battlePassEntry) this.button('UIMgr/Panels/Functions/Pages/Page1/BattlePass', () => this.battlePass?.open());
         const market = 'UIMgr/Panels/ItemMarket/';
         this.button(market + 'Tabs/Public', () => this.itemMarket?.switchScope(ItemMarketScope.Public));
         this.button(market + 'Tabs/Mine', () => this.itemMarket?.switchScope(ItemMarketScope.Mine));
@@ -966,6 +979,7 @@ export class AppRoot extends Component {
         this.itemMarket?.sync();
         this.goldMarket?.sync();
         this.refreshGrowthShopEntry();
+        this.refreshBattlePassEntry();
         this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
@@ -1581,6 +1595,7 @@ export class AppRoot extends Component {
         this.itemMarket?.sync();
         this.goldMarket?.sync();
         this.refreshGrowthShopEntry();
+        this.refreshBattlePassEntry();
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -1745,16 +1760,30 @@ export class AppRoot extends Component {
         if (placeholder) placeholder.active = false;
     }
 
-    // growthShopContext 保证原目录及报价始终绑定在当前的永久角色、场景和规则。
-    private growthShopContext() {
-        const identity = currentEntryIdentity(), { entry, wallet } = session;
-        if (!this.growthShopEntry?.active || this.disposed || !identity || !isCurrentEntry(identity) || !entry || !wallet ||
+    // refreshBattlePassEntry 只在当前装配开放时显示编辑器保存的战令。
+    private refreshBattlePassEntry(): void {
+        const button = this.battlePassEntry;
+        if (!button) return;
+        button.active = this.world?.gameplay.battle_pass === true && this.canSendInput() && [1, 2].includes(session.entry?.sceneKind);
+        const placeholder = button.parent?.getChildByName('Text');
+        if (placeholder) placeholder.active = !button.active;
+    }
+
+    // growthFunctionContext 让养成入口复用当前角色、场景与规则的检查。
+    private growthFunctionContext(button: Node | undefined) {
+        const identity = currentEntryIdentity(), { entry } = session;
+        if (!button?.active || this.disposed || !identity || !isCurrentEntry(identity) || !entry ||
             this.ui?.top?.name !== 'Functions') return undefined;
         const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
         if (!player || player.hp.isZero()) return undefined;
         return { scope: attachmentKey(identity), scene: entry.sceneEpoch, rule: entry.resourceVersion,
-            yuanbao: wallet.yuanbaoUnits, boundYuanbao: wallet.boundYuanbaoUnits,
             blocked: !this.canSendInput() || this.economicBusy || this.unresolved || !!session.pending?.get(roleIdentity()) };
+    }
+
+    // growthShopContext 在原角色附着上补充成长商城使用的各钱包。
+    private growthShopContext() {
+        const context = this.growthFunctionContext(this.growthShopEntry), wallet = session.wallet;
+        return context && wallet ? { ...context, yuanbao: wallet.yuanbaoUnits, boundYuanbao: wallet.boundYuanbaoUnits } : undefined;
     }
 
     private wingSnapshot(): WingSnapshot | null {
@@ -2528,6 +2557,10 @@ export class AppRoot extends Component {
             if (pending.id === MsgC2SGrowthShopCommit) {
                 growthPurchase = validateGrowthShopReceipt(result.growthShop, pending.value as unknown as GrowthShopCommit, this.growthShop?.confirmedQuote);
             }
+            if (pending.id === MsgC2SBattlePassClaim) {
+                const request = pending.value as unknown as BattlePassClaim;
+                validateBattlePassReceipt(result.battlePass, request, this.battlePass?.expectedReward(request));
+            }
             if (pending.id === 40030 && result.soul) {
                 const receipt = validateSoulReceipt(result.soul);
                 soulNotice = receipt.fragmentDelta.isZero() ? `获得 ${this.soulName(receipt.typeId)}`
@@ -2587,6 +2620,10 @@ export class AppRoot extends Component {
             const itemId = growthPurchase.terms.itemId;
             const item = this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === itemId);
             this.status(`已购得绑定${item?.name ?? '材料'} ×${growthPurchase.terms.itemQuantity}`);
+            return;
+        }
+        if (pending.id === MsgC2SBattlePassClaim) {
+            this.status('战令绑定奖励已到账');
             return;
         }
         if (enhanced) {

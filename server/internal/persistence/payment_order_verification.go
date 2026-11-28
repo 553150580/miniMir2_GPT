@@ -107,6 +107,12 @@ func (s *Store) recordVerifiedPayment(ctx context.Context, proof payment.Verifie
 		if observedRevision != 0 && order.Revision != observedRevision {
 			return Fail(p.CodeOperationConflict, "原订单在主动查询期间已变化")
 		}
+		if order.Quote.Kind == payment.KindBattlePass && order.State != PaymentOrderFulfilled &&
+			(!order.BattlePassReserved || !order.acceptsBattlePassPaidAt(proof.PaidAt())) {
+			result, err = s.writePaymentObservation(tc, order, PaymentReconciliationMismatch)
+			disagreement = err == nil
+			return err
+		}
 		digest, err := order.verificationDigest()
 		if err != nil {
 			return err
@@ -230,11 +236,19 @@ func (s *Store) writePaymentObservation(ctx context.Context, order PaymentOrder,
 	if order.State == PaymentOrderVerified {
 		change["state"] = PaymentOrderReview
 	}
+	// 仅渠道确认关闭且不存在实付证明时释放原角色的升档步骤。
+	release := order.Quote.Kind == payment.KindBattlePass && order.BattlePassReserved && order.Verification == nil && status == PaymentReconciliationClosed
+	if release {
+		change["battle_pass_reserved"] = false
+	}
 	if err := s.updatePaymentOrder(ctx, order, change, at); err != nil {
 		return PaymentOrder{}, err
 	}
 	if order.State == PaymentOrderVerified {
 		order.State = PaymentOrderReview
+	}
+	if release {
+		order.BattlePassReserved = false
 	}
 	order.Reconciliation = observation
 	order.Revision, order.UpdatedAt = order.Revision+1, at
@@ -273,7 +287,11 @@ func (s *Store) markPaymentOrderFulfilled(ctx context.Context, order PaymentOrde
 		assetOperationRef == "" || len(assetOperationRef) > 256 || at.IsZero() || at.Before(order.VerifiedAt) {
 		return Fail(p.CodeOperationConflict, "原支付订单或资产回执证据无效")
 	}
-	return s.updatePaymentOrder(ctx, order, bson.M{"state": PaymentOrderFulfilled, "asset_operation_ref": assetOperationRef, "fulfilled_at": at}, at)
+	fields := bson.M{"state": PaymentOrderFulfilled, "asset_operation_ref": assetOperationRef, "fulfilled_at": at}
+	if order.Quote.Kind == payment.KindBattlePass {
+		fields["battle_pass_reserved"] = false
+	}
+	return s.updatePaymentOrder(ctx, order, fields, at)
 }
 
 // updatePaymentOrder 在原阶段和修订仍匹配时写入新状态，避免覆盖并发的查单或履约。

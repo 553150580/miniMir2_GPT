@@ -52,15 +52,15 @@ type TaskCodexDefinition struct {
 
 // TaskCodexReward 使用整数最小货币单位，所有奖励按来源绑定。
 type TaskCodexReward struct {
-	BoundGold         int64                 `json:"bound_gold,omitempty"`          // 绑定金币增量。
-	BoundYuanbaoUnits int64                 `json:"bound_yuanbao_units,omitempty"` // 绑定元宝最小单位增量。
-	Items             []TaskCodexRewardItem `json:"items,omitempty"`               // 按定义发放的绑定库存物品。
+	BoundGold         int64                 `json:"bound_gold,omitempty" bson:"bound_gold,omitempty"`                   // 绑定金币增量。
+	BoundYuanbaoUnits int64                 `json:"bound_yuanbao_units,omitempty" bson:"bound_yuanbao_units,omitempty"` // 绑定元宝最小单位增量。
+	Items             []TaskCodexRewardItem `json:"items,omitempty" bson:"items,omitempty"`                             // 按定义发放的绑定库存物品。
 }
 
 // TaskCodexRewardItem 指定一种绑定奖励物品的模板和总数量。
 type TaskCodexRewardItem struct {
-	ItemID   uint32 `json:"item_id"`  // 运行时物品模板编号。
-	Quantity int64  `json:"quantity"` // 按库存堆叠规则拆分前的总数量。
+	ItemID   uint32 `json:"item_id" bson:"item_id"`   // 运行时物品模板编号。
+	Quantity int64  `json:"quantity" bson:"quantity"` // 按库存堆叠规则拆分前的总数量。
 }
 
 // ValidateTasksCodex 拒绝没有运行来源、存在循环或超过状态帧容量的发布定义。

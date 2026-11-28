@@ -413,6 +413,9 @@ export namespace minimir {
             /** OperationResult growth_shop. */
             growth_shop?: (minimir.v1.GrowthShopReceipt.$Properties|null);
 
+            /** OperationResult battle_pass. */
+            battle_pass?: (minimir.v1.BattlePassReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -545,12 +548,147 @@ export namespace minimir {
                 /** OperationResult growth_shop */
                 growth_shop?: (minimir.v1.GrowthShopReceipt.$Properties|null);
 
+                /** OperationResult battle_pass */
+                battle_pass?: (minimir.v1.BattlePassReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassReceipt.
+         * @deprecated Use minimir.v1.BattlePassReceipt.$Properties instead.
+         */
+        interface IBattlePassReceipt extends minimir.v1.BattlePassReceipt.$Properties {
+        }
+
+        /** Represents a BattlePassReceipt. */
+        class BattlePassReceipt {
+
+            /**
+             * Constructs a new BattlePassReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassReceipt season_start. */
+            season_start: string;
+
+            /** BattlePassReceipt day. */
+            day: number;
+
+            /** BattlePassReceipt previous_tier. */
+            previous_tier: number;
+
+            /** BattlePassReceipt tier. */
+            tier: number;
+
+            /** BattlePassReceipt bound_gold. */
+            bound_gold: Long;
+
+            /** BattlePassReceipt bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
+            /** BattlePassReceipt items. */
+            items: minimir.v1.ItemView.$Properties[];
+
+            /**
+             * Creates a new BattlePassReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassReceipt instance
+             */
+            static create(properties: minimir.v1.BattlePassReceipt.$Shape): minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape;
+            static create(properties?: minimir.v1.BattlePassReceipt.$Properties): minimir.v1.BattlePassReceipt;
+
+            /**
+             * Encodes the specified BattlePassReceipt message. Does not implicitly {@link minimir.v1.BattlePassReceipt.verify|verify} messages.
+             * @param message BattlePassReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassReceipt message, length delimited. Does not implicitly {@link minimir.v1.BattlePassReceipt.verify|verify} messages.
+             * @param message BattlePassReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape} BattlePassReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape;
+
+            /**
+             * Decodes a BattlePassReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape} BattlePassReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassReceipt & minimir.v1.BattlePassReceipt.$Shape;
+
+            /**
+             * Verifies a BattlePassReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassReceipt {
+
+            /** Properties of a BattlePassReceipt. */
+            interface $Properties {
+
+                /** BattlePassReceipt season_start */
+                season_start?: (string|null);
+
+                /** BattlePassReceipt day */
+                day?: (number|null);
+
+                /** BattlePassReceipt previous_tier */
+                previous_tier?: (number|null);
+
+                /** BattlePassReceipt tier */
+                tier?: (number|null);
+
+                /** BattlePassReceipt bound_gold */
+                bound_gold?: (Long|null);
+
+                /** BattlePassReceipt bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
+
+                /** BattlePassReceipt items */
+                items?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassReceipt. */
+            type $Shape = minimir.v1.BattlePassReceipt.$Properties;
         }
 
         /**
@@ -28805,6 +28943,846 @@ export namespace minimir {
 
             /** Shape of a GrowthShopCommitRequest. */
             type $Shape = minimir.v1.GrowthShopCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassQuery.
+         * @deprecated Use minimir.v1.BattlePassQuery.$Properties instead.
+         */
+        interface IBattlePassQuery extends minimir.v1.BattlePassQuery.$Properties {
+        }
+
+        /** Represents a BattlePassQuery. */
+        class BattlePassQuery {
+
+            /**
+             * Constructs a new BattlePassQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /** BattlePassQuery season_start. */
+            season_start: string;
+
+            /** BattlePassQuery history_before. */
+            history_before: string;
+
+            /**
+             * Creates a new BattlePassQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassQuery instance
+             */
+            static create(properties: minimir.v1.BattlePassQuery.$Shape): minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape;
+            static create(properties?: minimir.v1.BattlePassQuery.$Properties): minimir.v1.BattlePassQuery;
+
+            /**
+             * Encodes the specified BattlePassQuery message. Does not implicitly {@link minimir.v1.BattlePassQuery.verify|verify} messages.
+             * @param message BattlePassQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassQuery message, length delimited. Does not implicitly {@link minimir.v1.BattlePassQuery.verify|verify} messages.
+             * @param message BattlePassQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape} BattlePassQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape;
+
+            /**
+             * Decodes a BattlePassQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape} BattlePassQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassQuery & minimir.v1.BattlePassQuery.$Shape;
+
+            /**
+             * Verifies a BattlePassQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassQuery {
+
+            /** Properties of a BattlePassQuery. */
+            interface $Properties {
+
+                /** BattlePassQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** BattlePassQuery season_start */
+                season_start?: (string|null);
+
+                /** BattlePassQuery history_before */
+                history_before?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassQuery. */
+            type $Shape = minimir.v1.BattlePassQuery.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassMaterial.
+         * @deprecated Use minimir.v1.BattlePassMaterial.$Properties instead.
+         */
+        interface IBattlePassMaterial extends minimir.v1.BattlePassMaterial.$Properties {
+        }
+
+        /** Represents a BattlePassMaterial. */
+        class BattlePassMaterial {
+
+            /**
+             * Constructs a new BattlePassMaterial.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassMaterial.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassMaterial item_id. */
+            item_id: number;
+
+            /** BattlePassMaterial quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new BattlePassMaterial instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassMaterial instance
+             */
+            static create(properties: minimir.v1.BattlePassMaterial.$Shape): minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape;
+            static create(properties?: minimir.v1.BattlePassMaterial.$Properties): minimir.v1.BattlePassMaterial;
+
+            /**
+             * Encodes the specified BattlePassMaterial message. Does not implicitly {@link minimir.v1.BattlePassMaterial.verify|verify} messages.
+             * @param message BattlePassMaterial message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassMaterial.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassMaterial message, length delimited. Does not implicitly {@link minimir.v1.BattlePassMaterial.verify|verify} messages.
+             * @param message BattlePassMaterial message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassMaterial.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassMaterial message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape} BattlePassMaterial
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape;
+
+            /**
+             * Decodes a BattlePassMaterial message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape} BattlePassMaterial
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassMaterial & minimir.v1.BattlePassMaterial.$Shape;
+
+            /**
+             * Verifies a BattlePassMaterial message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassMaterial
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassMaterial {
+
+            /** Properties of a BattlePassMaterial. */
+            interface $Properties {
+
+                /** BattlePassMaterial item_id */
+                item_id?: (number|null);
+
+                /** BattlePassMaterial quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassMaterial. */
+            type $Shape = minimir.v1.BattlePassMaterial.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassReward.
+         * @deprecated Use minimir.v1.BattlePassReward.$Properties instead.
+         */
+        interface IBattlePassReward extends minimir.v1.BattlePassReward.$Properties {
+        }
+
+        /** Represents a BattlePassReward. */
+        class BattlePassReward {
+
+            /**
+             * Constructs a new BattlePassReward.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassReward.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassReward bound_gold. */
+            bound_gold: Long;
+
+            /** BattlePassReward bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
+            /** BattlePassReward materials. */
+            materials: minimir.v1.BattlePassMaterial.$Properties[];
+
+            /**
+             * Creates a new BattlePassReward instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassReward instance
+             */
+            static create(properties: minimir.v1.BattlePassReward.$Shape): minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape;
+            static create(properties?: minimir.v1.BattlePassReward.$Properties): minimir.v1.BattlePassReward;
+
+            /**
+             * Encodes the specified BattlePassReward message. Does not implicitly {@link minimir.v1.BattlePassReward.verify|verify} messages.
+             * @param message BattlePassReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassReward message, length delimited. Does not implicitly {@link minimir.v1.BattlePassReward.verify|verify} messages.
+             * @param message BattlePassReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassReward message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape} BattlePassReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape;
+
+            /**
+             * Decodes a BattlePassReward message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape} BattlePassReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassReward & minimir.v1.BattlePassReward.$Shape;
+
+            /**
+             * Verifies a BattlePassReward message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassReward
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassReward {
+
+            /** Properties of a BattlePassReward. */
+            interface $Properties {
+
+                /** BattlePassReward bound_gold */
+                bound_gold?: (Long|null);
+
+                /** BattlePassReward bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
+
+                /** BattlePassReward materials */
+                materials?: (minimir.v1.BattlePassMaterial.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassReward. */
+            type $Shape = minimir.v1.BattlePassReward.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassTierView.
+         * @deprecated Use minimir.v1.BattlePassTierView.$Properties instead.
+         */
+        interface IBattlePassTierView extends minimir.v1.BattlePassTierView.$Properties {
+        }
+
+        /** Represents a BattlePassTierView. */
+        class BattlePassTierView {
+
+            /**
+             * Constructs a new BattlePassTierView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassTierView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassTierView tier. */
+            tier: number;
+
+            /** BattlePassTierView total_cash_fen. */
+            total_cash_fen: Long;
+
+            /** BattlePassTierView upgrade_cash_fen. */
+            upgrade_cash_fen: Long;
+
+            /** BattlePassTierView daily. */
+            daily?: (minimir.v1.BattlePassReward.$Properties|null);
+
+            /** BattlePassTierView season. */
+            season?: (minimir.v1.BattlePassReward.$Properties|null);
+
+            /**
+             * Creates a new BattlePassTierView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassTierView instance
+             */
+            static create(properties: minimir.v1.BattlePassTierView.$Shape): minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape;
+            static create(properties?: minimir.v1.BattlePassTierView.$Properties): minimir.v1.BattlePassTierView;
+
+            /**
+             * Encodes the specified BattlePassTierView message. Does not implicitly {@link minimir.v1.BattlePassTierView.verify|verify} messages.
+             * @param message BattlePassTierView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassTierView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassTierView message, length delimited. Does not implicitly {@link minimir.v1.BattlePassTierView.verify|verify} messages.
+             * @param message BattlePassTierView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassTierView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassTierView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape} BattlePassTierView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape;
+
+            /**
+             * Decodes a BattlePassTierView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape} BattlePassTierView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassTierView & minimir.v1.BattlePassTierView.$Shape;
+
+            /**
+             * Verifies a BattlePassTierView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassTierView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassTierView {
+
+            /** Properties of a BattlePassTierView. */
+            interface $Properties {
+
+                /** BattlePassTierView tier */
+                tier?: (number|null);
+
+                /** BattlePassTierView total_cash_fen */
+                total_cash_fen?: (Long|null);
+
+                /** BattlePassTierView upgrade_cash_fen */
+                upgrade_cash_fen?: (Long|null);
+
+                /** BattlePassTierView daily */
+                daily?: (minimir.v1.BattlePassReward.$Properties|null);
+
+                /** BattlePassTierView season */
+                season?: (minimir.v1.BattlePassReward.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassTierView. */
+            type $Shape = minimir.v1.BattlePassTierView.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassDayView.
+         * @deprecated Use minimir.v1.BattlePassDayView.$Properties instead.
+         */
+        interface IBattlePassDayView extends minimir.v1.BattlePassDayView.$Properties {
+        }
+
+        /** Represents a BattlePassDayView. */
+        class BattlePassDayView {
+
+            /**
+             * Constructs a new BattlePassDayView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassDayView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassDayView day. */
+            day: number;
+
+            /** BattlePassDayView qualified. */
+            qualified: boolean;
+
+            /** BattlePassDayView claimed_tier. */
+            claimed_tier: number;
+
+            /**
+             * Creates a new BattlePassDayView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassDayView instance
+             */
+            static create(properties: minimir.v1.BattlePassDayView.$Shape): minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape;
+            static create(properties?: minimir.v1.BattlePassDayView.$Properties): minimir.v1.BattlePassDayView;
+
+            /**
+             * Encodes the specified BattlePassDayView message. Does not implicitly {@link minimir.v1.BattlePassDayView.verify|verify} messages.
+             * @param message BattlePassDayView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassDayView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassDayView message, length delimited. Does not implicitly {@link minimir.v1.BattlePassDayView.verify|verify} messages.
+             * @param message BattlePassDayView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassDayView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassDayView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape} BattlePassDayView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape;
+
+            /**
+             * Decodes a BattlePassDayView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape} BattlePassDayView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassDayView & minimir.v1.BattlePassDayView.$Shape;
+
+            /**
+             * Verifies a BattlePassDayView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassDayView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassDayView {
+
+            /** Properties of a BattlePassDayView. */
+            interface $Properties {
+
+                /** BattlePassDayView day */
+                day?: (number|null);
+
+                /** BattlePassDayView qualified */
+                qualified?: (boolean|null);
+
+                /** BattlePassDayView claimed_tier */
+                claimed_tier?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassDayView. */
+            type $Shape = minimir.v1.BattlePassDayView.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassState.
+         * @deprecated Use minimir.v1.BattlePassState.$Properties instead.
+         */
+        interface IBattlePassState extends minimir.v1.BattlePassState.$Properties {
+        }
+
+        /** Represents a BattlePassState. */
+        class BattlePassState {
+
+            /**
+             * Constructs a new BattlePassState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassState scene_epoch. */
+            scene_epoch: Long;
+
+            /** BattlePassState role_revision. */
+            role_revision: Long;
+
+            /** BattlePassState rule_version. */
+            rule_version: Long;
+
+            /** BattlePassState season_start. */
+            season_start: string;
+
+            /** BattlePassState season_end. */
+            season_end: string;
+
+            /** BattlePassState operating_day. */
+            operating_day: string;
+
+            /** BattlePassState tier. */
+            tier: number;
+
+            /** BattlePassState season_claimed_tier. */
+            season_claimed_tier: number;
+
+            /** BattlePassState activity. */
+            activity: number;
+
+            /** BattlePassState activity_target. */
+            activity_target: number;
+
+            /** BattlePassState tiers. */
+            tiers: minimir.v1.BattlePassTierView.$Properties[];
+
+            /** BattlePassState days. */
+            days: minimir.v1.BattlePassDayView.$Properties[];
+
+            /** BattlePassState history. */
+            history: string[];
+
+            /** BattlePassState history_has_more. */
+            history_has_more: boolean;
+
+            /**
+             * Creates a new BattlePassState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassState instance
+             */
+            static create(properties: minimir.v1.BattlePassState.$Shape): minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape;
+            static create(properties?: minimir.v1.BattlePassState.$Properties): minimir.v1.BattlePassState;
+
+            /**
+             * Encodes the specified BattlePassState message. Does not implicitly {@link minimir.v1.BattlePassState.verify|verify} messages.
+             * @param message BattlePassState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassState message, length delimited. Does not implicitly {@link minimir.v1.BattlePassState.verify|verify} messages.
+             * @param message BattlePassState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape} BattlePassState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape;
+
+            /**
+             * Decodes a BattlePassState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape} BattlePassState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassState & minimir.v1.BattlePassState.$Shape;
+
+            /**
+             * Verifies a BattlePassState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassState {
+
+            /** Properties of a BattlePassState. */
+            interface $Properties {
+
+                /** BattlePassState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** BattlePassState role_revision */
+                role_revision?: (Long|null);
+
+                /** BattlePassState rule_version */
+                rule_version?: (Long|null);
+
+                /** BattlePassState season_start */
+                season_start?: (string|null);
+
+                /** BattlePassState season_end */
+                season_end?: (string|null);
+
+                /** BattlePassState operating_day */
+                operating_day?: (string|null);
+
+                /** BattlePassState tier */
+                tier?: (number|null);
+
+                /** BattlePassState season_claimed_tier */
+                season_claimed_tier?: (number|null);
+
+                /** BattlePassState activity */
+                activity?: (number|null);
+
+                /** BattlePassState activity_target */
+                activity_target?: (number|null);
+
+                /** BattlePassState tiers */
+                tiers?: (minimir.v1.BattlePassTierView.$Properties[]|null);
+
+                /** BattlePassState days */
+                days?: (minimir.v1.BattlePassDayView.$Properties[]|null);
+
+                /** BattlePassState history */
+                history?: (string[]|null);
+
+                /** BattlePassState history_has_more */
+                history_has_more?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassState. */
+            type $Shape = minimir.v1.BattlePassState.$Properties;
+        }
+
+        /**
+         * Properties of a BattlePassClaimRequest.
+         * @deprecated Use minimir.v1.BattlePassClaimRequest.$Properties instead.
+         */
+        interface IBattlePassClaimRequest extends minimir.v1.BattlePassClaimRequest.$Properties {
+        }
+
+        /** Represents a BattlePassClaimRequest. */
+        class BattlePassClaimRequest {
+
+            /**
+             * Constructs a new BattlePassClaimRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BattlePassClaimRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BattlePassClaimRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** BattlePassClaimRequest season_start. */
+            season_start: string;
+
+            /** BattlePassClaimRequest day. */
+            day: number;
+
+            /** BattlePassClaimRequest tier. */
+            tier: number;
+
+            /** BattlePassClaimRequest claimed_tier. */
+            claimed_tier: number;
+
+            /**
+             * Creates a new BattlePassClaimRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BattlePassClaimRequest instance
+             */
+            static create(properties: minimir.v1.BattlePassClaimRequest.$Shape): minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape;
+            static create(properties?: minimir.v1.BattlePassClaimRequest.$Properties): minimir.v1.BattlePassClaimRequest;
+
+            /**
+             * Encodes the specified BattlePassClaimRequest message. Does not implicitly {@link minimir.v1.BattlePassClaimRequest.verify|verify} messages.
+             * @param message BattlePassClaimRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BattlePassClaimRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BattlePassClaimRequest message, length delimited. Does not implicitly {@link minimir.v1.BattlePassClaimRequest.verify|verify} messages.
+             * @param message BattlePassClaimRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BattlePassClaimRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BattlePassClaimRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape} BattlePassClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape;
+
+            /**
+             * Decodes a BattlePassClaimRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape} BattlePassClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BattlePassClaimRequest & minimir.v1.BattlePassClaimRequest.$Shape;
+
+            /**
+             * Verifies a BattlePassClaimRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BattlePassClaimRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BattlePassClaimRequest {
+
+            /** Properties of a BattlePassClaimRequest. */
+            interface $Properties {
+
+                /** BattlePassClaimRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** BattlePassClaimRequest season_start */
+                season_start?: (string|null);
+
+                /** BattlePassClaimRequest day */
+                day?: (number|null);
+
+                /** BattlePassClaimRequest tier */
+                tier?: (number|null);
+
+                /** BattlePassClaimRequest claimed_tier */
+                claimed_tier?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BattlePassClaimRequest. */
+            type $Shape = minimir.v1.BattlePassClaimRequest.$Properties;
         }
     }
 }

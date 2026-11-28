@@ -17,6 +17,7 @@ const (
 	KindRecharge      Kind = "recharge"       // 向指定角色新增非绑定元宝。
 	KindPrivilegeCard Kind = "privilege_card" // 人民币直购指定角色的特权卡期。
 	KindHostingCard   Kind = "hosting_card"   // 人民币直购指定角色的托管卡期。
+	KindBattlePass    Kind = "battle_pass"    // 人民币购买原角色原周期的档位差额。
 	CurrencyCNY            = "CNY"            // 当前玩法支持的实付币种，金额单位为分。
 )
 

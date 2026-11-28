@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 226,
+  "message_count": 234,
   "message_names": [
     "ItemView",
     "EquipmentRefineAffix",
@@ -13,6 +13,7 @@
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "BattlePassReceipt",
     "GrowthShopTerms",
     "GrowthShopReceipt",
     "SoulBeast",
@@ -231,10 +232,17 @@
     "GrowthShopOfferView",
     "GrowthShopQuote",
     "GrowthShopState",
-    "GrowthShopCommitRequest"
+    "GrowthShopCommitRequest",
+    "BattlePassQuery",
+    "BattlePassMaterial",
+    "BattlePassReward",
+    "BattlePassTierView",
+    "BattlePassDayView",
+    "BattlePassState",
+    "BattlePassClaimRequest"
   ],
-  "int64_field_count": 498,
-  "int64_boundary_cases": 1710,
+  "int64_field_count": 509,
+  "int64_boundary_cases": 1750,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -307,6 +315,18 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "BattlePassReceipt",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassReceipt",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "GrowthShopTerms",
@@ -3223,6 +3243,60 @@
       "field": "rule_version",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "BattlePassQuery",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BattlePassMaterial",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassReward",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassReward",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassTierView",
+      "field": "total_cash_fen",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassTierView",
+      "field": "upgrade_cash_fen",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BattlePassState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BattlePassState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BattlePassState",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
     }
   ],
   "bytes_field_count": 136,
@@ -3918,7 +3992,7 @@
     },
     {
       "path": "shared/proto/common.proto",
-      "sha256": "0259d9692d722994e441850350d6f72f4721e397d489bae4a938342d3fd2835b"
+      "sha256": "cebbe80bda3a4a0574fc579a1a6dc8220fd9e22c00cb0b2663782f9110b42c7f"
     },
     {
       "path": "shared/proto/account.proto",
@@ -4007,18 +4081,22 @@
     {
       "path": "shared/proto/growth_shop.proto",
       "sha256": "467d89fa427ba0447c1407fea73727da541653bc30b321d502955e6a130bfd1d"
+    },
+    {
+      "path": "shared/proto/battle_pass.proto",
+      "sha256": "78de50636feee6081006c9f82a164c08b527aec04bb3bbad426b0688b18f9d74"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "b8d1b9e930ac3caf6caa29cebaa0dac48bd349f626e7465be19b214159968408",
-      "bytes": 3987867
+      "sha256": "e7149fe58ad965e802aa31d9030db72cabd0bb9860d2ace66b4f773103c4d357",
+      "bytes": 4118328
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "920c105d9a6e68205be1cc375de090cbb64f65533914c46f9090d7a4a3dc837e",
-      "bytes": 1253075
+      "sha256": "d26322e73f653e8dd649bbb3ff341f83d4e15520680d0d0e0786d86fe320b135",
+      "bytes": 1296116
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

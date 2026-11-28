@@ -27,7 +27,7 @@ type assetBinding struct {
 func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, reviveID string) {
 	// 战斗中只允许查回指定成长操作的原回执，首次写入仍由普通角色和场景受理。
 	replayableGrowth := q.Kind == persistence.AssetRebirthCommit || q.Kind == persistence.AssetBodyTrainingCommit ||
-		q.Kind == persistence.AssetSoulAction || q.Kind == persistence.AssetGrowthShopCommit
+		q.Kind == persistence.AssetSoulAction || q.Kind == persistence.AssetGrowthShopCommit || q.Kind == persistence.AssetBattlePassClaim
 	if r.bossBattle != nil && (!replayableGrowth || !historicalGrowthOperation(r, q.Context)) {
 		return
 	}

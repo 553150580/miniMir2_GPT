@@ -135,6 +135,9 @@ const (
 	MsgC2SGrowthShopQuery uint16 = 40071
 	MsgS2CGrowthShopState uint16 = 40072
 	MsgC2SGrowthShopCommit uint16 = 40073
+	MsgC2SBattlePassQuery uint16 = 40074
+	MsgS2CBattlePassState uint16 = 40075
+	MsgC2SBattlePassClaim uint16 = 40076
 )
 
 const (
@@ -217,4 +220,7 @@ const (
 	CodeGrowthShopUnavailable uint32 = 3984
 	CodeGrowthShopQuoteChanged uint32 = 3985
 	CodeGrowthShopLimit uint32 = 3986
+	CodeBattlePassUnavailable uint32 = 3987
+	CodeBattlePassChanged uint32 = 3988
+	CodeBattlePassPaymentPending uint32 = 3989
 )
