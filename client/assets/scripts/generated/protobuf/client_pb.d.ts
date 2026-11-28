@@ -566,6 +566,12 @@ export namespace minimir {
             /** BodyTrainingState mana_level. */
             mana_level: number;
 
+            /** BodyTrainingState damage_level. */
+            damage_level: number;
+
+            /** BodyTrainingState absorption_level. */
+            absorption_level: number;
+
             /**
              * Creates a new BodyTrainingState instance using the specified properties.
              * @param [properties] Properties to set
@@ -634,6 +640,12 @@ export namespace minimir {
 
                 /** BodyTrainingState mana_level */
                 mana_level?: (number|null);
+
+                /** BodyTrainingState damage_level */
+                damage_level?: (number|null);
+
+                /** BodyTrainingState absorption_level */
+                absorption_level?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -9158,6 +9170,12 @@ export namespace minimir {
             /** CombatAttributes luck_enabled. */
             luck_enabled: boolean;
 
+            /** CombatAttributes expanded_damage_bp. */
+            expanded_damage_bp: number;
+
+            /** CombatAttributes expanded_absorption_bp. */
+            expanded_absorption_bp: number;
+
             /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @param [properties] Properties to set
@@ -9268,6 +9286,12 @@ export namespace minimir {
 
                 /** CombatAttributes luck_enabled */
                 luck_enabled?: (boolean|null);
+
+                /** CombatAttributes expanded_damage_bp */
+                expanded_damage_bp?: (number|null);
+
+                /** CombatAttributes expanded_absorption_bp */
+                expanded_absorption_bp?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

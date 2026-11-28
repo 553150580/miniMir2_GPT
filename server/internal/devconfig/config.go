@@ -79,6 +79,8 @@ type Fighter struct {
 	LuckAttackPPM uint32 `json:"luck_attack_ppm,omitempty" bson:"luck_attack_ppm,omitempty"`
 	// LuckResistancePPM 是该目标的幸运一击抵抗百万分率，随实际战斗快照保留。
 	LuckResistancePPM uint32 `json:"luck_resistance_ppm,omitempty" bson:"luck_resistance_ppm,omitempty"`
+	// HitBonuses 是正式命中时使用的角色扩展属性，随固定挑战属性一起冻结。
+	HitBonuses `bson:",inline"`
 	// canPushExplicit 标记是否处于“can”推入显式状态。
 	canPushExplicit bool
 }
@@ -321,6 +323,8 @@ type Fixture struct {
 	Rebirth *RebirthConfig `json:"rebirth,omitempty"`
 	// BodyTraining 配置已经具备完整数值和边界的独立炼体系别。
 	BodyTraining *BodyTrainingConfig `json:"body_training,omitempty"`
+	// ExpandedHitBudget 统一限制扩展增伤和吸收的战斗贡献。
+	ExpandedHitBudget *ExpandedHitBudget `json:"expanded_hit_budget,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -532,6 +536,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateRebirth(); err != nil {
+		return err
+	}
+	if err := f.validateExpandedHit(); err != nil {
 		return err
 	}
 	if err := f.validateBodyTraining(); err != nil {

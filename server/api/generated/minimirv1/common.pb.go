@@ -398,13 +398,15 @@ func (x *OperationResult) GetBodyTraining() *BodyTrainingReceipt {
 	return nil
 }
 
-// 两系的永久等级随同一角色库存修订下发。
+// 各系的永久等级随同一角色库存修订下发。
 type BodyTrainingState struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	HealthLevel   uint32                 `protobuf:"varint,1,opt,name=health_level,json=healthLevel,proto3" json:"health_level,omitempty"`
-	ManaLevel     uint32                 `protobuf:"varint,2,opt,name=mana_level,json=manaLevel,proto3" json:"mana_level,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	HealthLevel     uint32                 `protobuf:"varint,1,opt,name=health_level,json=healthLevel,proto3" json:"health_level,omitempty"`
+	ManaLevel       uint32                 `protobuf:"varint,2,opt,name=mana_level,json=manaLevel,proto3" json:"mana_level,omitempty"`
+	DamageLevel     uint32                 `protobuf:"varint,3,opt,name=damage_level,json=damageLevel,proto3" json:"damage_level,omitempty"`
+	AbsorptionLevel uint32                 `protobuf:"varint,4,opt,name=absorption_level,json=absorptionLevel,proto3" json:"absorption_level,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *BodyTrainingState) Reset() {
@@ -447,6 +449,20 @@ func (x *BodyTrainingState) GetHealthLevel() uint32 {
 func (x *BodyTrainingState) GetManaLevel() uint32 {
 	if x != nil {
 		return x.ManaLevel
+	}
+	return 0
+}
+
+func (x *BodyTrainingState) GetDamageLevel() uint32 {
+	if x != nil {
+		return x.DamageLevel
+	}
+	return 0
+}
+
+func (x *BodyTrainingState) GetAbsorptionLevel() uint32 {
+	if x != nil {
+		return x.AbsorptionLevel
 	}
 	return 0
 }
@@ -3250,11 +3266,13 @@ const file_common_proto_rawDesc = "" +
 	"\x0erecycle_refine\x18\x12 \x01(\v2 .minimir.v1.RecycleRefineReceiptR\rrecycleRefine\x12.\n" +
 	"\x05medal\x18\x13 \x01(\v2\x18.minimir.v1.MedalReceiptR\x05medal\x124\n" +
 	"\arebirth\x18\x14 \x01(\v2\x1a.minimir.v1.RebirthReceiptR\arebirth\x12D\n" +
-	"\rbody_training\x18\x15 \x01(\v2\x1f.minimir.v1.BodyTrainingReceiptR\fbodyTraining\"U\n" +
+	"\rbody_training\x18\x15 \x01(\v2\x1f.minimir.v1.BodyTrainingReceiptR\fbodyTraining\"\xa3\x01\n" +
 	"\x11BodyTrainingState\x12!\n" +
 	"\fhealth_level\x18\x01 \x01(\rR\vhealthLevel\x12\x1d\n" +
 	"\n" +
-	"mana_level\x18\x02 \x01(\rR\tmanaLevel\"\x89\x02\n" +
+	"mana_level\x18\x02 \x01(\rR\tmanaLevel\x12!\n" +
+	"\fdamage_level\x18\x03 \x01(\rR\vdamageLevel\x12)\n" +
+	"\x10absorption_level\x18\x04 \x01(\rR\x0fabsorptionLevel\"\x89\x02\n" +
 	"\x11BodyTrainingTerms\x12\x14\n" +
 	"\x05track\x18\x01 \x01(\rR\x05track\x12!\n" +
 	"\fbefore_level\x18\x02 \x01(\rR\vbeforeLevel\x12!\n" +

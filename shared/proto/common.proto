@@ -37,10 +37,12 @@ message OperationResult {
   BodyTrainingReceipt body_training = 21;
 }
 
-// 两系的永久等级随同一角色库存修订下发。
+// 各系的永久等级随同一角色库存修订下发。
 message BodyTrainingState {
   uint32 health_level = 1;
   uint32 mana_level = 2;
+  uint32 damage_level = 3;
+  uint32 absorption_level = 4;
 }
 
 // 本次原费用、成功率和额度。实际战斗加成仍受统一属性预算。

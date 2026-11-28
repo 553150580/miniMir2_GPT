@@ -43,7 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
-    'body-training': ('BodyTraining',),
+    'body-training': ('BodyTraining', 'BodyHits'),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -323,6 +323,18 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_BODY_TRAINING_TEST_FIXTURE'] = str(fixture)
             for label, path in (('assembly', assembly), ('fixture', fixture), ('public', public)):
                 report[f'body_training_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            # 在已核对的生命和魔法前置上追加伤害、吸收及两组统一封顶。
+            hits_assembly = destination / 'body-hits-assembly.json'
+            hits_fixture, hits_public = destination / 'body-hits-fixture.json', destination / 'body-hits-gameplay.json'
+            hits_assembly.write_bytes((ROOT / 'tools/resources/testdata/body-hits-isolated.json').read_bytes())
+            hits_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_body_hits.py'), '--assembly', str(hits_assembly),
+                           '--base-fixture', str(fixture), '--base-public', str(public),
+                           '--fixture-out', str(hits_fixture), '--public-out', str(hits_public)]
+            subprocess.run(hits_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*hits_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_BODY_HITS_TEST_FIXTURE'] = str(hits_fixture)
+            for label, path in (('assembly', hits_assembly), ('fixture', hits_fixture), ('public', hits_public)):
+                report[f'body_hits_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',

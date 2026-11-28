@@ -236,6 +236,9 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		w.isolateRoom(r)
 		return devconfig.Fighter{}
 	}
+	if f.ExpandedHitBudget != nil {
+		a.HitBonuses = w.bodyHitBonuses(r)
+	}
 	a, medalValid := f.ApplyMedalBonuses(a, r.Role.MedalLevel())
 	if !medalValid {
 		w.isolateRoom(r)
@@ -357,6 +360,7 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 // target 记录目标，使用实体表示，damage 记录伤害，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 // context 记录上下文，使用可变数量的命中上下文表示。
 func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
+	damage = w.expandedHitDamage(r, from, target, damage, context)
 	if world != nil && world.mirrorCombat != nil {
 		w.applyMirrorDamage(r, world, from, target, damage, now, context)
 		return

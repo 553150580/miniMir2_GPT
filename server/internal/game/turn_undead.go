@@ -38,7 +38,7 @@ func (w *worker) resolveTurnUndead(r *room, world *worldState, caster *entity, c
 	// before 保存当时剩余生命。成功效果沿普通击杀路径记录原事件来源，使归属、掉落和托管保持一致。
 	before := target.HP
 	w.applyDamageInWorld(r, world, caster, target, before, now, hitContext{
-		At: c.Due, HostSession: c.HostSession, PrivilegeUntil: c.PrivilegeUntil, PrivilegeCaptured: c.PrivilegeCaptured,
+		At: c.Due, HostSession: c.HostSession, PrivilegeUntil: c.PrivilegeUntil, PrivilegeCaptured: c.PrivilegeCaptured, InstantKill: true,
 	})
 	w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, before-target.HP, 1, false, c.ID, 0)
 }

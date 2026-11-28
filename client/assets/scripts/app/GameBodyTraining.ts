@@ -1,9 +1,10 @@
+// 本文件管理炼体系别选择、报价确认及已提交操作的回执校验。
 import Long from 'long';
 import { CodeBodyTrainingInputs, CodeBodyTrainingQuoteChanged, CodeBodyTrainingUnavailable, CodeOperationConflict } from '../generated/protocol_ids';
 import type { ItemActionView } from './GameItemActions';
 
-// 权威库存同步的两个独立等级。
-interface BodyTrainingState { healthLevel: number; manaLevel: number; }
+// 权威库存同步的各系等级，旧版本未下发的伤害与吸收按零级显示。
+interface BodyTrainingState { healthLevel: number; manaLevel: number; damageLevel?: number; absorptionLevel?: number; }
 interface Track { id: number; name: string; gold_base: number; bonus_per_rank: number; }
 interface Step { from: number; cost_multiplier: number; success_ppm: number; }
 interface TrainingRules { tracks: Track[]; steps: Step[]; health_cap_bp: number; mana_cap_bp: number; }
@@ -33,16 +34,28 @@ interface Commands {
 }
 interface View {
     role: string; scope: string; session: Uint8Array; read: Read; notice: string;
+    track?: number; // 当前从详情列表选中的系别。
     quote?: TrainingQuote; receipt?: BodyTrainingReceipt;
 }
 
-const healthTrack = 3, manaTrack = 4;
-const knownTrack = (id: number) => id === healthTrack || id === manaTrack;
+const damageTrack = 1, absorptionTrack = 2, healthTrack = 3, manaTrack = 4;
+const hitTrack = (id: number) => id === damageTrack || id === absorptionTrack;
+const knownTrack = (id: number) => hitTrack(id) || id === healthTrack || id === manaTrack;
 const validId = (v: unknown): v is Uint8Array => v instanceof Uint8Array && v.length === 16;
 const same = (a: unknown, b: unknown) => validId(a) && validId(b) && a.every((octet, i) => octet === b[i]);
 const amount = (n: unknown): n is Long => Long.isLong(n) && !n.unsigned && !n.isNegative();
-const rank = (s: BodyTrainingSnapshot, id: number) => id === healthTrack ? s.state.healthLevel : s.state.manaLevel;
 const cap = (s: BodyTrainingSnapshot) => Math.min(s.level, s.rules.steps.length);
+
+// 把协议中四个独立等级投影到工作簿的系别编号。
+function rank(s: BodyTrainingSnapshot, id: number): number {
+    switch (id) {
+        case damageTrack: return s.state.damageLevel ?? 0;
+        case absorptionTrack: return s.state.absorptionLevel ?? 0;
+        case healthTrack: return s.state.healthLevel;
+        case manaTrack: return s.state.manaLevel;
+        default: return 0;
+    }
+}
 
 // 已展示的费用、系别与等级必须和实际成交一致。新连接仍核对原操作形状。
 export function validateBodyTrainingReceipt(request: BodyTrainingCommit, receipt: BodyTrainingReceipt, quoted?: TrainingTerms): BodyTrainingReceipt {
@@ -104,7 +117,7 @@ export class GameBodyTraining {
         if (view.quote) {
             const quote = view.quote, t = quote.terms, current = this.validQuote(view, quote, s);
             const lines = [`${this.track(s, t.track)?.name ?? '炼体'} ${t.beforeLevel} → ${t.targetLevel}级`,
-                `成功率 ${t.successPpm / 10000}%`, ...costLines(t), `属性额度 ${t.beforeBonus} → ${t.targetBonus}`,
+                `成功率 ${t.successPpm / 10000}%`, ...costLines(t), `属性额度 ${bonusText(t.track, t.beforeBonus)} → ${bonusText(t.track, t.targetBonus)}`,
                 '实际收益受总上限约束', '失败扣费并保留原等级'];
             if (!current) lines.unshift('报价已变化，请重新查看');
             return { title: '炼体报价', lines, actions: [
@@ -113,14 +126,26 @@ export class GameBodyTraining {
                 { label: '返回炼体', enabled: true, run: () => this.overview(view) },
             ] };
         }
-        const lines = [`本角色可练至 ${cap(s)} 级`, ...s.rules.tracks.map(track =>
-            `${track.name} ${rank(s, track.id)} / ${cap(s)} 级`),
+        const summary = [...(view.notice ? [view.notice] : []), `本角色可练至 ${cap(s)} 级`];
+        const limits = [
             `独立生命加成上限 ${s.rules.health_cap_bp / 100}%`, `独立魔法加成上限 ${s.rules.mana_cap_bp / 100}%`];
-        if (view.notice) lines.unshift(view.notice);
+        const trackLabel = (track: Track) => `${track.name} ${rank(s, track.id)} / ${cap(s)} 级`;
+        const growth = { label: s.canRebirth ? '查看转生' : '成长详情', enabled: true, run: () => this.commands.growthDetails() };
+        // 三个固定按钮留给确认动作，系别较多时在现有详情列表切换。
+        if (s.rules.tracks.length > 2) {
+            const selected = this.track(s, view.track ?? 0) ?? s.rules.tracks[0];
+            const options = s.rules.tracks.map(track => ({
+                key: String(track.id), label: `${track.id === selected.id ? '✓ ' : ''}${trackLabel(track)}`,
+                enabled: true, choose: () => { view.track = track.id; view.notice = ''; },
+            }));
+            return { title: '炼体', lines: [...summary, ...limits], options, optionsFirst: true, actions: [
+                { label: '查看报价', enabled: !s.blocked && rank(s, selected.id) < cap(s), run: () => this.readQuote(view, selected.id) },
+                growth,
+            ] };
+        }
         const actions = s.rules.tracks.map(track => ({ label: track.name + '炼体', enabled: !s.blocked && rank(s, track.id) < cap(s),
             run: () => this.readQuote(view, track.id) }));
-        actions.push({ label: s.canRebirth ? '查看转生' : '成长详情', enabled: true, run: async () => this.commands.growthDetails() });
-        return { title: '炼体', lines, actions };
+        return { title: '炼体', lines: [...summary, ...s.rules.tracks.map(trackLabel), ...limits], actions: [...actions, growth] };
     }
 
     private overview(view: View): void {
@@ -189,3 +214,8 @@ function validTerms(t: TrainingTerms | undefined): t is TrainingTerms {
         amount(t.beforeBonus) && amount(t.targetBonus) && t.targetBonus.greaterThan(t.beforeBonus);
 }
 function costLines(t: TrainingTerms): string[] { return [`绑定金币 ${t.boundGold}`, `普通金币 ${t.gold}`]; }
+
+// 伤害与吸收的报价额度使用万分比，其余系别使用点数。
+function bonusText(track: number, value: Long): string {
+    return hitTrack(track) ? `${value.toNumber() / 100}%` : value.toString();
+}

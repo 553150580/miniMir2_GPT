@@ -1,4 +1,4 @@
-// 本文件定义炼体的逐级费用、概率以及生命和魔法的独立养成上限。
+// 本文件定义炼体的逐级费用、概率、独立生命与魔法上限，以及战斗属性的来源额度。
 package devconfig
 
 import (
@@ -7,10 +7,12 @@ import (
 )
 
 const (
-	BodyHealth    uint32 = 3         // 工作簿定义的生命上限系。
-	BodyMana      uint32 = 4         // 工作簿定义的魔法上限系。
-	BodyChancePPM uint32 = 1_000_000 // 逐级概率的统一百万分率。
-	vitalityBP    int64  = 10_000    // 上限相对装备基础使用万分比。
+	BodyDamage     uint32 = 1         // 工作簿定义的伤害系。
+	BodyAbsorption uint32 = 2         // 工作簿定义的伤害吸收系。
+	BodyHealth     uint32 = 3         // 工作簿定义的生命上限系。
+	BodyMana       uint32 = 4         // 工作簿定义的魔法上限系。
+	BodyChancePPM  uint32 = 1_000_000 // 逐级概率的统一百万分率。
+	vitalityBP     int64  = 10_000    // 上限相对装备基础使用万分比。
 )
 
 // BodyTrainingConfig 只有完整档位、增益和上限同时存在时才开放。
@@ -23,10 +25,11 @@ type BodyTrainingConfig struct {
 
 // BodyTrainingTrack 保存一系重复尝试的基数及每级固定增量。
 type BodyTrainingTrack struct {
-	ID           uint32 `json:"id"`             // 保留原工作簿编号。
-	Name         string `json:"name"`           // 客户端显示的系别名称。
-	GoldBase     int64  `json:"gold_base"`      // 金币基础费用，逐阶段相乘。
-	BonusPerRank int64  `json:"bonus_per_rank"` // 每级增加的整数额度。
+	ID           uint32 `json:"id"`                     // 保留原工作簿编号。
+	Name         string `json:"name"`                   // 客户端显示的系别名称。
+	GoldBase     int64  `json:"gold_base"`              // 金币基础费用，逐阶段相乘。
+	BonusPerRank int64  `json:"bonus_per_rank"`         // 生命、魔法使用点数，伤害、吸收使用万分比。
+	ShareCapBP   uint32 `json:"share_cap_bp,omitempty"` // 伤害或吸收该系在统一属性组内的来源上限。
 }
 
 // BodyTrainingStep 保存原等级到下一级的一次尝试参数。
@@ -48,6 +51,11 @@ func (c *BodyTrainingConfig) Track(id uint32) (BodyTrainingTrack, bool) {
 	return BodyTrainingTrack{}, false
 }
 
+// IsBodyTrainingTrack 校验当前支持提交的原工作簿系别编号。
+func IsBodyTrainingTrack(id uint32) bool {
+	return id >= BodyDamage && id <= BodyMana
+}
+
 // validateBodyTraining 逐档核对原公式，拒绝收费与属性预算分离的配置。
 func (f *Fixture) validateBodyTraining() error {
 	c := f.BodyTraining
@@ -61,10 +69,18 @@ func (f *Fixture) validateBodyTraining() error {
 	}
 	seen := make(map[uint32]bool, len(c.Tracks))
 	for _, track := range c.Tracks {
-		if track.ID != BodyHealth && track.ID != BodyMana || seen[track.ID] || track.Name == "" ||
+		if !IsBodyTrainingTrack(track.ID) || seen[track.ID] || track.Name == "" ||
 			track.GoldBase <= 0 || track.GoldBase > math.MaxInt64/int64(len(c.Steps)/10+1) ||
 			track.BonusPerRank <= 0 || track.BonusPerRank > math.MaxInt64/int64(len(c.Steps)) {
 			return errors.New("炼体系别、金币费用或属性额度无效")
+		}
+		if track.ID == BodyDamage || track.ID == BodyAbsorption {
+			cap := f.ExpandedHitBudget.trackLimit(track.ID)
+			if track.ShareCapBP == 0 || track.ShareCapBP > cap || track.BonusPerRank*int64(len(c.Steps)) > int64(track.ShareCapBP) {
+				return errors.New("伤害或吸收炼体必须具备覆盖开放等级的独立来源额度")
+			}
+		} else if track.ShareCapBP != 0 {
+			return errors.New("生命和魔法炼体使用各自的点数上限")
 		}
 		seen[track.ID] = true
 	}
@@ -75,6 +91,25 @@ func (f *Fixture) validateBodyTraining() error {
 		}
 	}
 	return nil
+}
+
+// BodyHitBonuses 返回有效等级贡献。目录缩减时保留原档，只计算当前可用等级。
+func (f *Fixture) BodyHitBonuses(level, damageRank, absorptionRank uint32) HitBonuses {
+	c := f.BodyTraining
+	if c == nil || f.ExpandedHitBudget == nil || damageRank == 0 && absorptionRank == 0 {
+		return HitBonuses{}
+	}
+	limit := min(uint32(len(c.Steps)), level)
+	return HitBonuses{
+		DamageBP:     c.hitTrackBonus(BodyDamage, min(damageRank, limit)),
+		AbsorptionBP: c.hitTrackBonus(BodyAbsorption, min(absorptionRank, limit)),
+	}
+}
+
+// hitTrackBonus 计算指定伤害系或吸收系的来源万分比，缺少该系时为零。
+func (c *BodyTrainingConfig) hitTrackBonus(id, rank uint32) uint32 {
+	track, _ := c.Track(id)
+	return uint32(min(int64(track.ShareCapBP), int64(rank)*track.BonusPerRank))
 }
 
 // ApplyBodyTraining 把已经确认的独立属性额度交给生命和魔法统一封顶。

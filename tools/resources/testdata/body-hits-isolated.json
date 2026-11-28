@@ -1,0 +1,6 @@
+{
+  "damage_bonus_per_rank": 100,
+  "damage_share_cap_bp": 1200,
+  "absorption_bonus_per_rank": 100,
+  "absorption_share_cap_bp": 1200
+}

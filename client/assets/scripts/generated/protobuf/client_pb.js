@@ -1458,6 +1458,8 @@ $root.minimir = (function() {
              * @typedef {Object} minimir.v1.BodyTrainingState.$Properties
              * @property {number|null} [health_level] BodyTrainingState health_level
              * @property {number|null} [mana_level] BodyTrainingState mana_level
+             * @property {number|null} [damage_level] BodyTrainingState damage_level
+             * @property {number|null} [absorption_level] BodyTrainingState absorption_level
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1506,6 +1508,22 @@ $root.minimir = (function() {
             BodyTrainingState.prototype.mana_level = 0;
 
             /**
+             * BodyTrainingState damage_level.
+             * @member {number} damage_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.damage_level = 0;
+
+            /**
+             * BodyTrainingState absorption_level.
+             * @member {number} absorption_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.absorption_level = 0;
+
+            /**
              * Creates a new BodyTrainingState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.BodyTrainingState
@@ -1541,6 +1559,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.health_level);
                 if (message.mana_level != null && $Object.hasOwnProperty.call(message, "mana_level") && message.mana_level !== 0)
                     writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.mana_level);
+                if (message.damage_level != null && $Object.hasOwnProperty.call(message, "damage_level") && message.damage_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.damage_level);
+                if (message.absorption_level != null && $Object.hasOwnProperty.call(message, "absorption_level") && message.absorption_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.absorption_level);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1616,6 +1638,24 @@ $root.minimir = (function() {
                                 delete message.mana_level;
                             continue;
                         }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.damage_level = value;
+                            else
+                                delete message.damage_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.absorption_level = value;
+                            else
+                                delete message.absorption_level;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1670,6 +1710,12 @@ $root.minimir = (function() {
                 if (message.mana_level != null && $Object.hasOwnProperty.call(message, "mana_level"))
                     if (!$util.isInteger(message.mana_level))
                         return "mana_level: integer expected";
+                if (message.damage_level != null && $Object.hasOwnProperty.call(message, "damage_level"))
+                    if (!$util.isInteger(message.damage_level))
+                        return "damage_level: integer expected";
+                if (message.absorption_level != null && $Object.hasOwnProperty.call(message, "absorption_level"))
+                    if (!$util.isInteger(message.absorption_level))
+                        return "absorption_level: integer expected";
                 return null;
             };
 
@@ -23701,6 +23747,8 @@ $root.minimir = (function() {
              * @property {number|null} [luck_attack_ppm] CombatAttributes luck_attack_ppm
              * @property {number|null} [luck_resistance_ppm] CombatAttributes luck_resistance_ppm
              * @property {boolean|null} [luck_enabled] CombatAttributes luck_enabled
+             * @property {number|null} [expanded_damage_bp] CombatAttributes expanded_damage_bp
+             * @property {number|null} [expanded_absorption_bp] CombatAttributes expanded_absorption_bp
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -23861,6 +23909,22 @@ $root.minimir = (function() {
             CombatAttributes.prototype.luck_enabled = false;
 
             /**
+             * CombatAttributes expanded_damage_bp.
+             * @member {number} expanded_damage_bp
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.expanded_damage_bp = 0;
+
+            /**
+             * CombatAttributes expanded_absorption_bp.
+             * @member {number} expanded_absorption_bp
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.expanded_absorption_bp = 0;
+
+            /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CombatAttributes
@@ -23924,6 +23988,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.luck_resistance_ppm);
                 if (message.luck_enabled != null && $Object.hasOwnProperty.call(message, "luck_enabled") && message.luck_enabled !== false)
                     writer.uint32(/* id 16, wireType 0 =*/128).bool(message.luck_enabled);
+                if (message.expanded_damage_bp != null && $Object.hasOwnProperty.call(message, "expanded_damage_bp") && message.expanded_damage_bp !== 0)
+                    writer.uint32(/* id 17, wireType 0 =*/136).uint32(message.expanded_damage_bp);
+                if (message.expanded_absorption_bp != null && $Object.hasOwnProperty.call(message, "expanded_absorption_bp") && message.expanded_absorption_bp !== 0)
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.expanded_absorption_bp);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -24125,6 +24193,24 @@ $root.minimir = (function() {
                                 delete message.luck_enabled;
                             continue;
                         }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.expanded_damage_bp = value;
+                            else
+                                delete message.expanded_damage_bp;
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.expanded_absorption_bp = value;
+                            else
+                                delete message.expanded_absorption_bp;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -24221,6 +24307,12 @@ $root.minimir = (function() {
                 if (message.luck_enabled != null && $Object.hasOwnProperty.call(message, "luck_enabled"))
                     if (typeof message.luck_enabled !== "boolean")
                         return "luck_enabled: boolean expected";
+                if (message.expanded_damage_bp != null && $Object.hasOwnProperty.call(message, "expanded_damage_bp"))
+                    if (!$util.isInteger(message.expanded_damage_bp))
+                        return "expanded_damage_bp: integer expected";
+                if (message.expanded_absorption_bp != null && $Object.hasOwnProperty.call(message, "expanded_absorption_bp"))
+                    if (!$util.isInteger(message.expanded_absorption_bp))
+                        return "expanded_absorption_bp: integer expected";
                 return null;
             };
 

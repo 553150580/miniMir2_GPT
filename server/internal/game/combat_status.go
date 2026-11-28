@@ -369,5 +369,7 @@ func (w *worker) combatAttributesPB(r *room, e *entity) *pb.CombatAttributes {
 	if w.e.Store.Cfg.Fixture.CombatLuck != nil {
 		result.LuckEnabled, result.LuckAttackPpm, result.LuckResistancePpm = true, a.LuckAttackPPM, a.LuckResistancePPM
 	}
+	bonuses := w.e.Store.Cfg.Fixture.ExpandedHitBudget.Combine(a.HitBonuses)
+	result.ExpandedDamageBp, result.ExpandedAbsorptionBp = bonuses.DamageBP, bonuses.AbsorptionBP
 	return result
 }

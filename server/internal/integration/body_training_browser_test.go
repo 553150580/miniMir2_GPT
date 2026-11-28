@@ -1,6 +1,6 @@
 //go:build creator_body_training
 
-// 本文件对照两个 Creator 构建的触屏结果和 MongoDB 角色账本。
+// 本文件对照 Creator 构建的炼体触屏结果和 MongoDB 角色账本。
 package integration
 
 import (
@@ -21,14 +21,14 @@ import (
 	"minimir/internal/persistence"
 )
 
-// TestBodyTrainingCreatorTouchMongo 实际触屏升级两系，默认包显示原只读详情。
+// TestBodyTrainingCreatorTouchMongo 触屏验证隔离命中或生命魔法候选，默认包显示原只读详情。
 func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	rawRoot, mode := os.Getenv("MINIMIR_BODY_TRAINING_BROWSER_WEB_ROOT"), os.Getenv("MINIMIR_BODY_TRAINING_BROWSER_MODE")
 	if rawRoot == "" {
 		t.Skip("需要原 Creator 实构和隔离账号")
 	}
-	if mode != "default" && mode != "candidate" {
-		t.Fatal("须指定候选或默认包")
+	if mode != "default" && mode != "candidate" && mode != "hits" {
+		t.Fatal("须指定命中、生命魔法候选或默认包")
 	}
 	repo, err := filepath.Abs("../../..")
 	must(t, err)
@@ -37,8 +37,14 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	source, err := os.ReadFile(filepath.Join(build, "assets", "main", "index.js"))
 	must(t, err)
 	bundleHash := persistence.Hash(source)
-	enabled := mode == "candidate"
-	trial, player := startBodyTrainingTrial(t, enabled)
+	enabled, hits := mode != "default", mode == "hits"
+	var trial worldBossRewardTrial
+	var player worldBossRewardPlayer
+	if hits {
+		trial, player = startBodyHitsTrial(t, true, nil)
+	} else {
+		trial, player = startBodyTrainingTrial(t, enabled)
+	}
 	fixtureHash := trial.store.Cfg.Fixture.Hash
 	upstream, err := url.Parse(trial.endpoint)
 	must(t, err)
@@ -52,7 +58,7 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	must(t, err)
 	t.Log("炼体触屏验收目录 " + evidence)
 	manifest := map[string]any{"baseUrl": web.URL, "endpoint": trial.route.assignment.GameWSURL, "role": player.summary.Name,
-		"region": trial.route.origin.RegionName, "server": trial.route.origin.Name, "enabled": enabled,
+		"region": trial.route.origin.RegionName, "server": trial.route.origin.Name, "enabled": enabled, "hits": hits,
 		"fixtureSha256": fixtureHash, "bundleSha256": bundleHash}
 	raw, err := json.Marshal(manifest)
 	must(t, err)
@@ -70,7 +76,7 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	raw, err = os.ReadFile(filepath.Join(evidence, "body-training-browser-report.json"))
 	must(t, err)
 	var result struct {
-		Passed, Enabled             bool   // 触屏是否通过及是否开放。
+		Passed, Enabled, Hits       bool   // 是否通过、开放以及应用命中两系候选。
 		FixtureSha256, BundleSha256 string // 实际配置及下载实包的摘要。
 		Receipts                    []struct {
 			Operation, Quote string // 浏览器看到的操作和报价身份。
@@ -78,7 +84,7 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 		}
 	}
 	must(t, json.Unmarshal(raw, &result))
-	if !result.Passed || result.Enabled != enabled || result.FixtureSha256 != fixtureHash || result.BundleSha256 != bundleHash {
+	if !result.Passed || result.Enabled != enabled || result.Hits != hits || result.FixtureSha256 != fixtureHash || result.BundleSha256 != bundleHash {
 		t.Fatal("触屏报告未对应实际包或夹具", result)
 	}
 	roleID := domain.Hex(player.summary.Key.RoleId)
@@ -87,8 +93,11 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	expected := 0
 	if enabled {
 		expected = 2
-		if role.BodyTrainingLevels() != (domain.BodyTrainingState{Health: 1, Mana: 1}) ||
-			role.Wallet.BoundGold != 0 || role.Wallet.Gold != 3000 {
+		levels, gold := domain.BodyTrainingState{Health: 1, Mana: 1}, int64(3000)
+		if hits {
+			levels, gold = domain.BodyTrainingState{Damage: 1, Absorption: 1}, 2500
+		}
+		if role.BodyTrainingLevels() != levels || role.Wallet.BoundGold != 0 || role.Wallet.Gold != gold {
 			t.Fatal("浏览器升级、两份费用与数据库未对账", role.BodyTrainingLevels(), role.Wallet)
 		}
 		for _, receipt := range result.Receipts {

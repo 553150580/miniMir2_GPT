@@ -71,6 +71,7 @@ func (w *worker) sourceTimeline() bool {
 // hitContext 提供命中时刻以及冻结的特权和托管归属。
 type hitContext struct {
 	PeriodicPoison    bool      // 毒的旧效果按自身节拍扣血，不算一次解除围困的直接攻击。
+	InstantKill       bool      // 圣言术成功时清空原生命，跳过扩展命中倍率。
 	At                time.Time // 本次命中正式发生的时刻。
 	HostSession       string    // 该事件所在离线托管区段的会话编号。
 	PrivilegeUntil    time.Time // 用于判断 Bind 属性的归属区段特权截止时刻。

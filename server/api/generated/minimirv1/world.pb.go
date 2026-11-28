@@ -1816,8 +1816,11 @@ type CombatAttributes struct {
 	// 此实体作为目标时的幸运一击抵抗，单位仍为百万分率。
 	LuckResistancePpm uint32 `protobuf:"varint,15,opt,name=luck_resistance_ppm,json=luckResistancePpm,proto3" json:"luck_resistance_ppm,omitempty"`
 	LuckEnabled       bool   `protobuf:"varint,16,opt,name=luck_enabled,json=luckEnabled,proto3" json:"luck_enabled,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 命中后应用的扩展增伤与吸收，单位均为万分比，已经按组封顶。
+	ExpandedDamageBp     uint32 `protobuf:"varint,17,opt,name=expanded_damage_bp,json=expandedDamageBp,proto3" json:"expanded_damage_bp,omitempty"`
+	ExpandedAbsorptionBp uint32 `protobuf:"varint,18,opt,name=expanded_absorption_bp,json=expandedAbsorptionBp,proto3" json:"expanded_absorption_bp,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *CombatAttributes) Reset() {
@@ -1960,6 +1963,20 @@ func (x *CombatAttributes) GetLuckEnabled() bool {
 		return x.LuckEnabled
 	}
 	return false
+}
+
+func (x *CombatAttributes) GetExpandedDamageBp() uint32 {
+	if x != nil {
+		return x.ExpandedDamageBp
+	}
+	return 0
+}
+
+func (x *CombatAttributes) GetExpandedAbsorptionBp() uint32 {
+	if x != nil {
+		return x.ExpandedAbsorptionBp
+	}
+	return 0
 }
 
 type SceneBaselineChunk struct {
@@ -3676,7 +3693,7 @@ const file_world_proto_rawDesc = "" +
 	"\vcaster_life\x18\t \x01(\x04R\n" +
 	"casterLife\x12A\n" +
 	"\x1dteleport_mana_penalty_percent\x18\n" +
-	" \x01(\rR\x1ateleportManaPenaltyPercent\"\xc5\x05\n" +
+	" \x01(\rR\x1ateleportManaPenaltyPercent\"\xa9\x06\n" +
 	"\x10CombatAttributes\x12.\n" +
 	"\x13physical_attack_min\x18\x01 \x01(\x03R\x11physicalAttackMin\x12.\n" +
 	"\x13physical_attack_max\x18\x02 \x01(\x03R\x11physicalAttackMax\x120\n" +
@@ -3694,7 +3711,9 @@ const file_world_proto_rawDesc = "" +
 	"\x18damage_reduction_percent\x18\r \x01(\rR\x16damageReductionPercent\x12&\n" +
 	"\x0fluck_attack_ppm\x18\x0e \x01(\rR\rluckAttackPpm\x12.\n" +
 	"\x13luck_resistance_ppm\x18\x0f \x01(\rR\x11luckResistancePpm\x12!\n" +
-	"\fluck_enabled\x18\x10 \x01(\bR\vluckEnabled\"\x9b\x04\n" +
+	"\fluck_enabled\x18\x10 \x01(\bR\vluckEnabled\x12,\n" +
+	"\x12expanded_damage_bp\x18\x11 \x01(\rR\x10expandedDamageBp\x124\n" +
+	"\x16expanded_absorption_bp\x18\x12 \x01(\rR\x14expandedAbsorptionBp\"\x9b\x04\n" +
 	"\x12SceneBaselineChunk\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +

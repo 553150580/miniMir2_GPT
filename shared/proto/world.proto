@@ -220,6 +220,9 @@ message CombatAttributes {
   // 此实体作为目标时的幸运一击抵抗，单位仍为百万分率。
   uint32 luck_resistance_ppm = 15;
   bool luck_enabled = 16;
+  // 命中后应用的扩展增伤与吸收，单位均为万分比，已经按组封顶。
+  uint32 expanded_damage_bp = 17;
+  uint32 expanded_absorption_bp = 18;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;

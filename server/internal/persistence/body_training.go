@@ -65,16 +65,16 @@ func (plan bodyTrainingPlan) terms() *pb.BodyTrainingTerms {
 		BeforeBonus: plan.BeforeBonus, TargetBonus: plan.TargetBonus}
 }
 
-// ValidBodyTrainingQuote 校验原场景、原界面和初批系别。
+// ValidBodyTrainingQuote 校验原场景、原界面和当前支持的系别。
 func ValidBodyTrainingQuote(q *pb.BodyTrainingQuoteRequest) bool {
 	return q != nil && q.SceneEpoch != 0 && len(q.UiSessionId) == 16 &&
-		(q.Track == devconfig.BodyHealth || q.Track == devconfig.BodyMana) && len(q.ProtoReflect().GetUnknown()) == 0
+		devconfig.IsBodyTrainingTrack(q.Track) && len(q.ProtoReflect().GetUnknown()) == 0
 }
 
 // ValidBodyTrainingCommit 确认正文、原报价及经济上下文完整。
 func ValidBodyTrainingCommit(q *pb.BodyTrainingCommitRequest, operation *pb.OperationContext) bool {
 	return q != nil && operation != nil && proto.Equal(operation, q.Operation) && len(q.QuoteId) == 16 &&
-		len(q.UiSessionId) == 16 && (q.Track == devconfig.BodyHealth || q.Track == devconfig.BodyMana) &&
+		len(q.UiSessionId) == 16 && devconfig.IsBodyTrainingTrack(q.Track) &&
 		len(q.ProtoReflect().GetUnknown()) == 0 && len(operation.ProtoReflect().GetUnknown()) == 0
 }
 

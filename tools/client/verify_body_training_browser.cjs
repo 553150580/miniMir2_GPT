@@ -1,4 +1,4 @@
-// 使用 Creator 实包触屏读取两系的权威报价、原回执和战斗上限。
+// 使用 Creator 实包触屏读取炼体的权威报价、回执和生效的战斗属性。
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -9,6 +9,7 @@ const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js'
 
 const role = safe + 'UIMgr/Panels/Role';
 const panel = safe + 'PopupView/Panels/ItemActions';
+const attributes = safe + 'PopupView/Panels/StatusDetails';
 const toHex = value => Buffer.from(value).toString('hex');
 const screenshot = (page, name) => page.screenshot({ path: path.join(output, name + '.png') });
 
@@ -49,26 +50,47 @@ async function observeRole(page, session, health, mana, hp, mp) {
     }, { session, health, mana, hp, mp });
 }
 
+// 从实际库存和角色基线核对两系百分比，以及独立保存的四个等级。
+async function observeHits(page, session, damage, absorption) {
+    return wait(page, ({ session, damage, absorption }) => {
+        const inventory = session.inventory, wallet = session.wallet;
+        const player = session.baseline?.entities.find(row => row.entityHandle === session.entry?.playerHandle);
+        const levels = inventory?.bodyTraining, stats = player?.combatAttributes;
+        if (!levels || !stats || !wallet || wallet.revision.lessThan(inventory.revision) ||
+            levels.damageLevel !== damage || levels.absorptionLevel !== absorption || levels.healthLevel !== 0 || levels.manaLevel !== 0 ||
+            stats.expandedDamageBp !== damage * 100 || stats.expandedAbsorptionBp !== absorption * 100) return null;
+        return { damage, absorption, hp: player.hpMax.toString(), mp: player.mpMax.toString(),
+            gold: wallet.gold.toString(), boundGold: wallet.boundGold.toString() };
+    }, { session, damage, absorption });
+}
+
 async function action(page, index, text) {
     await label(page, panel + '/Action' + index + '/Label', text);
     await touch(page, panel + '/Action' + index);
 }
 
-async function firstRank(page, index, name, bound, gold) {
-    await action(page, index, name + '炼体');
+async function firstRank(page, index, name, bound, gold, hits = false) {
+    if (hits) {
+        const row = name + ' 0 /';
+        await touch(page, panel + '/List/View/Content', row);
+        await wait(page, ({ panel, row }) => cc.find(panel + '/List').getComponent('List').items
+            .some(item => item.label?.includes('✓ ' + row)), { panel, row });
+    }
+    await action(page, index, hits ? '查看报价' : name + '炼体');
     await label(page, panel + '/Title', '炼体报价');
     const lines = await page.evaluate(base => cc.find(base + '/List').getComponent('List').items, panel);
     const display = lines.join(' ');
     for (const line of [name + ' 0 → 1级', '成功率 100%', '绑定金币 ' + bound, '普通金币 ' + gold]) {
         assert(display.includes(line), display);
     }
-    await screenshot(page, 'quote-' + index);
+    if (hits) assert(display.includes('属性额度 0% → 1%'), display);
+    await screenshot(page, 'quote-' + name);
     await action(page, 1, '确认炼体');
     await label(page, panel + '/Title', '炼体成功');
 }
 
 async function main() {
-    const report = { passed: false, enabled: expected.enabled, bundleSha256: expected.bundleSha256,
+    const report = { passed: false, enabled: expected.enabled, hits: expected.hits ?? false, bundleSha256: expected.bundleSha256,
         fixtureSha256: expected.fixtureSha256, sockets: 0, errors: [], requests: [], receipts: [] };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
@@ -91,7 +113,33 @@ async function main() {
         }
         await touch(page, safe + 'BottomHUD/QuickNav/Role');
         await touch(page, role + '/Message');
-        if (expected.enabled) {
+        if (expected.hits) {
+            await label(page, panel + '/Title', '炼体');
+            report.before = await observeHits(page, session, 0, 0);
+            await firstRank(page, 1, '伤害吸收', '1000', '500', true);
+            report.absorption = await observeHits(page, session, 0, 1);
+            await action(page, 1, '返回炼体');
+            await firstRank(page, 1, '伤害', '0', '3000', true);
+            report.after = await observeHits(page, session, 1, 1);
+            assert.deepEqual([report.after.gold, report.after.boundGold, report.after.hp, report.after.mp],
+                ['2500', '0', report.before.hp, report.before.mp]);
+            assert.deepEqual(report.requests, [40067, 40069, 40067, 40069]);
+            assert.deepEqual(report.receipts.map(r => [r.track, r.success, r.after, r.error, r.pending]), [[2, true, 1, 0, false], [1, true, 1, 0, false]]);
+            await action(page, 1, '返回炼体');
+            await screenshot(page, 'trained-hits');
+            await action(page, 2, '查看转生');
+            await label(page, panel + '/Title', '角色成长');
+            await page.touchscreen.tap(10, 130);
+            await wait(page, node => !cc.find(node)?.activeInHierarchy, panel);
+            await touch(page, role + '/Recycle');
+            await label(page, attributes + '/Title', '战斗属性');
+            report.attributes = await wait(page, node => {
+                const rows = cc.find(node + '/List')?.getComponent('List').items;
+                const expected = ['伤害加成 1%', '伤害吸收 1%'];
+                return rows && expected.every(text => rows.includes(text)) ? expected : null;
+            }, attributes);
+            await screenshot(page, 'combat-hits');
+        } else if (expected.enabled) {
             await label(page, panel + '/Title', '炼体');
             report.before = await observeRole(page, session, 0, 0);
             const hp = (BigInt(report.before.hp) + 2n).toString(), mp = (BigInt(report.before.mp) + 1n).toString();
@@ -108,7 +156,7 @@ async function main() {
             await action(page, 3, '查看转生');
             await label(page, panel + '/Title', '角色成长');
         } else {
-            await wait(page, node => cc.find(node)?.activeInHierarchy, safe + 'PopupView/Panels/StatusDetails');
+            await wait(page, node => cc.find(node)?.activeInHierarchy, attributes);
             assert.equal(await page.evaluate(node => cc.find(node)?.activeInHierarchy, panel), false);
             assert.deepEqual(report.requests, []);
             await screenshot(page, 'default-growth');

@@ -119,7 +119,8 @@ func (w *worker) newMirrorCombat(config *devconfig.MirrorArenaConfig, fighters [
 
 // validMirrorFighter 拒绝损坏的生命与时钟，保证两侧生命乘积和原动作时长在整数范围内。
 func validMirrorFighter(f devconfig.Fighter) bool {
-	return f.HP > 0 && f.HP < 1_000_000 && f.MP >= 0 && f.MoveMS > 0 && f.MoveMS <= 60_000 && f.AttackMS > 0 && f.AttackMS <= 60_000
+	return f.HP > 0 && f.HP < 1_000_000 && f.MP >= 0 && f.MoveMS > 0 && f.MoveMS <= 60_000 && f.AttackMS > 0 && f.AttackMS <= 60_000 &&
+		f.HitBonuses.ValidSnapshot()
 }
 
 func (b *mirrorCombat) eachBody(visit func(*entity)) {
