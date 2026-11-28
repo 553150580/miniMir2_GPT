@@ -13,7 +13,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coder/websocket"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"google.golang.org/protobuf/proto"
@@ -295,7 +294,7 @@ func observeGoldSample(t *testing.T, c *client, sample *goldSampleSummary, windo
 			setActive(now, c.hosting.AutoBattleEnabled)
 		}
 	}
-	stopHeartbeat := goldSampleHeartbeat(c, deadline)
+	stopHeartbeat := sampleHeartbeat(c, deadline)
 	defer stopHeartbeat()
 	c.auto(true, uint32(sample.MonsterSlots))
 	for time.Now().Before(deadline) {
@@ -322,39 +321,6 @@ func observeGoldSample(t *testing.T, c *client, sample *goldSampleSummary, windo
 	c.auto(false, uint32(sample.MonsterSlots))
 	sample.AutomaticActiveMS = activeTime.Milliseconds()
 	sample.StoppedMS = window.Milliseconds() - sample.AutomaticActiveMS
-}
-
-// goldSampleHeartbeat 使用独立传输层探针，保证缺少战争事件时仍能按时完成固定窗。
-func goldSampleHeartbeat(c *client, end time.Time) func() {
-	ctx, cancel := context.WithCancel(c.ctx)
-	ws, binding := c.ws, c.binding
-	done := make(chan struct{})
-	go func() {
-		defer close(done)
-		interval := time.NewTicker(5 * time.Second)
-		defer interval.Stop()
-		last := time.NewTimer(time.Until(end))
-		defer last.Stop()
-		send := func() error {
-			write, stop := context.WithTimeout(ctx, 3*time.Second)
-			defer stop()
-			return ws.Write(write, websocket.MessageBinary, wire.Encode(wire.Message(p.MsgC2SHeartbeat, 0, binding, &pb.Heartbeat{})))
-		}
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case <-interval.C:
-				if send() != nil {
-					return
-				}
-			case <-last.C:
-				_ = send()
-				return
-			}
-		}
-	}()
-	return func() { cancel(); <-done }
 }
 
 // verifyGoldSampleLedger 对拍永久来源并复算钱包，只有落在半开窗口内的击杀进入样本。

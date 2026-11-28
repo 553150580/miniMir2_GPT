@@ -160,6 +160,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             subprocess.run(mining_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
             subprocess.run([*mining_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
             environment['MINIMIR_MINING_TEST_FIXTURE'] = str(fixture)
+            environment['MINIMIR_MINING_ECONOMY_REPORT_DIR'] = str(destination)
             report['mining_assembly_sha256'] = hashlib.sha256(assembly.read_bytes()).hexdigest()
             report['mining_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
             report['mining_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()

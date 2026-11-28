@@ -304,7 +304,7 @@ func (a *economyActor) observeOnline(c *client, deadline time.Time, report *econ
 	}()
 	c.stop()
 	c.ctx, c.stop = context.WithTimeout(a.ctx, time.Until(deadline)+30*time.Minute)
-	stop := goldSampleHeartbeat(c, deadline)
+	stop := sampleHeartbeat(c, deadline)
 	defer stop()
 	c.auto(true, a.scenario.Slots)
 	for time.Now().Before(deadline) {

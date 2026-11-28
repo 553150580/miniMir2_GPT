@@ -50,7 +50,7 @@ func (a *economyActor) closeMaintenance(gate chan struct{}, before, end domain.R
 	c := a.client
 	care := &economyCare{Status: "completed", Restocked: map[uint32]int64{}}
 	report.Maintenance = care
-	stop := goldSampleHeartbeat(c, time.Now().Add(25*time.Minute))
+	stop := sampleHeartbeat(c, time.Now().Add(25*time.Minute))
 	defer stop()
 	select {
 	case gate <- struct{}{}:
