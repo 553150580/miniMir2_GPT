@@ -45,7 +45,7 @@ type economyActor struct {
 }
 
 // prepareEconomyActor 只写入可重复的起始等级、装备物品与资金。穿戴、学书、购卡走正常协议。
-func prepareEconomyActor(t *testing.T, ctx context.Context, cfg devconfig.Config, store *persistence.Store, scenario economyScenario, logins chan struct{}) *economyActor {
+func prepareEconomyActor(t *testing.T, ctx context.Context, cfg devconfig.Config, store *persistence.Store, scenario economyScenario, startWallet domain.Wallet, logins chan struct{}) *economyActor {
 	t.Helper()
 	actor := &economyActor{t: t, ctx: ctx, cfg: cfg, store: store, scenario: scenario, endpoint: "http://" + cfg.AccountAddress + "/rpc",
 		username: "econ_" + domain.ID()[:12], password: "economy_test_8753", logins: logins}
@@ -89,7 +89,7 @@ func prepareEconomyActor(t *testing.T, ctx context.Context, cfg devconfig.Config
 		}
 		actor.added = max(scenario.Seconds-limit, 0)
 	}
-	startWallet := domain.Wallet{Gold: 50_000, BoundGold: 50_000, Yuanbao: actor.paidCard}
+	startWallet.Yuanbao += actor.paidCard
 	matched, err := store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": created.ID, "session_epoch": created.SessionEpoch,
 		"revision": created.Revision, "source_seq": created.SourceSeq}, bson.M{"$set": bson.M{
 		"items": initial, "level": scenario.Level, "wallet": startWallet, "hosting_seconds": actor.added}})

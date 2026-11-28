@@ -121,7 +121,7 @@ def source_snapshot():
     return {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(paths)}
 
 
-def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE, *, test_command=None):
+def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE, *, test_command=None, sample_env=None):
     identity = uuid.uuid4().hex
     mongo_directory = mongo.run_directory(identity, mongo_storage)
     installation, _ = mongo.installation()
@@ -136,6 +136,8 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             raise RuntimeError('独立 MongoDB 端点或所有权核验失败')
         report['mongo'] = {key: endpoint[key] for key in ('version', 'port', 'pid', 'replica_set', 'storage', 'log')}
         environment = os.environ.copy()
+        if sample_env:
+            environment.update(sample_env)
         environment.update(
             MINIMIR_MONGO_E2E='1', MINIMIR_INTEGRATION_TEST_MONGO_URI=endpoint['uri'],
             MINIMIR_SERVER_DIRECTORY_TEST_MONGO_URI=endpoint['uri'],

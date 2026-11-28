@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"minimir/internal/devconfig"
+	"minimir/internal/domain"
 	"minimir/internal/persistence"
 )
 
@@ -85,7 +86,7 @@ func TestOrdinaryEconomyMatrixMongoWS(t *testing.T) {
 	for _, scenario := range scenarios {
 		t.Run(scenario.key(), func(t *testing.T) {
 			t.Parallel()
-			profile := prepareEconomyActor(t, ctx, cfg, store, scenario, loginAccess)
+			profile := prepareEconomyActor(t, ctx, cfg, store, scenario, domain.Wallet{Gold: 50_000, BoundGold: 50_000}, loginAccess)
 			report := profile.observe(time.Duration(scenario.Seconds)*time.Second, selection.Maintenance, shopAccess)
 			raw, err := json.MarshalIndent(report, "", "  ")
 			must(t, err)

@@ -98,22 +98,23 @@ type economyPrice struct {
 
 // economyAudit 保留用于核对同一持久回执的原审计字段。
 type economyAudit struct {
-	ID         string                         `bson:"_id"`
-	RoleID     string                         `bson:"role_id"`
-	Kind       string                         `bson:"kind"`
-	Code       uint32                         `bson:"result_code"`
-	Source     int64                          `bson:"source_seq"`
-	Rule       uint64                         `bson:"rule_version"`
-	Config     string                         `bson:"config_hash"`
-	EventAt    time.Time                      `bson:"event_at"`
-	Bound      bool                           `bson:"bound"`
-	Gold       int64                          `bson:"gold"`
-	Experience int64                          `bson:"experience"`
-	Item       *domain.Item                   `bson:"item"`
-	Settlement *persistence.SettlementReceipt `bson:"settlement"`
-	Potion     *persistence.PotionReceipt     `bson:"potion"`
-	Vendor     *persistence.VendorReceipt     `bson:"npc_trade"`
-	Binding    *persistence.BindingReceipt    `bson:"binding_use"`
+	ID         string                            `bson:"_id"`
+	RoleID     string                            `bson:"role_id"`
+	Kind       string                            `bson:"kind"`
+	Code       uint32                            `bson:"result_code"`
+	Source     int64                             `bson:"source_seq"`
+	Rule       uint64                            `bson:"rule_version"`
+	Config     string                            `bson:"config_hash"`
+	EventAt    time.Time                         `bson:"event_at"`
+	Bound      bool                              `bson:"bound"`
+	Gold       int64                             `bson:"gold"`
+	Experience int64                             `bson:"experience"`
+	Item       *domain.Item                      `bson:"item"`
+	Settlement *persistence.SettlementReceipt    `bson:"settlement"`
+	Mining     *persistence.MiningAttemptReceipt `bson:"mining_attempt"`
+	Potion     *persistence.PotionReceipt        `bson:"potion"`
+	Vendor     *persistence.VendorReceipt        `bson:"npc_trade"`
+	Binding    *persistence.BindingReceipt       `bson:"binding_use"`
 }
 
 // economySource 是从 MongoDB 清退后仍可逐条重新聚合的最小事实。
