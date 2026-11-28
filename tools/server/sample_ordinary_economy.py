@@ -72,10 +72,13 @@ def run(args):
     fixture = args.fixture.resolve(strict=True)
     if fixture != DEFAULT and not fixture.is_relative_to(WORK.resolve()):
         raise ValueError('候选夹具必须来自项目隔离工作目录')
-    selection = {'seconds': args.seconds, 'map_id': args.map_id, 'mode': args.mode, 'level': args.level,
+    selection = {'seconds': args.seconds, 'map_ids': args.map_ids or [args.map_id], 'mode': args.mode, 'levels': args.levels or [args.level],
                  'jobs': args.jobs, 'monsters': args.monsters, 'kits': args.kits,
                  'cards': args.cards, 'repeat': args.repeat, 'maintenance': args.maintenance}
-    size = math.prod(len(selection[key]) for key in ('jobs', 'monsters', 'kits', 'cards')) * args.repeat
+    axes = ('levels', 'map_ids', 'jobs', 'monsters', 'kits', 'cards')
+    if any(len(selection[key]) != len(set(selection[key])) for key in axes):
+        raise ValueError('采样等级、地图或角色其他条件出现重复')
+    size = math.prod(len(selection[key]) for key in axes) * args.repeat
     directory = STUDIES / uuid.uuid4().hex
     samples = directory / 'samples'
     samples.mkdir(parents=True)
@@ -119,8 +122,12 @@ def main():
     trial = sub.add_parser('run', help='启动可追踪的真实联机采样')
     trial.add_argument('--seconds', type=int, required=True)
     trial.add_argument('--mode', choices=('online', 'hosting'), default='online')
-    trial.add_argument('--map-id', type=int, default=1)
-    trial.add_argument('--level', type=int, default=15)
+    maps = trial.add_mutually_exclusive_group()
+    maps.add_argument('--map-id', type=int, default=1)
+    maps.add_argument('--map-ids', nargs='+', type=int)
+    levels = trial.add_mutually_exclusive_group()
+    levels.add_argument('--level', type=int, default=15)
+    levels.add_argument('--levels', nargs='+', type=int)
     trial.add_argument('--fixture', type=Path, default=DEFAULT)
     trial.add_argument('--jobs', nargs='+', type=int, choices=(0, 1, 2), default=[0, 1, 2])
     trial.add_argument('--monsters', nargs='+', type=int, choices=(1, 4, 8), default=[1, 4, 8])

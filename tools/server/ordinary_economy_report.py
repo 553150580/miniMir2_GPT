@@ -126,10 +126,17 @@ def reconcile_maintenance(report):
 def summarize(directory, manifest):
     """校验所有选定角色都已完成，保留每个样本的精确毛金币小时率。"""
     selection = manifest['selection']
-    cases = product(selection['jobs'], selection['monsters'], selection['kits'], selection['cards'],
+    expanded = 'levels' in selection and 'map_ids' in selection
+    levels = selection['levels'] if expanded else [selection['level']]
+    maps = selection['map_ids'] if expanded else [selection['map_id']]
+    cases = product(levels, maps, selection['jobs'], selection['monsters'], selection['kits'], selection['cards'],
                     range(1, selection['repeat'] + 1))
-    expected = {f'j{job}-m{slots}-{kit}-{cards}-r{count}': (job, slots, kit, cards, count)
-                for job, slots, kit, cards, count in cases}
+    expected = {}
+    for level, map_id, job, slots, kit, cards, count in cases:
+        key = f'j{job}-m{slots}-{kit}-{cards}-r{count}'
+        if expanded:
+            key = f'l{level}-map{map_id}-{key}'
+        expected[key] = (level, map_id, job, slots, kit, cards, count)
     found = {p.stem: p for p in directory.glob('*.json')}
     if found.keys() != expected.keys():
         raise ValueError(f'应完成 {len(expected)} 个组合，实际有 {len(found)} 个')
@@ -137,10 +144,10 @@ def summarize(directory, manifest):
     for key, path in sorted(found.items()):
         row = json.loads(path.read_bytes())
         case = row['scenario']
-        if tuple(case[field] for field in ('job', 'slots', 'kit', 'cards', 'repeat')) != expected[key]:
+        if tuple(case[field] for field in ('level', 'map_id', 'job', 'slots', 'kit', 'cards', 'repeat')) != expected[key]:
             raise ValueError(f'样本身份误配 {key}')
-        if (case['map_id'], case['mode'], case['seconds'], row['config_hash'], row['start_state']['level']) != (
-                selection['map_id'], selection['mode'], selection['seconds'], manifest['fixture_sha256'], selection['level']):
+        if (case['mode'], case['seconds'], row['config_hash'], row['start_state']['level']) != (
+                selection['mode'], selection['seconds'], manifest['fixture_sha256'], expected[key][0]):
             raise ValueError(f'样本规则、地图或时长变化 {key}')
         if row['source_log'] != key + '.jsonl':
             raise ValueError(f'样本引用了另一份细账 {key}')
@@ -150,6 +157,9 @@ def summarize(directory, manifest):
         rate = Fraction(gross * 3600, case['seconds'])
         care = row.get('post_window_maintenance')
         results.append({'sample': key, 'conditions': case, 'starting_level': row['start_state']['level'],
+                        'ending_level': row['end_state']['level'],
+                        'starting_equipment': [item['item']['item_id'] for item in row['start_state']['equipment']],
+                        'starting_skills': row['start_state']['skills'],
                         'kills': row['gross']['kills'], 'experience': row['gross']['experience'],
                         'observed_online_deaths': row['observed_online_deaths'], 'wear_deaths': row['gross']['wear_deaths'],
                         'gross_gold': gross, 'gross_gold_per_hour': [rate.numerator, rate.denominator],

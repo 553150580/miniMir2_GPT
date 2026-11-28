@@ -32,8 +32,10 @@ var economyCardProducts = map[string][]uint32{
 // economySelection 是隔离启动工具传入的实验条件。所有计时以真实服务端同机时钟推进。
 type economySelection struct {
 	Level       uint32   `json:"level"`       // 固定同档起点，让配装比较不混入不同初始等级。
+	Levels      []uint32 `json:"levels"`      // 按多档初始等级分别实跑，早期单档输入沿用 Level。
 	Seconds     int64    `json:"seconds"`     // 单样本实际墙钟时长。
 	MapID       uint64   `json:"map_id"`      // 当前规则的目标个人挂机实例模板。
+	MapIDs      []uint64 `json:"map_ids"`     // 实际选择的多个普通图，早期单图输入沿用 MapID。
 	Mode        string   `json:"mode"`        // 在线自动战斗或真正断开后的离线托管。
 	Jobs        []uint32 `json:"jobs"`        // 职业选取。
 	Monsters    []uint32 `json:"monsters"`    // 每个样本的活动怪槽数。
@@ -57,7 +59,7 @@ type economyScenario struct {
 }
 
 func (s economyScenario) key() string {
-	return fmt.Sprintf("j%d-m%d-%s-%s-r%d", s.Job, s.Slots, s.Kit, s.Cards, s.Repeat)
+	return fmt.Sprintf("l%d-map%d-j%d-m%d-%s-%s-r%d", s.Level, s.MapID, s.Job, s.Slots, s.Kit, s.Cards, s.Repeat)
 }
 
 // TestOrdinaryEconomyMatrixMongoWS 只由显式隔离启动工具执行，常规回归不会启动长窗。
@@ -103,36 +105,40 @@ func TestOrdinaryEconomyMatrixMongoWS(t *testing.T) {
 func (selection economySelection) scenarios(t *testing.T, f *devconfig.Fixture) []economyScenario {
 	t.Helper()
 	if selection.Seconds < 30 || selection.Seconds > 24*3600 || selection.Repeat < 1 || selection.Repeat > 3 ||
-		selection.Level < 7 || selection.Level > 50 ||
 		(selection.Mode != "online" && selection.Mode != "hosting") {
 		t.Fatal("隔离采样时长、重复次数或模式不合法", selection)
 	}
 	if !f.OrdinaryMonsterRosterEnabled() || f.HostingBenefits == nil || f.RoleCards == nil || f.EquipmentDurability == nil {
 		t.Fatal("采样要求当前普通怪、角色双卡和耐久的可运行配置")
 	}
-	world, found := f.MapByID(selection.MapID)
-	if !found || world.SceneKind != devconfig.SceneKindPersonal || world.Width != 13 || world.Height != 13 || len(world.MonsterSpawnIDs) < 8 {
-		t.Fatal("采样目标不是可比较的个人 13×13 八怪地图", selection.MapID)
+	maps, levels := selection.MapIDs, selection.Levels
+	if len(maps) == 0 {
+		maps = []uint64{selection.MapID}
 	}
+	if len(levels) == 0 {
+		levels = []uint32{selection.Level}
+	}
+	patterns := selection.patterns(t)
 	var scenarios []economyScenario
 	seen := make(map[string]bool)
-	for _, job := range selection.Jobs {
-		for _, count := range selection.Monsters {
-			for _, kit := range selection.Kits {
-				validateEconomyKit(t, f, job, selection.Level, kit)
-				for _, cards := range selection.Cards {
-					if _, ok := economyCardProducts[cards]; !ok || !slices.Contains([]uint32{1, 4, 8}, count) || job > 2 {
-						t.Fatal("采样职业、怪槽或卡状态不在已登记组合内")
-					}
-					for repeat := uint32(1); repeat <= selection.Repeat; repeat++ {
-						scenario := economyScenario{job, selection.Level, count, kit, cards, repeat, selection.MapID, selection.Mode, selection.Seconds}
-						if seen[scenario.key()] {
-							t.Fatal("采样组合重复", scenario.key())
-						}
-						seen[scenario.key()] = true
-						scenarios = append(scenarios, scenario)
-					}
+	for _, mapID := range maps {
+		world, found := f.MapByID(mapID)
+		if !found || world.SceneKind != devconfig.SceneKindPersonal || world.Width != 13 || world.Height != 13 || len(world.MonsterSpawnIDs) < 8 {
+			t.Fatal("采样目标不是可比较的个人 13×13 八怪地图", mapID)
+		}
+		for _, level := range levels {
+			if level < 7 || level > 50 {
+				t.Fatal("隔离角色起始等级超出当前普通成长区间", level)
+			}
+			for _, scenario := range patterns {
+				scenario.Level, scenario.MapID = level, mapID
+				validateEconomyKit(t, f, scenario.Job, level, scenario.Kit)
+				if key := scenario.key(); seen[key] {
+					t.Fatal("采样组合重复", key)
+				} else {
+					seen[key] = true
 				}
+				scenarios = append(scenarios, scenario)
 			}
 		}
 	}
@@ -140,6 +146,28 @@ func (selection economySelection) scenarios(t *testing.T, f *devconfig.Fixture) 
 		t.Fatal("没有要运行的实际样本")
 	}
 	return scenarios
+}
+
+// patterns 展开与地图和等级无关的原职业、怪槽、配装、卡状态及重复次数。
+func (selection economySelection) patterns(t *testing.T) []economyScenario {
+	t.Helper()
+	var patterns []economyScenario
+	for _, job := range selection.Jobs {
+		for _, count := range selection.Monsters {
+			for _, kit := range selection.Kits {
+				for _, cards := range selection.Cards {
+					if _, ok := economyCardProducts[cards]; !ok || !slices.Contains([]uint32{1, 4, 8}, count) || job > 2 {
+						t.Fatal("采样职业、怪槽或卡状态不在已登记组合内")
+					}
+					for repeat := uint32(1); repeat <= selection.Repeat; repeat++ {
+						patterns = append(patterns, economyScenario{Job: job, Slots: count, Kit: kit, Cards: cards,
+							Repeat: repeat, Mode: selection.Mode, Seconds: selection.Seconds})
+					}
+				}
+			}
+		}
+	}
+	return patterns
 }
 
 // validateEconomyKit 只允许同一等级和原职业真正能穿的装备，不覆盖原模板属性。

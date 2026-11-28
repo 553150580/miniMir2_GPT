@@ -2,6 +2,7 @@
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 import os
@@ -144,6 +145,17 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
         )
         environment.pop('MINIMIR_SERVER_DIRECTORY_WEB_ROOT', None)
         environment.pop('MINIMIR_WORLD_BOSS_BROWSER_WEB_ROOT', None)
+        if group == 'hosting':
+            # 独立载入工作簿五档，不对试玩默认配置或其他用例的报价窗口赋值。
+            candidate = destination / 'hosting-price-fixture.json'
+            now = datetime.now(timezone.utc).replace(microsecond=0)
+            command = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_hosting_time_prices.py'),
+                       '--fixture-out', str(candidate), '--version', str(int(now.timestamp())), '--step-seconds', '30',
+                       '--effective-from', (now - timedelta(hours=1)).isoformat()]
+            subprocess.run(command, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*command, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_HOSTING_PRICE_TEST_FIXTURE'] = str(candidate)
+            report['hosting_price_fixture_sha256'] = hashlib.sha256(candidate.read_bytes()).hexdigest()
         if group == 'payments':
             fixture = destination / 'cash-cards-fixture.json'
             cash_export = [sys.executable, str(ROOT / 'tools/resources/prepare_payment_cash_cards.py'), '--fixture-out', str(fixture)]

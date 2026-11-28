@@ -235,6 +235,10 @@ func (a *economyActor) observe(window time.Duration, maintain bool, shopAccess c
 			travelAcknowledge(c, true)
 		}
 	}
+	if !maintain {
+		// 关闭自动后，仍在线的角色会继续挨打。断开已停战的连接，再核对全部已排入的磨损和收益。
+		c.close()
+	}
 	end := a.awaitStill()
 	report.EndState = economyState(end)
 	ledger, quantities := a.reconcileEconomy(before, end, report.Start, report.End)
