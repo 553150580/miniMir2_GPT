@@ -21,14 +21,14 @@ import (
 	"minimir/internal/persistence"
 )
 
-// TestBodyTrainingCreatorTouchMongo 触屏验证隔离命中或生命魔法候选，默认包显示原只读详情。
+// TestBodyTrainingCreatorTouchMongo 触屏验证各阶段炼体候选，默认包显示原只读详情。
 func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	rawRoot, mode := os.Getenv("MINIMIR_BODY_TRAINING_BROWSER_WEB_ROOT"), os.Getenv("MINIMIR_BODY_TRAINING_BROWSER_MODE")
 	if rawRoot == "" {
 		t.Skip("需要原 Creator 实构和隔离账号")
 	}
-	if mode != "default" && mode != "candidate" && mode != "hits" {
-		t.Fatal("须指定命中、生命魔法候选或默认包")
+	if mode != "default" && mode != "candidate" && mode != "hits" && mode != "mastery" {
+		t.Fatal("须指定一个隔离炼体候选或默认包")
 	}
 	repo, err := filepath.Abs("../../..")
 	must(t, err)
@@ -37,12 +37,15 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	source, err := os.ReadFile(filepath.Join(build, "assets", "main", "index.js"))
 	must(t, err)
 	bundleHash := persistence.Hash(source)
-	enabled, hits := mode != "default", mode == "hits"
+	enabled, hits, mastery := mode != "default", mode == "hits", mode == "mastery"
 	var trial worldBossRewardTrial
 	var player worldBossRewardPlayer
-	if hits {
+	switch mode {
+	case "mastery":
+		trial, player = startBodyMasteryTrial(t, nil)
+	case "hits":
 		trial, player = startBodyHitsTrial(t, true, nil)
-	} else {
+	default:
 		trial, player = startBodyTrainingTrial(t, enabled)
 	}
 	fixtureHash := trial.store.Cfg.Fixture.Hash
@@ -58,7 +61,7 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	must(t, err)
 	t.Log("炼体触屏验收目录 " + evidence)
 	manifest := map[string]any{"baseUrl": web.URL, "endpoint": trial.route.assignment.GameWSURL, "role": player.summary.Name,
-		"region": trial.route.origin.RegionName, "server": trial.route.origin.Name, "enabled": enabled, "hits": hits,
+		"region": trial.route.origin.RegionName, "server": trial.route.origin.Name, "enabled": enabled, "hits": hits, "mastery": mastery,
 		"fixtureSha256": fixtureHash, "bundleSha256": bundleHash}
 	raw, err := json.Marshal(manifest)
 	must(t, err)
@@ -76,15 +79,16 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	raw, err = os.ReadFile(filepath.Join(evidence, "body-training-browser-report.json"))
 	must(t, err)
 	var result struct {
-		Passed, Enabled, Hits       bool   // 是否通过、开放以及应用命中两系候选。
-		FixtureSha256, BundleSha256 string // 实际配置及下载实包的摘要。
-		Receipts                    []struct {
+		Passed, Enabled, Hits, Mastery bool   // 是否通过、开放以及实际应用的候选。
+		FixtureSha256, BundleSha256    string // 实际配置及下载实包的摘要。
+		Receipts                       []struct {
 			Operation, Quote string // 浏览器看到的操作和报价身份。
 			Track            uint32 // 本次成交的系别。
 		}
 	}
 	must(t, json.Unmarshal(raw, &result))
-	if !result.Passed || result.Enabled != enabled || result.Hits != hits || result.FixtureSha256 != fixtureHash || result.BundleSha256 != bundleHash {
+	if !result.Passed || result.Enabled != enabled || result.Hits != hits || result.Mastery != mastery ||
+		result.FixtureSha256 != fixtureHash || result.BundleSha256 != bundleHash {
 		t.Fatal("触屏报告未对应实际包或夹具", result)
 	}
 	roleID := domain.Hex(player.summary.Key.RoleId)
@@ -93,12 +97,17 @@ func TestBodyTrainingCreatorTouchMongo(t *testing.T) {
 	expected := 0
 	if enabled {
 		expected = 2
-		levels, gold := domain.BodyTrainingState{Health: 1, Mana: 1}, int64(3000)
-		if hits {
-			levels, gold = domain.BodyTrainingState{Damage: 1, Absorption: 1}, 2500
+		levels, wallet := domain.BodyTrainingState{Health: 1, Mana: 1}, domain.Wallet{Gold: 3000}
+		switch mode {
+		case "hits":
+			levels, wallet = domain.BodyTrainingState{Damage: 1, Absorption: 1}, domain.Wallet{Gold: 2500}
+		case "mastery":
+			expected = 3
+			levels, wallet = domain.BodyTrainingState{Critical: 1, Speed: 1, Resistance: 1},
+				domain.Wallet{Gold: 5000, BoundGold: 1000, Yuanbao: 550}
 		}
-		if role.BodyTrainingLevels() != levels || role.Wallet.BoundGold != 0 || role.Wallet.Gold != gold {
-			t.Fatal("浏览器升级、两份费用与数据库未对账", role.BodyTrainingLevels(), role.Wallet)
+		if role.BodyTrainingLevels() != levels || role.Wallet != wallet {
+			t.Fatal("浏览器升级、费用与数据库未对账", role.BodyTrainingLevels(), role.Wallet)
 		}
 		for _, receipt := range result.Receipts {
 			var original persistence.Operation

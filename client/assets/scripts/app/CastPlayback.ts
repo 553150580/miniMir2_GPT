@@ -16,6 +16,7 @@ export interface CastStepEvent {
     grid: { x: number; y: number }; direction: number; stepIndex: number; skillLevel: number;
 }
 export interface ImpactEvent {
+    critical?: boolean; // 服务端确认产生额外暴击量的命中。
     sceneEpoch: PotionInteger; eventId: PotionInteger; skillId: number; casterHandle: number; targetHandle: number;
     targetLife: PotionInteger; targetGrid: { x: number; y: number }; amount: PotionInteger; outcome: number; healing: boolean;
     castId: PotionInteger; attackSequence: number;

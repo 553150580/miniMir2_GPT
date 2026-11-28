@@ -12,6 +12,7 @@ export interface CombatAttributes {
     spiritAttackMin: PotionInteger; spiritAttackMax: PotionInteger; accuracy: PotionInteger; agility: PotionInteger; damageReductionPercent: number;
     luckAttackPpm?: number; luckResistancePpm?: number; luckEnabled?: boolean;
     expandedDamageBp?: number; expandedAbsorptionBp?: number; // 服务器已经封顶的扩展命中属性，单位为万分比。
+    criticalBp?: number; attackIntervalReductionBp?: number; allResistanceBp?: number; // 炼体的三个进阶战斗属性，单位为基点。
 }
 export interface CombatEntity {
     entityHandle: number; entityKind: number; definitionId?: number; life: PotionInteger;
@@ -38,7 +39,8 @@ export function revealedMonsterHealthPercent(entity: CombatEntity, receivedAt: n
 }
 export function statusLines(status: EntityStatusState, receivedAt: number, now: number, definitions: readonly StatusDefinition[] = []): string[] {
     const seconds = statusSeconds(status, receivedAt, now);
-    const lines = [statusName(status.statusId, definitions), `技能等级 ${status.skillLevel}`, seconds ? `剩余 ${seconds} 秒` : '剩余0秒 · 等待状态更新'];
+    const lines = [statusName(status.statusId, definitions), seconds ? `剩余 ${seconds} 秒` : '剩余0秒 · 等待状态更新'];
+    if (status.sourceSkillId) lines.splice(1, 0, `技能等级 ${status.skillLevel}`);
     if (BigInt(status.maxPhysicalDefenceBonus.toString())) lines.push(`物理防御上限 +${status.maxPhysicalDefenceBonus}`);
     if (BigInt(status.maxMagicDefenceBonus.toString())) lines.push(`魔法防御上限 +${status.maxMagicDefenceBonus}`);
     if (status.teleportManaPenaltyPercent) lines.push(`传送技能魔法消耗 +${status.teleportManaPenaltyPercent}%`, '仅影响传送技能，成功传送刷新持续时间');
@@ -52,6 +54,9 @@ export function combatAttributeLines(value?: CombatAttributes | null): string[] 
     const expanded: string[] = [];
     if (value.expandedDamageBp) expanded.push(`伤害加成 ${value.expandedDamageBp / 100}%`);
     if (value.expandedAbsorptionBp) expanded.push(`伤害吸收 ${value.expandedAbsorptionBp / 100}%`);
+    if (value.criticalBp) expanded.push(`暴击率 ${value.criticalBp / 100}%`);
+    if (value.attackIntervalReductionBp) expanded.push(`普攻间隔缩减 ${value.attackIntervalReductionBp / 100}%`);
+    if (value.allResistanceBp) expanded.push(`全抗 ${value.allResistanceBp / 100}%`);
     return [`物理攻击 ${value.physicalAttackMin}–${value.physicalAttackMax}`, `物理防御 ${value.physicalDefenceMin}–${value.physicalDefenceMax}`,
         `魔法防御 ${value.magicDefenceMin}–${value.magicDefenceMax}`, `魔法攻击 ${value.magicAttackMin}–${value.magicAttackMax}`,
         `道术攻击 ${value.spiritAttackMin}–${value.spiritAttackMax}`, ...luck, ...expanded, `准确 ${value.accuracy} · 敏捷 ${value.agility}`, `伤害减免 ${value.damageReductionPercent}%`];

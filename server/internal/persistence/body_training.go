@@ -29,7 +29,7 @@ type bodyTrainingPlan struct {
 	Chance      uint32        `bson:"chance_ppm"`   // 原档位成功率。
 	BeforeBonus int64         `bson:"before_bonus"` // 原累计额度。
 	TargetBonus int64         `bson:"target_bonus"` // 成功时累计额度。
-	Spend       domain.Wallet `bson:"spend"`        // 绑定金币优先使用后的分账。
+	Spend       domain.Wallet `bson:"spend"`        // 同币种内优先使用绑定余额后的分账。
 }
 
 // bodyTrainingStoredQuote 保留原判定样本，已受理的事务重试沿用。
@@ -62,6 +62,7 @@ func (r *BodyTrainingReceipt) Proto() *pb.BodyTrainingReceipt {
 func (plan bodyTrainingPlan) terms() *pb.BodyTrainingTerms {
 	return &pb.BodyTrainingTerms{Track: plan.Track, BeforeLevel: plan.Before, TargetLevel: plan.Before + 1,
 		SuccessPpm: plan.Chance, Gold: plan.Spend.Gold, BoundGold: plan.Spend.BoundGold,
+		YuanbaoUnits: plan.Spend.Yuanbao, BoundYuanbaoUnits: plan.Spend.BoundYuanbao,
 		BeforeBonus: plan.BeforeBonus, TargetBonus: plan.TargetBonus}
 }
 
@@ -78,7 +79,7 @@ func ValidBodyTrainingCommit(q *pb.BodyTrainingCommitRequest, operation *pb.Oper
 		len(q.ProtoReflect().GetUnknown()) == 0 && len(operation.ProtoReflect().GetUnknown()) == 0
 }
 
-// buildBodyTrainingPlan 以实际角色等级和已开档位限价，优先选绑定金币。
+// buildBodyTrainingPlan 以实际角色等级和已开档位限价，并优先使用相应的绑定余额。
 func buildBodyTrainingPlan(role domain.Role, fixture *devconfig.Fixture, id uint32) (bodyTrainingPlan, uint32) {
 	c := fixture.BodyTraining
 	track, found := c.Track(id)
@@ -90,9 +91,15 @@ func buildBodyTrainingPlan(role domain.Role, fixture *devconfig.Fixture, id uint
 		return bodyTrainingPlan{}, p.CodeBodyTrainingInputs
 	}
 	step := c.Steps[before]
-	total := track.GoldBase * int64(step.CostMultiplier)
-	bound := min(max(role.Wallet.BoundGold, 0), total)
-	spend := domain.Wallet{Gold: total - bound, BoundGold: bound}
+	total := track.CostBase() * int64(step.CostMultiplier)
+	var spend domain.Wallet
+	if track.UsesYuanbao() {
+		spend.BoundYuanbao = min(max(role.Wallet.BoundYuanbao, 0), total)
+		spend.Yuanbao = total - spend.BoundYuanbao
+	} else {
+		spend.BoundGold = min(max(role.Wallet.BoundGold, 0), total)
+		spend.Gold = total - spend.BoundGold
+	}
 	if !vendorCanPay(role.Wallet, spend) {
 		return bodyTrainingPlan{}, p.CodeBodyTrainingInputs
 	}
@@ -127,7 +134,7 @@ func (s *Store) PreviewBodyTraining(ctx context.Context, auth Auth, request *pb.
 		}
 		plan, code := buildBodyTrainingPlan(role, fixture, request.Track)
 		if code != 0 {
-			return Fail(code, "炼体等级或金币不足")
+			return Fail(code, "炼体已达等级上限或相应币种余额不足")
 		}
 		quote.Binding.Revision, quote.Plan = role.Revision, plan
 		_, err = s.DB.Collection(bodyTrainingQuotes).ReplaceOne(tx, bson.M{"_id": role.ID}, quote, options.Replace().SetUpsert(true))
@@ -173,6 +180,8 @@ func (s *Store) commitBodyTraining(ctx context.Context, auth Auth, role domain.R
 	out := role
 	out.Wallet.BoundGold -= plan.Spend.BoundGold
 	out.Wallet.Gold -= plan.Spend.Gold
+	out.Wallet.BoundYuanbao -= plan.Spend.BoundYuanbao
+	out.Wallet.Yuanbao -= plan.Spend.Yuanbao
 	receipt := &BodyTrainingReceipt{QuoteID: b.ID, Rule: b.Rule, Config: b.Config, Plan: plan,
 		Roll: quote.Roll, Success: quote.Roll < plan.Chance, After: plan.Before}
 	if receipt.Success {

@@ -385,7 +385,7 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
     } else if (id === 40069) {
         const item = record(input.value, ['quoteId', 'uiSessionId', 'track', 'operation']);
         const track = uint32(item.track);
-        if (track < 1 || track > 4) return invalid('未知炼体系别');
+        if (track < 1 || track > 7) return invalid('未知炼体系别');
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored), track,
             operation: operation(item.operation, stored) };
     } else {

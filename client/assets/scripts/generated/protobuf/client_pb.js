@@ -1460,6 +1460,9 @@ $root.minimir = (function() {
              * @property {number|null} [mana_level] BodyTrainingState mana_level
              * @property {number|null} [damage_level] BodyTrainingState damage_level
              * @property {number|null} [absorption_level] BodyTrainingState absorption_level
+             * @property {number|null} [critical_level] BodyTrainingState critical_level
+             * @property {number|null} [speed_level] BodyTrainingState speed_level
+             * @property {number|null} [resistance_level] BodyTrainingState resistance_level
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1524,6 +1527,30 @@ $root.minimir = (function() {
             BodyTrainingState.prototype.absorption_level = 0;
 
             /**
+             * BodyTrainingState critical_level.
+             * @member {number} critical_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.critical_level = 0;
+
+            /**
+             * BodyTrainingState speed_level.
+             * @member {number} speed_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.speed_level = 0;
+
+            /**
+             * BodyTrainingState resistance_level.
+             * @member {number} resistance_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.resistance_level = 0;
+
+            /**
              * Creates a new BodyTrainingState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.BodyTrainingState
@@ -1563,6 +1590,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.damage_level);
                 if (message.absorption_level != null && $Object.hasOwnProperty.call(message, "absorption_level") && message.absorption_level !== 0)
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.absorption_level);
+                if (message.critical_level != null && $Object.hasOwnProperty.call(message, "critical_level") && message.critical_level !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.critical_level);
+                if (message.speed_level != null && $Object.hasOwnProperty.call(message, "speed_level") && message.speed_level !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.speed_level);
+                if (message.resistance_level != null && $Object.hasOwnProperty.call(message, "resistance_level") && message.resistance_level !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.resistance_level);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1656,6 +1689,33 @@ $root.minimir = (function() {
                                 delete message.absorption_level;
                             continue;
                         }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.critical_level = value;
+                            else
+                                delete message.critical_level;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.speed_level = value;
+                            else
+                                delete message.speed_level;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.resistance_level = value;
+                            else
+                                delete message.resistance_level;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1716,6 +1776,15 @@ $root.minimir = (function() {
                 if (message.absorption_level != null && $Object.hasOwnProperty.call(message, "absorption_level"))
                     if (!$util.isInteger(message.absorption_level))
                         return "absorption_level: integer expected";
+                if (message.critical_level != null && $Object.hasOwnProperty.call(message, "critical_level"))
+                    if (!$util.isInteger(message.critical_level))
+                        return "critical_level: integer expected";
+                if (message.speed_level != null && $Object.hasOwnProperty.call(message, "speed_level"))
+                    if (!$util.isInteger(message.speed_level))
+                        return "speed_level: integer expected";
+                if (message.resistance_level != null && $Object.hasOwnProperty.call(message, "resistance_level"))
+                    if (!$util.isInteger(message.resistance_level))
+                        return "resistance_level: integer expected";
                 return null;
             };
 
@@ -1749,6 +1818,8 @@ $root.minimir = (function() {
              * @property {Long|null} [bound_gold] BodyTrainingTerms bound_gold
              * @property {Long|null} [before_bonus] BodyTrainingTerms before_bonus
              * @property {Long|null} [target_bonus] BodyTrainingTerms target_bonus
+             * @property {Long|null} [yuanbao_units] BodyTrainingTerms yuanbao_units
+             * @property {Long|null} [bound_yuanbao_units] BodyTrainingTerms bound_yuanbao_units
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1845,6 +1916,22 @@ $root.minimir = (function() {
             BodyTrainingTerms.prototype.target_bonus = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
             /**
+             * BodyTrainingTerms yuanbao_units.
+             * @member {Long} yuanbao_units
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BodyTrainingTerms bound_yuanbao_units.
+             * @member {Long} bound_yuanbao_units
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new BodyTrainingTerms instance using the specified properties.
              * @function create
              * @memberof minimir.v1.BodyTrainingTerms
@@ -1892,6 +1979,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 7, wireType 0 =*/56).int64(message.before_bonus);
                 if (message.target_bonus != null && $Object.hasOwnProperty.call(message, "target_bonus") && (typeof message.target_bonus === "object" ? message.target_bonus.low || message.target_bonus.high : message.target_bonus !== 0))
                     writer.uint32(/* id 8, wireType 0 =*/64).int64(message.target_bonus);
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units") && (typeof message.yuanbao_units === "object" ? message.yuanbao_units.low || message.yuanbao_units.high : message.yuanbao_units !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.yuanbao_units);
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.bound_yuanbao_units);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -2021,6 +2112,24 @@ $root.minimir = (function() {
                                 delete message.target_bonus;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_units = value;
+                            else
+                                delete message.yuanbao_units;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_units = value;
+                            else
+                                delete message.bound_yuanbao_units;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -2093,6 +2202,12 @@ $root.minimir = (function() {
                 if (message.target_bonus != null && $Object.hasOwnProperty.call(message, "target_bonus"))
                     if (!$util.isInteger(message.target_bonus) && !(message.target_bonus && $util.isInteger(message.target_bonus.low) && $util.isInteger(message.target_bonus.high)))
                         return "target_bonus: integer|Long expected";
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units"))
+                    if (!$util.isInteger(message.yuanbao_units) && !(message.yuanbao_units && $util.isInteger(message.yuanbao_units.low) && $util.isInteger(message.yuanbao_units.high)))
+                        return "yuanbao_units: integer|Long expected";
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
+                        return "bound_yuanbao_units: integer|Long expected";
                 return null;
             };
 
@@ -23749,6 +23864,9 @@ $root.minimir = (function() {
              * @property {boolean|null} [luck_enabled] CombatAttributes luck_enabled
              * @property {number|null} [expanded_damage_bp] CombatAttributes expanded_damage_bp
              * @property {number|null} [expanded_absorption_bp] CombatAttributes expanded_absorption_bp
+             * @property {number|null} [critical_bp] CombatAttributes critical_bp
+             * @property {number|null} [attack_interval_reduction_bp] CombatAttributes attack_interval_reduction_bp
+             * @property {number|null} [all_resistance_bp] CombatAttributes all_resistance_bp
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -23925,6 +24043,30 @@ $root.minimir = (function() {
             CombatAttributes.prototype.expanded_absorption_bp = 0;
 
             /**
+             * CombatAttributes critical_bp.
+             * @member {number} critical_bp
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.critical_bp = 0;
+
+            /**
+             * CombatAttributes attack_interval_reduction_bp.
+             * @member {number} attack_interval_reduction_bp
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.attack_interval_reduction_bp = 0;
+
+            /**
+             * CombatAttributes all_resistance_bp.
+             * @member {number} all_resistance_bp
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.all_resistance_bp = 0;
+
+            /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CombatAttributes
@@ -23992,6 +24134,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 17, wireType 0 =*/136).uint32(message.expanded_damage_bp);
                 if (message.expanded_absorption_bp != null && $Object.hasOwnProperty.call(message, "expanded_absorption_bp") && message.expanded_absorption_bp !== 0)
                     writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.expanded_absorption_bp);
+                if (message.critical_bp != null && $Object.hasOwnProperty.call(message, "critical_bp") && message.critical_bp !== 0)
+                    writer.uint32(/* id 19, wireType 0 =*/152).uint32(message.critical_bp);
+                if (message.attack_interval_reduction_bp != null && $Object.hasOwnProperty.call(message, "attack_interval_reduction_bp") && message.attack_interval_reduction_bp !== 0)
+                    writer.uint32(/* id 20, wireType 0 =*/160).uint32(message.attack_interval_reduction_bp);
+                if (message.all_resistance_bp != null && $Object.hasOwnProperty.call(message, "all_resistance_bp") && message.all_resistance_bp !== 0)
+                    writer.uint32(/* id 21, wireType 0 =*/168).uint32(message.all_resistance_bp);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -24211,6 +24359,33 @@ $root.minimir = (function() {
                                 delete message.expanded_absorption_bp;
                             continue;
                         }
+                    case 19: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.critical_bp = value;
+                            else
+                                delete message.critical_bp;
+                            continue;
+                        }
+                    case 20: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_interval_reduction_bp = value;
+                            else
+                                delete message.attack_interval_reduction_bp;
+                            continue;
+                        }
+                    case 21: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.all_resistance_bp = value;
+                            else
+                                delete message.all_resistance_bp;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -24313,6 +24488,15 @@ $root.minimir = (function() {
                 if (message.expanded_absorption_bp != null && $Object.hasOwnProperty.call(message, "expanded_absorption_bp"))
                     if (!$util.isInteger(message.expanded_absorption_bp))
                         return "expanded_absorption_bp: integer expected";
+                if (message.critical_bp != null && $Object.hasOwnProperty.call(message, "critical_bp"))
+                    if (!$util.isInteger(message.critical_bp))
+                        return "critical_bp: integer expected";
+                if (message.attack_interval_reduction_bp != null && $Object.hasOwnProperty.call(message, "attack_interval_reduction_bp"))
+                    if (!$util.isInteger(message.attack_interval_reduction_bp))
+                        return "attack_interval_reduction_bp: integer expected";
+                if (message.all_resistance_bp != null && $Object.hasOwnProperty.call(message, "all_resistance_bp"))
+                    if (!$util.isInteger(message.all_resistance_bp))
+                        return "all_resistance_bp: integer expected";
                 return null;
             };
 
@@ -28085,6 +28269,7 @@ $root.minimir = (function() {
              * @property {boolean|null} [healing] CombatImpact healing
              * @property {Long|null} [cast_id] CombatImpact cast_id
              * @property {number|null} [attack_sequence] CombatImpact attack_sequence
+             * @property {boolean|null} [critical] CombatImpact critical
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -28213,6 +28398,14 @@ $root.minimir = (function() {
             CombatImpact.prototype.attack_sequence = 0;
 
             /**
+             * CombatImpact critical.
+             * @member {boolean} critical
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.critical = false;
+
+            /**
              * Creates a new CombatImpact instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CombatImpact
@@ -28268,6 +28461,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.cast_id);
                 if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence") && message.attack_sequence !== 0)
                     writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.attack_sequence);
+                if (message.critical != null && $Object.hasOwnProperty.call(message, "critical") && message.critical !== false)
+                    writer.uint32(/* id 13, wireType 0 =*/104).bool(message.critical);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -28430,6 +28625,15 @@ $root.minimir = (function() {
                                 delete message.attack_sequence;
                             continue;
                         }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.critical = value;
+                            else
+                                delete message.critical;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -28516,6 +28720,9 @@ $root.minimir = (function() {
                 if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence"))
                     if (!$util.isInteger(message.attack_sequence))
                         return "attack_sequence: integer expected";
+                if (message.critical != null && $Object.hasOwnProperty.call(message, "critical"))
+                    if (typeof message.critical !== "boolean")
+                        return "critical: boolean expected";
                 return null;
             };
 

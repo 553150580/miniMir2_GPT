@@ -371,5 +371,7 @@ func (w *worker) combatAttributesPB(r *room, e *entity) *pb.CombatAttributes {
 	}
 	bonuses := w.e.Store.Cfg.Fixture.ExpandedHitBudget.Combine(a.HitBonuses)
 	result.ExpandedDamageBp, result.ExpandedAbsorptionBp = bonuses.DamageBP, bonuses.AbsorptionBP
+	mastery := w.e.Store.Cfg.Fixture.MasteryCombat.Combine(a.MasteryBonuses)
+	result.CriticalBp, result.AttackIntervalReductionBp, result.AllResistanceBp = mastery.CriticalBP, mastery.AttackSpeedBP, mastery.ResistanceBP
 	return result
 }

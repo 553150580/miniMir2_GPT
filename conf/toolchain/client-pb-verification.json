@@ -222,8 +222,8 @@
     "BodyTrainingQuote",
     "BodyTrainingCommitRequest"
   ],
-  "int64_field_count": 479,
-  "int64_boundary_cases": 1640,
+  "int64_field_count": 481,
+  "int64_boundary_cases": 1648,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -318,6 +318,18 @@
     {
       "message": "BodyTrainingTerms",
       "field": "target_bonus",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BodyTrainingTerms",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "BodyTrainingTerms",
+      "field": "bound_yuanbao_units",
       "type": "int64",
       "cases": 4
     },
@@ -3778,7 +3790,7 @@
     },
     {
       "path": "shared/proto/common.proto",
-      "sha256": "32bb10bc14b388b71b741d0591235cfea10ea85cbfea27b0162baf9039a42048"
+      "sha256": "98dc61c0a2c5370bdabf42d59971a747e621a566ff640769bef2224cb7fc747f"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3786,7 +3798,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "585c901d3ce20e934ac6719697d15268d8a27d30587cca013e96dd4b3581fa06"
+      "sha256": "adc27940c74abde2dc6af617be0d5434cb843a9ae63b7f262a5e5706a285a07b"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -3864,13 +3876,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "f1ef7b0672e8ed5ff594c6e479bf57bf4ef5fc1ad3b88ee46a36a690269c058d",
-      "bytes": 3788116
+      "sha256": "7e1cad68a908d1d327f659f1ab98c90988bf88de629621075b89afcf04fbde7a",
+      "bytes": 3805179
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "26bb3ef19c64316967239d623c792c52c65ddaf13d45be634edda14314bcdc15",
-      "bytes": 1191401
+      "sha256": "c3aca4729777eedea8606ae0c780a288eca23caf9d4088a833625d71b5b5cb81",
+      "bytes": 1194002
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

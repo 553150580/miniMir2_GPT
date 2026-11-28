@@ -572,6 +572,15 @@ export namespace minimir {
             /** BodyTrainingState absorption_level. */
             absorption_level: number;
 
+            /** BodyTrainingState critical_level. */
+            critical_level: number;
+
+            /** BodyTrainingState speed_level. */
+            speed_level: number;
+
+            /** BodyTrainingState resistance_level. */
+            resistance_level: number;
+
             /**
              * Creates a new BodyTrainingState instance using the specified properties.
              * @param [properties] Properties to set
@@ -647,6 +656,15 @@ export namespace minimir {
                 /** BodyTrainingState absorption_level */
                 absorption_level?: (number|null);
 
+                /** BodyTrainingState critical_level */
+                critical_level?: (number|null);
+
+                /** BodyTrainingState speed_level */
+                speed_level?: (number|null);
+
+                /** BodyTrainingState resistance_level */
+                resistance_level?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -697,6 +715,12 @@ export namespace minimir {
 
             /** BodyTrainingTerms target_bonus. */
             target_bonus: Long;
+
+            /** BodyTrainingTerms yuanbao_units. */
+            yuanbao_units: Long;
+
+            /** BodyTrainingTerms bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
 
             /**
              * Creates a new BodyTrainingTerms instance using the specified properties.
@@ -784,6 +808,12 @@ export namespace minimir {
 
                 /** BodyTrainingTerms target_bonus */
                 target_bonus?: (Long|null);
+
+                /** BodyTrainingTerms yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** BodyTrainingTerms bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -9176,6 +9206,15 @@ export namespace minimir {
             /** CombatAttributes expanded_absorption_bp. */
             expanded_absorption_bp: number;
 
+            /** CombatAttributes critical_bp. */
+            critical_bp: number;
+
+            /** CombatAttributes attack_interval_reduction_bp. */
+            attack_interval_reduction_bp: number;
+
+            /** CombatAttributes all_resistance_bp. */
+            all_resistance_bp: number;
+
             /**
              * Creates a new CombatAttributes instance using the specified properties.
              * @param [properties] Properties to set
@@ -9292,6 +9331,15 @@ export namespace minimir {
 
                 /** CombatAttributes expanded_absorption_bp */
                 expanded_absorption_bp?: (number|null);
+
+                /** CombatAttributes critical_bp */
+                critical_bp?: (number|null);
+
+                /** CombatAttributes attack_interval_reduction_bp */
+                attack_interval_reduction_bp?: (number|null);
+
+                /** CombatAttributes all_resistance_bp */
+                all_resistance_bp?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -10724,6 +10772,9 @@ export namespace minimir {
             /** CombatImpact attack_sequence. */
             attack_sequence: number;
 
+            /** CombatImpact critical. */
+            critical: boolean;
+
             /**
              * Creates a new CombatImpact instance using the specified properties.
              * @param [properties] Properties to set
@@ -10822,6 +10873,9 @@ export namespace minimir {
 
                 /** CombatImpact attack_sequence */
                 attack_sequence?: (number|null);
+
+                /** CombatImpact critical */
+                critical?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

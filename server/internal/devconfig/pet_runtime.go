@@ -189,7 +189,8 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			if name == "" {
 				name = field.Name
 			}
-			if kind == reflect.TypeOf(Fighter{}) && (field.Name == "LuckAttackPPM" || field.Name == "LuckResistancePPM" || field.Name == "HitBonuses") {
+			if kind == reflect.TypeOf(Fighter{}) && (field.Name == "LuckAttackPPM" || field.Name == "LuckResistancePPM" ||
+				field.Name == "HitBonuses" || field.Name == "MasteryBonuses") {
 				continue // 运行态属性投影不属于宠物基础模板。
 			}
 			known[name] = true

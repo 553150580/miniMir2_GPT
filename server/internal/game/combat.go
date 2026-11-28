@@ -259,10 +259,18 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		}
 		a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 	}
+	if f.MasteryCombat != nil {
+		a.MasteryBonuses = w.bodyMasteryBonuses(r)
+		if a.AttackSpeedBP != 0 {
+			// 保留原动作和最快攻击门禁；只缩短能由普攻间隔节省的时间。
+			floor := min(a.AttackMS, max(f.CombatTiming.PlayerAttackMinMS, f.CombatTiming.PlayerAttackActionMS))
+			a.AttackMS = max(floor, devconfig.ReduceByBP(a.AttackMS, a.AttackSpeedBP))
+		}
+	}
 	if rules := f.CombatLuck; rules != nil {
 		// 在线角色和挑战快照共同读取已经确认的装备及唯一翅膀的原幸运。
 		a.LuckAttackPPM = equipmentLuck(r, f, roleWingLuck(r.Role, f))
-		a.LuckResistancePPM = rules.RoleResistancePPM[r.Role.Job]
+		a.LuckResistancePPM = min(luckMillion, rules.RoleResistancePPM[r.Role.Job]+a.ResistanceBP*100)
 	}
 	return a
 }
@@ -341,6 +349,9 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 	// targetLife 固定目标受击前的出生代次，hitPoint 是受击格，before 是扣血前生命值。
 	targetLife, hitPoint, before := target.Life, target.Pos, target.HP
 	w.applyDamageInWorld(r, world, from, target, damage, now)
+	if target.HP < before {
+		w.applyMonsterControl(r, world, from, target, now)
+	}
 	// actual 是目标实际减少的生命值，用于命中表现。
 	if actual := before - target.HP; actual > 0 && w.e.Store.Cfg.Fixture.RuleVersion >= 24 && (from.Kind == 2 || from.Kind == 3) {
 		// 宠物和怪物仍在本帧结算；致死时即使原实体已归档，事件仍引用受击生命和落点。
@@ -359,29 +370,29 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，from 记录来源，使用实体表示。
 // target 记录目标，使用实体表示，damage 记录伤害，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 // context 记录上下文，使用可变数量的命中上下文表示。
-func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
-	damage = w.expandedHitDamage(r, from, target, damage, context)
+func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) bool {
+	damage, critical := w.expandedHitDamage(r, from, target, damage, context)
 	if world != nil && world.mirrorCombat != nil {
 		w.applyMirrorDamage(r, world, from, target, damage, now, context)
-		return
+		return critical
 	}
 	if r.dungeonCombat != nil {
 		if damage > 0 && target.HP > 0 && world == r.currentWorld() {
 			w.applyDungeonDamage(r, from, target, damage, now, context)
 		}
-		return
+		return critical
 	}
 	if from != nil && len(from.Statuses) != 0 && target.HP > 0 && world == r.currentWorld() {
 		exposeHiddenAttacker(world, from, target)
 	}
 	if damage <= 0 || target.HP <= 0 {
-		return
+		return false
 	}
 	if r.bossBattle != nil {
 		if world == r.currentWorld() {
 			w.applyPersonalBossDamage(r, from, target, damage, now, context)
 		}
-		return
+		return critical
 	}
 	if from != nil && (len(context) == 0 || !context[0].PeriodicPoison) {
 		world.clearTrapHexagon(target)
@@ -451,6 +462,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 			w.snapshot(r)
 		}
 	}
+	return critical
 }
 
 // clearFinishedAction 清除活体已过期的动作表现，不改变攻击或移动门禁。

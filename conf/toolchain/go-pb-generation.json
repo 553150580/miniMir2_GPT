@@ -5,7 +5,7 @@
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
     "assets.proto": "8381c7dee35e489c2681b710800088e7d2e8fa8f6e800e97233389994d433d3a",
     "body_training.proto": "428ee87d4a7fc59d821950a7d789e1dc94f99b46fbdd746616d0c9049734c47c",
-    "common.proto": "32bb10bc14b388b71b741d0591235cfea10ea85cbfea27b0162baf9039a42048",
+    "common.proto": "98dc61c0a2c5370bdabf42d59971a747e621a566ff640769bef2224cb7fc747f",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
     "equipment_enhancement.proto": "c3c618d899bf5d563ed542462c6e64054a90390743b80931b1de840df2e8601b",
     "equipment_refine.proto": "afc0d2350d947a01f381b4a0f72b246bbe7e21c842abb1c7c1ede96432cc4a7e",
@@ -22,14 +22,14 @@
     "tasks_codex.proto": "2d72442ba3da69dcc5ff44813f7cecdf6a6089895d1cde50a53eb153f1728b4e",
     "weapon_oil.proto": "be7f6a1fffdbcb2440c508ea4b46b7173b22713d7656b599794cb9beb511f7da",
     "wings.proto": "18f6b18d7aa929011e661387cc5030bf934fdfe4c8983c56f756cc3cb608a3ae",
-    "world.proto": "585c901d3ce20e934ac6719697d15268d8a27d30587cca013e96dd4b3581fa06",
+    "world.proto": "adc27940c74abde2dc6af617be0d5434cb843a9ae63b7f262a5e5706a285a07b",
     "world_boss.proto": "4780f801334ee49b2e7c0b627ff58d8b78d69525acc5b4311ea12e8463ba9cdd"
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
     "server/api/generated/minimirv1/assets.pb.go": "06f1bbf78ab0336e3c0306fd5296cc3f4427258c4b642fff5fbe8c3caa91e919",
     "server/api/generated/minimirv1/body_training.pb.go": "e92aa3d8df041d569b8d292aec9e2a1bf3d0ad3481dd605ac56a8ef143a4b65f",
-    "server/api/generated/minimirv1/common.pb.go": "da3eda711e4ba07fd850849189893da2273d28e98dab0877f9b8cf839e38cab1",
+    "server/api/generated/minimirv1/common.pb.go": "ed59765a5ce00c0aa207b6aef6a93b5d81ebf095dc37087a151d9aba97853c85",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
     "server/api/generated/minimirv1/equipment_enhancement.pb.go": "339f4c909fddd5f4108677fe9a79a410358ca4956e2d0e2fd16820fb3b7d68a9",
     "server/api/generated/minimirv1/equipment_refine.pb.go": "ff58d91c277c855904fed6b88de13a998abb5159c5053c1507b736cb32a59e10",
@@ -46,7 +46,7 @@
     "server/api/generated/minimirv1/tasks_codex.pb.go": "c39b7d50ac84fa06d49967d45a0c895806ff3741d17998ff4851a1f7d2e8e5a2",
     "server/api/generated/minimirv1/weapon_oil.pb.go": "710a8e91c9fb1e798ea0a158a93fc538e9b84f2f4b7f5fd2b5d354524e2dd0f9",
     "server/api/generated/minimirv1/wings.pb.go": "c30d683f112a6cf9ba8fa79580b96d553c153764f57c275fa4c98591a026d116",
-    "server/api/generated/minimirv1/world.pb.go": "e6d7bdf39ec3a6ac4ea825cf606f22255eb1861d8ec7eb618d992f95b573ab34",
+    "server/api/generated/minimirv1/world.pb.go": "a04b8168c190630dd9139290fca74c5a9b0eec5aaf21f189e796d54b70ecc474",
     "server/api/generated/minimirv1/world_boss.pb.go": "d9482bafd6186c6f63e34a47c5e896af48a2b8c4bbb1409d950c892c64e6940e"
   },
   "business_implemented": false

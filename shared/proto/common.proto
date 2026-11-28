@@ -43,6 +43,9 @@ message BodyTrainingState {
   uint32 mana_level = 2;
   uint32 damage_level = 3;
   uint32 absorption_level = 4;
+  uint32 critical_level = 5;
+  uint32 speed_level = 6;
+  uint32 resistance_level = 7;
 }
 
 // 本次原费用、成功率和额度。实际战斗加成仍受统一属性预算。
@@ -55,6 +58,9 @@ message BodyTrainingTerms {
   int64 bound_gold = 6;
   int64 before_bonus = 7;
   int64 target_bonus = 8;
+  // 元宝用十分之一元宝的整数单位下发。原四个金币系仍使用字段 5、6。
+  int64 yuanbao_units = 9;
+  int64 bound_yuanbao_units = 10;
 }
 
 // 成功与概率失败都记录原费用和确定的后级，供重连恢复。

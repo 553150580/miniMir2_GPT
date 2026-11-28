@@ -1,4 +1,4 @@
-import { instantiate, isValid, Label, Node, Prefab, UIOpacity, UITransform, Vec3 } from 'cc';
+import { Color, instantiate, isValid, Label, Node, Prefab, UIOpacity, UITransform, Vec3 } from 'cc';
 import type { ImpactEvent } from './CastPlayback';
 import { travelInteger } from './MapTravelModel';
 
@@ -6,8 +6,9 @@ const capacity = 10;
 const lifetimeMs = 720;
 const risePixels = 42;
 const offsets = [0, -32, 32, -60, 60];
+const criticalColor = new Color(255, 230, 140); // 暴击沿用数字字形，以金色区分。
 
-interface NumberNode { node: Node; label: Label; opacity: UIOpacity; }
+interface NumberNode { node: Node; label: Label; opacity: UIOpacity; normalColor: Color; }
 interface ActiveNumber extends NumberNode {
     eventId: string;
     targetHandle: number;
@@ -65,6 +66,7 @@ export class DamageNumbers {
         const origin = new Vec3(position.x + offsets[lane], position.y + 29, position.z);
         const entry = this.spare.pop() ?? this.create();
         entry.label.string = amount;
+        entry.label.color = event.critical === true ? criticalColor : entry.normalColor;
         entry.opacity.opacity = 255;
         entry.node.setPosition(origin);
         entry.node.parent = this.parent;
@@ -101,14 +103,14 @@ export class DamageNumbers {
             node.destroy();
             throw new Error('伤害数字预制体根缺少标签、透明度或位置组件');
         }
-        return { node, label, opacity };
+        return { node, label, opacity, normalColor: label.color.clone() };
     }
 
     private recycle(index: number): void {
-        const [{ node, label, opacity }] = this.active.splice(index, 1);
+        const [{ node, label, opacity, normalColor }] = this.active.splice(index, 1);
         node.active = false;
         node.parent = null;
         label.string = '';
-        this.spare.push({ node, label, opacity });
+        this.spare.push({ node, label, opacity, normalColor });
     }
 }

@@ -13,16 +13,19 @@ func TestExpandedHitBudget(t *testing.T) {
 		t.Fatal("同类加算及两组独立封顶错误", total)
 	}
 	rounding := budget.Combine(HitBonuses{DamageBP: 375}, HitBonuses{DamageBP: 375}, HitBonuses{DamageBP: 375})
-	if got := budget.Apply(23, rounding.DamageBP, 0); got != 25 {
+	if got := budget.Apply(23, rounding.DamageBP, 0, 0); got != 25 {
 		t.Fatal("取整应发生在同类来源合并之后", got)
 	}
-	if got := budget.Apply(127, total.DamageBP, total.AbsorptionBP); got != 134 {
+	if got := budget.Apply(127, total.DamageBP, total.AbsorptionBP, 0); got != 134 {
 		t.Fatal("增伤和吸收的前后顺序或取整错误", got)
 	}
-	if got := budget.Apply(math.MaxInt64, 2000, 2000); got != 8_854_437_155_380_584_775 {
+	if got := budget.Apply(100, 1000, 1200, 2500); got != 119 {
+		t.Fatal("增伤和暴击应共用原净伤基数，最后统一计算吸收", got)
+	}
+	if got := budget.Apply(math.MaxInt64, 2000, 2000, 0); got != 8_854_437_155_380_584_775 {
 		t.Fatal("大伤害在增伤后、吸收前被过早截断", got)
 	}
-	if budget.Apply(math.MaxInt64, 2000, 0) != math.MaxInt64 || budget.Apply(0, 2000, 1200) != 0 {
+	if budget.Apply(math.MaxInt64, 2000, 0, 0) != math.MaxInt64 || budget.Apply(0, 2000, 1200, 0) != 0 {
 		t.Fatal("伤害边界、未命中保留错误")
 	}
 }

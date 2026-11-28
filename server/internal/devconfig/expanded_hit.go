@@ -52,13 +52,14 @@ func (b *ExpandedHitBudget) Combine(sources ...HitBonuses) HitBonuses {
 	return total
 }
 
-// Apply 保留原判定的未命中。对净伤害先取整增加攻击方贡献，再取整扣除目标方吸收。
-func (b *ExpandedHitBudget) Apply(net int64, damageBP, absorptionBP uint32) int64 {
+// Apply 保留未命中。增伤组和本次暴击各按同一净伤基数求增量，然后计算吸收。
+func (b *ExpandedHitBudget) Apply(net int64, damageBP, absorptionBP, criticalExtraBP uint32) int64 {
 	if b == nil || net <= 0 {
 		return net
 	}
-	amount := uint64(net)
-	amount += hitPortion(amount, min(damageBP, b.DamageCapBP))
+	base := uint64(net)
+	amount := base + hitPortion(base, min(damageBP, b.DamageCapBP)) +
+		hitPortion(base, min(criticalExtraBP, maxMasteryExtraBP))
 	amount -= hitPortion(amount, min(absorptionBP, b.AbsorptionCapBP))
 	return int64(min(amount, math.MaxInt64))
 }
@@ -76,18 +77,18 @@ func (f *Fixture) validateExpandedHit() error {
 		return errors.New("扩展增伤和吸收的战斗属性组上限无效")
 	}
 	for _, fighter := range f.Players {
-		if fighter.HitBonuses != (HitBonuses{}) {
+		if fighter.HitBonuses != (HitBonuses{}) || fighter.MasteryBonuses != (MasteryBonuses{}) {
 			return errors.New("角色基础模板不能直接配置扩展命中属性")
 		}
 	}
 	for _, roster := range [][]Monster{f.Monsters, f.ChallengeMonsters} {
 		for _, monster := range roster {
-			if monster.HitBonuses != (HitBonuses{}) {
+			if monster.HitBonuses != (HitBonuses{}) || monster.MasteryBonuses != (MasteryBonuses{}) {
 				return errors.New("怪物基础模板不能直接配置扩展命中属性")
 			}
 		}
 	}
-	if f.Pet.HitBonuses != (HitBonuses{}) {
+	if f.Pet.HitBonuses != (HitBonuses{}) || f.Pet.MasteryBonuses != (MasteryBonuses{}) {
 		return errors.New("宠物基础模板不能直接配置扩展命中属性")
 	}
 	return nil

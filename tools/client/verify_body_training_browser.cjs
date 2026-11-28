@@ -33,7 +33,8 @@ function observe(page, report) {
             if (!receipt) return;
             report.receipts.push({ operation: toHex(result.op_id), quote: toHex(receipt.quote_id), error: result.error_code,
                 pending: result.pending, track: receipt.terms.track, after: receipt.after_level, success: receipt.success,
-                gold: receipt.terms.gold.toString(), boundGold: receipt.terms.bound_gold.toString() });
+                gold: receipt.terms.gold.toString(), boundGold: receipt.terms.bound_gold.toString(),
+                yuanbao: receipt.terms.yuanbao_units.toString(), boundYuanbao: receipt.terms.bound_yuanbao_units.toString() });
         });
     });
 }
@@ -69,28 +70,87 @@ async function action(page, index, text) {
     await touch(page, panel + '/Action' + index);
 }
 
-async function firstRank(page, index, name, bound, gold, hits = false) {
-    if (hits) {
+// 在手机列表选择系别，通过原报价和确认按钮提交。
+async function firstRank(page, index, name, bound, ordinary, options = {}) {
+    if (options.select) {
         const row = name + ' 0 /';
         await touch(page, panel + '/List/View/Content', row);
         await wait(page, ({ panel, row }) => cc.find(panel + '/List').getComponent('List').items
             .some(item => item.label?.includes('✓ ' + row)), { panel, row });
     }
-    await action(page, index, hits ? '查看报价' : name + '炼体');
+    await action(page, index, options.select ? '查看报价' : name + '炼体');
     await label(page, panel + '/Title', '炼体报价');
     const lines = await page.evaluate(base => cc.find(base + '/List').getComponent('List').items, panel);
     const display = lines.join(' ');
-    for (const line of [name + ' 0 → 1级', '成功率 100%', '绑定金币 ' + bound, '普通金币 ' + gold]) {
+    const currency = options.yuanbao ? '元宝' : '金币';
+    for (const line of [name + ' 0 → 1级', '成功率 100%', '绑定' + currency + ' ' + bound, '普通' + currency + ' ' + ordinary]) {
         assert(display.includes(line), display);
     }
-    if (hits) assert(display.includes('属性额度 0% → 1%'), display);
+    if (options.bonus) assert(display.includes('属性额度 0% → ' + options.bonus), display);
     await screenshot(page, 'quote-' + name);
     await action(page, 1, '确认炼体');
     await label(page, panel + '/Title', '炼体成功');
 }
 
+async function observeMastery(page, session, expectedLevels) {
+    return wait(page, ({ session, expectedLevels }) => {
+        const inventory = session.inventory, wallet = session.wallet;
+        const player = session.baseline?.entities.find(row => row.entityHandle === session.entry?.playerHandle);
+        const levels = inventory?.bodyTraining, stats = player?.combatAttributes;
+        if (!levels || !stats || !wallet || wallet.revision.lessThan(inventory.revision) ||
+            [levels.criticalLevel, levels.speedLevel, levels.resistanceLevel].some((value, i) => value !== expectedLevels[i]) ||
+            [levels.healthLevel, levels.manaLevel, levels.damageLevel, levels.absorptionLevel].some(value => value !== 0) ||
+            [stats.criticalBp, stats.attackIntervalReductionBp, stats.allResistanceBp].some((value, i) => value !== expectedLevels[i] * [100, 50, 50][i])) return null;
+        return { gold: wallet.gold.toString(), boundGold: wallet.boundGold.toString(),
+            yuanbao: wallet.yuanbaoUnits.toString(), boundYuanbao: wallet.boundYuanbaoUnits.toString(), interval: player.attackIntervalMs };
+    }, { session, expectedLevels });
+}
+
+// 从实际打开的战斗详情列表核对显示数值。
+async function combatDetails(page, cases) {
+    await page.touchscreen.tap(10, 130);
+    await wait(page, node => !cc.find(node)?.activeInHierarchy, panel);
+    await touch(page, role + '/Recycle');
+    await label(page, attributes + '/Title', '战斗属性');
+    return wait(page, ({ node, expected }) => {
+        const rows = cc.find(node + '/List')?.getComponent('List').items;
+        return rows && expected.every(text => rows.includes(text)) ? expected : null;
+    }, { node: attributes, expected: cases });
+}
+
+// 用实包观察层回放两条数值事件，确认节点复用时恢复预制体原色。
+async function damageStyleSample(page, session) {
+    const style = await wait(page, model => {
+        const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
+        const numbers = app?.world?.damageNumbers;
+        const character = model.baseline?.entities.find(row => row.entityHandle === model.entry?.playerHandle);
+        if (!numbers || !character || !numbers.head(character.entityHandle)) return null;
+        const at = cc.game.totalTime;
+        const rgb = color => [color.r, color.g, color.b];
+        const emit = critical => {
+            const eventId = (numbers.lastEventId + 1n).toString();
+            numbers.accept({ eventId, sceneEpoch: model.entry.sceneEpoch, targetHandle: character.entityHandle,
+                targetLife: character.life, amount: critical ? '125' : '100', outcome: 1, healing: false, critical }, at);
+            return numbers.active.find(row => row.eventId === eventId);
+        };
+        const critical = emit(true);
+        if (!critical) throw new Error('暴击飘字实包样本未进入节点');
+        const marked = rgb(critical.label.color);
+        const original = rgb(critical.normalColor);
+        numbers.recycle(numbers.active.indexOf(critical));
+        const normal = emit(false);
+        if (!normal) throw new Error('普通飘字实包样本未进入节点');
+        return { marked, original, afterReuse: rgb(normal.label.color), reused: normal.node === critical.node };
+    }, session);
+    assert.deepEqual(style.marked, [255, 230, 140]);
+    assert.notDeepEqual(style.marked, style.original);
+    assert(style.reused);
+    assert.deepEqual(style.afterReuse, style.original);
+    return style;
+}
+
 async function main() {
-    const report = { passed: false, enabled: expected.enabled, hits: expected.hits ?? false, bundleSha256: expected.bundleSha256,
+    const report = { passed: false, enabled: expected.enabled, hits: expected.hits ?? false, mastery: expected.mastery ?? false, bundleSha256: expected.bundleSha256,
         fixtureSha256: expected.fixtureSha256, sockets: 0, errors: [], requests: [], receipts: [] };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
@@ -113,13 +173,33 @@ async function main() {
         }
         await touch(page, safe + 'BottomHUD/QuickNav/Role');
         await touch(page, role + '/Message');
-        if (expected.hits) {
+        if (expected.mastery) {
+            await label(page, panel + '/Title', '炼体');
+            report.before = await observeMastery(page, session, [0, 0, 0]);
+            const trials = [['暴击', '15.0', '5.0', '1%'], ['攻速', '0.0', '20.0', '0.5%'], ['全抗', '0.0', '20.0', '0.5%']];
+            for (const [name, bound, ordinary, bonus] of trials) {
+                await firstRank(page, 1, name, bound, ordinary, { select: true, yuanbao: true, bonus });
+                await action(page, 1, '返回炼体');
+            }
+            report.after = await observeMastery(page, session, [1, 1, 1]);
+            assert.deepEqual([report.after.gold, report.after.boundGold, report.after.yuanbao, report.after.boundYuanbao],
+                ['5000', '1000', '550', '0']);
+            assert.equal(report.after.interval, report.before.interval - Math.floor(report.before.interval / 200));
+            assert.deepEqual(report.requests, [40067, 40069, 40067, 40069, 40067, 40069]);
+            assert.deepEqual(report.receipts.map(r => [r.track, r.success, r.after, r.gold, r.boundGold, r.yuanbao, r.boundYuanbao, r.error, r.pending]),
+                [[5, true, 1, '0', '0', '50', '150', 0, false], [6, true, 1, '0', '0', '200', '0', 0, false],
+                    [7, true, 1, '0', '0', '200', '0', 0, false]]);
+            await screenshot(page, 'trained-mastery');
+            report.attributes = await combatDetails(page, ['暴击率 1%', '普攻间隔缩减 0.5%', '全抗 0.5%', '幸运抵抗 0.5%']);
+            await screenshot(page, 'combat-mastery');
+            report.damageStyleSample = await damageStyleSample(page, session);
+        } else if (expected.hits) {
             await label(page, panel + '/Title', '炼体');
             report.before = await observeHits(page, session, 0, 0);
-            await firstRank(page, 1, '伤害吸收', '1000', '500', true);
+            await firstRank(page, 1, '伤害吸收', '1000', '500', { select: true, bonus: '1%' });
             report.absorption = await observeHits(page, session, 0, 1);
             await action(page, 1, '返回炼体');
-            await firstRank(page, 1, '伤害', '0', '3000', true);
+            await firstRank(page, 1, '伤害', '0', '3000', { select: true, bonus: '1%' });
             report.after = await observeHits(page, session, 1, 1);
             assert.deepEqual([report.after.gold, report.after.boundGold, report.after.hp, report.after.mp],
                 ['2500', '0', report.before.hp, report.before.mp]);
@@ -129,15 +209,7 @@ async function main() {
             await screenshot(page, 'trained-hits');
             await action(page, 2, '查看转生');
             await label(page, panel + '/Title', '角色成长');
-            await page.touchscreen.tap(10, 130);
-            await wait(page, node => !cc.find(node)?.activeInHierarchy, panel);
-            await touch(page, role + '/Recycle');
-            await label(page, attributes + '/Title', '战斗属性');
-            report.attributes = await wait(page, node => {
-                const rows = cc.find(node + '/List')?.getComponent('List').items;
-                const expected = ['伤害加成 1%', '伤害吸收 1%'];
-                return rows && expected.every(text => rows.includes(text)) ? expected : null;
-            }, attributes);
+            report.attributes = await combatDetails(page, ['伤害加成 1%', '伤害吸收 1%']);
             await screenshot(page, 'combat-hits');
         } else if (expected.enabled) {
             await label(page, panel + '/Title', '炼体');

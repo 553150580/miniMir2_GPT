@@ -72,6 +72,7 @@ func (w *worker) sourceTimeline() bool {
 type hitContext struct {
 	PeriodicPoison    bool      // 毒的旧效果按自身节拍扣血，不算一次解除围困的直接攻击。
 	InstantKill       bool      // 圣言术成功时清空原生命，跳过扩展命中倍率。
+	DirectCritical    bool      // 这次直接伤害在有效命中时可独立判定暴击。
 	At                time.Time // 本次命中正式发生的时刻。
 	HostSession       string    // 该事件所在离线托管区段的会话编号。
 	PrivilegeUntil    time.Time // 用于判断 Bind 属性的归属区段特权截止时刻。
@@ -372,8 +373,10 @@ func (w *worker) nextEvent(r *room) uint64 {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，skill 记录技能，使用数值表示，caster 记录施法者，使用数值表示，target 记录目标，使用数值表示。
 // life 记录生命代次，使用数值表示，grid 记录网格，使用点位表示，amount 记录数量，使用数值表示，outcome 记录“outcome”，使用数值表示。
 // healing 标记是否处于治疗状态，cast 记录施法，使用数值表示，attack 记录攻击，使用数值表示。
-func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32) {
-	w.sendCombatObservation(r, p.MsgS2CCombatImpact, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster, TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing, CastId: cast, AttackSequence: attack})
+func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32, critical ...bool) {
+	w.sendCombatObservation(r, p.MsgS2CCombatImpact, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster,
+		TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing,
+		CastId: cast, AttackSequence: attack, Critical: amount > 0 && len(critical) != 0 && critical[0]})
 }
 
 // impactInWorld 只向当前可观察原世界的连接发送命中表现。
@@ -381,9 +384,9 @@ func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid
 // skill 记录技能，使用数值表示，caster 记录施法者，使用数值表示，target 记录目标，使用数值表示，life 记录生命代次，使用数值表示，grid 记录网格，使用点位表示。
 // amount 记录数量，使用数值表示，outcome 记录“outcome”，使用数值表示，healing 标记是否处于治疗状态，cast 记录施法，使用数值表示。
 // attack 记录攻击，使用数值表示。
-func (w *worker) impactInWorld(r *room, world *worldState, scene uint64, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32) {
+func (w *worker) impactInWorld(r *room, world *worldState, scene uint64, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32, critical ...bool) {
 	if r.observesWorld(world, scene) {
-		w.impact(r, skill, caster, target, life, grid, amount, outcome, healing, cast, attack)
+		w.impact(r, skill, caster, target, life, grid, amount, outcome, healing, cast, attack, critical...)
 	}
 }
 
@@ -434,7 +437,9 @@ func (w *worker) resolveAttackInWorld(r *room, world *worldState, a pendingAttac
 	}
 	// before 保存生命值，用于当前步骤中的操作前的状态。
 	before := target.HP
-	w.applyDamageInWorld(r, world, caster, target, damage, now, hitContext{At: a.Due, HostSession: a.HostSession, PrivilegeUntil: a.PrivilegeUntil, PrivilegeCaptured: a.PrivilegeCaptured})
+	critical := w.applyDamageInWorld(r, world, caster, target, damage, now, hitContext{
+		At: a.Due, HostSession: a.HostSession, PrivilegeUntil: a.PrivilegeUntil, PrivilegeCaptured: a.PrivilegeCaptured, DirectCritical: true,
+	})
 	// actual 是扣血前后生命差，伤害表现使用这个实际值。
 	actual := before - target.HP
 	// outcome 是命中表现的协议结果，区分实际掉血和未命中。
@@ -442,7 +447,7 @@ func (w *worker) resolveAttackInWorld(r *room, world *worldState, a pendingAttac
 	if actual == 0 {
 		outcome = 2
 	}
-	w.impactInWorld(r, world, a.Scene, a.SkillID, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence)
+	w.impactInWorld(r, world, a.Scene, a.SkillID, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence, critical)
 }
 
 // kill 标记怪物死亡及复活期限，并在原世界建立来源收益事实。

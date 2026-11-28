@@ -289,7 +289,8 @@ func (w *worker) attackWithSkill(r *room, direction, input uint32, now time.Time
 	}
 	from := &r.Player
 	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
-	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
+	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) ||
+		masteryControlHeld(from, now) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
 	// front 保存由敌人发生时间取得的前端。

@@ -1,0 +1,13 @@
+{
+  "critical_extra_bp": 2500,
+  "tracks": {
+    "critical": {"group_cap_bp": 1200, "share_cap_bp": 1200, "bonus_per_rank": 100},
+    "speed": {"group_cap_bp": 600, "share_cap_bp": 600, "bonus_per_rank": 50},
+    "resistance": {"group_cap_bp": 600, "share_cap_bp": 600, "bonus_per_rank": 50}
+  },
+  "monster_controls": {
+    "80001": {"status_id": 91, "chance_ppm": 1000000, "duration_ms": 1000},
+    "80002": {"status_id": 92, "chance_ppm": 1000000, "duration_ms": 1200},
+    "80003": {"status_id": 93, "chance_ppm": 1000000, "duration_ms": 1400}
+  }
+}

@@ -22,10 +22,14 @@ func (w *worker) hitBonuses(r *room, e *entity) devconfig.HitBonuses {
 }
 
 // expandedHitDamage 调整已经经过原命中、防御和魔法盾的净伤害。
-func (w *worker) expandedHitDamage(r *room, from, target *entity, damage int64, context []hitContext) int64 {
+func (w *worker) expandedHitDamage(r *room, from, target *entity, damage int64, context []hitContext) (int64, bool) {
 	budget := w.e.Store.Cfg.Fixture.ExpandedHitBudget
 	if budget == nil || damage <= 0 || len(context) > 0 && (context[0].PeriodicPoison || context[0].InstantKill) {
-		return damage
+		return damage, false
 	}
-	return budget.Apply(damage, w.hitBonuses(r, from).DamageBP, w.hitBonuses(r, target).AbsorptionBP)
+	var criticalExtra uint32
+	if target != nil && target.HP > 0 {
+		criticalExtra = w.criticalExtraBP(r, from, damage, context)
+	}
+	return budget.Apply(damage, w.hitBonuses(r, from).DamageBP, w.hitBonuses(r, target).AbsorptionBP, criticalExtra), criticalExtra != 0
 }

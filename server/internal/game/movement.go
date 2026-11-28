@@ -76,6 +76,9 @@ func (w *worker) beginMovement(r *room, e *entity, kind uint32) bool {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，e 记录实体，point 记录点位，direction 记录朝向，使用数值表示。
 // now 提供当前时点，作为状态有效期和计时判断的基准，interval 记录周期，使用数值表示。
 func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction uint32, now time.Time, interval int64) bool {
+	if masteryControlHeld(e, now) {
+		return false
+	}
 	if r.Pending || r.petAway(e) || !w.walkable(r, point) {
 		return false
 	}

@@ -2,10 +2,14 @@
 import Long from 'long';
 import { CodeBodyTrainingInputs, CodeBodyTrainingQuoteChanged, CodeBodyTrainingUnavailable, CodeOperationConflict } from '../generated/protocol_ids';
 import type { ItemActionView } from './GameItemActions';
+import { yuanbaoText } from './SkillAssetsModel';
 
-// 权威库存同步的各系等级，旧版本未下发的伤害与吸收按零级显示。
-interface BodyTrainingState { healthLevel: number; manaLevel: number; damageLevel?: number; absorptionLevel?: number; }
-interface Track { id: number; name: string; gold_base: number; bonus_per_rank: number; }
+// 权威库存同步各系等级，旧版本缺少的新增字段按零级显示。
+interface BodyTrainingState {
+    healthLevel: number; manaLevel: number; damageLevel?: number; absorptionLevel?: number;
+    criticalLevel?: number; speedLevel?: number; resistanceLevel?: number;
+}
+interface Track { id: number; name: string; gold_base?: number; yuanbao_base_units?: number; bonus_per_rank: number; }
 interface Step { from: number; cost_multiplier: number; success_ppm: number; }
 interface TrainingRules { tracks: Track[]; steps: Step[]; health_cap_bp: number; mana_cap_bp: number; }
 export interface BodyTrainingSnapshot {
@@ -14,7 +18,7 @@ export interface BodyTrainingSnapshot {
 }
 interface TrainingTerms {
     track: number; beforeLevel: number; targetLevel: number; successPpm: number;
-    gold: Long; boundGold: Long; beforeBonus: Long; targetBonus: Long;
+    gold: Long; boundGold: Long; yuanbaoUnits?: Long; boundYuanbaoUnits?: Long; beforeBonus: Long; targetBonus: Long;
 }
 interface TrainingQuote {
     quoteId: Uint8Array; uiSessionId: Uint8Array; sceneEpoch: Long; roleRevision: Long; expiresAtUnixMs: Long; terms: TrainingTerms;
@@ -38,21 +42,24 @@ interface View {
     quote?: TrainingQuote; receipt?: BodyTrainingReceipt;
 }
 
-const damageTrack = 1, absorptionTrack = 2, healthTrack = 3, manaTrack = 4;
-const hitTrack = (id: number) => id === damageTrack || id === absorptionTrack;
-const knownTrack = (id: number) => hitTrack(id) || id === healthTrack || id === manaTrack;
+const damageTrack = 1, absorptionTrack = 2, healthTrack = 3, manaTrack = 4, criticalTrack = 5, speedTrack = 6, resistanceTrack = 7;
+const knownTrack = (id: number) => Number.isInteger(id) && id >= damageTrack && id <= resistanceTrack;
+const yuanbaoTrack = (id: number) => id >= criticalTrack && id <= resistanceTrack;
 const validId = (v: unknown): v is Uint8Array => v instanceof Uint8Array && v.length === 16;
 const same = (a: unknown, b: unknown) => validId(a) && validId(b) && a.every((octet, i) => octet === b[i]);
 const amount = (n: unknown): n is Long => Long.isLong(n) && !n.unsigned && !n.isNegative();
 const cap = (s: BodyTrainingSnapshot) => Math.min(s.level, s.rules.steps.length);
 
-// 把协议中四个独立等级投影到工作簿的系别编号。
+// 把权威库存各系等级投影到工作簿的系别编号。
 function rank(s: BodyTrainingSnapshot, id: number): number {
     switch (id) {
         case damageTrack: return s.state.damageLevel ?? 0;
         case absorptionTrack: return s.state.absorptionLevel ?? 0;
         case healthTrack: return s.state.healthLevel;
         case manaTrack: return s.state.manaLevel;
+        case criticalTrack: return s.state.criticalLevel ?? 0;
+        case speedTrack: return s.state.speedLevel ?? 0;
+        case resistanceTrack: return s.state.resistanceLevel ?? 0;
         default: return 0;
     }
 }
@@ -62,7 +69,9 @@ export function validateBodyTrainingReceipt(request: BodyTrainingCommit, receipt
     const t = receipt?.terms;
     if (!same(request.quoteId, receipt?.quoteId) || !validTerms(t) || t.track !== request.track || typeof receipt.success !== 'boolean' ||
         receipt.afterLevel !== t.beforeLevel + (receipt.success ? 1 : 0) || (!receipt.success && t.successPpm === 1000000) ||
-        (quoted && (!quoted.gold.equals(t.gold) || !quoted.boundGold.equals(t.boundGold) || !quoted.beforeBonus.equals(t.beforeBonus) ||
+        (quoted && (!quoted.gold.equals(t.gold) || !quoted.boundGold.equals(t.boundGold) ||
+            !(quoted.yuanbaoUnits ?? Long.ZERO).equals(t.yuanbaoUnits ?? Long.ZERO) ||
+            !(quoted.boundYuanbaoUnits ?? Long.ZERO).equals(t.boundYuanbaoUnits ?? Long.ZERO) || !quoted.beforeBonus.equals(t.beforeBonus) ||
             !quoted.targetBonus.equals(t.targetBonus) || quoted.track !== t.track || quoted.beforeLevel !== t.beforeLevel))) {
         throw new Error('炼体回执与原操作不符，保留原身份核对');
     }
@@ -167,7 +176,7 @@ export class GameBodyTraining {
             q.roleRevision.greaterThan(s.revision) || !Long.isLong(q.expiresAtUnixMs) || q.expiresAtUnixMs.lessThanOrEqual(Long.fromNumber(Date.now(), true))) return false;
         const track = this.track(s, t.track), before = rank(s, t.track), step = s.rules.steps[before];
         return !!track && !!step && before < cap(s) && t.beforeLevel === before && step.from === before && t.successPpm === step.success_ppm &&
-            t.gold.add(t.boundGold).equals(Long.fromNumber(track.gold_base).multiply(step.cost_multiplier)) &&
+            quoteCostMatches(t, track, step) &&
             t.beforeBonus.equals(Long.fromNumber(track.bonus_per_rank).multiply(before)) &&
             t.targetBonus.equals(Long.fromNumber(track.bonus_per_rank).multiply(before + 1));
     }
@@ -206,16 +215,35 @@ export class GameBodyTraining {
     }
 }
 
-// 校验原单次阶梯，以及四个必须使用 int64 的费用和属性额度。
+// 校验单次阶梯、币种、正费用和递增的 int64 属性额度。
 function validTerms(t: TrainingTerms | undefined): t is TrainingTerms {
-    return !!t && knownTrack(t.track) && Number.isInteger(t.beforeLevel) && t.beforeLevel >= 0 && t.beforeLevel < 0xffffffff &&
+    if (!t || !knownTrack(t.track) || !amount(t.gold) || !amount(t.boundGold) ||
+        !amount(t.yuanbaoUnits ?? Long.ZERO) || !amount(t.boundYuanbaoUnits ?? Long.ZERO)) return false;
+    const hasGold = !t.gold.isZero() || !t.boundGold.isZero();
+    const hasYuanbao = !(t.yuanbaoUnits ?? Long.ZERO).isZero() || !(t.boundYuanbaoUnits ?? Long.ZERO).isZero();
+    return hasYuanbao === yuanbaoTrack(t.track) && hasGold !== hasYuanbao &&
+        Number.isInteger(t.beforeLevel) && t.beforeLevel >= 0 && t.beforeLevel < 0xffffffff &&
         t.targetLevel === t.beforeLevel + 1 && t.successPpm === 1000000 - t.beforeLevel % 10 * 100000 &&
-        amount(t.gold) && amount(t.boundGold) && (!t.gold.isZero() || !t.boundGold.isZero()) &&
         amount(t.beforeBonus) && amount(t.targetBonus) && t.targetBonus.greaterThan(t.beforeBonus);
 }
-function costLines(t: TrainingTerms): string[] { return [`绑定金币 ${t.boundGold}`, `普通金币 ${t.gold}`]; }
 
-// 伤害与吸收的报价额度使用万分比，其余系别使用点数。
+// 用整数最小单位核对报价分账，保留原金币回执缺少元宝字段的兼容。
+function quoteCostMatches(t: TrainingTerms, track: Track, step: Step): boolean {
+    const ingot = yuanbaoTrack(t.track);
+    const base = ingot ? track.yuanbao_base_units : track.gold_base;
+    if (base === undefined || !Number.isSafeInteger(base) || base <= 0) return false;
+    const ordinary = ingot ? t.yuanbaoUnits ?? Long.ZERO : t.gold;
+    const bound = ingot ? t.boundYuanbaoUnits ?? Long.ZERO : t.boundGold;
+    return BigInt(ordinary.toString()) + BigInt(bound.toString()) === BigInt(base) * BigInt(step.cost_multiplier);
+}
+
+// 分两行显示实际绑定和非绑定扣款，沿用项目的元宝精度。
+function costLines(t: TrainingTerms): string[] {
+    if (yuanbaoTrack(t.track)) return [`绑定元宝 ${yuanbaoText(t.boundYuanbaoUnits ?? Long.ZERO)}`, `普通元宝 ${yuanbaoText(t.yuanbaoUnits ?? Long.ZERO)}`];
+    return [`绑定金币 ${t.boundGold}`, `普通金币 ${t.gold}`];
+}
+
+// 生命与魔法显示点数，其余系别按基点显示百分比。
 function bonusText(track: number, value: Long): string {
-    return hitTrack(track) ? `${value.toNumber() / 100}%` : value.toString();
+    return track === healthTrack || track === manaTrack ? value.toString() : `${value.toNumber() / 100}%`;
 }

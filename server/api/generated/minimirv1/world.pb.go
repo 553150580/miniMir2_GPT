@@ -1819,8 +1819,12 @@ type CombatAttributes struct {
 	// 命中后应用的扩展增伤与吸收，单位均为万分比，已经按组封顶。
 	ExpandedDamageBp     uint32 `protobuf:"varint,17,opt,name=expanded_damage_bp,json=expandedDamageBp,proto3" json:"expanded_damage_bp,omitempty"`
 	ExpandedAbsorptionBp uint32 `protobuf:"varint,18,opt,name=expanded_absorption_bp,json=expandedAbsorptionBp,proto3" json:"expanded_absorption_bp,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	// 已确认的暴击率、普攻间隔缩减和全抗额度，单位为基点。
+	CriticalBp                uint32 `protobuf:"varint,19,opt,name=critical_bp,json=criticalBp,proto3" json:"critical_bp,omitempty"`
+	AttackIntervalReductionBp uint32 `protobuf:"varint,20,opt,name=attack_interval_reduction_bp,json=attackIntervalReductionBp,proto3" json:"attack_interval_reduction_bp,omitempty"`
+	AllResistanceBp           uint32 `protobuf:"varint,21,opt,name=all_resistance_bp,json=allResistanceBp,proto3" json:"all_resistance_bp,omitempty"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
 }
 
 func (x *CombatAttributes) Reset() {
@@ -1975,6 +1979,27 @@ func (x *CombatAttributes) GetExpandedDamageBp() uint32 {
 func (x *CombatAttributes) GetExpandedAbsorptionBp() uint32 {
 	if x != nil {
 		return x.ExpandedAbsorptionBp
+	}
+	return 0
+}
+
+func (x *CombatAttributes) GetCriticalBp() uint32 {
+	if x != nil {
+		return x.CriticalBp
+	}
+	return 0
+}
+
+func (x *CombatAttributes) GetAttackIntervalReductionBp() uint32 {
+	if x != nil {
+		return x.AttackIntervalReductionBp
+	}
+	return 0
+}
+
+func (x *CombatAttributes) GetAllResistanceBp() uint32 {
+	if x != nil {
+		return x.AllResistanceBp
 	}
 	return 0
 }
@@ -2989,8 +3014,10 @@ type CombatImpact struct {
 	Healing        bool                   `protobuf:"varint,10,opt,name=healing,proto3" json:"healing,omitempty"`
 	CastId         uint64                 `protobuf:"varint,11,opt,name=cast_id,json=castId,proto3" json:"cast_id,omitempty"`
 	AttackSequence uint32                 `protobuf:"varint,12,opt,name=attack_sequence,json=attackSequence,proto3" json:"attack_sequence,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 本次直接命中实际产生了额外暴击伤害。
+	Critical      bool `protobuf:"varint,13,opt,name=critical,proto3" json:"critical,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CombatImpact) Reset() {
@@ -3105,6 +3132,13 @@ func (x *CombatImpact) GetAttackSequence() uint32 {
 		return x.AttackSequence
 	}
 	return 0
+}
+
+func (x *CombatImpact) GetCritical() bool {
+	if x != nil {
+		return x.Critical
+	}
+	return false
 }
 
 type AutoSkillSettings struct {
@@ -3693,7 +3727,7 @@ const file_world_proto_rawDesc = "" +
 	"\vcaster_life\x18\t \x01(\x04R\n" +
 	"casterLife\x12A\n" +
 	"\x1dteleport_mana_penalty_percent\x18\n" +
-	" \x01(\rR\x1ateleportManaPenaltyPercent\"\xa9\x06\n" +
+	" \x01(\rR\x1ateleportManaPenaltyPercent\"\xb7\a\n" +
 	"\x10CombatAttributes\x12.\n" +
 	"\x13physical_attack_min\x18\x01 \x01(\x03R\x11physicalAttackMin\x12.\n" +
 	"\x13physical_attack_max\x18\x02 \x01(\x03R\x11physicalAttackMax\x120\n" +
@@ -3713,7 +3747,11 @@ const file_world_proto_rawDesc = "" +
 	"\x13luck_resistance_ppm\x18\x0f \x01(\rR\x11luckResistancePpm\x12!\n" +
 	"\fluck_enabled\x18\x10 \x01(\bR\vluckEnabled\x12,\n" +
 	"\x12expanded_damage_bp\x18\x11 \x01(\rR\x10expandedDamageBp\x124\n" +
-	"\x16expanded_absorption_bp\x18\x12 \x01(\rR\x14expandedAbsorptionBp\"\x9b\x04\n" +
+	"\x16expanded_absorption_bp\x18\x12 \x01(\rR\x14expandedAbsorptionBp\x12\x1f\n" +
+	"\vcritical_bp\x18\x13 \x01(\rR\n" +
+	"criticalBp\x12?\n" +
+	"\x1cattack_interval_reduction_bp\x18\x14 \x01(\rR\x19attackIntervalReductionBp\x12*\n" +
+	"\x11all_resistance_bp\x18\x15 \x01(\rR\x0fallResistanceBp\"\x9b\x04\n" +
 	"\x12SceneBaselineChunk\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
@@ -3832,7 +3870,7 @@ const file_world_proto_rawDesc = "" +
 	"\vskill_level\x18\f \x01(\rR\n" +
 	"skillLevel\x12\x1f\n" +
 	"\vcaster_life\x18\r \x01(\x04R\n" +
-	"casterLife\"\x96\x03\n" +
+	"casterLife\"\xb2\x03\n" +
 	"\fCombatImpact\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x19\n" +
@@ -3849,7 +3887,8 @@ const file_world_proto_rawDesc = "" +
 	"\ahealing\x18\n" +
 	" \x01(\bR\ahealing\x12\x17\n" +
 	"\acast_id\x18\v \x01(\x04R\x06castId\x12'\n" +
-	"\x0fattack_sequence\x18\f \x01(\rR\x0eattackSequence\"[\n" +
+	"\x0fattack_sequence\x18\f \x01(\rR\x0eattackSequence\x12\x1a\n" +
+	"\bcritical\x18\r \x01(\bR\bcritical\"[\n" +
 	"\x11AutoSkillSettings\x12\x18\n" +
 	"\aenabled\x18\x01 \x01(\bR\aenabled\x12,\n" +
 	"\x12disabled_skill_ids\x18\x02 \x03(\rR\x10disabledSkillIds\"\xc1\x01\n" +

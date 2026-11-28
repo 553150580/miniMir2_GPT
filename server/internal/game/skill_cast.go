@@ -255,7 +255,8 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		s.Behavior == "revelation" && (r.worldBossCombat != nil || r.worldBossObservation != nil || r.dungeonCombat != nil) {
 		return nil, p.CodeSkillStateBlocked
 	}
-	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.castSequenceFull() || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
+	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.castSequenceFull() || r.Player.HP <= 0 || now.Before(r.Player.NextMove) ||
+		now.Before(r.Player.ActionReadyAt) || masteryControlHeld(&r.Player, now) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[id]) {
@@ -617,6 +618,7 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		amount := int64(0)
 		// outcome 保存由无符号整数“32”取得的“outcome”。
 		outcome := uint32(2)
+		critical := false // 仅在该目标的直接伤害产生额外暴击量时记录。
 		if handler.Healing {
 			if target.HP < target.MaxHP {
 				// before 保存治疗数量，用于当前步骤中的操作前的状态。
@@ -637,13 +639,15 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 			damage := w.magicDamage(r, target, value)
 			// before 保存生命值，用于当前步骤中的操作前的状态。
 			before := target.HP
-			w.applyDamageInWorld(r, world, caster, target, damage, now, hitContext{At: c.Due, HostSession: c.HostSession, PrivilegeUntil: c.PrivilegeUntil, PrivilegeCaptured: c.PrivilegeCaptured})
+			critical = w.applyDamageInWorld(r, world, caster, target, damage, now, hitContext{
+				At: c.Due, HostSession: c.HostSession, PrivilegeUntil: c.PrivilegeUntil, PrivilegeCaptured: c.PrivilegeCaptured, DirectCritical: true,
+			})
 			amount = before - target.HP
 			if amount > 0 {
 				outcome = 1
 			}
 		}
-		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, amount, outcome, handler.Healing, c.ID, 0)
+		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, amount, outcome, handler.Healing, c.ID, 0, critical)
 	}
 	if buffChanged && r.dungeonCombat != nil {
 		w.snapshotDungeonSeats(r.dungeonCombat, now)

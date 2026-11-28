@@ -223,6 +223,10 @@ message CombatAttributes {
   // 命中后应用的扩展增伤与吸收，单位均为万分比，已经按组封顶。
   uint32 expanded_damage_bp = 17;
   uint32 expanded_absorption_bp = 18;
+  // 已确认的暴击率、普攻间隔缩减和全抗额度，单位为基点。
+  uint32 critical_bp = 19;
+  uint32 attack_interval_reduction_bp = 20;
+  uint32 all_resistance_bp = 21;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;
@@ -335,6 +339,8 @@ message CombatImpact {
   bool healing = 10;
   uint64 cast_id = 11;
   uint32 attack_sequence = 12;
+  // 本次直接命中实际产生了额外暴击伤害。
+  bool critical = 13;
 }
 message AutoSkillSettings {
   bool enabled = 1;

@@ -1,4 +1,4 @@
-// 本文件保存角色四个独立系别的已完成炼体等级。
+// 本文件保存角色各独立系别的已完成炼体等级。
 package domain
 
 import (
@@ -12,6 +12,9 @@ type BodyTrainingState struct {
 	Mana       uint32 `bson:"mana" json:"mana"`                                 // 已完成的魔法系等级。
 	Damage     uint32 `bson:"damage,omitempty" json:"damage,omitempty"`         // 已完成的伤害系等级。
 	Absorption uint32 `bson:"absorption,omitempty" json:"absorption,omitempty"` // 已完成的伤害吸收系等级。
+	Critical   uint32 `bson:"critical,omitempty" json:"critical,omitempty"`     // 已完成的暴击系等级。
+	Speed      uint32 `bson:"speed,omitempty" json:"speed,omitempty"`           // 已完成的攻速系等级。
+	Resistance uint32 `bson:"resistance,omitempty" json:"resistance,omitempty"` // 已完成的全抗系等级。
 }
 
 // BodyTrainingLevels 复制当前状态，事务计算不改动原角色聚合。
@@ -33,6 +36,12 @@ func (s BodyTrainingState) Level(track uint32) uint32 {
 		return s.Health
 	case devconfig.BodyMana:
 		return s.Mana
+	case devconfig.BodyCritical:
+		return s.Critical
+	case devconfig.BodySpeed:
+		return s.Speed
+	case devconfig.BodyResistance:
+		return s.Resistance
 	}
 	return 0
 }
@@ -48,11 +57,18 @@ func (s BodyTrainingState) Advance(track uint32) *BodyTrainingState {
 		s.Health++
 	case devconfig.BodyMana:
 		s.Mana++
+	case devconfig.BodyCritical:
+		s.Critical++
+	case devconfig.BodySpeed:
+		s.Speed++
+	case devconfig.BodyResistance:
+		s.Resistance++
 	}
 	return &s
 }
 
 // Proto 生成同一库存修订的各系状态。
 func (s BodyTrainingState) Proto() *pb.BodyTrainingState {
-	return &pb.BodyTrainingState{HealthLevel: s.Health, ManaLevel: s.Mana, DamageLevel: s.Damage, AbsorptionLevel: s.Absorption}
+	return &pb.BodyTrainingState{HealthLevel: s.Health, ManaLevel: s.Mana, DamageLevel: s.Damage, AbsorptionLevel: s.Absorption,
+		CriticalLevel: s.Critical, SpeedLevel: s.Speed, ResistanceLevel: s.Resistance}
 }

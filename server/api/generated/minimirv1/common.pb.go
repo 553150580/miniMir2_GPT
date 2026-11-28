@@ -405,6 +405,9 @@ type BodyTrainingState struct {
 	ManaLevel       uint32                 `protobuf:"varint,2,opt,name=mana_level,json=manaLevel,proto3" json:"mana_level,omitempty"`
 	DamageLevel     uint32                 `protobuf:"varint,3,opt,name=damage_level,json=damageLevel,proto3" json:"damage_level,omitempty"`
 	AbsorptionLevel uint32                 `protobuf:"varint,4,opt,name=absorption_level,json=absorptionLevel,proto3" json:"absorption_level,omitempty"`
+	CriticalLevel   uint32                 `protobuf:"varint,5,opt,name=critical_level,json=criticalLevel,proto3" json:"critical_level,omitempty"`
+	SpeedLevel      uint32                 `protobuf:"varint,6,opt,name=speed_level,json=speedLevel,proto3" json:"speed_level,omitempty"`
+	ResistanceLevel uint32                 `protobuf:"varint,7,opt,name=resistance_level,json=resistanceLevel,proto3" json:"resistance_level,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -467,19 +470,43 @@ func (x *BodyTrainingState) GetAbsorptionLevel() uint32 {
 	return 0
 }
 
+func (x *BodyTrainingState) GetCriticalLevel() uint32 {
+	if x != nil {
+		return x.CriticalLevel
+	}
+	return 0
+}
+
+func (x *BodyTrainingState) GetSpeedLevel() uint32 {
+	if x != nil {
+		return x.SpeedLevel
+	}
+	return 0
+}
+
+func (x *BodyTrainingState) GetResistanceLevel() uint32 {
+	if x != nil {
+		return x.ResistanceLevel
+	}
+	return 0
+}
+
 // 本次原费用、成功率和额度。实际战斗加成仍受统一属性预算。
 type BodyTrainingTerms struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Track         uint32                 `protobuf:"varint,1,opt,name=track,proto3" json:"track,omitempty"`
-	BeforeLevel   uint32                 `protobuf:"varint,2,opt,name=before_level,json=beforeLevel,proto3" json:"before_level,omitempty"`
-	TargetLevel   uint32                 `protobuf:"varint,3,opt,name=target_level,json=targetLevel,proto3" json:"target_level,omitempty"`
-	SuccessPpm    uint32                 `protobuf:"varint,4,opt,name=success_ppm,json=successPpm,proto3" json:"success_ppm,omitempty"`
-	Gold          int64                  `protobuf:"varint,5,opt,name=gold,proto3" json:"gold,omitempty"`
-	BoundGold     int64                  `protobuf:"varint,6,opt,name=bound_gold,json=boundGold,proto3" json:"bound_gold,omitempty"`
-	BeforeBonus   int64                  `protobuf:"varint,7,opt,name=before_bonus,json=beforeBonus,proto3" json:"before_bonus,omitempty"`
-	TargetBonus   int64                  `protobuf:"varint,8,opt,name=target_bonus,json=targetBonus,proto3" json:"target_bonus,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Track       uint32                 `protobuf:"varint,1,opt,name=track,proto3" json:"track,omitempty"`
+	BeforeLevel uint32                 `protobuf:"varint,2,opt,name=before_level,json=beforeLevel,proto3" json:"before_level,omitempty"`
+	TargetLevel uint32                 `protobuf:"varint,3,opt,name=target_level,json=targetLevel,proto3" json:"target_level,omitempty"`
+	SuccessPpm  uint32                 `protobuf:"varint,4,opt,name=success_ppm,json=successPpm,proto3" json:"success_ppm,omitempty"`
+	Gold        int64                  `protobuf:"varint,5,opt,name=gold,proto3" json:"gold,omitempty"`
+	BoundGold   int64                  `protobuf:"varint,6,opt,name=bound_gold,json=boundGold,proto3" json:"bound_gold,omitempty"`
+	BeforeBonus int64                  `protobuf:"varint,7,opt,name=before_bonus,json=beforeBonus,proto3" json:"before_bonus,omitempty"`
+	TargetBonus int64                  `protobuf:"varint,8,opt,name=target_bonus,json=targetBonus,proto3" json:"target_bonus,omitempty"`
+	// 元宝用十分之一元宝的整数单位下发。原四个金币系仍使用字段 5、6。
+	YuanbaoUnits      int64 `protobuf:"varint,9,opt,name=yuanbao_units,json=yuanbaoUnits,proto3" json:"yuanbao_units,omitempty"`
+	BoundYuanbaoUnits int64 `protobuf:"varint,10,opt,name=bound_yuanbao_units,json=boundYuanbaoUnits,proto3" json:"bound_yuanbao_units,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *BodyTrainingTerms) Reset() {
@@ -564,6 +591,20 @@ func (x *BodyTrainingTerms) GetBeforeBonus() int64 {
 func (x *BodyTrainingTerms) GetTargetBonus() int64 {
 	if x != nil {
 		return x.TargetBonus
+	}
+	return 0
+}
+
+func (x *BodyTrainingTerms) GetYuanbaoUnits() int64 {
+	if x != nil {
+		return x.YuanbaoUnits
+	}
+	return 0
+}
+
+func (x *BodyTrainingTerms) GetBoundYuanbaoUnits() int64 {
+	if x != nil {
+		return x.BoundYuanbaoUnits
 	}
 	return 0
 }
@@ -3266,13 +3307,17 @@ const file_common_proto_rawDesc = "" +
 	"\x0erecycle_refine\x18\x12 \x01(\v2 .minimir.v1.RecycleRefineReceiptR\rrecycleRefine\x12.\n" +
 	"\x05medal\x18\x13 \x01(\v2\x18.minimir.v1.MedalReceiptR\x05medal\x124\n" +
 	"\arebirth\x18\x14 \x01(\v2\x1a.minimir.v1.RebirthReceiptR\arebirth\x12D\n" +
-	"\rbody_training\x18\x15 \x01(\v2\x1f.minimir.v1.BodyTrainingReceiptR\fbodyTraining\"\xa3\x01\n" +
+	"\rbody_training\x18\x15 \x01(\v2\x1f.minimir.v1.BodyTrainingReceiptR\fbodyTraining\"\x96\x02\n" +
 	"\x11BodyTrainingState\x12!\n" +
 	"\fhealth_level\x18\x01 \x01(\rR\vhealthLevel\x12\x1d\n" +
 	"\n" +
 	"mana_level\x18\x02 \x01(\rR\tmanaLevel\x12!\n" +
 	"\fdamage_level\x18\x03 \x01(\rR\vdamageLevel\x12)\n" +
-	"\x10absorption_level\x18\x04 \x01(\rR\x0fabsorptionLevel\"\x89\x02\n" +
+	"\x10absorption_level\x18\x04 \x01(\rR\x0fabsorptionLevel\x12%\n" +
+	"\x0ecritical_level\x18\x05 \x01(\rR\rcriticalLevel\x12\x1f\n" +
+	"\vspeed_level\x18\x06 \x01(\rR\n" +
+	"speedLevel\x12)\n" +
+	"\x10resistance_level\x18\a \x01(\rR\x0fresistanceLevel\"\xde\x02\n" +
 	"\x11BodyTrainingTerms\x12\x14\n" +
 	"\x05track\x18\x01 \x01(\rR\x05track\x12!\n" +
 	"\fbefore_level\x18\x02 \x01(\rR\vbeforeLevel\x12!\n" +
@@ -3283,7 +3328,10 @@ const file_common_proto_rawDesc = "" +
 	"\n" +
 	"bound_gold\x18\x06 \x01(\x03R\tboundGold\x12!\n" +
 	"\fbefore_bonus\x18\a \x01(\x03R\vbeforeBonus\x12!\n" +
-	"\ftarget_bonus\x18\b \x01(\x03R\vtargetBonus\"\xa0\x01\n" +
+	"\ftarget_bonus\x18\b \x01(\x03R\vtargetBonus\x12#\n" +
+	"\ryuanbao_units\x18\t \x01(\x03R\fyuanbaoUnits\x12.\n" +
+	"\x13bound_yuanbao_units\x18\n" +
+	" \x01(\x03R\x11boundYuanbaoUnits\"\xa0\x01\n" +
 	"\x13BodyTrainingReceipt\x12\x19\n" +
 	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x123\n" +
 	"\x05terms\x18\x02 \x01(\v2\x1d.minimir.v1.BodyTrainingTermsR\x05terms\x12\x18\n" +

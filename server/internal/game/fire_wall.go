@@ -156,6 +156,8 @@ func (w *worker) fireWallHit(r *room, world *worldState, caster, target *entity,
 	before := target.HP
 	// damage 是根据当前防御判定得到的伤害。
 	damage := w.magicDamage(r, target, w.damageWithLuck(r, target, field.Amount, field.Luck))
+	// 灼烧抵抗只缩减已经站在有效火墙格上的周期伤害。
+	damage = devconfig.ReduceByBP(damage, w.masteryBonuses(r, target).ResistanceBP)
 	w.applyDamageInWorld(r, world, caster, target, damage, now, context)
 	// outcome 对应通用技能协议中的伤害成功或抵抗。
 	outcome := uint32(2)

@@ -11,6 +11,9 @@ const (
 	BodyAbsorption uint32 = 2         // 工作簿定义的伤害吸收系。
 	BodyHealth     uint32 = 3         // 工作簿定义的生命上限系。
 	BodyMana       uint32 = 4         // 工作簿定义的魔法上限系。
+	BodyCritical   uint32 = 5         // 工作簿定义的暴击系。
+	BodySpeed      uint32 = 6         // 工作簿定义的攻速系。
+	BodyResistance uint32 = 7         // 工作簿定义的全抗系。
 	BodyChancePPM  uint32 = 1_000_000 // 逐级概率的统一百万分率。
 	vitalityBP     int64  = 10_000    // 上限相对装备基础使用万分比。
 )
@@ -25,11 +28,12 @@ type BodyTrainingConfig struct {
 
 // BodyTrainingTrack 保存一系重复尝试的基数及每级固定增量。
 type BodyTrainingTrack struct {
-	ID           uint32 `json:"id"`                     // 保留原工作簿编号。
-	Name         string `json:"name"`                   // 客户端显示的系别名称。
-	GoldBase     int64  `json:"gold_base"`              // 金币基础费用，逐阶段相乘。
-	BonusPerRank int64  `json:"bonus_per_rank"`         // 生命、魔法使用点数，伤害、吸收使用万分比。
-	ShareCapBP   uint32 `json:"share_cap_bp,omitempty"` // 伤害或吸收该系在统一属性组内的来源上限。
+	ID               uint32 `json:"id"`                           // 保留原工作簿编号。
+	Name             string `json:"name"`                         // 客户端显示的系别名称。
+	GoldBase         int64  `json:"gold_base,omitempty"`          // 金币基础费用，逐阶段相乘。
+	YuanbaoBaseUnits int64  `json:"yuanbao_base_units,omitempty"` // 元宝基础费用，使用协议最小整数单位。
+	BonusPerRank     int64  `json:"bonus_per_rank"`               // 生命、魔法使用点数，其余使用基点。
+	ShareCapBP       uint32 `json:"share_cap_bp,omitempty"`       // 百分比系别在统一属性组内的来源上限。
 }
 
 // BodyTrainingStep 保存原等级到下一级的一次尝试参数。
@@ -53,7 +57,20 @@ func (c *BodyTrainingConfig) Track(id uint32) (BodyTrainingTrack, bool) {
 
 // IsBodyTrainingTrack 校验当前支持提交的原工作簿系别编号。
 func IsBodyTrainingTrack(id uint32) bool {
-	return id >= BodyDamage && id <= BodyMana
+	return id >= BodyDamage && id <= BodyResistance
+}
+
+// UsesYuanbao 把付费币种限制在工作簿登记的三个元宝炼体系别。
+func (t BodyTrainingTrack) UsesYuanbao() bool {
+	return t.ID >= BodyCritical && t.ID <= BodyResistance
+}
+
+// CostBase 返回当前系别的一阶段费用，单位随登记币种确定。
+func (t BodyTrainingTrack) CostBase() int64 {
+	if t.UsesYuanbao() {
+		return t.YuanbaoBaseUnits
+	}
+	return t.GoldBase
 }
 
 // validateBodyTraining 逐档核对原公式，拒绝收费与属性预算分离的配置。
@@ -69,18 +86,27 @@ func (f *Fixture) validateBodyTraining() error {
 	}
 	seen := make(map[uint32]bool, len(c.Tracks))
 	for _, track := range c.Tracks {
+		base := track.CostBase()
 		if !IsBodyTrainingTrack(track.ID) || seen[track.ID] || track.Name == "" ||
-			track.GoldBase <= 0 || track.GoldBase > math.MaxInt64/int64(len(c.Steps)/10+1) ||
+			base <= 0 || base > math.MaxInt64/int64(len(c.Steps)/10+1) ||
+			track.UsesYuanbao() && track.GoldBase != 0 || !track.UsesYuanbao() && track.YuanbaoBaseUnits != 0 ||
 			track.BonusPerRank <= 0 || track.BonusPerRank > math.MaxInt64/int64(len(c.Steps)) {
-			return errors.New("炼体系别、金币费用或属性额度无效")
+			return errors.New("炼体系别、费用币种或属性额度无效")
 		}
-		if track.ID == BodyDamage || track.ID == BodyAbsorption {
-			cap := f.ExpandedHitBudget.trackLimit(track.ID)
-			if track.ShareCapBP == 0 || track.ShareCapBP > cap || track.BonusPerRank*int64(len(c.Steps)) > int64(track.ShareCapBP) {
-				return errors.New("伤害或吸收炼体必须具备覆盖开放等级的独立来源额度")
+		var limit uint32
+		switch track.ID {
+		case BodyHealth, BodyMana:
+			if track.ShareCapBP != 0 {
+				return errors.New("生命和魔法炼体使用各自的点数上限")
 			}
-		} else if track.ShareCapBP != 0 {
-			return errors.New("生命和魔法炼体使用各自的点数上限")
+		case BodyDamage, BodyAbsorption:
+			limit = f.ExpandedHitBudget.trackLimit(track.ID)
+		default:
+			limit = f.MasteryCombat.trackLimit(track.ID)
+		}
+		if track.ID != BodyHealth && track.ID != BodyMana &&
+			(track.ShareCapBP == 0 || track.ShareCapBP > limit || track.BonusPerRank*int64(len(c.Steps)) > int64(track.ShareCapBP)) {
+			return errors.New("百分比炼体必须具备覆盖开放等级的独立来源额度")
 		}
 		seen[track.ID] = true
 	}
@@ -101,13 +127,13 @@ func (f *Fixture) BodyHitBonuses(level, damageRank, absorptionRank uint32) HitBo
 	}
 	limit := min(uint32(len(c.Steps)), level)
 	return HitBonuses{
-		DamageBP:     c.hitTrackBonus(BodyDamage, min(damageRank, limit)),
-		AbsorptionBP: c.hitTrackBonus(BodyAbsorption, min(absorptionRank, limit)),
+		DamageBP:     c.trackBasisPoints(BodyDamage, min(damageRank, limit)),
+		AbsorptionBP: c.trackBasisPoints(BodyAbsorption, min(absorptionRank, limit)),
 	}
 }
 
-// hitTrackBonus 计算指定伤害系或吸收系的来源万分比，缺少该系时为零。
-func (c *BodyTrainingConfig) hitTrackBonus(id, rank uint32) uint32 {
+// trackBasisPoints 计算百分比系别的来源额度，缺少该系时为零。
+func (c *BodyTrainingConfig) trackBasisPoints(id, rank uint32) uint32 {
 	track, _ := c.Track(id)
 	return uint32(min(int64(track.ShareCapBP), int64(rank)*track.BonusPerRank))
 }

@@ -43,7 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
-    'body-training': ('BodyTraining', 'BodyHits'),
+    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery'),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -335,6 +335,18 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_BODY_HITS_TEST_FIXTURE'] = str(hits_fixture)
             for label, path in (('assembly', hits_assembly), ('fixture', hits_fixture), ('public', hits_public)):
                 report[f'body_hits_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            # 将同一工作簿的七系取值、元宝单位和控制来源逐字节核对。
+            mastery_assembly = destination / 'body-mastery-assembly.json'
+            mastery_fixture, mastery_public = destination / 'body-mastery-fixture.json', destination / 'body-mastery-gameplay.json'
+            mastery_assembly.write_bytes((ROOT / 'tools/resources/testdata/body-mastery-isolated.json').read_bytes())
+            mastery_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_body_mastery.py'), '--assembly', str(mastery_assembly),
+                              '--base-fixture', str(hits_fixture), '--base-public', str(hits_public),
+                              '--fixture-out', str(mastery_fixture), '--public-out', str(mastery_public)]
+            subprocess.run(mastery_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*mastery_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_BODY_MASTERY_TEST_FIXTURE'] = str(mastery_fixture)
+            for label, path in (('assembly', mastery_assembly), ('fixture', mastery_fixture), ('public', mastery_public)):
+                report[f'body_mastery_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',
