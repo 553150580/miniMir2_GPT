@@ -212,27 +212,51 @@ func reachTownVendor(c *client, town *devconfig.MapTemplate, npc devconfig.TownN
 		travelToBaseline(c, 1, town.ID)
 		travelAcknowledge(c, true)
 	}
-	// 优先选择位于 NPC 横纵相邻的可走地格，排除其它 NPC 的占格。
-	position := c.player().Position
+	// 共享城镇的第一位玩家可能属于其他连接，使用当前附着在首包确认的原实体。
+	position := challengePlayerDeathBody(c).Position
 	near := func(point *pb.GridPoint) bool {
 		x, y := int(point.X)-npc.Position.X, int(point.Y)-npc.Position.Y
 		return x >= -1 && x <= 1 && y >= -1 && y <= 1
 	}
 	if !near(position) {
-		for _, offset := range []devconfig.Point{{X: 1}, {X: -1}, {Y: 1}, {Y: -1}} {
+		for _, offset := range []devconfig.Point{{X: 1}, {X: -1}, {Y: 1}, {Y: -1}, {X: 1, Y: 1}, {X: -1, Y: 1}, {X: 1, Y: -1}, {X: -1, Y: -1}} {
 			point := devconfig.Point{X: npc.Position.X + offset.X, Y: npc.Position.Y + offset.Y}
 			if !town.Walkable(point) {
 				continue
 			}
 			grid := &pb.GridPoint{X: int32(point.X), Y: int32(point.Y)}
+			occupied := false
+			for _, entity := range c.scene.GetEntities() {
+				if entity.EntityHandle != c.entry.PlayerHandle && proto.Equal(entity.Position, grid) {
+					occupied = true
+					break
+				}
+			}
+			if occupied {
+				continue
+			}
 			c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, Destination: grid})
-			travelUntilWithin(c, 10*time.Second, func(frame wire.Frame) bool {
-				return frame.ID == p.MsgS2CSceneBaseline && proto.Equal(c.player().Position, grid) && c.scene.NavigationState.GetStatus() == 2
-			})
-			break
+			// 心跳保持同一连接并读入基线。一个相邻格动态受阻时，可在原附着内改试其它格子。
+			deadline := time.Now().Add(10 * time.Second)
+			for time.Now().Before(deadline) {
+				heartbeat := c.send(p.MsgC2SHeartbeat, &pb.Heartbeat{})
+				travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool {
+					return frame.ID == p.MsgS2CHeartbeat && frame.Request == heartbeat
+				})
+				nav := c.scene.GetNavigationState()
+				if nav.GetInputSequence() == c.input {
+					if nav.GetStatus() == 2 && proto.Equal(challengePlayerDeathBody(c).Position, grid) {
+						return
+					}
+					if nav.GetStatus() == 5 {
+						break
+					}
+				}
+				time.Sleep(150 * time.Millisecond)
+			}
 		}
 	}
-	if !near(c.player().Position) {
+	if !near(challengePlayerDeathBody(c).Position) {
 		c.t.Fatalf("没有到达商店 NPC %d 的相邻地格", npc.ID)
 	}
 }

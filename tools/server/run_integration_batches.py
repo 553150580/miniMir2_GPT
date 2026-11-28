@@ -121,7 +121,7 @@ def source_snapshot():
     return {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(paths)}
 
 
-def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE):
+def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE, *, test_command=None):
     identity = uuid.uuid4().hex
     mongo_directory = mongo.run_directory(identity, mongo_storage)
     installation, _ = mongo.installation()
@@ -402,6 +402,8 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']
+        if test_command is not None:
+            command = test_command(expression, timeout)
         report['command'] = command
         log = destination / 'events.jsonl'
         with log.open('wb') as results, (destination / 'stderr.log').open('wb') as errors:
