@@ -92,6 +92,7 @@ type PersonalBossChallenge struct {
 	RewardBound     bool                `bson:"reward_bound,omitempty"`  // 该金币依据原击杀时刻进入绑定账户。
 	RewardItems     []domain.Item       `bson:"reward_items,omitempty"`  // 胜利时确认的原实例，后续领取不会改写历史。
 	RewardQueued    bool                `bson:"reward_queued,omitempty"` // 胜利时是否转入永久待领。
+	SoulReward      *domain.SoulReceipt `bson:"soul_reward,omitempty"`   // 原胜利直接确认的魂兽或折片。
 	Automatic       bool                `bson:"automatic,omitempty"`     // 原预约是否由有效托管卡自动启动。
 	Qualification   string              `bson:"qualification,omitempty"` // 入场条件摘要，真实击杀会成为对应模板的通关证明。
 }
@@ -105,13 +106,14 @@ type personalBossRecord struct {
 	BeginDigest           string `bson:"begin_digest"`            // 初次预约内容摘要。
 	FinishDigest          string `bson:"finish_digest,omitempty"` // 首次确认的结束提案内容摘要。
 
-	KillRewardGold       int64         `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
-	PrivilegeUntil       time.Time     `bson:"privilege_until_at_entry,omitempty"` // 手动挑战冻结的特权截止时间。
-	RewardPrivilegeUntil time.Time     `bson:"reward_privilege_until,omitempty"`   // 按实际击杀时权益判绑所用的角色特权截止时间。
-	KillRewardItems      []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
-	PendingRewardLimit   uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
-	KillMapID            uint64        `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
-	KillMonsterID        uint32        `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
+	KillRewardGold       int64             `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
+	PrivilegeUntil       time.Time         `bson:"privilege_until_at_entry,omitempty"` // 手动挑战冻结的特权截止时间。
+	RewardPrivilegeUntil time.Time         `bson:"reward_privilege_until,omitempty"`   // 按实际击杀时权益判绑所用的角色特权截止时间。
+	KillRewardItems      []domain.Item     `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
+	PendingRewardLimit   uint32            `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
+	KillMapID            uint64            `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
+	KillMonsterID        uint32            `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
+	SoulAward            *domain.SoulAward `bson:"soul_award,omitempty"`               // 预约时已固化、只在胜利时确认。
 
 	RewardPrivilegeAtKill bool `bson:"reward_privilege_at_kill,omitempty"` // 含强化石的场次也按实际击杀时特权判绑。
 }
@@ -188,6 +190,9 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
 			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil, KillMapID: template.Map.ID, KillMonsterID: template.Monster.ID}
 		freezePersonalBossItems(cfg, &record, template.ItemReward)
+		if cfg.Souls != nil {
+			record.SoulAward = freezeSoulAward(cfg.Souls, cfg.Souls.Personal[q.TemplateID], grant.ReservationID)
+		}
 		if rules := cfg.EquipmentEnhancement; rules != nil {
 			for _, item := range record.KillRewardItems {
 				if item.ItemID == rules.StoneItemID {
@@ -335,6 +340,13 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		}
 		if err := applyPersonalBossItems(&r, record); err != nil {
 			return r, err
+		}
+		if record.SoulAward != nil {
+			var err error
+			r, record.SoulReward, err = grantSoulAward(r, record.SoulAward)
+			if err != nil {
+				return r, err
+			}
 		}
 		recordPersonalBossQualification(&state, record)
 		r = s.advancePersonalBossTasks(r, record)

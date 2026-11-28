@@ -185,8 +185,9 @@ type Role struct {
 	BindingSourceSeq             int64             `bson:"binding_source_seq,omitempty" json:"-"`                                          // 最后一次确认绑定的服务端来源序号。
 	BindingSafeZoneID            uint64            `bson:"-" json:"-"`                                                                     // 读取时核对出的可信安全区号，由配置推导。
 
-	TasksCodex   *TaskCodexProgress `bson:"tasks_codex,omitempty" json:"tasks_codex,omitempty"`     // 角色的已确认任务、成就和图鉴进度，旧角色从空进度开始。
-	BodyTraining *BodyTrainingState `bson:"body_training,omitempty" json:"body_training,omitempty"` // 永久炼体等级，旧档缺省视作零级。
+	TasksCodex   *TaskCodexProgress `bson:"tasks_codex,omitempty" json:"tasks_codex,omitempty"`         // 角色的已确认任务、成就和图鉴进度，旧角色从空进度开始。
+	BodyTraining *BodyTrainingState `bson:"body_training,omitempty" json:"body_training,omitempty"`     // 永久炼体等级，旧档缺省视作零级。
+	Soul         *SoulCollection    `bson:"soul_collection,omitempty" json:"soul_collection,omitempty"` // 角色专属魂兽及通用碎片。
 
 	EquipmentEnhancement *EquipmentEnhancement `bson:"-" json:"equipment_enhancement,omitempty"` // 角色十个强化部位，由独立文档装配。
 

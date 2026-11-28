@@ -329,6 +329,8 @@ type Fixture struct {
 	ExpandedHitBudget *ExpandedHitBudget `json:"expanded_hit_budget,omitempty"`
 	// MasteryCombat 管理暴击、攻速、全抗预算与明确登记的控制来源。
 	MasteryCombat *MasteryCombat `json:"mastery_combat,omitempty"`
+	// Souls 提供角色专属收藏、三池和原首领配置，默认规则缺省。
+	Souls *SoulRules `json:"soul_beasts,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -546,6 +548,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateMasteryCombat(); err != nil {
+		return err
+	}
+	if err := f.validateSouls(); err != nil {
 		return err
 	}
 	if err := f.validateBodyTraining(); err != nil {

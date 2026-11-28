@@ -237,7 +237,18 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		return devconfig.Fighter{}
 	}
 	if f.ExpandedHitBudget != nil {
-		a.HitBonuses = w.bodyHitBonuses(r)
+		a.HitBonuses = w.roleHitBonuses(r)
+	}
+	if f.Souls != nil {
+		soul := w.soulBonuses(r)
+		if soul != (devconfig.SoulBonuses{}) {
+			var valid bool
+			a, valid = soul.ApplyBase(a)
+			if !valid {
+				w.isolateRoom(r)
+				return devconfig.Fighter{}
+			}
+		}
 	}
 	a, medalValid := f.ApplyMedalBonuses(a, r.Role.MedalLevel())
 	if !medalValid {
@@ -260,7 +271,7 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 		a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 	}
 	if f.MasteryCombat != nil {
-		a.MasteryBonuses = w.bodyMasteryBonuses(r)
+		a.MasteryBonuses = w.roleMasteryBonuses(r)
 		if a.AttackSpeedBP != 0 {
 			// 保留原动作和最快攻击门禁；只缩短能由普攻间隔节省的时间。
 			floor := min(a.AttackMS, max(f.CombatTiming.PlayerAttackMinMS, f.CombatTiming.PlayerAttackActionMS))

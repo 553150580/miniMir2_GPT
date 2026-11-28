@@ -817,6 +817,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.MedalReceipt.$Properties|null} [medal] OperationResult medal
              * @property {minimir.v1.RebirthReceipt.$Properties|null} [rebirth] OperationResult rebirth
              * @property {minimir.v1.BodyTrainingReceipt.$Properties|null} [body_training] OperationResult body_training
+             * @property {minimir.v1.SoulReceipt.$Properties|null} [soul] OperationResult soul
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1017,6 +1018,14 @@ $root.minimir = (function() {
             OperationResult.prototype.body_training = null;
 
             /**
+             * OperationResult soul.
+             * @member {minimir.v1.SoulReceipt.$Properties|null|undefined} soul
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.soul = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1090,6 +1099,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.RebirthReceipt.encode(message.rebirth, writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
                 if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training"))
                     $root.minimir.v1.BodyTrainingReceipt.encode(message.body_training, writer.uint32(/* id 21, wireType 2 =*/170).fork(), _depth + 1).ldelim();
+                if (message.soul != null && $Object.hasOwnProperty.call(message, "soul"))
+                    $root.minimir.v1.SoulReceipt.encode(message.soul, writer.uint32(/* id 22, wireType 2 =*/178).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1288,6 +1299,12 @@ $root.minimir = (function() {
                             message.body_training = $root.minimir.v1.BodyTrainingReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.body_training);
                             continue;
                         }
+                    case 22: {
+                            if (wireType !== 2)
+                                break;
+                            message.soul = $root.minimir.v1.SoulReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.soul);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1431,6 +1448,11 @@ $root.minimir = (function() {
                     if (error)
                         return "body_training." + error;
                 }
+                if (message.soul != null && $Object.hasOwnProperty.call(message, "soul")) {
+                    var error = $root.minimir.v1.SoulReceipt.verify(message.soul, _depth + 1);
+                    if (error)
+                        return "soul." + error;
+                }
                 return null;
             };
 
@@ -1449,6 +1471,854 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.SoulBeast = (function() {
+
+            /**
+             * Properties of a SoulBeast.
+             * @typedef {Object} minimir.v1.SoulBeast.$Properties
+             * @property {number|null} [type_id] SoulBeast type_id
+             * @property {number|null} [star] SoulBeast star
+             * @property {Array.<number>|null} [affix_ids] SoulBeast affix_ids
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SoulBeast.
+             * @memberof minimir.v1
+             * @interface ISoulBeast
+             * @augments minimir.v1.SoulBeast.$Properties
+             * @deprecated Use minimir.v1.SoulBeast.$Properties instead.
+             */
+
+            /**
+             * Shape of a SoulBeast.
+             * @typedef {minimir.v1.SoulBeast.$Properties} minimir.v1.SoulBeast.$Shape
+             */
+
+            /**
+             * Constructs a new SoulBeast.
+             * @memberof minimir.v1
+             * @classdesc Represents a SoulBeast.
+             * @constructor
+             * @param {minimir.v1.SoulBeast.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SoulBeast = function (properties) {
+                this.affix_ids = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SoulBeast type_id.
+             * @member {number} type_id
+             * @memberof minimir.v1.SoulBeast
+             * @instance
+             */
+            SoulBeast.prototype.type_id = 0;
+
+            /**
+             * SoulBeast star.
+             * @member {number} star
+             * @memberof minimir.v1.SoulBeast
+             * @instance
+             */
+            SoulBeast.prototype.star = 0;
+
+            /**
+             * SoulBeast affix_ids.
+             * @member {Array.<number>} affix_ids
+             * @memberof minimir.v1.SoulBeast
+             * @instance
+             */
+            SoulBeast.prototype.affix_ids = $util.emptyArray;
+
+            /**
+             * Creates a new SoulBeast instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {minimir.v1.SoulBeast.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SoulBeast} SoulBeast instance
+             * @type {{
+             *   (properties: minimir.v1.SoulBeast.$Shape): minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape;
+             *   (properties?: minimir.v1.SoulBeast.$Properties): minimir.v1.SoulBeast;
+             * }}
+             */
+            SoulBeast.create = function(properties) {
+                return new SoulBeast(properties);
+            };
+
+            /**
+             * Encodes the specified SoulBeast message. Does not implicitly {@link minimir.v1.SoulBeast.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {minimir.v1.SoulBeast.$Properties} message SoulBeast message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulBeast.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id") && message.type_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.type_id);
+                if (message.star != null && $Object.hasOwnProperty.call(message, "star") && message.star !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.star);
+                if (message.affix_ids != null && message.affix_ids.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).uint32s(message.affix_ids);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SoulBeast message, length delimited. Does not implicitly {@link minimir.v1.SoulBeast.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {minimir.v1.SoulBeast.$Properties} message SoulBeast message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulBeast.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SoulBeast message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape} SoulBeast
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulBeast.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SoulBeast();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.type_id = value;
+                            else
+                                delete message.type_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.star = value;
+                            else
+                                delete message.star;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType === 2) {
+                                if (!(message.affix_ids && message.affix_ids.length))
+                                    message.affix_ids = [];
+                                reader.uint32s(message.affix_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.affix_ids && message.affix_ids.length))
+                                message.affix_ids = [];
+                            message.affix_ids.push(reader.uint32());
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SoulBeast message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape} SoulBeast
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulBeast.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SoulBeast message.
+             * @function verify
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SoulBeast.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id"))
+                    if (!$util.isInteger(message.type_id))
+                        return "type_id: integer expected";
+                if (message.star != null && $Object.hasOwnProperty.call(message, "star"))
+                    if (!$util.isInteger(message.star))
+                        return "star: integer expected";
+                if (message.affix_ids != null && $Object.hasOwnProperty.call(message, "affix_ids")) {
+                    if (!$Array.isArray(message.affix_ids))
+                        return "affix_ids: array expected";
+                    for (var i = 0; i < message.affix_ids.length; ++i)
+                        if (!$util.isInteger(message.affix_ids[i]))
+                            return "affix_ids: integer[] expected";
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SoulBeast
+             * @function getTypeUrl
+             * @memberof minimir.v1.SoulBeast
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SoulBeast.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SoulBeast";
+            };
+
+            return SoulBeast;
+        })();
+
+        v1.SoulCollection = (function() {
+
+            /**
+             * Properties of a SoulCollection.
+             * @typedef {Object} minimir.v1.SoulCollection.$Properties
+             * @property {Long|null} [revision] SoulCollection revision
+             * @property {Long|null} [fragments] SoulCollection fragments
+             * @property {number|null} [attached_type_id] SoulCollection attached_type_id
+             * @property {Array.<minimir.v1.SoulBeast.$Properties>|null} [beasts] SoulCollection beasts
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SoulCollection.
+             * @memberof minimir.v1
+             * @interface ISoulCollection
+             * @augments minimir.v1.SoulCollection.$Properties
+             * @deprecated Use minimir.v1.SoulCollection.$Properties instead.
+             */
+
+            /**
+             * Shape of a SoulCollection.
+             * @typedef {minimir.v1.SoulCollection.$Properties} minimir.v1.SoulCollection.$Shape
+             */
+
+            /**
+             * Constructs a new SoulCollection.
+             * @memberof minimir.v1
+             * @classdesc Represents a SoulCollection.
+             * @constructor
+             * @param {minimir.v1.SoulCollection.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SoulCollection = function (properties) {
+                this.beasts = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SoulCollection revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.SoulCollection
+             * @instance
+             */
+            SoulCollection.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SoulCollection fragments.
+             * @member {Long} fragments
+             * @memberof minimir.v1.SoulCollection
+             * @instance
+             */
+            SoulCollection.prototype.fragments = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SoulCollection attached_type_id.
+             * @member {number} attached_type_id
+             * @memberof minimir.v1.SoulCollection
+             * @instance
+             */
+            SoulCollection.prototype.attached_type_id = 0;
+
+            /**
+             * SoulCollection beasts.
+             * @member {Array.<minimir.v1.SoulBeast.$Properties>} beasts
+             * @memberof minimir.v1.SoulCollection
+             * @instance
+             */
+            SoulCollection.prototype.beasts = $util.emptyArray;
+
+            /**
+             * Creates a new SoulCollection instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {minimir.v1.SoulCollection.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SoulCollection} SoulCollection instance
+             * @type {{
+             *   (properties: minimir.v1.SoulCollection.$Shape): minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape;
+             *   (properties?: minimir.v1.SoulCollection.$Properties): minimir.v1.SoulCollection;
+             * }}
+             */
+            SoulCollection.create = function(properties) {
+                return new SoulCollection(properties);
+            };
+
+            /**
+             * Encodes the specified SoulCollection message. Does not implicitly {@link minimir.v1.SoulCollection.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {minimir.v1.SoulCollection.$Properties} message SoulCollection message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulCollection.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.revision);
+                if (message.fragments != null && $Object.hasOwnProperty.call(message, "fragments") && (typeof message.fragments === "object" ? message.fragments.low || message.fragments.high : message.fragments !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.fragments);
+                if (message.attached_type_id != null && $Object.hasOwnProperty.call(message, "attached_type_id") && message.attached_type_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.attached_type_id);
+                if (message.beasts != null && message.beasts.length)
+                    for (var i = 0; i < message.beasts.length; ++i)
+                        $root.minimir.v1.SoulBeast.encode(message.beasts[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SoulCollection message, length delimited. Does not implicitly {@link minimir.v1.SoulCollection.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {minimir.v1.SoulCollection.$Properties} message SoulCollection message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulCollection.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SoulCollection message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape} SoulCollection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulCollection.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SoulCollection();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.fragments = value;
+                            else
+                                delete message.fragments;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attached_type_id = value;
+                            else
+                                delete message.attached_type_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.beasts && message.beasts.length))
+                                message.beasts = [];
+                            message.beasts.push($root.minimir.v1.SoulBeast.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SoulCollection message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape} SoulCollection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulCollection.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SoulCollection message.
+             * @function verify
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SoulCollection.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                if (message.fragments != null && $Object.hasOwnProperty.call(message, "fragments"))
+                    if (!$util.isInteger(message.fragments) && !(message.fragments && $util.isInteger(message.fragments.low) && $util.isInteger(message.fragments.high)))
+                        return "fragments: integer|Long expected";
+                if (message.attached_type_id != null && $Object.hasOwnProperty.call(message, "attached_type_id"))
+                    if (!$util.isInteger(message.attached_type_id))
+                        return "attached_type_id: integer expected";
+                if (message.beasts != null && $Object.hasOwnProperty.call(message, "beasts")) {
+                    if (!$Array.isArray(message.beasts))
+                        return "beasts: array expected";
+                    for (var i = 0; i < message.beasts.length; ++i) {
+                        var error = $root.minimir.v1.SoulBeast.verify(message.beasts[i], _depth + 1);
+                        if (error)
+                            return "beasts." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SoulCollection
+             * @function getTypeUrl
+             * @memberof minimir.v1.SoulCollection
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SoulCollection.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SoulCollection";
+            };
+
+            return SoulCollection;
+        })();
+
+        v1.SoulReceipt = (function() {
+
+            /**
+             * Properties of a SoulReceipt.
+             * @typedef {Object} minimir.v1.SoulReceipt.$Properties
+             * @property {number|null} [action] SoulReceipt action
+             * @property {number|null} [type_id] SoulReceipt type_id
+             * @property {Long|null} [fragment_delta] SoulReceipt fragment_delta
+             * @property {minimir.v1.SoulCollection.$Properties|null} [collection] SoulReceipt collection
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SoulReceipt.
+             * @memberof minimir.v1
+             * @interface ISoulReceipt
+             * @augments minimir.v1.SoulReceipt.$Properties
+             * @deprecated Use minimir.v1.SoulReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a SoulReceipt.
+             * @typedef {minimir.v1.SoulReceipt.$Properties} minimir.v1.SoulReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new SoulReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a SoulReceipt.
+             * @constructor
+             * @param {minimir.v1.SoulReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SoulReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SoulReceipt action.
+             * @member {number} action
+             * @memberof minimir.v1.SoulReceipt
+             * @instance
+             */
+            SoulReceipt.prototype.action = 0;
+
+            /**
+             * SoulReceipt type_id.
+             * @member {number} type_id
+             * @memberof minimir.v1.SoulReceipt
+             * @instance
+             */
+            SoulReceipt.prototype.type_id = 0;
+
+            /**
+             * SoulReceipt fragment_delta.
+             * @member {Long} fragment_delta
+             * @memberof minimir.v1.SoulReceipt
+             * @instance
+             */
+            SoulReceipt.prototype.fragment_delta = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SoulReceipt collection.
+             * @member {minimir.v1.SoulCollection.$Properties|null|undefined} collection
+             * @memberof minimir.v1.SoulReceipt
+             * @instance
+             */
+            SoulReceipt.prototype.collection = null;
+
+            /**
+             * Creates a new SoulReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {minimir.v1.SoulReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SoulReceipt} SoulReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.SoulReceipt.$Shape): minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape;
+             *   (properties?: minimir.v1.SoulReceipt.$Properties): minimir.v1.SoulReceipt;
+             * }}
+             */
+            SoulReceipt.create = function(properties) {
+                return new SoulReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified SoulReceipt message. Does not implicitly {@link minimir.v1.SoulReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {minimir.v1.SoulReceipt.$Properties} message SoulReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.action);
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id") && message.type_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.type_id);
+                if (message.fragment_delta != null && $Object.hasOwnProperty.call(message, "fragment_delta") && (typeof message.fragment_delta === "object" ? message.fragment_delta.low || message.fragment_delta.high : message.fragment_delta !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).sint64(message.fragment_delta);
+                if (message.collection != null && $Object.hasOwnProperty.call(message, "collection"))
+                    $root.minimir.v1.SoulCollection.encode(message.collection, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SoulReceipt message, length delimited. Does not implicitly {@link minimir.v1.SoulReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {minimir.v1.SoulReceipt.$Properties} message SoulReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SoulReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape} SoulReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SoulReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.type_id = value;
+                            else
+                                delete message.type_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.sint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.fragment_delta = value;
+                            else
+                                delete message.fragment_delta;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.collection = $root.minimir.v1.SoulCollection.decode(reader, reader.size(), $undefined, _depth + 1, message.collection);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SoulReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape} SoulReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SoulReceipt message.
+             * @function verify
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SoulReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id"))
+                    if (!$util.isInteger(message.type_id))
+                        return "type_id: integer expected";
+                if (message.fragment_delta != null && $Object.hasOwnProperty.call(message, "fragment_delta"))
+                    if (!$util.isInteger(message.fragment_delta) && !(message.fragment_delta && $util.isInteger(message.fragment_delta.low) && $util.isInteger(message.fragment_delta.high)))
+                        return "fragment_delta: integer|Long expected";
+                if (message.collection != null && $Object.hasOwnProperty.call(message, "collection")) {
+                    var error = $root.minimir.v1.SoulCollection.verify(message.collection, _depth + 1);
+                    if (error)
+                        return "collection." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SoulReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.SoulReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SoulReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SoulReceipt";
+            };
+
+            return SoulReceipt;
         })();
 
         v1.BodyTrainingState = (function() {
@@ -31218,6 +32088,7 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.EquipmentEnhancementSlot.$Properties>|null} [equipment_enhancement_slots] InventoryResult equipment_enhancement_slots
              * @property {minimir.v1.MedalState.$Properties|null} [medal] InventoryResult medal
              * @property {minimir.v1.BodyTrainingState.$Properties|null} [body_training] InventoryResult body_training
+             * @property {minimir.v1.SoulCollection.$Properties|null} [soul_collection] InventoryResult soul_collection
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -31367,6 +32238,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.body_training = null;
 
             /**
+             * InventoryResult soul_collection.
+             * @member {minimir.v1.SoulCollection.$Properties|null|undefined} soul_collection
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.soul_collection = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -31430,6 +32309,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.MedalState.encode(message.medal, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
                 if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training"))
                     $root.minimir.v1.BodyTrainingState.encode(message.body_training, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
+                if (message.soul_collection != null && $Object.hasOwnProperty.call(message, "soul_collection"))
+                    $root.minimir.v1.SoulCollection.encode(message.soul_collection, writer.uint32(/* id 15, wireType 2 =*/122).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -31599,6 +32480,12 @@ $root.minimir = (function() {
                             message.body_training = $root.minimir.v1.BodyTrainingState.decode(reader, reader.size(), $undefined, _depth + 1, message.body_training);
                             continue;
                         }
+                    case 15: {
+                            if (wireType !== 2)
+                                break;
+                            message.soul_collection = $root.minimir.v1.SoulCollection.decode(reader, reader.size(), $undefined, _depth + 1, message.soul_collection);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -31726,6 +32613,11 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.BodyTrainingState.verify(message.body_training, _depth + 1);
                     if (error)
                         return "body_training." + error;
+                }
+                if (message.soul_collection != null && $Object.hasOwnProperty.call(message, "soul_collection")) {
+                    var error = $root.minimir.v1.SoulCollection.verify(message.soul_collection, _depth + 1);
+                    if (error)
+                        return "soul_collection." + error;
                 }
                 return null;
             };
@@ -46607,6 +47499,8 @@ $root.minimir = (function() {
              * @property {string|null} [source_kind] ChallengePendingReward source_kind
              * @property {number|null} [source_rank] ChallengePendingReward source_rank
              * @property {Long|null} [bound_yuanbao_units] ChallengePendingReward bound_yuanbao_units
+             * @property {number|null} [soul_type_id] ChallengePendingReward soul_type_id
+             * @property {Long|null} [soul_duplicate_fragments] ChallengePendingReward soul_duplicate_fragments
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -46696,6 +47590,22 @@ $root.minimir = (function() {
             ChallengePendingReward.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
             /**
+             * ChallengePendingReward soul_type_id.
+             * @member {number} soul_type_id
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.soul_type_id = 0;
+
+            /**
+             * ChallengePendingReward soul_duplicate_fragments.
+             * @member {Long} soul_duplicate_fragments
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.soul_duplicate_fragments = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ChallengePendingReward
@@ -46742,6 +47652,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.source_rank);
                 if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
                     writer.uint32(/* id 7, wireType 0 =*/56).int64(message.bound_yuanbao_units);
+                if (message.soul_type_id != null && $Object.hasOwnProperty.call(message, "soul_type_id") && message.soul_type_id !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.soul_type_id);
+                if (message.soul_duplicate_fragments != null && $Object.hasOwnProperty.call(message, "soul_duplicate_fragments") && (typeof message.soul_duplicate_fragments === "object" ? message.soul_duplicate_fragments.low || message.soul_duplicate_fragments.high : message.soul_duplicate_fragments !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.soul_duplicate_fragments);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -46861,6 +47775,24 @@ $root.minimir = (function() {
                                 delete message.bound_yuanbao_units;
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.soul_type_id = value;
+                            else
+                                delete message.soul_type_id;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.soul_duplicate_fragments = value;
+                            else
+                                delete message.soul_duplicate_fragments;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -46936,6 +47868,12 @@ $root.minimir = (function() {
                 if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
                     if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
                         return "bound_yuanbao_units: integer|Long expected";
+                if (message.soul_type_id != null && $Object.hasOwnProperty.call(message, "soul_type_id"))
+                    if (!$util.isInteger(message.soul_type_id))
+                        return "soul_type_id: integer expected";
+                if (message.soul_duplicate_fragments != null && $Object.hasOwnProperty.call(message, "soul_duplicate_fragments"))
+                    if (!$util.isInteger(message.soul_duplicate_fragments) && !(message.soul_duplicate_fragments && $util.isInteger(message.soul_duplicate_fragments.low) && $util.isInteger(message.soul_duplicate_fragments.high)))
+                        return "soul_duplicate_fragments: integer|Long expected";
                 return null;
             };
 
@@ -47209,6 +48147,8 @@ $root.minimir = (function() {
              * @property {boolean|null} [recovered] PersonalBossHistoryEntry recovered
              * @property {Long|null} [reward_gold] PersonalBossHistoryEntry reward_gold
              * @property {boolean|null} [reward_bound] PersonalBossHistoryEntry reward_bound
+             * @property {number|null} [soul_type_id] PersonalBossHistoryEntry soul_type_id
+             * @property {Long|null} [soul_fragments] PersonalBossHistoryEntry soul_fragments
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -47321,6 +48261,22 @@ $root.minimir = (function() {
             PersonalBossHistoryEntry.prototype.reward_bound = false;
 
             /**
+             * PersonalBossHistoryEntry soul_type_id.
+             * @member {number} soul_type_id
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.soul_type_id = 0;
+
+            /**
+             * PersonalBossHistoryEntry soul_fragments.
+             * @member {Long} soul_fragments
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.soul_fragments = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new PersonalBossHistoryEntry instance using the specified properties.
              * @function create
              * @memberof minimir.v1.PersonalBossHistoryEntry
@@ -47372,6 +48328,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).int64(message.reward_gold);
                 if (message.reward_bound != null && $Object.hasOwnProperty.call(message, "reward_bound") && message.reward_bound !== false)
                     writer.uint32(/* id 10, wireType 0 =*/80).bool(message.reward_bound);
+                if (message.soul_type_id != null && $Object.hasOwnProperty.call(message, "soul_type_id") && message.soul_type_id !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.soul_type_id);
+                if (message.soul_fragments != null && $Object.hasOwnProperty.call(message, "soul_fragments") && (typeof message.soul_fragments === "object" ? message.soul_fragments.low || message.soul_fragments.high : message.soul_fragments !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.soul_fragments);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -47519,6 +48479,24 @@ $root.minimir = (function() {
                                 delete message.reward_bound;
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.soul_type_id = value;
+                            else
+                                delete message.soul_type_id;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.soul_fragments = value;
+                            else
+                                delete message.soul_fragments;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -47597,6 +48575,12 @@ $root.minimir = (function() {
                 if (message.reward_bound != null && $Object.hasOwnProperty.call(message, "reward_bound"))
                     if (typeof message.reward_bound !== "boolean")
                         return "reward_bound: boolean expected";
+                if (message.soul_type_id != null && $Object.hasOwnProperty.call(message, "soul_type_id"))
+                    if (!$util.isInteger(message.soul_type_id))
+                        return "soul_type_id: integer expected";
+                if (message.soul_fragments != null && $Object.hasOwnProperty.call(message, "soul_fragments"))
+                    if (!$util.isInteger(message.soul_fragments) && !(message.soul_fragments && $util.isInteger(message.soul_fragments.low) && $util.isInteger(message.soul_fragments.high)))
+                        return "soul_fragments: integer|Long expected";
                 return null;
             };
 
@@ -72944,6 +73928,336 @@ $root.minimir = (function() {
             };
 
             return BodyTrainingCommitRequest;
+        })();
+
+        v1.SoulActionRequest = (function() {
+
+            /**
+             * Properties of a SoulActionRequest.
+             * @typedef {Object} minimir.v1.SoulActionRequest.$Properties
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SoulActionRequest operation
+             * @property {number|null} [action] SoulActionRequest action
+             * @property {number|null} [type_id] SoulActionRequest type_id
+             * @property {number|null} [affix_id] SoulActionRequest affix_id
+             * @property {Long|null} [soul_revision] SoulActionRequest soul_revision
+             * @property {Long|null} [fragment_delta] SoulActionRequest fragment_delta
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SoulActionRequest.
+             * @memberof minimir.v1
+             * @interface ISoulActionRequest
+             * @augments minimir.v1.SoulActionRequest.$Properties
+             * @deprecated Use minimir.v1.SoulActionRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SoulActionRequest.
+             * @typedef {minimir.v1.SoulActionRequest.$Properties} minimir.v1.SoulActionRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SoulActionRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SoulActionRequest.
+             * @constructor
+             * @param {minimir.v1.SoulActionRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SoulActionRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SoulActionRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.operation = null;
+
+            /**
+             * SoulActionRequest action.
+             * @member {number} action
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.action = 0;
+
+            /**
+             * SoulActionRequest type_id.
+             * @member {number} type_id
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.type_id = 0;
+
+            /**
+             * SoulActionRequest affix_id.
+             * @member {number} affix_id
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.affix_id = 0;
+
+            /**
+             * SoulActionRequest soul_revision.
+             * @member {Long} soul_revision
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.soul_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SoulActionRequest fragment_delta.
+             * @member {Long} fragment_delta
+             * @memberof minimir.v1.SoulActionRequest
+             * @instance
+             */
+            SoulActionRequest.prototype.fragment_delta = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new SoulActionRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {minimir.v1.SoulActionRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SoulActionRequest} SoulActionRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SoulActionRequest.$Shape): minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape;
+             *   (properties?: minimir.v1.SoulActionRequest.$Properties): minimir.v1.SoulActionRequest;
+             * }}
+             */
+            SoulActionRequest.create = function(properties) {
+                return new SoulActionRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SoulActionRequest message. Does not implicitly {@link minimir.v1.SoulActionRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {minimir.v1.SoulActionRequest.$Properties} message SoulActionRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulActionRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.action);
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id") && message.type_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.type_id);
+                if (message.affix_id != null && $Object.hasOwnProperty.call(message, "affix_id") && message.affix_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.affix_id);
+                if (message.soul_revision != null && $Object.hasOwnProperty.call(message, "soul_revision") && (typeof message.soul_revision === "object" ? message.soul_revision.low || message.soul_revision.high : message.soul_revision !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.soul_revision);
+                if (message.fragment_delta != null && $Object.hasOwnProperty.call(message, "fragment_delta") && (typeof message.fragment_delta === "object" ? message.fragment_delta.low || message.fragment_delta.high : message.fragment_delta !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).sint64(message.fragment_delta);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SoulActionRequest message, length delimited. Does not implicitly {@link minimir.v1.SoulActionRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {minimir.v1.SoulActionRequest.$Properties} message SoulActionRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SoulActionRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SoulActionRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape} SoulActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulActionRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SoulActionRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.type_id = value;
+                            else
+                                delete message.type_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.affix_id = value;
+                            else
+                                delete message.affix_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.soul_revision = value;
+                            else
+                                delete message.soul_revision;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.sint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.fragment_delta = value;
+                            else
+                                delete message.fragment_delta;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SoulActionRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape} SoulActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SoulActionRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SoulActionRequest message.
+             * @function verify
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SoulActionRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.type_id != null && $Object.hasOwnProperty.call(message, "type_id"))
+                    if (!$util.isInteger(message.type_id))
+                        return "type_id: integer expected";
+                if (message.affix_id != null && $Object.hasOwnProperty.call(message, "affix_id"))
+                    if (!$util.isInteger(message.affix_id))
+                        return "affix_id: integer expected";
+                if (message.soul_revision != null && $Object.hasOwnProperty.call(message, "soul_revision"))
+                    if (!$util.isInteger(message.soul_revision) && !(message.soul_revision && $util.isInteger(message.soul_revision.low) && $util.isInteger(message.soul_revision.high)))
+                        return "soul_revision: integer|Long expected";
+                if (message.fragment_delta != null && $Object.hasOwnProperty.call(message, "fragment_delta"))
+                    if (!$util.isInteger(message.fragment_delta) && !(message.fragment_delta && $util.isInteger(message.fragment_delta.low) && $util.isInteger(message.fragment_delta.high)))
+                        return "fragment_delta: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SoulActionRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SoulActionRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SoulActionRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SoulActionRequest";
+            };
+
+            return SoulActionRequest;
         })();
 
         return v1;

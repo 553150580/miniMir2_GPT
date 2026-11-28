@@ -15,6 +15,7 @@ const (
 	worldBossRewardCollection = "world_boss_rewards" // 独立附件永久保存，领取后保留原发放和到账身份。
 	worldBossKillReward       = "world_boss"         // 实际击杀触发的参与与排名奖励。
 	worldBossTimeoutReward    = "world_boss_timeout" // 超时独立配置的绑定参与附件。
+	worldBossSoulReward       = "world_boss_soul"    // 独立于背包的同名角色奖项。
 )
 
 // WorldBossPresence 保存首领终态时已获准的席位状态，由当前世界分片裁定。
@@ -50,13 +51,17 @@ func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish Wor
 		return nil, nil
 	}
 	participation, sourceKind := rules.Participation, worldBossKillReward
+	var soulDrop devconfig.SoulDrop
+	if finish.Outcome == WorldBossKilled && f.Souls != nil {
+		soulDrop = f.Souls.World[spec.TemplateID]
+	}
 	if finish.Outcome == WorldBossExpired {
 		participation, sourceKind = rules.TimeoutParticipation, worldBossTimeoutReward
 		if len(participation) == 0 {
 			return nil, nil
 		}
 	}
-	var rewards []externalChallengeRewardRecord // 至多每位已确认角色一笔，按原稳定榜单顺序生成。
+	var rewards []externalChallengeRewardRecord // 每位有效角色最多一笔物品和一笔独立魂兽。
 	for index, row := range finish.Contributions {
 		if row.Damage < rules.MinimumDamage {
 			continue
@@ -71,7 +76,7 @@ func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish Wor
 				}
 			}
 		}
-		if len(participation) == 0 && len(ranking) == 0 {
+		if len(participation) == 0 && len(ranking) == 0 && soulDrop.TypeID == 0 {
 			continue
 		}
 		evidence := row.RewardEvidence
@@ -96,11 +101,19 @@ func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish Wor
 				items = append(items, InitializeItemDurability(item, f))
 			}
 		}
-		rewards = append(rewards, externalChallengeRewardRecord{ID: id, RoleID: row.RoleID, ChallengePendingReward: domain.ChallengePendingReward{
+		attachment := domain.ChallengePendingReward{
 			RewardID: id, SourceKind: sourceKind, SourceID: spec.OccurrenceID, Origin: evidence.Origin, TemplateID: spec.TemplateID,
 			RuleVersion: spec.RuleVersion, EarnedAt: finish.FinishedAt, Items: items, SourceRunID: spec.RunID, SourceRank: rank,
 			ConfigHash: spec.ConfigHash, PrivilegeUntil: evidence.PrivilegeUntil,
-		}})
+		}
+		if len(items) != 0 {
+			rewards = append(rewards, externalChallengeRewardRecord{ID: id, RoleID: row.RoleID, ChallengePendingReward: attachment})
+		}
+		if award := freezeSoulAward(f.Souls, soulDrop, row.ReservationID); award != nil {
+			soulID := Hash([]byte("world_boss_soul:" + id))[:32]
+			attachment.RewardID, attachment.SourceKind, attachment.Items, attachment.Soul = soulID, worldBossSoulReward, nil, award
+			rewards = append(rewards, externalChallengeRewardRecord{ID: soulID, RoleID: row.RoleID, ChallengePendingReward: attachment})
+		}
 	}
 	return rewards, nil
 }

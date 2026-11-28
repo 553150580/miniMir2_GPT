@@ -7,11 +7,11 @@ import (
 	"minimir/internal/devconfig"
 )
 
-// bodyMasteryBonuses 从确认过的角色聚合读取已开放系别。
-func (w *worker) bodyMasteryBonuses(r *room) devconfig.MasteryBonuses {
+// roleMasteryBonuses 统一合并角色炼体及附体的暴击、攻速和抵抗贡献。
+func (w *worker) roleMasteryBonuses(r *room) devconfig.MasteryBonuses {
 	f := &w.e.Store.Cfg.Fixture
 	state := r.Role.BodyTrainingLevels()
-	return f.MasteryCombat.Combine(f.BodyMasteryBonuses(r.Role.Level, state.Critical, state.Speed, state.Resistance))
+	return f.MasteryCombat.Combine(f.BodyMasteryBonuses(r.Role.Level, state.Critical, state.Speed, state.Resistance), w.soulBonuses(r).Mastery)
 }
 
 // masteryBonuses 保留挑战入场时的值。普通交战只读取当前角色的确认聚合。
@@ -23,7 +23,7 @@ func (w *worker) masteryBonuses(r *room, e *entity) devconfig.MasteryBonuses {
 	if r.bossBattle != nil {
 		return rules.Combine(w.fighter(r, e).MasteryBonuses)
 	}
-	return w.bodyMasteryBonuses(r)
+	return w.roleMasteryBonuses(r)
 }
 
 // criticalExtraBP 在原直接攻击已命中时掷一次点，返回能产生实际增量的暴击额度。

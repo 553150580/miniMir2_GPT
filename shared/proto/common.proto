@@ -35,6 +35,27 @@ message OperationResult {
   MedalReceipt medal = 19;
   RebirthReceipt rebirth = 20;
   BodyTrainingReceipt body_training = 21;
+  SoulReceipt soul = 22;
+}
+
+// 魂兽记录固定归属当前角色，随库存修订下发。
+message SoulBeast {
+  uint32 type_id = 1;
+  uint32 star = 2;
+  repeated uint32 affix_ids = 3;
+}
+message SoulCollection {
+  uint64 revision = 1;
+  int64 fragments = 2;
+  uint32 attached_type_id = 3;
+  repeated SoulBeast beasts = 4;
+}
+// 同一操作重放原结果，包含原流水对应的碎片变化和收藏修订。
+message SoulReceipt {
+  uint32 action = 1;
+  uint32 type_id = 2;
+  sint64 fragment_delta = 3;
+  SoulCollection collection = 4;
 }
 
 // 各系的永久等级随同一角色库存修订下发。

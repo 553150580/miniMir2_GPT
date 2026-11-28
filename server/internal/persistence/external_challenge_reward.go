@@ -61,7 +61,7 @@ func (s *Store) queryExternalChallengeRewards(ctx context.Context, role domain.R
 }
 
 // claimExternalChallengeReward 领取其他挑战已确认的附件，只在原角色资产事务中调用。
-func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Role, id, operationID string) (domain.Role, *domain.ChallengePendingReward, uint32, error) {
+func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Role, id, operationID string) (domain.Role, *domain.ChallengePendingReward, *domain.SoulReceipt, uint32, error) {
 	filter := externalChallengeRewardFilter(role)
 	filter["_id"] = id
 	for _, name := range [...]string{worldBossRewardCollection, dungeonRewardCollection, mirrorSeasonRewardCollection} {
@@ -71,43 +71,62 @@ func (s *Store) claimExternalChallengeReward(ctx context.Context, role domain.Ro
 			if errors.Is(err, mongo.ErrNoDocuments) {
 				continue
 			}
-			return role, nil, 0, err
+			return role, nil, nil, 0, err
 		}
 		mirror := name == mirrorSeasonRewardCollection
-		if row.RewardID != id || !validExternalRewardSource(name, row.SourceKind) ||
-			mirror && (!validMirrorSeasonAssets(row.MirrorAssets) || len(row.Items) != 0) || !mirror && (row.MirrorAssets != nil || len(row.Items) == 0) {
-			return role, nil, 0, Fail(p.CodeOperationConflict, "挑战待领附件的原身份不一致")
+		soulAward := row.SourceKind == worldBossSoulReward
+		if row.RewardID != id || !validExternalRewardSource(name, row.SourceKind) || !validChallengeAttachment(row, mirror, soulAward) {
+			return role, nil, nil, 0, Fail(p.CodeOperationConflict, "挑战待领附件的原身份不一致")
 		}
 		if len(row.Items) > 0 && len(row.Items) > role.Capacity-len(role.Items) {
-			return role, nil, p.CodeEquipmentBagFull, nil
+			return role, nil, nil, p.CodeEquipmentBagFull, nil
 		}
 		updatedRole := role
+		var soul *domain.SoulReceipt
 		if mirror {
 			var err error
 			if updatedRole, err = grantMirrorSeasonAssets(role, row.MirrorAssets); err != nil {
-				return role, nil, 0, err
+				return role, nil, nil, 0, err
+			}
+		}
+		if soulAward {
+			var err error
+			if updatedRole, soul, err = grantSoulAward(role, row.Soul); err != nil {
+				return role, nil, nil, 0, err
 			}
 		}
 		// 标记、入包、唯一回执和审计属于一个事务，满包时在这一步之前返回。
 		write, err := collection.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"claimed": true, "claim_operation": operationID,
 			"claimed_at": bossTime(time.Now())}})
 		if err != nil {
-			return role, nil, 0, err
+			return role, nil, nil, 0, err
 		}
 		if write.MatchedCount != 1 {
-			return role, nil, 0, Fail(p.CodeOperationPending, "挑战奖励领取结果待查证")
+			return role, nil, nil, 0, Fail(p.CodeOperationPending, "挑战奖励领取结果待查证")
 		}
 		if len(row.Items) > 0 {
 			updatedRole.Items = append(slices.Clone(role.Items), row.Items...)
 		}
-		return updatedRole, &row.ChallengePendingReward, 0, nil
+		return updatedRole, &row.ChallengePendingReward, soul, 0, nil
 	}
-	return role, nil, p.CodeOperationConflict, nil
+	return role, nil, nil, p.CodeOperationConflict, nil
+}
+
+// validChallengeAttachment 保障三类附件各自有唯一资产载体。
+func validChallengeAttachment(row externalChallengeRewardRecord, mirror, soul bool) bool {
+	switch {
+	case mirror:
+		return validMirrorSeasonAssets(row.MirrorAssets) && len(row.Items) == 0 && row.Soul == nil
+	case soul:
+		return row.Soul != nil && row.Soul.Valid() && len(row.Items) == 0 && row.MirrorAssets == nil
+	default:
+		return row.MirrorAssets == nil && row.Soul == nil && len(row.Items) != 0
+	}
 }
 
 // validExternalRewardSource 拒绝存储在错误来源集合的旧记录。
 func validExternalRewardSource(collection, source string) bool {
-	return collection == worldBossRewardCollection && (source == worldBossKillReward || source == worldBossTimeoutReward) ||
+	return collection == worldBossRewardCollection && (source == worldBossKillReward || source == worldBossTimeoutReward || source == worldBossSoulReward) ||
 		collection == dungeonRewardCollection && source == dungeonRewardSource ||
 		collection == mirrorSeasonRewardCollection && (source == mirrorRankRewardSource || source == mirrorParticipationRewardSource)
 }

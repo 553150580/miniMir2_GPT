@@ -1,0 +1,15 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+import "common.proto";
+
+// 玩家确认页面所见的收藏修订、对象和碎片增减。
+message SoulActionRequest {
+  OperationContext operation = 1;
+  // 1 附体，2 解除，3 改一池词条，4 升星，5 分解，6 合成。
+  uint32 action = 2;
+  uint32 type_id = 3;
+  uint32 affix_id = 4;
+  uint64 soul_revision = 5;
+  sint64 fragment_delta = 6;
+}

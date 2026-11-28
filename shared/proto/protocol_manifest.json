@@ -1572,6 +1572,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.5/5.7 一次扣费、一次判定及原回执"
+    },
+    {
+      "value": 40070,
+      "name": "MsgC2SSoulAction",
+      "proto_message": "SoulActionRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.22/5.9 魂兽收藏修订、原碎片条款与幂等"
     }
   ],
   "error_codes": [
@@ -2165,6 +2177,22 @@
       "display_zh": "炼体已达当前上限，或金币余额不足",
       "status": "draft",
       "source_ref": "最终策划案4.5",
+      "active_in_scope": true
+    },
+    {
+      "value": 3982,
+      "name": "CodeSoulUnavailable",
+      "display_zh": "当前规则或场景未开放魂兽操作",
+      "status": "draft",
+      "source_ref": "最终策划案4.22/5.9",
+      "active_in_scope": true
+    },
+    {
+      "value": 3983,
+      "name": "CodeSoulChanged",
+      "display_zh": "魂兽状态或碎片条件已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.22/5.9",
       "active_in_scope": true
     }
   ]

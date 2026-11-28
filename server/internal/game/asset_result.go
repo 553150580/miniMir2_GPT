@@ -25,9 +25,9 @@ type assetBinding struct {
 // submitAsset 冻结原操作，提交事务，队列满时按原任务退避。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，q 记录资产请求，f 记录协议帧，reviveID 标识当前业务使用的复活。
 func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, reviveID string) {
-	// 只有转生和炼体在首领战斗中允许读取已确认的原回执。
-	vitalityOperation := q.Kind == persistence.AssetRebirthCommit || q.Kind == persistence.AssetBodyTrainingCommit
-	if r.bossBattle != nil && (!vitalityOperation || !historicalGrowthOperation(r, q.Context)) {
+	// 战斗中只允许查回指定成长操作的原回执，首次写入仍由普通角色和场景受理。
+	replayableGrowth := q.Kind == persistence.AssetRebirthCommit || q.Kind == persistence.AssetBodyTrainingCommit || q.Kind == persistence.AssetSoulAction
+	if r.bossBattle != nil && (!replayableGrowth || !historicalGrowthOperation(r, q.Context)) {
 		return
 	}
 	if r.AssetGeneration == math.MaxUint64 {

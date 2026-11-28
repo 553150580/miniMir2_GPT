@@ -62,6 +62,7 @@ const codecs: Record<number, MessageType> = {
     40061: pb.MedalQuoteRequest, 40062: pb.MedalQuote, 40063: pb.MedalCommitRequest,
     40064: pb.RebirthQuoteRequest, 40065: pb.RebirthQuote, 40066: pb.RebirthCommitRequest,
     40067: pb.BodyTrainingQuoteRequest, 40068: pb.BodyTrainingQuote, 40069: pb.BodyTrainingCommitRequest,
+    40070: pb.SoulActionRequest,
 };
 
 function variable(value: Long): number[] {

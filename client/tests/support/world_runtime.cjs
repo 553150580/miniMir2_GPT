@@ -14,7 +14,17 @@ class UITransform{
  }
 }
 class Material{copy(_base,options){this.passes=[{blendState:options.states.blendState}];}destroy(){this.destroyed=true;}}
-class Sprite{static Type={SIMPLE:0};static SizeMode={CUSTOM:0};getSharedMaterial(){return {}}getRenderMaterial(){return this.customMaterial}}class Label{}class ProgressBar{}
+class Sprite{static Type={SIMPLE:0};static SizeMode={CUSTOM:0};getSharedMaterial(){return {}}getRenderMaterial(){return this.customMaterial}}
+
+// 伤害飘字会创建暴击色，并复制预制标签的原色用于节点复用。
+class Color {
+ constructor(r=255,g=255,b=255,a=255){Object.assign(this,{r,g,b,a});}
+ clone(){return new Color(this.r,this.g,this.b,this.a);}
+}
+class Label {
+ constructor(){this.string='';this.color=new Color();}
+}
+class ProgressBar{}
 class UIOpacity{constructor(){this.opacity=255;}}
 class AudioSource{constructor(){this.clip=null;this.volume=1;this.calls=[];this.playing=false;}play(){this.calls.push({kind:'play',clip:this.clip,volume:this.volume});this.playing=true;}stop(){this.calls.push({kind:'stop'});this.playing=false;}destroy(){this.destroyed=true;}}
 class Node{
@@ -29,7 +39,7 @@ class Node{
 }
 const sprite=name=>{const node=new Node(name);node.add(Sprite,new Sprite());return node;};
 const touchListeners=new Set();
-const cc={Node,UITransform,Sprite,Label,ProgressBar,UIOpacity,Vec3,AudioSource,Material,Input:{EventType:{TOUCH_END:'touch-end'}},
+const cc={Node,UITransform,Sprite,Label,ProgressBar,UIOpacity,Vec3,AudioSource,Material,Color,Input:{EventType:{TOUCH_END:'touch-end'}},
  view:{getViewportRect:()=>({x:0,y:0}),getScaleX:()=>1,getScaleY:()=>1},
  input:{on(_e,callback,owner){touchListeners.add({callback,owner});},off(_e,callback,owner){for(const value of touchListeners)if(value.callback===callback&&value.owner===owner)touchListeners.delete(value);},touch(){for(const value of Array.from(touchListeners))value.callback.call(value.owner);}},
  gfx:{BlendFactor:{SRC_ALPHA:2,ONE:1,ONE_MINUS_SRC_ALPHA:4}},isValid:node=>!node?.destroyed,game:{totalTime:0},instantiate(prefab){

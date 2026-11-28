@@ -32,7 +32,7 @@ run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbjs'), [
   'shared/proto/equipment_refine.proto',
   'shared/proto/medal.proto',
   'shared/proto/rebirth.proto',
-  'shared/proto/body_training.proto',
+  'shared/proto/body_training.proto', 'shared/proto/soul_beast.proto',
 ]);
 run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbts'), ['-o', 'client/assets/scripts/generated/protobuf/client_pb.d.ts', 'client/assets/scripts/generated/protobuf/client_pb.js']);
 run(path.join(root, 'tools/protocol/verify_client_pb.cjs'), ['--report', 'conf/toolchain/client-pb-verification.json']);

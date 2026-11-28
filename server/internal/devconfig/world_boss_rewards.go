@@ -45,8 +45,9 @@ func (f *Fixture) ValidWorldBossRewards(cfg *WorldBossConfig) bool {
 	if rules == nil {
 		return true
 	}
+	hasSoul := f.Souls != nil && f.Souls.validDrop(f.Souls.World[cfg.TemplateID])
 	if cfg.ParticipantLimit <= 0 || rules.MinimumDamage <= 0 || rules.MinimumDamage > cfg.Monster.HP ||
-		len(rules.Participation)+len(rules.Ranks)+len(rules.TimeoutParticipation) == 0 ||
+		len(rules.Participation)+len(rules.Ranks)+len(rules.TimeoutParticipation) == 0 && !hasSoul ||
 		!f.validWorldBossRewardItems(rules.Participation) || !f.validWorldBossRewardItems(rules.TimeoutParticipation) ||
 		len(rules.TimeoutParticipation) > 0 && rules.MinimumDamage == cfg.Monster.HP {
 		return false

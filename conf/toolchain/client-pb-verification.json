@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 215,
+  "message_count": 219,
   "message_names": [
     "ItemView",
     "EquipmentRefineAffix",
@@ -13,6 +13,9 @@
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "SoulBeast",
+    "SoulCollection",
+    "SoulReceipt",
     "BodyTrainingState",
     "BodyTrainingTerms",
     "BodyTrainingReceipt",
@@ -220,10 +223,11 @@
     "RebirthCommitRequest",
     "BodyTrainingQuoteRequest",
     "BodyTrainingQuote",
-    "BodyTrainingCommitRequest"
+    "BodyTrainingCommitRequest",
+    "SoulActionRequest"
   ],
-  "int64_field_count": 481,
-  "int64_boundary_cases": 1648,
+  "int64_field_count": 488,
+  "int64_boundary_cases": 1674,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -296,6 +300,24 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "SoulCollection",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SoulCollection",
+      "field": "fragments",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SoulReceipt",
+      "field": "fragment_delta",
+      "type": "sint64",
+      "cases": 4
     },
     {
       "message": "BodyTrainingTerms",
@@ -2110,6 +2132,12 @@
       "cases": 4
     },
     {
+      "message": "ChallengePendingReward",
+      "field": "soul_duplicate_fragments",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "PersonalBossHistoryEntry",
       "field": "rule_version",
       "type": "uint64",
@@ -2136,6 +2164,12 @@
     {
       "message": "PersonalBossHistoryEntry",
       "field": "reward_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "PersonalBossHistoryEntry",
+      "field": "soul_fragments",
       "type": "int64",
       "cases": 4
     },
@@ -3110,6 +3144,18 @@
       "field": "expires_at_unix_ms",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "SoulActionRequest",
+      "field": "soul_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SoulActionRequest",
+      "field": "fragment_delta",
+      "type": "sint64",
+      "cases": 4
     }
   ],
   "bytes_field_count": 133,
@@ -3790,7 +3836,7 @@
     },
     {
       "path": "shared/proto/common.proto",
-      "sha256": "98dc61c0a2c5370bdabf42d59971a747e621a566ff640769bef2224cb7fc747f"
+      "sha256": "b5ffa419042ea51b7d041a1bf74da1ec8949404a0ce37321e828af23641fdac3"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3802,7 +3848,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "8381c7dee35e489c2681b710800088e7d2e8fa8f6e800e97233389994d433d3a"
+      "sha256": "93b22aa90f4026ba9200af9369eb981d195998b2fccf5dc9a7810bb78dd671d3"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -3810,7 +3856,7 @@
     },
     {
       "path": "shared/proto/personal_boss.proto",
-      "sha256": "e80ecbe52c86e2d2931fee7fa2c1a61321ef0b799603eeac7b4574bd67476180"
+      "sha256": "1edd494fe01afdcaf86850c46d6bd8994822e0dc0fc51f4d7e02bcba4a805cce"
     },
     {
       "path": "shared/proto/world_boss.proto",
@@ -3871,18 +3917,22 @@
     {
       "path": "shared/proto/body_training.proto",
       "sha256": "428ee87d4a7fc59d821950a7d789e1dc94f99b46fbdd746616d0c9049734c47c"
+    },
+    {
+      "path": "shared/proto/soul_beast.proto",
+      "sha256": "e0dca668b1110201bdd3252421c3ebb28bc79557d7fcc64a8c03845c667dbd21"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "7e1cad68a908d1d327f659f1ab98c90988bf88de629621075b89afcf04fbde7a",
-      "bytes": 3805179
+      "sha256": "c8ce4bef39be4d53506cb06ca6d44a23e0d0d82b4ca0aa2a92753b02c84d0ae6",
+      "bytes": 3871593
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "c3aca4729777eedea8606ae0c780a288eca23caf9d4088a833625d71b5b5cb81",
-      "bytes": 1194002
+      "sha256": "225fd98a5df7ad07f459d849237e0033486724580c27890914ed3f140ad95ebd",
+      "bytes": 1215048
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

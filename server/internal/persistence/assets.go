@@ -79,6 +79,8 @@ type AssetRequest struct {
 	BodyTrainingCommit     *pb.BodyTrainingCommitRequest // 原炼体确认。
 	BodyTrainingGate       uint32                        // 当前位置的首次尝试门禁。
 	BodyTrainingAcceptedAt time.Time                     `json:"-"` // 已受理的时刻用于报价时限。
+	SoulAction             *pb.SoulActionRequest         // 原收藏修订与魂兽确认条款。
+	SoulGate               bool                          // 首次写入受当前地图限制。
 
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
@@ -224,7 +226,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit, AssetBodyTrainingCommit:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit, AssetBodyTrainingCommit, AssetSoulAction:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -257,6 +259,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var medal *MedalCommitReceipt                      // 原勋章档案与确切碎片消费。
 		var rebirth *RebirthCommitReceipt                  // 原转生、经验释放与确切资产扣除。
 		var bodyTraining *BodyTrainingReceipt              // 炼体每次实际的扣款、成功与原等级。
+		var soul *domain.SoulReceipt                       // 角色魂兽、碎片变更或原首领附件结果。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -318,6 +321,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			if e != nil {
 				return e
 			}
+		case AssetSoulAction:
+			r, soul, businessCode = commitSoulAction(r, s.Cfg.Fixture.Souls, q)
 		case "warehouse":
 			if q.Warehouse == nil || !proto.Equal(q.Warehouse.Operation, q.Context) {
 				businessCode = p.CodeInvalidArgument
@@ -405,7 +410,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
 			if businessCode == p.CodeOperationConflict {
 				// 个人挑战无此编号时，再按原永久角色查询世界和讨伐附件。
-				r, challengeReward, businessCode, e = s.claimExternalChallengeReward(tc, r, q.ChallengeRewardID, opID)
+				r, challengeReward, soul, businessCode, e = s.claimExternalChallengeReward(tc, r, q.ChallengeRewardID, opID)
 				if e != nil {
 					return e
 				}
@@ -470,6 +475,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Medal = medal
 		op.Rebirth = rebirth
 		op.BodyTraining = bodyTraining
+		op.Soul = soul
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -562,6 +568,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["body_training"] = bodyTraining
 			audit["rule_version"] = bodyTraining.Rule
 			audit["config_hash"] = bodyTraining.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if soul != nil {
+			audit["soul"] = soul
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -660,6 +672,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.Medal = receipt.Medal.Proto()
 		result.Rebirth = receipt.Rebirth.Proto()
 		result.BodyTraining = receipt.BodyTraining.Proto()
+		result.Soul = receipt.Soul.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 		result.RecycleRefine = receipt.Recycling.refineProto()
 	}

@@ -70,6 +70,8 @@ import { GameRebirth, validateRebirthReceipt } from './GameRebirth';
 import type { RebirthCommitRequest, RebirthReceipt, RebirthSnapshot } from './GameRebirth';
 import { GameBodyTraining, validateBodyTrainingReceipt } from './GameBodyTraining';
 import type { BodyTrainingCommit, BodyTrainingReceipt, BodyTrainingSnapshot } from './GameBodyTraining';
+import { GameSoulBeasts, validateSoulReceipt } from './GameSoulBeasts';
+import type { SoulAction, SoulSnapshot } from './GameSoulBeasts';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -101,7 +103,7 @@ import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './W
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
     MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote,
-    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote } from '../generated/protocol_ids';
+    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -158,6 +160,7 @@ export class AppRoot extends Component {
     private medal?: GameMedal;
     private rebirth?: GameRebirth;
     private bodyTraining?: GameBodyTraining;
+    private soulBeasts?: GameSoulBeasts;
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -577,9 +580,12 @@ export class AppRoot extends Component {
             submit: (request, revision) => this.economic(MsgC2SRebirthCommit, request, revision) });
         this.bodyTraining = new GameBodyTraining({ snapshot: () => this.bodyTrainingSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read),
-            refresh: () => this.itemActions!.refresh(), growthDetails: () => this.openGrowthDetails(),
+            refresh: () => this.itemActions!.refresh(), growthDetails: () => this.openGrowthDetails(), soulBeasts: () => this.soulBeasts?.open(),
             quote: request => session.connection.request(MsgC2SBodyTrainingQuote, request),
             submit: (request, revision) => this.economic(MsgC2SBodyTrainingCommit, request, revision) });
+        this.soulBeasts = new GameSoulBeasts({ snapshot: () => this.soulSnapshot(),
+            open: read => this.itemActions!.open(read), refresh: () => this.itemActions!.refresh(),
+            submit: (request, revision) => this.economic(MsgC2SSoulAction, request, revision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -627,6 +633,7 @@ export class AppRoot extends Component {
         }, () => { if (this.ui?.top === bossPanel) this.ui.back(); }, (target, signal) => this.prepareBossEntry(target, signal), {
             claim: rewardId => this.economic(40030, { rewardId }),
             itemName: itemId => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === itemId)?.name,
+            soulName: id => this.soulName(id),
             report: error => this.error(error),
         });
         this.cleanups.push(() => this.boss?.dispose());
@@ -786,6 +793,7 @@ export class AppRoot extends Component {
         }
         this.button('UIMgr/Panels/Role/Message', () => {
             if (this.bodyTrainingSnapshot()) { this.bodyTraining?.open(); return; }
+            if (this.soulSnapshot()) { this.soulBeasts?.open(); return; }
             this.openGrowthDetails();
         }, Node.EventType.TOUCH_END);
         for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
@@ -1695,7 +1703,24 @@ export class AppRoot extends Component {
         const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
             this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
         return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, level: inventory.level,
-            state: inventory.bodyTraining, rules, blocked, canRebirth: !!inventory.progression?.rebirthEnabled && !!this.world?.gameplay.rebirth };
+            state: inventory.bodyTraining, rules, blocked, canRebirth: !!inventory.progression?.rebirthEnabled && !!this.world?.gameplay.rebirth,
+            soulAvailable: !!this.soulSnapshot() };
+    }
+
+    // 名录只对当前附着的永久角色开放，实际变更还须使用同一收藏修订。
+    private soulSnapshot(): SoulSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory;
+        const rules = this.world?.gameplay.soul_beasts;
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory?.soulCollection ||
+            !Array.isArray(rules?.types) || !Array.isArray(rules.affixes) || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(roleIdentity());
+        return { scope: attachmentKey(identity), revision: inventory.revision, rules, state: inventory.soulCollection, blocked };
+    }
+
+    private soulName(id: number): string {
+        return this.world?.gameplay.soul_beasts?.types?.find((row: { id: number }) => row.id === id)?.name ?? `魂兽 ${id}`;
     }
 
     private wingSnapshot(): WingSnapshot | null {
@@ -2407,6 +2432,7 @@ export class AppRoot extends Component {
         let medal: { request: MedalCommitRequest; receipt: MedalReceipt } | undefined;
         let rebirth: { request: RebirthCommitRequest; receipt: RebirthReceipt } | undefined;
         let bodyTraining: { request: BodyTrainingCommit; receipt: BodyTrainingReceipt } | undefined;
+        let soulNotice: string | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
@@ -2460,6 +2486,15 @@ export class AppRoot extends Component {
                 bodyTraining = { request, receipt: this.bodyTraining?.reconcile(request, result.bodyTraining) ??
                     validateBodyTrainingReceipt(request, result.bodyTraining) };
             }
+            if (pending.id === MsgC2SSoulAction) {
+                validateSoulReceipt(result.soul, pending.value as unknown as SoulAction);
+                soulNotice = '魂兽状态已更新';
+            }
+            if (pending.id === 40030 && result.soul) {
+                const receipt = validateSoulReceipt(result.soul);
+                soulNotice = receipt.fragmentDelta.isZero() ? `获得 ${this.soulName(receipt.typeId)}`
+                    : `重复魂兽折为 ${receipt.fragmentDelta} 碎片`;
+            }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2502,6 +2537,12 @@ export class AppRoot extends Component {
         if (bodyTraining) {
             this.bodyTraining?.accept(role, bodyTraining.request, bodyTraining.receipt);
             this.status(bodyTraining.receipt.success ? `炼体成功 · ${bodyTraining.receipt.afterLevel}级` : '炼体未升级 · 已扣除本次费用');
+            return;
+        }
+        if (soulNotice) {
+            if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
+            this.itemActions?.refresh();
+            this.status(soulNotice);
             return;
         }
         if (enhanced) {

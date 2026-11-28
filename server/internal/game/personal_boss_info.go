@@ -88,10 +88,14 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		out.DungeonPendingRewards = append(out.DungeonPendingRewards, pendingChallengeRewardPB(reward))
 	}
 	for _, previous := range info.History {
-		out.History = append(out.History, &pb.PersonalBossHistoryEntry{ChallengeId: previous.ChallengeID, TemplateId: previous.TemplateID,
+		entry := &pb.PersonalBossHistoryEntry{ChallengeId: previous.ChallengeID, TemplateId: previous.TemplateID,
 			RuleVersion: previous.RuleVersion, Outcome: uint32(previous.Outcome), FinishedAtUnixMs: previous.FinishedAt.UnixMilli(),
 			Damage: previous.Damage, HpRemaining: previous.HPRemaining, Recovered: previous.Recovered,
-			RewardGold: previous.RewardGold, RewardBound: previous.RewardBound})
+			RewardGold: previous.RewardGold, RewardBound: previous.RewardBound}
+		if soul := previous.SoulReward; soul != nil {
+			entry.SoulTypeId, entry.SoulFragments = soul.TypeID, soul.Delta
+		}
+		out.History = append(out.History, entry)
 	}
 	w.send(owner, p.MsgS2CPersonalBossInfo, frame.Request, out)
 }
@@ -102,6 +106,9 @@ func pendingChallengeRewardPB(reward domain.ChallengePendingReward) *pb.Challeng
 		EarnedAtUnixMs: reward.EarnedAt.UnixMilli(), SourceKind: reward.SourceKind, SourceRank: reward.SourceRank}
 	if assets := reward.MirrorAssets; assets != nil {
 		entry.BoundYuanbaoUnits = assets.BoundIngot
+	}
+	if soul := reward.Soul; soul != nil {
+		entry.SoulTypeId, entry.SoulDuplicateFragments = soul.TypeID, soul.Duplicate
 	}
 	for _, item := range reward.Items {
 		entry.Items = append(entry.Items, item.Proto())

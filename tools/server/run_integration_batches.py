@@ -43,7 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
-    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery'),
+    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery', 'SoulBeast'),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -347,6 +347,18 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_BODY_MASTERY_TEST_FIXTURE'] = str(mastery_fixture)
             for label, path in (('assembly', mastery_assembly), ('fixture', mastery_fixture), ('public', mastery_public)):
                 report[f'body_mastery_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            # 使用同一工作簿、战斗属性组和原首领目录，生成独立的魂兽样本。
+            soul_assembly = destination / 'soul-beast-assembly.json'
+            soul_fixture, soul_public = destination / 'soul-beast-fixture.json', destination / 'soul-beast-gameplay.json'
+            soul_assembly.write_bytes((ROOT / 'tools/resources/testdata/soul-beast-isolated.json').read_bytes())
+            soul_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_soul_beast.py'), '--assembly', str(soul_assembly),
+                           '--base-fixture', str(mastery_fixture), '--base-public', str(mastery_public),
+                           '--fixture-out', str(soul_fixture), '--public-out', str(soul_public)]
+            subprocess.run(soul_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*soul_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_SOUL_TEST_FIXTURE'] = str(soul_fixture)
+            for label, path in (('assembly', soul_assembly), ('fixture', soul_fixture), ('public', soul_public)):
+                report[f'soul_beast_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',

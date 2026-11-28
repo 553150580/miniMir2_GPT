@@ -32,6 +32,7 @@ message InventoryResult {
   repeated EquipmentEnhancementSlot equipment_enhancement_slots = 12;
   MedalState medal = 13;
   BodyTrainingState body_training = 14;
+  SoulCollection soul_collection = 15;
 }
 message SetSkillSlotsRequest {
   repeated uint32 skill_slot_ids = 1;

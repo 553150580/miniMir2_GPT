@@ -46,6 +46,8 @@ interface PendingChallengeReward {
     items: RewardItem[];
     sourceKind?: string; // 原奖励来自个人击杀、世界击杀、独立超时或讨伐链通关。
     sourceRank?: number; // 击杀时原榜名次；无排名的独立奖励为零。
+    soulTypeId?: number;
+    soulDuplicateFragments?: { toString(): string };
 }
 
 interface RewardPage {
@@ -56,6 +58,7 @@ interface RewardPage {
 interface ChallengeRewardActions {
     claim(rewardId: Uint8Array): Promise<void>;
     itemName(itemId: number): string | undefined;
+    soulName(typeId: number): string;
     report(error: unknown): void;
 }
 
@@ -307,7 +310,9 @@ export class GameBoss {
         return choices.filter(choice => active === undefined || choice.templateId === active).flatMap(offer => {
             const history = (value.history ?? []).filter((row: any) => choices.length === 1 || row.templateId === offer.templateId);
             const rows = history.map((row: any) => `${dateText(row.finishedAtUnixMs)}  ${historyOutcomes[row.outcome] ?? '已结算'}  伤害 ${row.damage}`
-                + (row.rewardGold && row.rewardGold.toString() !== '0' ? `  金币 +${row.rewardGold}` : ''));
+                + (row.rewardGold && row.rewardGold.toString() !== '0' ? `  金币 +${row.rewardGold}` : '')
+                + (row.soulTypeId ? row.soulFragments?.toString() !== '0' ? `  碎片 +${row.soulFragments}`
+                    : `  获得 ${this.rewardActions.soulName(row.soulTypeId)}` : ''));
             return Array.from({ length: Math.max(1, Math.ceil(rows.length / pageSize)) }, (_, page) =>
                 ({ offer, rows: rows.slice(page * pageSize, (page + 1) * pageSize) }));
         });
@@ -342,17 +347,19 @@ export class GameBoss {
         if (dungeon) counts.push(`讨伐 ${dungeon}${this.personal.dungeonPendingRewardsMore ? '+' : ''}`);
         this.label('Status', this.personal ? world || dungeon ? counts.join(' · ') : `待领取 ${personalCount}` : '等待查询');
         if (page) {
-            const reward = page.reward, fromWorld = reward.sourceKind === 'world_boss' || reward.sourceKind === 'world_boss_timeout';
+            const reward = page.reward, fromWorld = reward.sourceKind === 'world_boss' || reward.sourceKind === 'world_boss_timeout' || reward.sourceKind === 'world_boss_soul';
             const fromDungeon = reward.sourceKind === 'dungeon';
             const source = fromWorld ? this.worldOffer(context, reward.templateId)?.display_name ?? '世界首领'
                 : fromDungeon ? '讨伐链' : this.personalPages(reward.templateId)[0]?.offer.displayName ?? `首领 ${reward.templateId}`;
             const outcome = reward.sourceKind === 'world_boss_timeout' ? ' · 超时奖励'
                 : fromWorld && reward.sourceRank ? ` · 第${reward.sourceRank}名` : fromDungeon ? ' · 通关奖励' : '';
-            this.label('Details', `${source}${outcome} · ${dateText(reward.earnedAtUnixMs)}\n${reward.items?.length ?? 0} 项物品`);
+            this.label('Details', `${source}${outcome} · ${dateText(reward.earnedAtUnixMs)}\n${reward.soulTypeId ? '魂兽收藏奖' : (reward.items?.length ?? 0) + ' 项物品'}`);
         } else this.label('Details', context && context.sceneKind >= 3 ? '请返回原场景后领取' : '');
         const lines = page?.items.map(item => `${this.rewardActions.itemName(item.itemId) ?? `物品 ${item.itemId}`} ×${item.quantity}  ${item.bound ? '绑定' : '非绑定'}`
             + (item.quality ? `  品质 ${item.quality}` : ''));
-        this.label('Results', lines?.join('\n') || (this.personal ? '暂无待领取奖励' : '尚未同步待领取奖励'));
+        const soul = page?.reward.soulTypeId ? [this.rewardActions.soulName(page.reward.soulTypeId),
+            `已收录时折为 ${page.reward.soulDuplicateFragments} 碎片`] : [];
+        this.label('Results', [...(lines ?? []), ...soul].join('\n') || (this.personal ? '暂无待领取奖励' : '尚未同步待领取奖励'));
         this.label('Page', `${this.page + 1}/${Math.max(1, pages.length)}`);
         this.label('Action/Label', '领取');
         this.enable('Action', !this.busy && this.canClaimReward(context, page?.reward));

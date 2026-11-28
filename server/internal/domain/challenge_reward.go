@@ -19,4 +19,5 @@ type ChallengePendingReward struct {
 	ConfigHash     string              `bson:"config_hash,omitempty" json:"config_hash,omitempty"`         // 生成世界附件的完整配置摘要。
 	PrivilegeUntil time.Time           `bson:"privilege_until,omitempty" json:"privilege_until,omitempty"` // 世界首领奖励采用的原特权截止时间。
 	MirrorAssets   *MirrorSeasonAssets `bson:"mirror_assets,omitempty" json:"mirror_assets,omitempty"`     // 镜像赛季确认时冻结的绑定元宝。
+	Soul           *SoulAward          `bson:"soul,omitempty" json:"soul,omitempty"`                       // 世界首领独立角色奖项。
 }

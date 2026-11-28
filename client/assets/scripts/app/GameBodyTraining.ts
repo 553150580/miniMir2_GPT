@@ -14,7 +14,7 @@ interface Step { from: number; cost_multiplier: number; success_ppm: number; }
 interface TrainingRules { tracks: Track[]; steps: Step[]; health_cap_bp: number; mana_cap_bp: number; }
 export interface BodyTrainingSnapshot {
     role: string; scope: string; sceneEpoch: Long; revision: Long; level: number; blocked: boolean;
-    state: BodyTrainingState; rules: TrainingRules; canRebirth: boolean;
+    state: BodyTrainingState; rules: TrainingRules; canRebirth: boolean; soulAvailable?: boolean;
 }
 interface TrainingTerms {
     track: number; beforeLevel: number; targetLevel: number; successPpm: number;
@@ -33,6 +33,7 @@ interface Commands {
     current(read: Read): boolean;
     refresh(): void;
     growthDetails(): void;
+    soulBeasts(): void;
     quote(request: { sceneEpoch: Long; uiSessionId: Uint8Array; track: number }): Promise<TrainingQuote>;
     submit(request: BodyTrainingCommit, revision: Long): Promise<void>;
 }
@@ -150,6 +151,7 @@ export class GameBodyTraining {
             return { title: '炼体', lines: [...summary, ...limits], options, optionsFirst: true, actions: [
                 { label: '查看报价', enabled: !s.blocked && rank(s, selected.id) < cap(s), run: () => this.readQuote(view, selected.id) },
                 growth,
+                ...(s.soulAvailable ? [{ label: '魂兽', enabled: true, run: () => this.commands.soulBeasts() }] : []),
             ] };
         }
         const actions = s.rules.tracks.map(track => ({ label: track.name + '炼体', enabled: !s.blocked && rank(s, track.id) < cap(s),

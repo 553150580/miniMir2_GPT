@@ -1,0 +1,28 @@
+{
+  "duplicate": 6,
+  "synthesis": 12,
+  "stars": [
+    {"salvage": 4, "upgrade": 0},
+    {"salvage": 7, "upgrade": 6},
+    {"salvage": 11, "upgrade": 8},
+    {"salvage": 16, "upgrade": 10},
+    {"salvage": 22, "upgrade": 12},
+    {"salvage": 29, "upgrade": 14},
+    {"salvage": 37, "upgrade": 16}
+  ],
+  "defaults": [7, 8, 18],
+  "affixes": {
+    "1": [1, 1, 1, 1, 2, 2, 2],
+    "2": [1, 1, 1, 1, 2, 2, 2],
+    "3": [1, 1, 1, 1, 2, 2, 2],
+    "7": [25, 50, 75, 100, 125, 150, 175],
+    "8": [1, 1, 1, 1, 2, 2, 2],
+    "9": [1, 1, 1, 1, 2, 2, 2],
+    "15": [15, 30, 45, 60, 75, 90, 105],
+    "18": [1, 1, 1, 1, 2, 2, 2],
+    "19": [15, 30, 45, 60, 75, 90, 105]
+  },
+  "personal": {"3": {"type_id": 1, "chance_ppm": 1000000}},
+  "world": {"5": {"type_id": 3, "chance_ppm": 1000000}},
+  "world_minimum_damage": 1
+}

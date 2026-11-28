@@ -593,8 +593,11 @@ type ChallengePendingReward struct {
 	SourceRank     uint32                 `protobuf:"varint,6,opt,name=source_rank,json=sourceRank,proto3" json:"source_rank,omitempty"`
 	// 镜像赛季结算冻结的绑定元宝，使用钱包最小单位。
 	BoundYuanbaoUnits int64 `protobuf:"varint,7,opt,name=bound_yuanbao_units,json=boundYuanbaoUnits,proto3" json:"bound_yuanbao_units,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 世界场次冻结的魂兽，领取不消耗背包格。
+	SoulTypeId             uint32 `protobuf:"varint,8,opt,name=soul_type_id,json=soulTypeId,proto3" json:"soul_type_id,omitempty"`
+	SoulDuplicateFragments int64  `protobuf:"varint,9,opt,name=soul_duplicate_fragments,json=soulDuplicateFragments,proto3" json:"soul_duplicate_fragments,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *ChallengePendingReward) Reset() {
@@ -676,6 +679,20 @@ func (x *ChallengePendingReward) GetBoundYuanbaoUnits() int64 {
 	return 0
 }
 
+func (x *ChallengePendingReward) GetSoulTypeId() uint32 {
+	if x != nil {
+		return x.SoulTypeId
+	}
+	return 0
+}
+
+func (x *ChallengePendingReward) GetSoulDuplicateFragments() int64 {
+	if x != nil {
+		return x.SoulDuplicateFragments
+	}
+	return 0
+}
+
 // 领取整笔待领；库存不足时保留原记录。
 type ClaimChallengeReward struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -742,6 +759,8 @@ type PersonalBossHistoryEntry struct {
 	Recovered        bool   `protobuf:"varint,8,opt,name=recovered,proto3" json:"recovered,omitempty"`
 	RewardGold       int64  `protobuf:"varint,9,opt,name=reward_gold,json=rewardGold,proto3" json:"reward_gold,omitempty"`
 	RewardBound      bool   `protobuf:"varint,10,opt,name=reward_bound,json=rewardBound,proto3" json:"reward_bound,omitempty"`
+	SoulTypeId       uint32 `protobuf:"varint,11,opt,name=soul_type_id,json=soulTypeId,proto3" json:"soul_type_id,omitempty"`        // 已实际获得或折片的魂兽类型。
+	SoulFragments    int64  `protobuf:"varint,12,opt,name=soul_fragments,json=soulFragments,proto3" json:"soul_fragments,omitempty"` // 已经计入角色余额的折片数量，零为取得首只。
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -846,6 +865,20 @@ func (x *PersonalBossHistoryEntry) GetRewardBound() bool {
 	return false
 }
 
+func (x *PersonalBossHistoryEntry) GetSoulTypeId() uint32 {
+	if x != nil {
+		return x.SoulTypeId
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetSoulFragments() int64 {
+	if x != nil {
+		return x.SoulFragments
+	}
+	return 0
+}
+
 var File_personal_boss_proto protoreflect.FileDescriptor
 
 const file_personal_boss_proto_rawDesc = "" +
@@ -912,7 +945,7 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\rminimum_level\x18\x05 \x01(\rR\fminimumLevel\x12\x1b\n" +
 	"\tcan_enter\x18\x06 \x01(\bR\bcanEnter\x12-\n" +
 	"\x12eligibility_reason\x18\a \x01(\rR\x11eligibilityReason\x12/\n" +
-	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\x9f\x02\n" +
+	"\x14available_at_unix_ms\x18\b \x01(\x03R\x11availableAtUnixMs\"\xfb\x02\n" +
 	"\x16ChallengePendingReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12\x1f\n" +
 	"\vtemplate_id\x18\x02 \x01(\rR\n" +
@@ -923,10 +956,13 @@ const file_personal_boss_proto_rawDesc = "" +
 	"sourceKind\x12\x1f\n" +
 	"\vsource_rank\x18\x06 \x01(\rR\n" +
 	"sourceRank\x12.\n" +
-	"\x13bound_yuanbao_units\x18\a \x01(\x03R\x11boundYuanbaoUnits\"o\n" +
+	"\x13bound_yuanbao_units\x18\a \x01(\x03R\x11boundYuanbaoUnits\x12 \n" +
+	"\fsoul_type_id\x18\b \x01(\rR\n" +
+	"soulTypeId\x128\n" +
+	"\x18soul_duplicate_fragments\x18\t \x01(\x03R\x16soulDuplicateFragments\"o\n" +
 	"\x14ClaimChallengeReward\x12\x1b\n" +
 	"\treward_id\x18\x01 \x01(\fR\brewardId\x12:\n" +
-	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xe7\x02\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xb0\x03\n" +
 	"\x18PersonalBossHistoryEntry\x12!\n" +
 	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x1f\n" +
 	"\vtemplate_id\x18\x02 \x01(\rR\n" +
@@ -940,7 +976,10 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\vreward_gold\x18\t \x01(\x03R\n" +
 	"rewardGold\x12!\n" +
 	"\freward_bound\x18\n" +
-	" \x01(\bR\vrewardBoundB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	" \x01(\bR\vrewardBound\x12 \n" +
+	"\fsoul_type_id\x18\v \x01(\rR\n" +
+	"soulTypeId\x12%\n" +
+	"\x0esoul_fragments\x18\f \x01(\x03R\rsoulFragmentsB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_personal_boss_proto_rawDescOnce sync.Once

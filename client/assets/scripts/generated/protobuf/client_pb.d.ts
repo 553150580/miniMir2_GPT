@@ -407,6 +407,9 @@ export namespace minimir {
             /** OperationResult body_training. */
             body_training?: (minimir.v1.BodyTrainingReceipt.$Properties|null);
 
+            /** OperationResult soul. */
+            soul?: (minimir.v1.SoulReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -533,12 +536,351 @@ export namespace minimir {
                 /** OperationResult body_training */
                 body_training?: (minimir.v1.BodyTrainingReceipt.$Properties|null);
 
+                /** OperationResult soul */
+                soul?: (minimir.v1.SoulReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a SoulBeast.
+         * @deprecated Use minimir.v1.SoulBeast.$Properties instead.
+         */
+        interface ISoulBeast extends minimir.v1.SoulBeast.$Properties {
+        }
+
+        /** Represents a SoulBeast. */
+        class SoulBeast {
+
+            /**
+             * Constructs a new SoulBeast.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SoulBeast.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SoulBeast type_id. */
+            type_id: number;
+
+            /** SoulBeast star. */
+            star: number;
+
+            /** SoulBeast affix_ids. */
+            affix_ids: number[];
+
+            /**
+             * Creates a new SoulBeast instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SoulBeast instance
+             */
+            static create(properties: minimir.v1.SoulBeast.$Shape): minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape;
+            static create(properties?: minimir.v1.SoulBeast.$Properties): minimir.v1.SoulBeast;
+
+            /**
+             * Encodes the specified SoulBeast message. Does not implicitly {@link minimir.v1.SoulBeast.verify|verify} messages.
+             * @param message SoulBeast message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SoulBeast.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SoulBeast message, length delimited. Does not implicitly {@link minimir.v1.SoulBeast.verify|verify} messages.
+             * @param message SoulBeast message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SoulBeast.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SoulBeast message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape} SoulBeast
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape;
+
+            /**
+             * Decodes a SoulBeast message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape} SoulBeast
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SoulBeast & minimir.v1.SoulBeast.$Shape;
+
+            /**
+             * Verifies a SoulBeast message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SoulBeast
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SoulBeast {
+
+            /** Properties of a SoulBeast. */
+            interface $Properties {
+
+                /** SoulBeast type_id */
+                type_id?: (number|null);
+
+                /** SoulBeast star */
+                star?: (number|null);
+
+                /** SoulBeast affix_ids */
+                affix_ids?: (number[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SoulBeast. */
+            type $Shape = minimir.v1.SoulBeast.$Properties;
+        }
+
+        /**
+         * Properties of a SoulCollection.
+         * @deprecated Use minimir.v1.SoulCollection.$Properties instead.
+         */
+        interface ISoulCollection extends minimir.v1.SoulCollection.$Properties {
+        }
+
+        /** Represents a SoulCollection. */
+        class SoulCollection {
+
+            /**
+             * Constructs a new SoulCollection.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SoulCollection.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SoulCollection revision. */
+            revision: Long;
+
+            /** SoulCollection fragments. */
+            fragments: Long;
+
+            /** SoulCollection attached_type_id. */
+            attached_type_id: number;
+
+            /** SoulCollection beasts. */
+            beasts: minimir.v1.SoulBeast.$Properties[];
+
+            /**
+             * Creates a new SoulCollection instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SoulCollection instance
+             */
+            static create(properties: minimir.v1.SoulCollection.$Shape): minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape;
+            static create(properties?: minimir.v1.SoulCollection.$Properties): minimir.v1.SoulCollection;
+
+            /**
+             * Encodes the specified SoulCollection message. Does not implicitly {@link minimir.v1.SoulCollection.verify|verify} messages.
+             * @param message SoulCollection message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SoulCollection.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SoulCollection message, length delimited. Does not implicitly {@link minimir.v1.SoulCollection.verify|verify} messages.
+             * @param message SoulCollection message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SoulCollection.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SoulCollection message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape} SoulCollection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape;
+
+            /**
+             * Decodes a SoulCollection message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape} SoulCollection
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SoulCollection & minimir.v1.SoulCollection.$Shape;
+
+            /**
+             * Verifies a SoulCollection message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SoulCollection
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SoulCollection {
+
+            /** Properties of a SoulCollection. */
+            interface $Properties {
+
+                /** SoulCollection revision */
+                revision?: (Long|null);
+
+                /** SoulCollection fragments */
+                fragments?: (Long|null);
+
+                /** SoulCollection attached_type_id */
+                attached_type_id?: (number|null);
+
+                /** SoulCollection beasts */
+                beasts?: (minimir.v1.SoulBeast.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SoulCollection. */
+            type $Shape = minimir.v1.SoulCollection.$Properties;
+        }
+
+        /**
+         * Properties of a SoulReceipt.
+         * @deprecated Use minimir.v1.SoulReceipt.$Properties instead.
+         */
+        interface ISoulReceipt extends minimir.v1.SoulReceipt.$Properties {
+        }
+
+        /** Represents a SoulReceipt. */
+        class SoulReceipt {
+
+            /**
+             * Constructs a new SoulReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SoulReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SoulReceipt action. */
+            action: number;
+
+            /** SoulReceipt type_id. */
+            type_id: number;
+
+            /** SoulReceipt fragment_delta. */
+            fragment_delta: Long;
+
+            /** SoulReceipt collection. */
+            collection?: (minimir.v1.SoulCollection.$Properties|null);
+
+            /**
+             * Creates a new SoulReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SoulReceipt instance
+             */
+            static create(properties: minimir.v1.SoulReceipt.$Shape): minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape;
+            static create(properties?: minimir.v1.SoulReceipt.$Properties): minimir.v1.SoulReceipt;
+
+            /**
+             * Encodes the specified SoulReceipt message. Does not implicitly {@link minimir.v1.SoulReceipt.verify|verify} messages.
+             * @param message SoulReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SoulReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SoulReceipt message, length delimited. Does not implicitly {@link minimir.v1.SoulReceipt.verify|verify} messages.
+             * @param message SoulReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SoulReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SoulReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape} SoulReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape;
+
+            /**
+             * Decodes a SoulReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape} SoulReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SoulReceipt & minimir.v1.SoulReceipt.$Shape;
+
+            /**
+             * Verifies a SoulReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SoulReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SoulReceipt {
+
+            /** Properties of a SoulReceipt. */
+            interface $Properties {
+
+                /** SoulReceipt action */
+                action?: (number|null);
+
+                /** SoulReceipt type_id */
+                type_id?: (number|null);
+
+                /** SoulReceipt fragment_delta */
+                fragment_delta?: (Long|null);
+
+                /** SoulReceipt collection */
+                collection?: (minimir.v1.SoulCollection.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SoulReceipt. */
+            type $Shape = minimir.v1.SoulReceipt.$Properties;
         }
 
         /**
@@ -11942,6 +12284,9 @@ export namespace minimir {
             /** InventoryResult body_training. */
             body_training?: (minimir.v1.BodyTrainingState.$Properties|null);
 
+            /** InventoryResult soul_collection. */
+            soul_collection?: (minimir.v1.SoulCollection.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -12046,6 +12391,9 @@ export namespace minimir {
 
                 /** InventoryResult body_training */
                 body_training?: (minimir.v1.BodyTrainingState.$Properties|null);
+
+                /** InventoryResult soul_collection */
+                soul_collection?: (minimir.v1.SoulCollection.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -17645,6 +17993,12 @@ export namespace minimir {
             /** ChallengePendingReward bound_yuanbao_units. */
             bound_yuanbao_units: Long;
 
+            /** ChallengePendingReward soul_type_id. */
+            soul_type_id: number;
+
+            /** ChallengePendingReward soul_duplicate_fragments. */
+            soul_duplicate_fragments: Long;
+
             /**
              * Creates a new ChallengePendingReward instance using the specified properties.
              * @param [properties] Properties to set
@@ -17728,6 +18082,12 @@ export namespace minimir {
 
                 /** ChallengePendingReward bound_yuanbao_units */
                 bound_yuanbao_units?: (Long|null);
+
+                /** ChallengePendingReward soul_type_id */
+                soul_type_id?: (number|null);
+
+                /** ChallengePendingReward soul_duplicate_fragments */
+                soul_duplicate_fragments?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -17888,6 +18248,12 @@ export namespace minimir {
             /** PersonalBossHistoryEntry reward_bound. */
             reward_bound: boolean;
 
+            /** PersonalBossHistoryEntry soul_type_id. */
+            soul_type_id: number;
+
+            /** PersonalBossHistoryEntry soul_fragments. */
+            soul_fragments: Long;
+
             /**
              * Creates a new PersonalBossHistoryEntry instance using the specified properties.
              * @param [properties] Properties to set
@@ -17980,6 +18346,12 @@ export namespace minimir {
 
                 /** PersonalBossHistoryEntry reward_bound */
                 reward_bound?: (boolean|null);
+
+                /** PersonalBossHistoryEntry soul_type_id */
+                soul_type_id?: (number|null);
+
+                /** PersonalBossHistoryEntry soul_fragments */
+                soul_fragments?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -27437,6 +27809,132 @@ export namespace minimir {
 
             /** Shape of a BodyTrainingCommitRequest. */
             type $Shape = minimir.v1.BodyTrainingCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a SoulActionRequest.
+         * @deprecated Use minimir.v1.SoulActionRequest.$Properties instead.
+         */
+        interface ISoulActionRequest extends minimir.v1.SoulActionRequest.$Properties {
+        }
+
+        /** Represents a SoulActionRequest. */
+        class SoulActionRequest {
+
+            /**
+             * Constructs a new SoulActionRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SoulActionRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SoulActionRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** SoulActionRequest action. */
+            action: number;
+
+            /** SoulActionRequest type_id. */
+            type_id: number;
+
+            /** SoulActionRequest affix_id. */
+            affix_id: number;
+
+            /** SoulActionRequest soul_revision. */
+            soul_revision: Long;
+
+            /** SoulActionRequest fragment_delta. */
+            fragment_delta: Long;
+
+            /**
+             * Creates a new SoulActionRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SoulActionRequest instance
+             */
+            static create(properties: minimir.v1.SoulActionRequest.$Shape): minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape;
+            static create(properties?: minimir.v1.SoulActionRequest.$Properties): minimir.v1.SoulActionRequest;
+
+            /**
+             * Encodes the specified SoulActionRequest message. Does not implicitly {@link minimir.v1.SoulActionRequest.verify|verify} messages.
+             * @param message SoulActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SoulActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SoulActionRequest message, length delimited. Does not implicitly {@link minimir.v1.SoulActionRequest.verify|verify} messages.
+             * @param message SoulActionRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SoulActionRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SoulActionRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape} SoulActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape;
+
+            /**
+             * Decodes a SoulActionRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape} SoulActionRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SoulActionRequest & minimir.v1.SoulActionRequest.$Shape;
+
+            /**
+             * Verifies a SoulActionRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SoulActionRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SoulActionRequest {
+
+            /** Properties of a SoulActionRequest. */
+            interface $Properties {
+
+                /** SoulActionRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** SoulActionRequest action */
+                action?: (number|null);
+
+                /** SoulActionRequest type_id */
+                type_id?: (number|null);
+
+                /** SoulActionRequest affix_id */
+                affix_id?: (number|null);
+
+                /** SoulActionRequest soul_revision */
+                soul_revision?: (Long|null);
+
+                /** SoulActionRequest fragment_delta */
+                fragment_delta?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SoulActionRequest. */
+            type $Shape = minimir.v1.SoulActionRequest.$Properties;
         }
     }
 }

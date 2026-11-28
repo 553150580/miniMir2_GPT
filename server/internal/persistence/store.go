@@ -129,6 +129,7 @@ type Operation struct {
 	Medal                *MedalCommitReceipt          `bson:"medal,omitempty"`                 // 原角色勋章升阶和确切碎片扣料。
 	Rebirth              *RebirthCommitReceipt        `bson:"rebirth,omitempty"`               // 原转生、经验释放与扣料。
 	BodyTraining         *BodyTrainingReceipt         `bson:"body_training,omitempty"`         // 原炼体扣款、等级和结果。
+	Soul                 *domain.SoulReceipt          `bson:"soul,omitempty"`                  // 角色收藏操作或原魂兽奖项。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
