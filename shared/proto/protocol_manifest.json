@@ -1536,6 +1536,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.4/5.1 原转生费用和成长回执"
+    },
+    {
+      "value": 40067,
+      "name": "MsgC2SBodyTrainingQuote",
+      "proto_message": "BodyTrainingQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.5/5.10 炼体系别和原场景"
+    },
+    {
+      "value": 40068,
+      "name": "MsgS2CBodyTrainingQuote",
+      "proto_message": "BodyTrainingQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.5/5.10 逐级费用、概率和属性额度"
+    },
+    {
+      "value": 40069,
+      "name": "MsgC2SBodyTrainingCommit",
+      "proto_message": "BodyTrainingCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.5/5.7 一次扣费、一次判定及原回执"
     }
   ],
   "error_codes": [
@@ -2105,6 +2141,30 @@
       "display_zh": "请达到当前等级上限，并备齐通关凭证、绑定材料与金币",
       "status": "draft",
       "source_ref": "最终策划案4.4/5.1",
+      "active_in_scope": true
+    },
+    {
+      "value": 3979,
+      "name": "CodeBodyTrainingUnavailable",
+      "display_zh": "当前规则或场景暂未开放炼体",
+      "status": "draft",
+      "source_ref": "最终策划案4.5",
+      "active_in_scope": true
+    },
+    {
+      "value": 3980,
+      "name": "CodeBodyTrainingQuoteChanged",
+      "display_zh": "炼体费用、等级或报价已变化，请重新查看",
+      "status": "draft",
+      "source_ref": "最终策划案4.5",
+      "active_in_scope": true
+    },
+    {
+      "value": 3981,
+      "name": "CodeBodyTrainingInputs",
+      "display_zh": "炼体已达当前上限，或金币余额不足",
+      "status": "draft",
+      "source_ref": "最终策划案4.5",
       "active_in_scope": true
     }
   ]

@@ -3,8 +3,9 @@
   "protoc_gen_go": "protoc-gen-go v1.36.12",
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
-    "assets.proto": "71457c43318aae62a8b6455af4ae1388511c902be8e8c25dfc2d81b01029c69d",
-    "common.proto": "bbb7c303af98ad031aaeaf54a1c6b01980d3689a6a7f6a29ff2658ea98d96e31",
+    "assets.proto": "8381c7dee35e489c2681b710800088e7d2e8fa8f6e800e97233389994d433d3a",
+    "body_training.proto": "428ee87d4a7fc59d821950a7d789e1dc94f99b46fbdd746616d0c9049734c47c",
+    "common.proto": "32bb10bc14b388b71b741d0591235cfea10ea85cbfea27b0162baf9039a42048",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
     "equipment_enhancement.proto": "c3c618d899bf5d563ed542462c6e64054a90390743b80931b1de840df2e8601b",
     "equipment_refine.proto": "afc0d2350d947a01f381b4a0f72b246bbe7e21c842abb1c7c1ede96432cc4a7e",
@@ -26,8 +27,9 @@
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
-    "server/api/generated/minimirv1/assets.pb.go": "bbacbeb1788dc0e9e5e0a888e2357084aa9341bed21b86151ee06feca52520b7",
-    "server/api/generated/minimirv1/common.pb.go": "534fe9714305d90691744ad4feecbfc94876a016b530e90163913b79c9d3ac90",
+    "server/api/generated/minimirv1/assets.pb.go": "06f1bbf78ab0336e3c0306fd5296cc3f4427258c4b642fff5fbe8c3caa91e919",
+    "server/api/generated/minimirv1/body_training.pb.go": "e92aa3d8df041d569b8d292aec9e2a1bf3d0ad3481dd605ac56a8ef143a4b65f",
+    "server/api/generated/minimirv1/common.pb.go": "da3eda711e4ba07fd850849189893da2273d28e98dab0877f9b8cf839e38cab1",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
     "server/api/generated/minimirv1/equipment_enhancement.pb.go": "339f4c909fddd5f4108677fe9a79a410358ca4956e2d0e2fd16820fb3b7d68a9",
     "server/api/generated/minimirv1/equipment_refine.pb.go": "ff58d91c277c855904fed6b88de13a998abb5159c5053c1507b736cb32a59e10",

@@ -1,0 +1,7 @@
+{
+  "max_rank": 12,
+  "health_bonus_per_rank": 2,
+  "mana_bonus_per_rank": 1,
+  "health_cap_bp": 500,
+  "mana_cap_bp": 500
+}

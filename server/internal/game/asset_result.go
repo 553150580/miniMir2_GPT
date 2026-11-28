@@ -25,8 +25,9 @@ type assetBinding struct {
 // submitAsset 冻结原操作，提交事务，队列满时按原任务退避。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，q 记录资产请求，f 记录协议帧，reviveID 标识当前业务使用的复活。
 func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, reviveID string) {
-	// 首领副本只保留战斗快照。转生的历史原操作可以查询已确定回执。
-	if r.bossBattle != nil && (q.Kind != persistence.AssetRebirthCommit || !historicalGrowthOperation(r, q.Context)) {
+	// 只有转生和炼体在首领战斗中允许读取已确认的原回执。
+	vitalityOperation := q.Kind == persistence.AssetRebirthCommit || q.Kind == persistence.AssetBodyTrainingCommit
+	if r.bossBattle != nil && (!vitalityOperation || !historicalGrowthOperation(r, q.Context)) {
 		return
 	}
 	if r.AssetGeneration == math.MaxUint64 {
@@ -115,7 +116,7 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 		r.Role = role
 		w.acceptRolePrivilege(r, observedAt, previousPrivilege)
 		// 仓储只迁移背包及仓库，不改变已穿属性或任何临时身体状态。
-		if q.Kind != "warehouse" && !autoPotion && (q.Kind != persistence.AssetRebirthCommit || r.bossBattle == nil) {
+		if q.Kind != "warehouse" && !autoPotion && r.bossBattle == nil {
 			w.refreshPlayerStats(r)
 		}
 		if q.Kind == persistence.AssetRebirthCommit && result.ErrorCode == 0 {

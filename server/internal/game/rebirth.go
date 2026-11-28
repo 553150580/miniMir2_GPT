@@ -2,7 +2,7 @@
 package game
 
 import (
-	"math"
+	"context"
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
@@ -23,38 +23,10 @@ func (w *worker) rebirthPreview(r *room, frame wire.Frame) {
 		w.failure(r, frame, p.CodeInvalidArgument)
 		return
 	}
-	if !w.rebirthAvailable(r) {
-		w.failure(r, frame, p.CodeRebirthUnavailable)
-		return
-	}
-	if r.Pending || r.PreviewInFlight || r.PreviewGeneration == math.MaxUint64 {
-		w.failure(r, frame, p.CodeOperationPending)
-		return
-	}
-	r.PreviewGeneration++
-	r.PreviewInFlight = true
-	binding := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
-	store := w.roomStore(r)
-	if !w.submit(job{target: w, run: func() func(*worker) {
-		quote, err := store.PreviewRebirth(w.e.ctx, binding.auth, &request)
-		return func(owner *worker) {
-			if !owner.claimPreview(binding) {
-				return
-			}
-			if !owner.rebirthAvailable(r) {
-				owner.failure(r, frame, p.CodeRebirthUnavailable)
-				return
-			}
-			if err != nil {
-				owner.failure(r, frame, persistence.Code(err))
-				return
-			}
-			owner.send(r, p.MsgS2CRebirthQuote, frame.Request, quote)
-		}
-	}}) {
-		r.PreviewInFlight = false
-		w.failure(r, frame, p.CodeServerBusy)
-	}
+	w.enqueueGrowthPreview(r, frame, p.MsgS2CRebirthQuote, p.CodeRebirthUnavailable, w.rebirthAvailable,
+		func(ctx context.Context, store *persistence.Store, auth persistence.Auth) (proto.Message, error) {
+			return store.PreviewRebirth(ctx, auth, &request)
+		})
 }
 
 // readRebirthCommit 解析首次确认和历史回执重放共同使用的原指令。

@@ -128,6 +128,9 @@ const (
 	MsgC2SRebirthQuote uint16 = 40064
 	MsgS2CRebirthQuote uint16 = 40065
 	MsgC2SRebirthCommit uint16 = 40066
+	MsgC2SBodyTrainingQuote uint16 = 40067
+	MsgS2CBodyTrainingQuote uint16 = 40068
+	MsgC2SBodyTrainingCommit uint16 = 40069
 )
 
 const (
@@ -202,4 +205,7 @@ const (
 	CodeRebirthUnavailable uint32 = 3976
 	CodeRebirthQuoteChanged uint32 = 3977
 	CodeRebirthInputs uint32 = 3978
+	CodeBodyTrainingUnavailable uint32 = 3979
+	CodeBodyTrainingQuoteChanged uint32 = 3980
+	CodeBodyTrainingInputs uint32 = 3981
 )

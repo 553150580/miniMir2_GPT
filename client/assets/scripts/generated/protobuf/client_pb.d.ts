@@ -404,6 +404,9 @@ export namespace minimir {
             /** OperationResult rebirth. */
             rebirth?: (minimir.v1.RebirthReceipt.$Properties|null);
 
+            /** OperationResult body_training. */
+            body_training?: (minimir.v1.BodyTrainingReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -527,12 +530,369 @@ export namespace minimir {
                 /** OperationResult rebirth */
                 rebirth?: (minimir.v1.RebirthReceipt.$Properties|null);
 
+                /** OperationResult body_training */
+                body_training?: (minimir.v1.BodyTrainingReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingState.
+         * @deprecated Use minimir.v1.BodyTrainingState.$Properties instead.
+         */
+        interface IBodyTrainingState extends minimir.v1.BodyTrainingState.$Properties {
+        }
+
+        /** Represents a BodyTrainingState. */
+        class BodyTrainingState {
+
+            /**
+             * Constructs a new BodyTrainingState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingState health_level. */
+            health_level: number;
+
+            /** BodyTrainingState mana_level. */
+            mana_level: number;
+
+            /**
+             * Creates a new BodyTrainingState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingState instance
+             */
+            static create(properties: minimir.v1.BodyTrainingState.$Shape): minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingState.$Properties): minimir.v1.BodyTrainingState;
+
+            /**
+             * Encodes the specified BodyTrainingState message. Does not implicitly {@link minimir.v1.BodyTrainingState.verify|verify} messages.
+             * @param message BodyTrainingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingState message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingState.verify|verify} messages.
+             * @param message BodyTrainingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape} BodyTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape;
+
+            /**
+             * Decodes a BodyTrainingState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape} BodyTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape;
+
+            /**
+             * Verifies a BodyTrainingState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingState {
+
+            /** Properties of a BodyTrainingState. */
+            interface $Properties {
+
+                /** BodyTrainingState health_level */
+                health_level?: (number|null);
+
+                /** BodyTrainingState mana_level */
+                mana_level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingState. */
+            type $Shape = minimir.v1.BodyTrainingState.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingTerms.
+         * @deprecated Use minimir.v1.BodyTrainingTerms.$Properties instead.
+         */
+        interface IBodyTrainingTerms extends minimir.v1.BodyTrainingTerms.$Properties {
+        }
+
+        /** Represents a BodyTrainingTerms. */
+        class BodyTrainingTerms {
+
+            /**
+             * Constructs a new BodyTrainingTerms.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingTerms.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingTerms track. */
+            track: number;
+
+            /** BodyTrainingTerms before_level. */
+            before_level: number;
+
+            /** BodyTrainingTerms target_level. */
+            target_level: number;
+
+            /** BodyTrainingTerms success_ppm. */
+            success_ppm: number;
+
+            /** BodyTrainingTerms gold. */
+            gold: Long;
+
+            /** BodyTrainingTerms bound_gold. */
+            bound_gold: Long;
+
+            /** BodyTrainingTerms before_bonus. */
+            before_bonus: Long;
+
+            /** BodyTrainingTerms target_bonus. */
+            target_bonus: Long;
+
+            /**
+             * Creates a new BodyTrainingTerms instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingTerms instance
+             */
+            static create(properties: minimir.v1.BodyTrainingTerms.$Shape): minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingTerms.$Properties): minimir.v1.BodyTrainingTerms;
+
+            /**
+             * Encodes the specified BodyTrainingTerms message. Does not implicitly {@link minimir.v1.BodyTrainingTerms.verify|verify} messages.
+             * @param message BodyTrainingTerms message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingTerms.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingTerms message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingTerms.verify|verify} messages.
+             * @param message BodyTrainingTerms message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingTerms.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingTerms message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape} BodyTrainingTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape;
+
+            /**
+             * Decodes a BodyTrainingTerms message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape} BodyTrainingTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape;
+
+            /**
+             * Verifies a BodyTrainingTerms message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingTerms
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingTerms {
+
+            /** Properties of a BodyTrainingTerms. */
+            interface $Properties {
+
+                /** BodyTrainingTerms track */
+                track?: (number|null);
+
+                /** BodyTrainingTerms before_level */
+                before_level?: (number|null);
+
+                /** BodyTrainingTerms target_level */
+                target_level?: (number|null);
+
+                /** BodyTrainingTerms success_ppm */
+                success_ppm?: (number|null);
+
+                /** BodyTrainingTerms gold */
+                gold?: (Long|null);
+
+                /** BodyTrainingTerms bound_gold */
+                bound_gold?: (Long|null);
+
+                /** BodyTrainingTerms before_bonus */
+                before_bonus?: (Long|null);
+
+                /** BodyTrainingTerms target_bonus */
+                target_bonus?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingTerms. */
+            type $Shape = minimir.v1.BodyTrainingTerms.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingReceipt.
+         * @deprecated Use minimir.v1.BodyTrainingReceipt.$Properties instead.
+         */
+        interface IBodyTrainingReceipt extends minimir.v1.BodyTrainingReceipt.$Properties {
+        }
+
+        /** Represents a BodyTrainingReceipt. */
+        class BodyTrainingReceipt {
+
+            /**
+             * Constructs a new BodyTrainingReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** BodyTrainingReceipt terms. */
+            terms?: (minimir.v1.BodyTrainingTerms.$Properties|null);
+
+            /** BodyTrainingReceipt success. */
+            success: boolean;
+
+            /** BodyTrainingReceipt after_level. */
+            after_level: number;
+
+            /**
+             * Creates a new BodyTrainingReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingReceipt instance
+             */
+            static create(properties: minimir.v1.BodyTrainingReceipt.$Shape): minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingReceipt.$Properties): minimir.v1.BodyTrainingReceipt;
+
+            /**
+             * Encodes the specified BodyTrainingReceipt message. Does not implicitly {@link minimir.v1.BodyTrainingReceipt.verify|verify} messages.
+             * @param message BodyTrainingReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingReceipt message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingReceipt.verify|verify} messages.
+             * @param message BodyTrainingReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape} BodyTrainingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape;
+
+            /**
+             * Decodes a BodyTrainingReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape} BodyTrainingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape;
+
+            /**
+             * Verifies a BodyTrainingReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingReceipt {
+
+            /** Properties of a BodyTrainingReceipt. */
+            interface $Properties {
+
+                /** BodyTrainingReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** BodyTrainingReceipt terms */
+                terms?: (minimir.v1.BodyTrainingTerms.$Properties|null);
+
+                /** BodyTrainingReceipt success */
+                success?: (boolean|null);
+
+                /** BodyTrainingReceipt after_level */
+                after_level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingReceipt. */
+            type $Shape = minimir.v1.BodyTrainingReceipt.$Properties;
         }
 
         /**
@@ -11501,6 +11861,9 @@ export namespace minimir {
             /** InventoryResult medal. */
             medal?: (minimir.v1.MedalState.$Properties|null);
 
+            /** InventoryResult body_training. */
+            body_training?: (minimir.v1.BodyTrainingState.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -11602,6 +11965,9 @@ export namespace minimir {
 
                 /** InventoryResult medal */
                 medal?: (minimir.v1.MedalState.$Properties|null);
+
+                /** InventoryResult body_training */
+                body_training?: (minimir.v1.BodyTrainingState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -26645,6 +27011,354 @@ export namespace minimir {
 
             /** Shape of a RebirthCommitRequest. */
             type $Shape = minimir.v1.RebirthCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingQuoteRequest.
+         * @deprecated Use minimir.v1.BodyTrainingQuoteRequest.$Properties instead.
+         */
+        interface IBodyTrainingQuoteRequest extends minimir.v1.BodyTrainingQuoteRequest.$Properties {
+        }
+
+        /** Represents a BodyTrainingQuoteRequest. */
+        class BodyTrainingQuoteRequest {
+
+            /**
+             * Constructs a new BodyTrainingQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** BodyTrainingQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** BodyTrainingQuoteRequest track. */
+            track: number;
+
+            /**
+             * Creates a new BodyTrainingQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingQuoteRequest instance
+             */
+            static create(properties: minimir.v1.BodyTrainingQuoteRequest.$Shape): minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingQuoteRequest.$Properties): minimir.v1.BodyTrainingQuoteRequest;
+
+            /**
+             * Encodes the specified BodyTrainingQuoteRequest message. Does not implicitly {@link minimir.v1.BodyTrainingQuoteRequest.verify|verify} messages.
+             * @param message BodyTrainingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingQuoteRequest.verify|verify} messages.
+             * @param message BodyTrainingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape} BodyTrainingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape;
+
+            /**
+             * Decodes a BodyTrainingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape} BodyTrainingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape;
+
+            /**
+             * Verifies a BodyTrainingQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingQuoteRequest {
+
+            /** Properties of a BodyTrainingQuoteRequest. */
+            interface $Properties {
+
+                /** BodyTrainingQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** BodyTrainingQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** BodyTrainingQuoteRequest track */
+                track?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingQuoteRequest. */
+            type $Shape = minimir.v1.BodyTrainingQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingQuote.
+         * @deprecated Use minimir.v1.BodyTrainingQuote.$Properties instead.
+         */
+        interface IBodyTrainingQuote extends minimir.v1.BodyTrainingQuote.$Properties {
+        }
+
+        /** Represents a BodyTrainingQuote. */
+        class BodyTrainingQuote {
+
+            /**
+             * Constructs a new BodyTrainingQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** BodyTrainingQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** BodyTrainingQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** BodyTrainingQuote role_revision. */
+            role_revision: Long;
+
+            /** BodyTrainingQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** BodyTrainingQuote terms. */
+            terms?: (minimir.v1.BodyTrainingTerms.$Properties|null);
+
+            /**
+             * Creates a new BodyTrainingQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingQuote instance
+             */
+            static create(properties: minimir.v1.BodyTrainingQuote.$Shape): minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingQuote.$Properties): minimir.v1.BodyTrainingQuote;
+
+            /**
+             * Encodes the specified BodyTrainingQuote message. Does not implicitly {@link minimir.v1.BodyTrainingQuote.verify|verify} messages.
+             * @param message BodyTrainingQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingQuote message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingQuote.verify|verify} messages.
+             * @param message BodyTrainingQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape} BodyTrainingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape;
+
+            /**
+             * Decodes a BodyTrainingQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape} BodyTrainingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape;
+
+            /**
+             * Verifies a BodyTrainingQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingQuote {
+
+            /** Properties of a BodyTrainingQuote. */
+            interface $Properties {
+
+                /** BodyTrainingQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** BodyTrainingQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** BodyTrainingQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** BodyTrainingQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** BodyTrainingQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** BodyTrainingQuote terms */
+                terms?: (minimir.v1.BodyTrainingTerms.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingQuote. */
+            type $Shape = minimir.v1.BodyTrainingQuote.$Properties;
+        }
+
+        /**
+         * Properties of a BodyTrainingCommitRequest.
+         * @deprecated Use minimir.v1.BodyTrainingCommitRequest.$Properties instead.
+         */
+        interface IBodyTrainingCommitRequest extends minimir.v1.BodyTrainingCommitRequest.$Properties {
+        }
+
+        /** Represents a BodyTrainingCommitRequest. */
+        class BodyTrainingCommitRequest {
+
+            /**
+             * Constructs a new BodyTrainingCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BodyTrainingCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BodyTrainingCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** BodyTrainingCommitRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** BodyTrainingCommitRequest track. */
+            track: number;
+
+            /** BodyTrainingCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new BodyTrainingCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BodyTrainingCommitRequest instance
+             */
+            static create(properties: minimir.v1.BodyTrainingCommitRequest.$Shape): minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape;
+            static create(properties?: minimir.v1.BodyTrainingCommitRequest.$Properties): minimir.v1.BodyTrainingCommitRequest;
+
+            /**
+             * Encodes the specified BodyTrainingCommitRequest message. Does not implicitly {@link minimir.v1.BodyTrainingCommitRequest.verify|verify} messages.
+             * @param message BodyTrainingCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BodyTrainingCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BodyTrainingCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingCommitRequest.verify|verify} messages.
+             * @param message BodyTrainingCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BodyTrainingCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BodyTrainingCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape} BodyTrainingCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape;
+
+            /**
+             * Decodes a BodyTrainingCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape} BodyTrainingCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape;
+
+            /**
+             * Verifies a BodyTrainingCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BodyTrainingCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BodyTrainingCommitRequest {
+
+            /** Properties of a BodyTrainingCommitRequest. */
+            interface $Properties {
+
+                /** BodyTrainingCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** BodyTrainingCommitRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** BodyTrainingCommitRequest track */
+                track?: (number|null);
+
+                /** BodyTrainingCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BodyTrainingCommitRequest. */
+            type $Shape = minimir.v1.BodyTrainingCommitRequest.$Properties;
         }
     }
 }

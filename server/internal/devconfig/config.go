@@ -319,6 +319,8 @@ type Fixture struct {
 	Medal *MedalConfig `json:"medal,omitempty"`
 	// Rebirth 配置当前开放的连续转生档位与对应挑战。
 	Rebirth *RebirthConfig `json:"rebirth,omitempty"`
+	// BodyTraining 配置已经具备完整数值和边界的独立炼体系别。
+	BodyTraining *BodyTrainingConfig `json:"body_training,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -530,6 +532,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateRebirth(); err != nil {
+		return err
+	}
+	if err := f.validateBodyTraining(); err != nil {
 		return err
 	}
 	// err 接收校验装备统计或属性过程中可能产生的错误，供后续失败分支处理。

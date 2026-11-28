@@ -816,6 +816,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.RecycleRefineReceipt.$Properties|null} [recycle_refine] OperationResult recycle_refine
              * @property {minimir.v1.MedalReceipt.$Properties|null} [medal] OperationResult medal
              * @property {minimir.v1.RebirthReceipt.$Properties|null} [rebirth] OperationResult rebirth
+             * @property {minimir.v1.BodyTrainingReceipt.$Properties|null} [body_training] OperationResult body_training
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1008,6 +1009,14 @@ $root.minimir = (function() {
             OperationResult.prototype.rebirth = null;
 
             /**
+             * OperationResult body_training.
+             * @member {minimir.v1.BodyTrainingReceipt.$Properties|null|undefined} body_training
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.body_training = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1079,6 +1088,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.MedalReceipt.encode(message.medal, writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
                 if (message.rebirth != null && $Object.hasOwnProperty.call(message, "rebirth"))
                     $root.minimir.v1.RebirthReceipt.encode(message.rebirth, writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
+                if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training"))
+                    $root.minimir.v1.BodyTrainingReceipt.encode(message.body_training, writer.uint32(/* id 21, wireType 2 =*/170).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1271,6 +1282,12 @@ $root.minimir = (function() {
                             message.rebirth = $root.minimir.v1.RebirthReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.rebirth);
                             continue;
                         }
+                    case 21: {
+                            if (wireType !== 2)
+                                break;
+                            message.body_training = $root.minimir.v1.BodyTrainingReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.body_training);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1409,6 +1426,11 @@ $root.minimir = (function() {
                     if (error)
                         return "rebirth." + error;
                 }
+                if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training")) {
+                    var error = $root.minimir.v1.BodyTrainingReceipt.verify(message.body_training, _depth + 1);
+                    if (error)
+                        return "body_training." + error;
+                }
                 return null;
             };
 
@@ -1427,6 +1449,906 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.BodyTrainingState = (function() {
+
+            /**
+             * Properties of a BodyTrainingState.
+             * @typedef {Object} minimir.v1.BodyTrainingState.$Properties
+             * @property {number|null} [health_level] BodyTrainingState health_level
+             * @property {number|null} [mana_level] BodyTrainingState mana_level
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingState.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingState
+             * @augments minimir.v1.BodyTrainingState.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingState.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingState.
+             * @typedef {minimir.v1.BodyTrainingState.$Properties} minimir.v1.BodyTrainingState.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingState.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingState.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingState health_level.
+             * @member {number} health_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.health_level = 0;
+
+            /**
+             * BodyTrainingState mana_level.
+             * @member {number} mana_level
+             * @memberof minimir.v1.BodyTrainingState
+             * @instance
+             */
+            BodyTrainingState.prototype.mana_level = 0;
+
+            /**
+             * Creates a new BodyTrainingState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {minimir.v1.BodyTrainingState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingState} BodyTrainingState instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingState.$Shape): minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingState.$Properties): minimir.v1.BodyTrainingState;
+             * }}
+             */
+            BodyTrainingState.create = function(properties) {
+                return new BodyTrainingState(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingState message. Does not implicitly {@link minimir.v1.BodyTrainingState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {minimir.v1.BodyTrainingState.$Properties} message BodyTrainingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.health_level != null && $Object.hasOwnProperty.call(message, "health_level") && message.health_level !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.health_level);
+                if (message.mana_level != null && $Object.hasOwnProperty.call(message, "mana_level") && message.mana_level !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.mana_level);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingState message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {minimir.v1.BodyTrainingState.$Properties} message BodyTrainingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape} BodyTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.health_level = value;
+                            else
+                                delete message.health_level;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.mana_level = value;
+                            else
+                                delete message.mana_level;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingState & minimir.v1.BodyTrainingState.$Shape} BodyTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingState message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.health_level != null && $Object.hasOwnProperty.call(message, "health_level"))
+                    if (!$util.isInteger(message.health_level))
+                        return "health_level: integer expected";
+                if (message.mana_level != null && $Object.hasOwnProperty.call(message, "mana_level"))
+                    if (!$util.isInteger(message.mana_level))
+                        return "mana_level: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingState
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingState";
+            };
+
+            return BodyTrainingState;
+        })();
+
+        v1.BodyTrainingTerms = (function() {
+
+            /**
+             * Properties of a BodyTrainingTerms.
+             * @typedef {Object} minimir.v1.BodyTrainingTerms.$Properties
+             * @property {number|null} [track] BodyTrainingTerms track
+             * @property {number|null} [before_level] BodyTrainingTerms before_level
+             * @property {number|null} [target_level] BodyTrainingTerms target_level
+             * @property {number|null} [success_ppm] BodyTrainingTerms success_ppm
+             * @property {Long|null} [gold] BodyTrainingTerms gold
+             * @property {Long|null} [bound_gold] BodyTrainingTerms bound_gold
+             * @property {Long|null} [before_bonus] BodyTrainingTerms before_bonus
+             * @property {Long|null} [target_bonus] BodyTrainingTerms target_bonus
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingTerms.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingTerms
+             * @augments minimir.v1.BodyTrainingTerms.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingTerms.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingTerms.
+             * @typedef {minimir.v1.BodyTrainingTerms.$Properties} minimir.v1.BodyTrainingTerms.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingTerms.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingTerms.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingTerms.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingTerms = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingTerms track.
+             * @member {number} track
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.track = 0;
+
+            /**
+             * BodyTrainingTerms before_level.
+             * @member {number} before_level
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.before_level = 0;
+
+            /**
+             * BodyTrainingTerms target_level.
+             * @member {number} target_level
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.target_level = 0;
+
+            /**
+             * BodyTrainingTerms success_ppm.
+             * @member {number} success_ppm
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.success_ppm = 0;
+
+            /**
+             * BodyTrainingTerms gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BodyTrainingTerms bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BodyTrainingTerms before_bonus.
+             * @member {Long} before_bonus
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.before_bonus = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * BodyTrainingTerms target_bonus.
+             * @member {Long} target_bonus
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @instance
+             */
+            BodyTrainingTerms.prototype.target_bonus = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new BodyTrainingTerms instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {minimir.v1.BodyTrainingTerms.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingTerms} BodyTrainingTerms instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingTerms.$Shape): minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingTerms.$Properties): minimir.v1.BodyTrainingTerms;
+             * }}
+             */
+            BodyTrainingTerms.create = function(properties) {
+                return new BodyTrainingTerms(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingTerms message. Does not implicitly {@link minimir.v1.BodyTrainingTerms.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {minimir.v1.BodyTrainingTerms.$Properties} message BodyTrainingTerms message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingTerms.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track") && message.track !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.track);
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level") && message.before_level !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.before_level);
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level") && message.target_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.target_level);
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm") && message.success_ppm !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.success_ppm);
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.bound_gold);
+                if (message.before_bonus != null && $Object.hasOwnProperty.call(message, "before_bonus") && (typeof message.before_bonus === "object" ? message.before_bonus.low || message.before_bonus.high : message.before_bonus !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.before_bonus);
+                if (message.target_bonus != null && $Object.hasOwnProperty.call(message, "target_bonus") && (typeof message.target_bonus === "object" ? message.target_bonus.low || message.target_bonus.high : message.target_bonus !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.target_bonus);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingTerms message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingTerms.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {minimir.v1.BodyTrainingTerms.$Properties} message BodyTrainingTerms message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingTerms.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingTerms message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape} BodyTrainingTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingTerms.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingTerms();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.track = value;
+                            else
+                                delete message.track;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.before_level = value;
+                            else
+                                delete message.before_level;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_level = value;
+                            else
+                                delete message.target_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.success_ppm = value;
+                            else
+                                delete message.success_ppm;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.before_bonus = value;
+                            else
+                                delete message.before_bonus;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_bonus = value;
+                            else
+                                delete message.target_bonus;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingTerms message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingTerms & minimir.v1.BodyTrainingTerms.$Shape} BodyTrainingTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingTerms.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingTerms message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingTerms.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track"))
+                    if (!$util.isInteger(message.track))
+                        return "track: integer expected";
+                if (message.before_level != null && $Object.hasOwnProperty.call(message, "before_level"))
+                    if (!$util.isInteger(message.before_level))
+                        return "before_level: integer expected";
+                if (message.target_level != null && $Object.hasOwnProperty.call(message, "target_level"))
+                    if (!$util.isInteger(message.target_level))
+                        return "target_level: integer expected";
+                if (message.success_ppm != null && $Object.hasOwnProperty.call(message, "success_ppm"))
+                    if (!$util.isInteger(message.success_ppm))
+                        return "success_ppm: integer expected";
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.before_bonus != null && $Object.hasOwnProperty.call(message, "before_bonus"))
+                    if (!$util.isInteger(message.before_bonus) && !(message.before_bonus && $util.isInteger(message.before_bonus.low) && $util.isInteger(message.before_bonus.high)))
+                        return "before_bonus: integer|Long expected";
+                if (message.target_bonus != null && $Object.hasOwnProperty.call(message, "target_bonus"))
+                    if (!$util.isInteger(message.target_bonus) && !(message.target_bonus && $util.isInteger(message.target_bonus.low) && $util.isInteger(message.target_bonus.high)))
+                        return "target_bonus: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingTerms
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingTerms
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingTerms.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingTerms";
+            };
+
+            return BodyTrainingTerms;
+        })();
+
+        v1.BodyTrainingReceipt = (function() {
+
+            /**
+             * Properties of a BodyTrainingReceipt.
+             * @typedef {Object} minimir.v1.BodyTrainingReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] BodyTrainingReceipt quote_id
+             * @property {minimir.v1.BodyTrainingTerms.$Properties|null} [terms] BodyTrainingReceipt terms
+             * @property {boolean|null} [success] BodyTrainingReceipt success
+             * @property {number|null} [after_level] BodyTrainingReceipt after_level
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingReceipt.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingReceipt
+             * @augments minimir.v1.BodyTrainingReceipt.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingReceipt.
+             * @typedef {minimir.v1.BodyTrainingReceipt.$Properties} minimir.v1.BodyTrainingReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingReceipt.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @instance
+             */
+            BodyTrainingReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingReceipt terms.
+             * @member {minimir.v1.BodyTrainingTerms.$Properties|null|undefined} terms
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @instance
+             */
+            BodyTrainingReceipt.prototype.terms = null;
+
+            /**
+             * BodyTrainingReceipt success.
+             * @member {boolean} success
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @instance
+             */
+            BodyTrainingReceipt.prototype.success = false;
+
+            /**
+             * BodyTrainingReceipt after_level.
+             * @member {number} after_level
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @instance
+             */
+            BodyTrainingReceipt.prototype.after_level = 0;
+
+            /**
+             * Creates a new BodyTrainingReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {minimir.v1.BodyTrainingReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingReceipt} BodyTrainingReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingReceipt.$Shape): minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingReceipt.$Properties): minimir.v1.BodyTrainingReceipt;
+             * }}
+             */
+            BodyTrainingReceipt.create = function(properties) {
+                return new BodyTrainingReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingReceipt message. Does not implicitly {@link minimir.v1.BodyTrainingReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {minimir.v1.BodyTrainingReceipt.$Properties} message BodyTrainingReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms"))
+                    $root.minimir.v1.BodyTrainingTerms.encode(message.terms, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success") && message.success !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.success);
+                if (message.after_level != null && $Object.hasOwnProperty.call(message, "after_level") && message.after_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.after_level);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingReceipt message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {minimir.v1.BodyTrainingReceipt.$Properties} message BodyTrainingReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape} BodyTrainingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.terms = $root.minimir.v1.BodyTrainingTerms.decode(reader, reader.size(), $undefined, _depth + 1, message.terms);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.success = value;
+                            else
+                                delete message.success;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.after_level = value;
+                            else
+                                delete message.after_level;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingReceipt & minimir.v1.BodyTrainingReceipt.$Shape} BodyTrainingReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingReceipt message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms")) {
+                    var error = $root.minimir.v1.BodyTrainingTerms.verify(message.terms, _depth + 1);
+                    if (error)
+                        return "terms." + error;
+                }
+                if (message.success != null && $Object.hasOwnProperty.call(message, "success"))
+                    if (typeof message.success !== "boolean")
+                        return "success: boolean expected";
+                if (message.after_level != null && $Object.hasOwnProperty.call(message, "after_level"))
+                    if (!$util.isInteger(message.after_level))
+                        return "after_level: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingReceipt";
+            };
+
+            return BodyTrainingReceipt;
         })();
 
         v1.RebirthSpend = (function() {
@@ -29996,6 +30918,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.WingState.$Properties|null} [wing] InventoryResult wing
              * @property {Array.<minimir.v1.EquipmentEnhancementSlot.$Properties>|null} [equipment_enhancement_slots] InventoryResult equipment_enhancement_slots
              * @property {minimir.v1.MedalState.$Properties|null} [medal] InventoryResult medal
+             * @property {minimir.v1.BodyTrainingState.$Properties|null} [body_training] InventoryResult body_training
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -30137,6 +31060,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.medal = null;
 
             /**
+             * InventoryResult body_training.
+             * @member {minimir.v1.BodyTrainingState.$Properties|null|undefined} body_training
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.body_training = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -30198,6 +31129,8 @@ $root.minimir = (function() {
                         $root.minimir.v1.EquipmentEnhancementSlot.encode(message.equipment_enhancement_slots[i], writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
                 if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
                     $root.minimir.v1.MedalState.encode(message.medal, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
+                if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training"))
+                    $root.minimir.v1.BodyTrainingState.encode(message.body_training, writer.uint32(/* id 14, wireType 2 =*/114).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -30361,6 +31294,12 @@ $root.minimir = (function() {
                             message.medal = $root.minimir.v1.MedalState.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
                             continue;
                         }
+                    case 14: {
+                            if (wireType !== 2)
+                                break;
+                            message.body_training = $root.minimir.v1.BodyTrainingState.decode(reader, reader.size(), $undefined, _depth + 1, message.body_training);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -30483,6 +31422,11 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.MedalState.verify(message.medal, _depth + 1);
                     if (error)
                         return "medal." + error;
+                }
+                if (message.body_training != null && $Object.hasOwnProperty.call(message, "body_training")) {
+                    var error = $root.minimir.v1.BodyTrainingState.verify(message.body_training, _depth + 1);
+                    if (error)
+                        return "body_training." + error;
                 }
                 return null;
             };
@@ -70825,6 +71769,882 @@ $root.minimir = (function() {
             };
 
             return RebirthCommitRequest;
+        })();
+
+        v1.BodyTrainingQuoteRequest = (function() {
+
+            /**
+             * Properties of a BodyTrainingQuoteRequest.
+             * @typedef {Object} minimir.v1.BodyTrainingQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] BodyTrainingQuoteRequest scene_epoch
+             * @property {Uint8Array|null} [ui_session_id] BodyTrainingQuoteRequest ui_session_id
+             * @property {number|null} [track] BodyTrainingQuoteRequest track
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingQuoteRequest
+             * @augments minimir.v1.BodyTrainingQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingQuoteRequest.
+             * @typedef {minimir.v1.BodyTrainingQuoteRequest.$Properties} minimir.v1.BodyTrainingQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingQuoteRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @instance
+             */
+            BodyTrainingQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BodyTrainingQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @instance
+             */
+            BodyTrainingQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingQuoteRequest track.
+             * @member {number} track
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @instance
+             */
+            BodyTrainingQuoteRequest.prototype.track = 0;
+
+            /**
+             * Creates a new BodyTrainingQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingQuoteRequest} BodyTrainingQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingQuoteRequest.$Shape): minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingQuoteRequest.$Properties): minimir.v1.BodyTrainingQuoteRequest;
+             * }}
+             */
+            BodyTrainingQuoteRequest.create = function(properties) {
+                return new BodyTrainingQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingQuoteRequest message. Does not implicitly {@link minimir.v1.BodyTrainingQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingQuoteRequest.$Properties} message BodyTrainingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ui_session_id);
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track") && message.track !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.track);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingQuoteRequest.$Properties} message BodyTrainingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape} BodyTrainingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.track = value;
+                            else
+                                delete message.track;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingQuoteRequest & minimir.v1.BodyTrainingQuoteRequest.$Shape} BodyTrainingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track"))
+                    if (!$util.isInteger(message.track))
+                        return "track: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingQuoteRequest";
+            };
+
+            return BodyTrainingQuoteRequest;
+        })();
+
+        v1.BodyTrainingQuote = (function() {
+
+            /**
+             * Properties of a BodyTrainingQuote.
+             * @typedef {Object} minimir.v1.BodyTrainingQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] BodyTrainingQuote quote_id
+             * @property {Long|null} [scene_epoch] BodyTrainingQuote scene_epoch
+             * @property {Uint8Array|null} [ui_session_id] BodyTrainingQuote ui_session_id
+             * @property {Long|null} [role_revision] BodyTrainingQuote role_revision
+             * @property {Long|null} [expires_at_unix_ms] BodyTrainingQuote expires_at_unix_ms
+             * @property {minimir.v1.BodyTrainingTerms.$Properties|null} [terms] BodyTrainingQuote terms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingQuote.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingQuote
+             * @augments minimir.v1.BodyTrainingQuote.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingQuote.
+             * @typedef {minimir.v1.BodyTrainingQuote.$Properties} minimir.v1.BodyTrainingQuote.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingQuote.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingQuote = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BodyTrainingQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BodyTrainingQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BodyTrainingQuote terms.
+             * @member {minimir.v1.BodyTrainingTerms.$Properties|null|undefined} terms
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @instance
+             */
+            BodyTrainingQuote.prototype.terms = null;
+
+            /**
+             * Creates a new BodyTrainingQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {minimir.v1.BodyTrainingQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingQuote} BodyTrainingQuote instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingQuote.$Shape): minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingQuote.$Properties): minimir.v1.BodyTrainingQuote;
+             * }}
+             */
+            BodyTrainingQuote.create = function(properties) {
+                return new BodyTrainingQuote(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingQuote message. Does not implicitly {@link minimir.v1.BodyTrainingQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {minimir.v1.BodyTrainingQuote.$Properties} message BodyTrainingQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ui_session_id);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.role_revision);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.expires_at_unix_ms);
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms"))
+                    $root.minimir.v1.BodyTrainingTerms.encode(message.terms, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingQuote message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {minimir.v1.BodyTrainingQuote.$Properties} message BodyTrainingQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape} BodyTrainingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.terms = $root.minimir.v1.BodyTrainingTerms.decode(reader, reader.size(), $undefined, _depth + 1, message.terms);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingQuote & minimir.v1.BodyTrainingQuote.$Shape} BodyTrainingQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingQuote message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms")) {
+                    var error = $root.minimir.v1.BodyTrainingTerms.verify(message.terms, _depth + 1);
+                    if (error)
+                        return "terms." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingQuote";
+            };
+
+            return BodyTrainingQuote;
+        })();
+
+        v1.BodyTrainingCommitRequest = (function() {
+
+            /**
+             * Properties of a BodyTrainingCommitRequest.
+             * @typedef {Object} minimir.v1.BodyTrainingCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] BodyTrainingCommitRequest quote_id
+             * @property {Uint8Array|null} [ui_session_id] BodyTrainingCommitRequest ui_session_id
+             * @property {number|null} [track] BodyTrainingCommitRequest track
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] BodyTrainingCommitRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BodyTrainingCommitRequest.
+             * @memberof minimir.v1
+             * @interface IBodyTrainingCommitRequest
+             * @augments minimir.v1.BodyTrainingCommitRequest.$Properties
+             * @deprecated Use minimir.v1.BodyTrainingCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a BodyTrainingCommitRequest.
+             * @typedef {minimir.v1.BodyTrainingCommitRequest.$Properties} minimir.v1.BodyTrainingCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new BodyTrainingCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a BodyTrainingCommitRequest.
+             * @constructor
+             * @param {minimir.v1.BodyTrainingCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BodyTrainingCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BodyTrainingCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @instance
+             */
+            BodyTrainingCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingCommitRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @instance
+             */
+            BodyTrainingCommitRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * BodyTrainingCommitRequest track.
+             * @member {number} track
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @instance
+             */
+            BodyTrainingCommitRequest.prototype.track = 0;
+
+            /**
+             * BodyTrainingCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @instance
+             */
+            BodyTrainingCommitRequest.prototype.operation = null;
+
+            /**
+             * Creates a new BodyTrainingCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BodyTrainingCommitRequest} BodyTrainingCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.BodyTrainingCommitRequest.$Shape): minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape;
+             *   (properties?: minimir.v1.BodyTrainingCommitRequest.$Properties): minimir.v1.BodyTrainingCommitRequest;
+             * }}
+             */
+            BodyTrainingCommitRequest.create = function(properties) {
+                return new BodyTrainingCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified BodyTrainingCommitRequest message. Does not implicitly {@link minimir.v1.BodyTrainingCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingCommitRequest.$Properties} message BodyTrainingCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ui_session_id);
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track") && message.track !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.track);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BodyTrainingCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.BodyTrainingCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {minimir.v1.BodyTrainingCommitRequest.$Properties} message BodyTrainingCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BodyTrainingCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BodyTrainingCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape} BodyTrainingCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BodyTrainingCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.track = value;
+                            else
+                                delete message.track;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BodyTrainingCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BodyTrainingCommitRequest & minimir.v1.BodyTrainingCommitRequest.$Shape} BodyTrainingCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BodyTrainingCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BodyTrainingCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BodyTrainingCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.track != null && $Object.hasOwnProperty.call(message, "track"))
+                    if (!$util.isInteger(message.track))
+                        return "track: integer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for BodyTrainingCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.BodyTrainingCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BodyTrainingCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BodyTrainingCommitRequest";
+            };
+
+            return BodyTrainingCommitRequest;
         })();
 
         return v1;

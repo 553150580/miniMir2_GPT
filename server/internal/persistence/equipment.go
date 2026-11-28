@@ -151,6 +151,11 @@ func equipmentRoleArithmeticSafe(r domain.Role, f devconfig.Fixture) bool {
 			return false
 		}
 	}
+	levels := r.BodyTrainingLevels()
+	a, ok = f.ApplyBodyTraining(a, levels.Health, levels.Mana)
+	if !ok {
+		return false
+	}
 	a, ok = f.ApplyMedalBonuses(a, r.MedalLevel())
 	return ok && f.EquipmentArithmeticSafe(a)
 }

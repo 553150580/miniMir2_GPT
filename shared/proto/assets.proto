@@ -31,6 +31,7 @@ message InventoryResult {
   // 强化开放时包含十个普通装备部位，包括没有装备的部位。
   repeated EquipmentEnhancementSlot equipment_enhancement_slots = 12;
   MedalState medal = 13;
+  BodyTrainingState body_training = 14;
 }
 message SetSkillSlotsRequest {
   repeated uint32 skill_slot_ids = 1;

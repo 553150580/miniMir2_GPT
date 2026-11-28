@@ -43,6 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
+    'body-training': ('BodyTraining',),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -64,6 +65,7 @@ EQUIPMENT_ENHANCEMENT_PERSISTENCE_CASES = ('TestEnhanceEquipmentSlotSettlementMo
 EQUIPMENT_REFINE_PERSISTENCE_CASES = ('TestEquipmentRefineSettlementMongo', 'TestRefineRecycleSettlementMongo')
 MEDAL_PERSISTENCE_CASES = ('TestMedalSettlementMongo',)
 REBIRTH_PERSISTENCE_CASES = ('TestRebirthSettlementMongo',)
+BODY_TRAINING_PERSISTENCE_CASES = ('TestBodyTrainingSettlementMongo',)
 # 子进程入口由父用例启动；浏览器专项另传真实 Creator 构建并独立生成报告。
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
@@ -107,6 +109,7 @@ def suites():
     groups['equipment-refine'].extend(EQUIPMENT_REFINE_PERSISTENCE_CASES)
     groups['medal'].extend(MEDAL_PERSISTENCE_CASES)
     groups['rebirth'].extend(REBIRTH_PERSISTENCE_CASES)
+    groups['body-training'].extend(BODY_TRAINING_PERSISTENCE_CASES)
     return groups, external
 
 
@@ -193,7 +196,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             for label, artifact in (('assembly', assembly), ('mining_assembly', mining_assembly), ('forge_assembly', forge_assembly),
                                     ('fixture', fixture), ('public', public)):
                 report[f'luck_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        if group in ('weapon-oil', 'recycle-oil', 'wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+        if group in ('weapon-oil', 'recycle-oil', 'wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
             # 隔离原武器培养规则及原三项前置配置，便于同源重放全部材料。
             export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_luck_oil.py')]
             for arg, source in (('assembly', 'luck-oil'), ('luck-assembly', 'combat-luck'),
@@ -209,7 +212,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_LUCK_OIL_TEST_FIXTURE'] = str(fixture)
             report['weapon_oil_fixture_sha256'] = hashlib.sha256(fixture.read_bytes()).hexdigest()
             report['weapon_oil_public_sha256'] = hashlib.sha256(public.read_bytes()).hexdigest()
-            if group in ('recycle-oil', 'wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+            if group in ('recycle-oil', 'wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
                 # 手动分解在同一候选上使用表格投影的准确分母。
                 recycle_fixture = destination / 'recycle-oil-fixture.json'
                 recycle_public = destination / 'recycle-oil-gameplay.json'
@@ -221,7 +224,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
                 environment['MINIMIR_RECYCLE_OIL_TEST_FIXTURE'] = str(recycle_fixture)
                 report['recycle_oil_fixture_sha256'] = hashlib.sha256(recycle_fixture.read_bytes()).hexdigest()
                 report['recycle_oil_public_sha256'] = hashlib.sha256(recycle_public.read_bytes()).hexdigest()
-                if group in ('wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+                if group in ('wing', 'wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
                     # 翅膀沿原世界首领模板真实发奖；唯一工作簿和隔离费用一起固定。
                     wing_assembly = destination / 'wings-assembly.json'
                     wing_assembly.write_bytes((ROOT / 'tools/resources/testdata/wings-isolated.json').read_bytes())
@@ -236,7 +239,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
                     report['wing_assembly_sha256'] = hashlib.sha256(wing_assembly.read_bytes()).hexdigest()
                     report['wing_fixture_sha256'] = hashlib.sha256(wing_fixture.read_bytes()).hexdigest()
                     report['wing_public_sha256'] = hashlib.sha256(wing_public.read_bytes()).hexdigest()
-                    if group in ('wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+                    if group in ('wing-oil', 'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
                         # 复用同一翅膀前态规则，仅在独立候选授权该对象使用原祝福油。
                         wing_oil_fixture = destination / 'wing-oil-fixture.json'
                         wing_oil_public = destination / 'wing-oil-gameplay.json'
@@ -248,7 +251,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
                         environment['MINIMIR_WING_OIL_TEST_FIXTURE'] = str(wing_oil_fixture)
                         report['wing_oil_fixture_sha256'] = hashlib.sha256(wing_oil_fixture.read_bytes()).hexdigest()
                         report['wing_oil_public_sha256'] = hashlib.sha256(wing_oil_public.read_bytes()).hexdigest()
-        if group in ('equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+        if group in ('equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
             # 从本批校验过的翅膀用油前置重建首领、原石和强化等级目录。
             assembly = destination / 'equipment-enhancement-assembly.json'
             enhancement_fixture = destination / 'equipment-enhancement-fixture.json'
@@ -263,7 +266,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_EQUIPMENT_ENHANCEMENT_TEST_FIXTURE'] = str(enhancement_fixture)
             for label, artifact in (('assembly', assembly), ('fixture', enhancement_fixture), ('public', enhancement_public)):
                 report[f'equipment_enhancement_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        if group in ('equipment-refine', 'medal', 'rebirth'):
+        if group in ('equipment-refine', 'medal', 'rebirth', 'body-training'):
             # 当前批次从同一强化候选和唯一工作簿重建原分解、材料和洗炼参数。
             assembly = destination / 'equipment-refine-assembly.json'
             refine_fixture = destination / 'equipment-refine-fixture.json'
@@ -278,7 +281,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_EQUIPMENT_REFINE_TEST_FIXTURE'] = str(refine_fixture)
             for label, artifact in (('assembly', assembly), ('fixture', refine_fixture), ('public', refine_public)):
                 report[f'equipment_refine_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        if group in ('medal', 'rebirth'):
+        if group in ('medal', 'rebirth', 'body-training'):
             # 用本批已验收的前置候选重投角色勋章，并记录世界首领奖励和逐档配置摘要。
             assembly = destination / 'medal-assembly.json'
             medal_fixture = destination / 'medal-fixture.json'
@@ -292,7 +295,7 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_MEDAL_TEST_FIXTURE'] = str(medal_fixture)
             for label, artifact in (('assembly', assembly), ('fixture', medal_fixture), ('public', medal_public)):
                 report[f'medal_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        if group == 'rebirth':
+        if group in ('rebirth', 'body-training'):
             # 转生沿用已核对的前置进度，在同一夹具上验证胜利、扣费和重放。
             assembly = destination / 'rebirth-assembly.json'
             rebirth_fixture = destination / 'rebirth-fixture.json'
@@ -306,10 +309,24 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_REBIRTH_TEST_FIXTURE'] = str(rebirth_fixture)
             for label, artifact in (('assembly', assembly), ('fixture', rebirth_fixture), ('public', rebirth_public)):
                 report[f'rebirth_{label}_sha256'] = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        if group == 'body-training':
+            # 从同一工作簿及前置目录重投炼体概率、费用与属性预算。
+            assembly = destination / 'body-training-assembly.json'
+            fixture = destination / 'body-training-fixture.json'
+            public = destination / 'body-training-gameplay.json'
+            assembly.write_bytes((ROOT / 'tools/resources/testdata/body-training-isolated.json').read_bytes())
+            export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_body_training.py'), '--assembly', str(assembly),
+                      '--base-fixture', str(rebirth_fixture), '--base-public', str(rebirth_public),
+                      '--fixture-out', str(fixture), '--public-out', str(public)]
+            subprocess.run(export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_BODY_TRAINING_TEST_FIXTURE'] = str(fixture)
+            for label, path in (('assembly', assembly), ('fixture', fixture), ('public', public)):
+                report[f'body_training_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',
-                     'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth'):
+                     'equipment-enhancement', 'equipment-refine', 'medal', 'rebirth', 'body-training'):
             packages.append('./internal/persistence')
         command = [*GO, '-json', '-race', '-p', '1', *packages, '-run', expression,
                    '-count=1', f'-timeout={timeout}s']

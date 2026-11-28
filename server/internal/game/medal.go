@@ -6,7 +6,6 @@ import (
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
-	"minimir/internal/devconfig"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
@@ -15,17 +14,6 @@ import (
 // medalAvailable 判断当前活角色是否可进行首次勋章培养，原回执重放不走这个限制。
 func (w *worker) medalAvailable(r *room) bool {
 	return w.roomStore(r).Cfg.Fixture.Medal != nil && w.growthSceneAvailable(r)
-}
-
-// growthSceneAvailable 允许活角色在普通挂机地图或城镇办理养成。
-func (w *worker) growthSceneAvailable(r *room) bool {
-	fixture := &w.roomStore(r).Cfg.Fixture
-	if !r.Ready || r.Player.HP <= 0 || r.bossBattle != nil || r.mirrorMatch != nil ||
-		miningMap(fixture, r.MapID) {
-		return false
-	}
-	current, found := w.currentMap(r)
-	return found && (current.SceneKind == devconfig.SceneKindPersonal || current.SceneKind == devconfig.SceneKindTown)
 }
 
 // medalPreview 复用角色原异步报价槽，旧连接换图或失去原附着后不能领取报价。

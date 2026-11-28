@@ -128,6 +128,7 @@ type Operation struct {
 	EquipmentRefine      *EquipmentRefineReceipt      `bson:"equipment_refine,omitempty"`      // 洗炼原装备、已付候选及确认动作。
 	Medal                *MedalCommitReceipt          `bson:"medal,omitempty"`                 // 原角色勋章升阶和确切碎片扣料。
 	Rebirth              *RebirthCommitReceipt        `bson:"rebirth,omitempty"`               // 原转生、经验释放与扣料。
+	BodyTraining         *BodyTrainingReceipt         `bson:"body_training,omitempty"`         // 原炼体扣款、等级和结果。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -243,6 +244,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	if s.Cfg.Fixture.Progression.RebirthEnabled {
 		indexes[rebirthQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
+	}
+	if s.Cfg.Fixture.BodyTraining != nil {
+		indexes[bodyTrainingQuotes] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.MirrorArena != nil {
 		for collection, models := range mirrorArenaIndexes() {

@@ -76,6 +76,10 @@ type AssetRequest struct {
 	RebirthGate       uint32                   // 当前场景对首次转生的门禁。
 	RebirthAcceptedAt time.Time                `json:"-"` // 原确认到达时刻，排队重试沿用。
 
+	BodyTrainingCommit     *pb.BodyTrainingCommitRequest // 原炼体确认。
+	BodyTrainingGate       uint32                        // 当前位置的首次尝试门禁。
+	BodyTrainingAcceptedAt time.Time                     `json:"-"` // 已受理的时刻用于报价时限。
+
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
 	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
@@ -155,6 +159,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetRebirthCommit && q.RebirthAcceptedAt.IsZero() {
 		q.RebirthAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetBodyTrainingCommit && q.BodyTrainingAcceptedAt.IsZero() {
+		q.BodyTrainingAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -217,7 +224,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit, AssetBodyTrainingCommit:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -249,6 +256,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var refine *EquipmentRefineReceipt                 // 原洗炼动作与已付结果的永久确认。
 		var medal *MedalCommitReceipt                      // 原勋章档案与确切碎片消费。
 		var rebirth *RebirthCommitReceipt                  // 原转生、经验释放与确切资产扣除。
+		var bodyTraining *BodyTrainingReceipt              // 炼体每次实际的扣款、成功与原等级。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -302,6 +310,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetRebirthCommit:
 			r, businessCode, rebirth, e = s.commitRebirth(tc, a, r, q)
+			if e != nil {
+				return e
+			}
+		case AssetBodyTrainingCommit:
+			r, businessCode, bodyTraining, e = s.commitBodyTraining(tc, a, r, q)
 			if e != nil {
 				return e
 			}
@@ -456,6 +469,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.EquipmentRefine = refine
 		op.Medal = medal
 		op.Rebirth = rebirth
+		op.BodyTraining = bodyTraining
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -542,6 +556,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["rebirth"] = rebirth
 			audit["rule_version"] = rebirth.Rule
 			audit["config_hash"] = rebirth.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if bodyTraining != nil {
+			audit["body_training"] = bodyTraining
+			audit["rule_version"] = bodyTraining.Rule
+			audit["config_hash"] = bodyTraining.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -639,6 +659,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		result.EquipmentRefine = receipt.EquipmentRefine.Proto()
 		result.Medal = receipt.Medal.Proto()
 		result.Rebirth = receipt.Rebirth.Proto()
+		result.BodyTraining = receipt.BodyTraining.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 		result.RecycleRefine = receipt.Recycling.refineProto()
 	}

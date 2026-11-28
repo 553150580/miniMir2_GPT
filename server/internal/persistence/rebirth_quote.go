@@ -5,8 +5,6 @@ import (
 	"context"
 	"errors"
 	"reflect"
-	"strconv"
-	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -20,26 +18,12 @@ import (
 const (
 	AssetRebirthCommit     = "rebirth_commit" // 使用现有角色经济流水。
 	rebirthQuoteCollection = "rebirth_quotes" // 每个角色只保留最新报价。
-	rebirthQuoteDuration   = 30 * time.Second // 报价展示后的首次受理期限。
-	rebirthQuoteGrace      = 5 * time.Minute  // 已受理的队列与数据库重试保留期。
 )
 
 // rebirthStoredQuote 保留报价与初次确认必须核对的所有身份。
 type rebirthStoredQuote struct {
-	RoleID       string      `bson:"_id"`           // 角色唯一编号。
-	ID           string      `bson:"quote_id"`      // 本次报价编号。
-	Scene        string      `bson:"scene_epoch"`   // 原场景，按文本保存完整64位。
-	UISession    string      `bson:"ui_session_id"` // 原面板会话。
-	SessionEpoch int64       `bson:"session_epoch"` // 原登录接管代次。
-	RunID        uint64      `bson:"run_server_id"` // 签发报价的运行服。
-	RunEpoch     int64       `bson:"run_epoch"`     // 原运行服所有权代次。
-	Revision     int64       `bson:"revision"`      // 原报价的角色修订。
-	Rule         uint64      `bson:"rule_version"`  // 签发时的玩法版本。
-	Config       string      `bson:"config_hash"`   // 玩法字节摘要。
-	Issued       time.Time   `bson:"issued_at"`     // 允许首次确认的起点。
-	Expires      time.Time   `bson:"expires_at"`    // 允许首次确认的截止。
-	PurgeAt      time.Time   `bson:"purge_at"`      // 被TTL清理的时刻。
-	Plan         rebirthPlan `bson:"plan"`          // 已向玩家显示的角色结果和费用。
+	Binding growthQuoteBinding `bson:",inline"` // 沿用原报价字段和数据格式。
+	Plan    rebirthPlan        `bson:"plan"`    // 已向玩家显示的角色结果和费用。
 }
 
 // RebirthCommitReceipt 保存原成长结果和资产变更，允许后续连接原样核对。
@@ -81,11 +65,7 @@ func (s *Store) PreviewRebirth(ctx context.Context, auth Auth, request *pb.Rebir
 	if !ValidRebirthQuoteRequest(request) {
 		return nil, Fail(p.CodeInvalidArgument, "转生报价缺少原场景或面板身份")
 	}
-	issued := bossTime(time.Now())
-	quote := rebirthStoredQuote{RoleID: auth.RoleID, ID: domain.ID(), Scene: strconv.FormatUint(request.SceneEpoch, 10),
-		UISession: domain.Hex(request.UiSessionId), SessionEpoch: auth.SessionEpoch, RunID: s.Cfg.RunID, RunEpoch: s.Epoch,
-		Rule: f.RuleVersion, Config: f.Hash, Issued: issued, Expires: issued.Add(rebirthQuoteDuration),
-		PurgeAt: issued.Add(rebirthQuoteDuration + rebirthQuoteGrace)}
+	quote := rebirthStoredQuote{Binding: s.newGrowthQuote(auth, request.SceneEpoch, request.UiSessionId)}
 	err := s.guardedTx(ctx, auth, func(tx context.Context) error {
 		if err := s.fence(tx, auth); err != nil {
 			return err
@@ -104,16 +84,17 @@ func (s *Store) PreviewRebirth(ctx context.Context, auth Auth, request *pb.Rebir
 		if code != 0 {
 			return Fail(code, "转生档位、挑战凭证或投入条件不符")
 		}
-		quote.Revision, quote.Plan = role.Revision, plan
+		quote.Binding.Revision, quote.Plan = role.Revision, plan
 		_, err = s.DB.Collection(rebirthQuoteCollection).ReplaceOne(tx, bson.M{"_id": role.ID}, quote, options.Replace().SetUpsert(true))
 		return err
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &pb.RebirthQuote{Preview: quote.Plan.proto(quote.ID), SceneEpoch: request.SceneEpoch,
-		UiSessionId: domain.Bytes(quote.UISession), RoleRevision: uint64(quote.Revision),
-		ExpiresAtUnixMs: uint64(quote.Expires.UnixMilli())}, nil
+	b := quote.Binding
+	return &pb.RebirthQuote{Preview: quote.Plan.proto(b.ID), SceneEpoch: request.SceneEpoch,
+		UiSessionId: domain.Bytes(b.UISession), RoleRevision: uint64(b.Revision),
+		ExpiresAtUnixMs: uint64(b.Expires.UnixMilli())}, nil
 }
 
 // commitRebirth 应用首次确认。原回执由资产事务在场景和资格检查前处理。
@@ -136,11 +117,8 @@ func (s *Store) commitRebirth(ctx context.Context, auth Auth, role domain.Role, 
 	if err != nil {
 		return role, 0, nil, err
 	}
-	if quote.Scene != strconv.FormatUint(request.SceneEpoch, 10) || quote.UISession != domain.Hex(input.UiSessionId) ||
-		quote.SessionEpoch != auth.SessionEpoch || quote.RunID != s.Cfg.RunID || quote.RunEpoch != s.Epoch ||
-		request.RebirthAcceptedAt.Before(quote.Issued) || !request.RebirthAcceptedAt.Before(quote.Expires) ||
-		quote.Rule != f.RuleVersion || quote.Config != f.Hash || quote.Revision < 1 || quote.Revision > role.Revision ||
-		uint64(quote.Revision) != request.Context.ExpectedRevision {
+	b := quote.Binding
+	if !s.matchesGrowthQuote(b, role, auth, request.Context.ExpectedRevision, request.SceneEpoch, input.UiSessionId, request.RebirthAcceptedAt) {
 		return role, p.CodeRebirthQuoteChanged, nil, nil
 	}
 	out, plan, code, err := s.buildRebirthPlan(ctx, role)
@@ -157,6 +135,6 @@ func (s *Store) commitRebirth(ctx context.Context, auth Auth, role domain.Role, 
 	if deleted.DeletedCount != 1 {
 		return role, p.CodeRebirthQuoteChanged, nil, nil
 	}
-	return out, 0, &RebirthCommitReceipt{QuoteID: quote.ID, Scene: quote.Scene, UISession: quote.UISession,
-		Rule: quote.Rule, Config: quote.Config, Plan: plan}, nil
+	return out, 0, &RebirthCommitReceipt{QuoteID: b.ID, Scene: b.Scene, UISession: b.UISession,
+		Rule: b.Rule, Config: b.Config, Plan: plan}, nil
 }

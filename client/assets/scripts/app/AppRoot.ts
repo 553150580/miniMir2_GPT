@@ -68,6 +68,8 @@ import { medalRules, medalSlotLabel, validateMedalReceipt } from './MedalModel';
 import type { MedalCommitRequest, MedalReceipt, MedalSnapshot } from './MedalModel';
 import { GameRebirth, validateRebirthReceipt } from './GameRebirth';
 import type { RebirthCommitRequest, RebirthReceipt, RebirthSnapshot } from './GameRebirth';
+import { GameBodyTraining, validateBodyTrainingReceipt } from './GameBodyTraining';
+import type { BodyTrainingCommit, BodyTrainingReceipt, BodyTrainingSnapshot } from './GameBodyTraining';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -98,7 +100,8 @@ import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
-    MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote } from '../generated/protocol_ids';
+    MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote,
+    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -154,6 +157,7 @@ export class AppRoot extends Component {
     private wings?: GameWings;
     private medal?: GameMedal;
     private rebirth?: GameRebirth;
+    private bodyTraining?: GameBodyTraining;
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -571,6 +575,11 @@ export class AppRoot extends Component {
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read),
             refresh: () => this.itemActions!.refresh(), quote: request => session.connection.request(MsgC2SRebirthQuote, request),
             submit: (request, revision) => this.economic(MsgC2SRebirthCommit, request, revision) });
+        this.bodyTraining = new GameBodyTraining({ snapshot: () => this.bodyTrainingSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read),
+            refresh: () => this.itemActions!.refresh(), growthDetails: () => this.openGrowthDetails(),
+            quote: request => session.connection.request(MsgC2SBodyTrainingQuote, request),
+            submit: (request, revision) => this.economic(MsgC2SBodyTrainingCommit, request, revision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -776,10 +785,8 @@ export class AppRoot extends Component {
             if (target !== name) this.button(`UIMgr/Panels/${name}/SectionTabs/${target}`, () => { this.ui!.open(target); this.refreshGame(); });
         }
         this.button('UIMgr/Panels/Role/Message', () => {
-            const identity = currentEntryIdentity(); if (!identity || !session.role) return;
-            if (this.rebirthSnapshot()) { this.rebirth?.open(); return; }
-            this.combatStatus?.showLiveDetails('角色成长', () => !this.disposed && isCurrentEntry(identity)
-                ? progressionDetailLines(session.inventory?.level, session.inventory?.experience, session.inventory?.progression) : null);
+            if (this.bodyTrainingSnapshot()) { this.bodyTraining?.open(); return; }
+            this.openGrowthDetails();
         }, Node.EventType.TOUCH_END);
         for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
             this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => this.openGamePanel(panel));
@@ -1633,6 +1640,15 @@ export class AppRoot extends Component {
         return raw ? wingRules(raw) : undefined;
     }
 
+    // 成长详情仍可从炼体面板访问，独立配置炼体时保留原经验与等级观察。
+    private openGrowthDetails(): void {
+        const identity = currentEntryIdentity();
+        if (!identity || !session.role) return;
+        if (this.rebirthSnapshot()) { this.rebirth?.open(); return; }
+        this.combatStatus?.showLiveDetails('角色成长', () => !this.disposed && isCurrentEntry(identity)
+            ? progressionDetailLines(session.inventory?.level, session.inventory?.experience, session.inventory?.progression) : null);
+    }
+
     private currentMedalRules() {
         const raw = this.world?.gameplay.medal;
         if (this.medalRulesSource !== raw) {
@@ -1666,6 +1682,20 @@ export class AppRoot extends Component {
             this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
         return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, level: inventory.level,
             experience: inventory.experience, progression: inventory.progression, items: inventory.items, stages, blocked };
+    }
+
+    // 公开炼体配置与权威库存同时就绪后才呈现对应角色的入口。
+    private bodyTrainingSnapshot(): BodyTrainingSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory;
+        const rules = this.world?.gameplay.body_training;
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory?.bodyTraining ||
+            !Array.isArray(rules?.tracks) || !rules.tracks.length || !Array.isArray(rules.steps) || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, level: inventory.level,
+            state: inventory.bodyTraining, rules, blocked, canRebirth: !!inventory.progression?.rebirthEnabled && !!this.world?.gameplay.rebirth };
     }
 
     private wingSnapshot(): WingSnapshot | null {
@@ -2376,6 +2406,7 @@ export class AppRoot extends Component {
         let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
         let medal: { request: MedalCommitRequest; receipt: MedalReceipt } | undefined;
         let rebirth: { request: RebirthCommitRequest; receipt: RebirthReceipt } | undefined;
+        let bodyTraining: { request: BodyTrainingCommit; receipt: BodyTrainingReceipt } | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
@@ -2424,6 +2455,11 @@ export class AppRoot extends Component {
                 const request = pending.value as unknown as RebirthCommitRequest;
                 rebirth = { request, receipt: this.rebirth?.reconcile(request, result.rebirth) ?? validateRebirthReceipt(request, result.rebirth) };
             }
+            if (pending.id === MsgC2SBodyTrainingCommit) {
+                const request = pending.value as unknown as BodyTrainingCommit;
+                bodyTraining = { request, receipt: this.bodyTraining?.reconcile(request, result.bodyTraining) ??
+                    validateBodyTrainingReceipt(request, result.bodyTraining) };
+            }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2461,6 +2497,11 @@ export class AppRoot extends Component {
         if (rebirth) {
             this.rebirth?.accept(role, rebirth.request, rebirth.receipt);
             this.status(`转生完成 · 等级上限 ${rebirth.receipt.transition.newCap} 级`);
+            return;
+        }
+        if (bodyTraining) {
+            this.bodyTraining?.accept(role, bodyTraining.request, bodyTraining.receipt);
+            this.status(bodyTraining.receipt.success ? `炼体成功 · ${bodyTraining.receipt.afterLevel}级` : '炼体未升级 · 已扣除本次费用');
             return;
         }
         if (enhanced) {

@@ -1,0 +1,30 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 临时询价只从已就绪的同一场景发出。
+message BodyTrainingQuoteRequest {
+  uint64 scene_epoch = 1;
+  bytes ui_session_id = 2;
+  uint32 track = 3;
+}
+
+// 原费用、成功率、等级及签发时的附着身份。
+message BodyTrainingQuote {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  bytes ui_session_id = 3;
+  uint64 role_revision = 4;
+  uint64 expires_at_unix_ms = 5;
+  BodyTrainingTerms terms = 6;
+}
+
+// 原经济操作可以重放同一已结算的单次尝试。
+message BodyTrainingCommitRequest {
+  bytes quote_id = 1;
+  bytes ui_session_id = 2;
+  uint32 track = 3;
+  OperationContext operation = 4;
+}

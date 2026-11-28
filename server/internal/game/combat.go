@@ -230,6 +230,12 @@ func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
 			return devconfig.Fighter{}
 		}
 	}
+	body := r.Role.BodyTrainingLevels()
+	a, bodyValid := f.ApplyBodyTraining(a, body.Health, body.Mana)
+	if !bodyValid {
+		w.isolateRoom(r)
+		return devconfig.Fighter{}
+	}
 	a, medalValid := f.ApplyMedalBonuses(a, r.Role.MedalLevel())
 	if !medalValid {
 		w.isolateRoom(r)

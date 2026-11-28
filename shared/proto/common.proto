@@ -34,6 +34,33 @@ message OperationResult {
   RecycleRefineReceipt recycle_refine = 18;
   MedalReceipt medal = 19;
   RebirthReceipt rebirth = 20;
+  BodyTrainingReceipt body_training = 21;
+}
+
+// 两系的永久等级随同一角色库存修订下发。
+message BodyTrainingState {
+  uint32 health_level = 1;
+  uint32 mana_level = 2;
+}
+
+// 本次原费用、成功率和额度。实际战斗加成仍受统一属性预算。
+message BodyTrainingTerms {
+  uint32 track = 1;
+  uint32 before_level = 2;
+  uint32 target_level = 3;
+  uint32 success_ppm = 4;
+  int64 gold = 5;
+  int64 bound_gold = 6;
+  int64 before_bonus = 7;
+  int64 target_bonus = 8;
+}
+
+// 成功与概率失败都记录原费用和确定的后级，供重连恢复。
+message BodyTrainingReceipt {
+  bytes quote_id = 1;
+  BodyTrainingTerms terms = 2;
+  bool success = 3;
+  uint32 after_level = 4;
 }
 
 // 原绑定道具实例和实际扣量。
