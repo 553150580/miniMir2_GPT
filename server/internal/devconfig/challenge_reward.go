@@ -7,8 +7,9 @@ const maxChallengeRewardItems = 8
 
 // ChallengeItemReward 是同一场胜利可授予的一批物品及其排队容量。
 type ChallengeItemReward struct {
-	PendingLimit uint32                `json:"pending_limit"` // 单角色可积累的未领挑战笔数。
-	Items        []ChallengeRewardItem `json:"items"`         // 此挑战会产生的固定物品列表。
+	PendingLimit uint32                `json:"pending_limit"`         // 单角色可积累的未领挑战笔数。
+	Items        []ChallengeRewardItem `json:"items"`                 // 按原击杀规则判定绑定的固定附件。
+	BoundItems   []ChallengeRewardItem `json:"bound_items,omitempty"` // 始终绑定的固定附件，计入同一胜利批次。
 }
 
 // ChallengeRewardItem 是一个独立实例或一份可堆叠的物品。
@@ -22,14 +23,17 @@ func (f *Fixture) validChallengeItemReward(reward *ChallengeItemReward) bool {
 	if reward == nil {
 		return true
 	}
+	total := len(reward.Items) + len(reward.BoundItems) // 按两个来源的总格数控制待领体积。
 	if reward.PendingLimit == 0 || reward.PendingLimit > maxChallengePendingBundles ||
-		len(reward.Items) == 0 || len(reward.Items) > maxChallengeRewardItems {
+		total == 0 || total > maxChallengeRewardItems {
 		return false
 	}
-	for _, line := range reward.Items {
-		item, exists := f.Item(line.ItemID)
-		if !exists || !item.validChallengeRewardQuantity(line.Quantity) {
-			return false
+	for _, group := range [][]ChallengeRewardItem{reward.Items, reward.BoundItems} {
+		for _, line := range group {
+			item, exists := f.Item(line.ItemID)
+			if !exists || !item.validChallengeRewardQuantity(line.Quantity) {
+				return false
+			}
 		}
 	}
 	return true

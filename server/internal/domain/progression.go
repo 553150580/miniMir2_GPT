@@ -168,7 +168,9 @@ func ApplyExperience(r Role, raw int64, c GrowthContract) (Role, ExperienceGrant
 	if out.ProgressionCurveVersion != c.CurveVersion {
 		out.ProgressionMigrationRequired = true
 	}
-	if out.ProgressionMigrationRequired {
+	// 回滚到较旧开放档时保留已经解锁的等级和经验，恢复原配置后继续计算。
+	capUnavailable := out.RebirthCount > (c.OperatingLevelCap-c.InitialLevelCap)/c.RebirthLevelIncrement
+	if out.ProgressionMigrationRequired || capUnavailable {
 		grant.Rejected = raw
 		grant.LevelAfter = out.Level
 		grant.After = out.ProgressionSnapshot()

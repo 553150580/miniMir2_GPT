@@ -125,6 +125,9 @@ const (
 	MsgC2SMedalQuote uint16 = 40061
 	MsgS2CMedalQuote uint16 = 40062
 	MsgC2SMedalCommit uint16 = 40063
+	MsgC2SRebirthQuote uint16 = 40064
+	MsgS2CRebirthQuote uint16 = 40065
+	MsgC2SRebirthCommit uint16 = 40066
 )
 
 const (
@@ -196,4 +199,7 @@ const (
 	CodeMedalUnavailable uint32 = 3973
 	CodeMedalQuoteChanged uint32 = 3974
 	CodeMedalInputs uint32 = 3975
+	CodeRebirthUnavailable uint32 = 3976
+	CodeRebirthQuoteChanged uint32 = 3977
+	CodeRebirthInputs uint32 = 3978
 )

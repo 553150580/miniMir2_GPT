@@ -33,6 +33,37 @@ message OperationResult {
   EquipmentRefineReceipt equipment_refine = 17;
   RecycleRefineReceipt recycle_refine = 18;
   MedalReceipt medal = 19;
+  RebirthReceipt rebirth = 20;
+}
+
+// 原绑定道具实例和实际扣量。
+message RebirthSpend {
+  bytes instance_id = 1;
+  uint32 item_id = 2;
+  uint64 version = 3;
+  int64 quantity = 4;
+}
+
+// 原转生档位、实际等级与待用经验释放结果。
+message RebirthTransition {
+  uint32 previous_cap = 1;
+  uint32 new_cap = 2;
+  uint32 previous_level = 3;
+  uint32 new_level = 4;
+  uint32 new_count = 5;
+  int64 released_experience = 6;
+  int64 new_experience = 7;
+}
+
+// 完整扣款、凭证来源及成长结果，供原操作重放。
+message RebirthReceipt {
+  bytes quote_id = 1;
+  RebirthTransition transition = 2;
+  bytes challenge_id = 3;
+  RebirthSpend credential = 4;
+  repeated RebirthSpend materials = 5;
+  int64 gold = 6;
+  int64 bound_gold = 7;
 }
 
 // 角色独立勋章的永久等级与版本；未激活时不发送状态。

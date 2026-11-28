@@ -69,7 +69,7 @@ export function progressionDetailLines(level: number | undefined, experience: Lo
         state.migrationRequired && state.pendingExperienceLimit.isZero() ? `待用历史余额 ${state.pendingExperience} · 当前池上限待核` : `待用经验 ${state.pendingExperience} / ${state.pendingExperienceLimit}`, `历史经验封存 ${state.legacyExperienceOverflow}`,
         state.migrationRequired ? '旧成长资料待服务端整理；保持原等级，不推定已转生' : state.atCap ? '达到当前上限仍可正常战斗与掉落' : '经验按权威目录逐级消费',
         amount(state.pendingExperience, '待用经验') >= amount(state.pendingExperienceLimit, '经验池上限') && !state.pendingExperienceLimit.isZero() ? '待用经验池已满，新增超额经验不再接收' : '超出经验池上限的部分不累计',
-        state.rebirthEnabled ? '转生资格以服务端规则为准，本界面不提供转生操作' : '转生尚未开放；不提供假费用或入口',
+        state.rebirthEnabled ? '转生资格以服务端规则为准' : '转生尚未开放；不提供假费用或入口',
         `成长曲线 ${state.curveVersion}`, '当前数值为开发候选，不代表自然1至50周期或平衡通过'];
 }
 export interface ExperienceNotice { readonly role: string; readonly revision: string; readonly source: string; readonly raw: string; readonly accepted: string;

@@ -66,6 +66,8 @@ import type { WingActionRequest, WingReceipt, WingSnapshot } from './WingModel';
 import { GameMedal } from './GameMedal';
 import { medalRules, medalSlotLabel, validateMedalReceipt } from './MedalModel';
 import type { MedalCommitRequest, MedalReceipt, MedalSnapshot } from './MedalModel';
+import { GameRebirth, validateRebirthReceipt } from './GameRebirth';
+import type { RebirthCommitRequest, RebirthReceipt, RebirthSnapshot } from './GameRebirth';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -96,7 +98,7 @@ import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
-    MsgC2SMedalCommit, MsgC2SMedalQuote } from '../generated/protocol_ids';
+    MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -151,6 +153,7 @@ export class AppRoot extends Component {
     private weaponOil?: GameWeaponOil;
     private wings?: GameWings;
     private medal?: GameMedal;
+    private rebirth?: GameRebirth;
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -564,6 +567,10 @@ export class AppRoot extends Component {
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
             quote: request => session.connection.request(MsgC2SMedalQuote, request),
             submit: (request, expectedRevision) => this.economic(MsgC2SMedalCommit, request, expectedRevision) });
+        this.rebirth = new GameRebirth({ snapshot: () => this.rebirthSnapshot(), newSession: newOperationId,
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read),
+            refresh: () => this.itemActions!.refresh(), quote: request => session.connection.request(MsgC2SRebirthQuote, request),
+            submit: (request, revision) => this.economic(MsgC2SRebirthCommit, request, revision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -770,6 +777,7 @@ export class AppRoot extends Component {
         }
         this.button('UIMgr/Panels/Role/Message', () => {
             const identity = currentEntryIdentity(); if (!identity || !session.role) return;
+            if (this.rebirthSnapshot()) { this.rebirth?.open(); return; }
             this.combatStatus?.showLiveDetails('角色成长', () => !this.disposed && isCurrentEntry(identity)
                 ? progressionDetailLines(session.inventory?.level, session.inventory?.experience, session.inventory?.progression) : null);
         }, Node.EventType.TOUCH_END);
@@ -1646,6 +1654,20 @@ export class AppRoot extends Component {
             revision: inventory.revision, medal: inventory.medal, rules, inventory: inventory.items, blocked };
     }
 
+    // 只有双端同时开放转生时才把成长入口接到可操作面板。
+    private rebirthSnapshot(): RebirthSnapshot | null {
+        const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory;
+        const stages = this.world?.gameplay.rebirth?.stages;
+        if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory?.progression?.rebirthEnabled ||
+            !Array.isArray(stages) || !stages.length || this.ui?.top?.name !== 'Role') return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        const role = roleIdentity();
+        const blocked = !this.canSendInput() || !player || player.hp.isZero() || ![1, 2].includes(entry.sceneKind) ||
+            this.economicBusy || this.unresolved || !session.pending || !!session.pending.get(role);
+        return { scope: attachmentKey(identity), role, sceneEpoch: entry.sceneEpoch, revision: inventory.revision, level: inventory.level,
+            experience: inventory.experience, progression: inventory.progression, items: inventory.items, stages, blocked };
+    }
+
     private wingSnapshot(): WingSnapshot | null {
         const identity = currentEntryIdentity(), entry = session.entry, inventory = session.inventory, rules = this.currentWingRules();
         if (this.disposed || !identity || !isCurrentEntry(identity) || !entry || !inventory || !rules || this.ui?.top?.name !== 'Role') return null;
@@ -2353,6 +2375,7 @@ export class AppRoot extends Component {
         let oiled: { request: WeaponOilCommitRequest; result: WeaponOilReceipt } | undefined;
         let wing: { request: WingActionRequest; receipt: WingReceipt } | undefined;
         let medal: { request: MedalCommitRequest; receipt: MedalReceipt } | undefined;
+        let rebirth: { request: RebirthCommitRequest; receipt: RebirthReceipt } | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
@@ -2397,6 +2420,10 @@ export class AppRoot extends Component {
                 const request = pending.value as unknown as MedalCommitRequest;
                 medal = { request, receipt: this.medal?.reconcile(request, result.medal) ?? validateMedalReceipt(request, result.medal) };
             }
+            if (pending.id === MsgC2SRebirthCommit) {
+                const request = pending.value as unknown as RebirthCommitRequest;
+                rebirth = { request, receipt: this.rebirth?.reconcile(request, result.rebirth) ?? validateRebirthReceipt(request, result.rebirth) };
+            }
         } catch (error) { this.unresolved = true; throw error; }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
@@ -2429,6 +2456,11 @@ export class AppRoot extends Component {
         if (medal) {
             this.medal?.accept(role, medal.request, medal.receipt);
             this.status(`勋章已达 ${medal.receipt.medal.level}级`);
+            return;
+        }
+        if (rebirth) {
+            this.rebirth?.accept(role, rebirth.request, rebirth.receipt);
+            this.status(`转生完成 · 等级上限 ${rebirth.receipt.transition.newCap} 级`);
             return;
         }
         if (enhanced) {

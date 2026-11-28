@@ -83,7 +83,7 @@ func (f *Fixture) ValidateProgression() error {
 		}
 	}
 	if f.RuleVersion < 20 {
-		if p.CurveVersion != "" || p.InitialLevelCap != 0 || p.OperatingLevelCap != 0 || p.CatalogMaxLevel != 0 || p.PendingPoolPolicy != "" || p.NewOverflowPolicy != "" || p.LegacyOverflowPolicy != "" || p.LevelUpResources != "" || p.RebirthLevelCapIncrement != 0 || p.RebirthEnabled || p.RebirthResetProgression {
+		if p.CurveVersion != "" || p.InitialLevelCap != 0 || p.OperatingLevelCap != 0 || p.CatalogMaxLevel != 0 || p.PendingPoolPolicy != "" || p.NewOverflowPolicy != "" || p.LegacyOverflowPolicy != "" || p.LevelUpResources != "" || p.RebirthLevelCapIncrement != 0 || p.RebirthEnabled || p.RebirthResetProgression || f.Rebirth != nil {
 			return errors.New("旧规则版本不能混入新成长合同")
 		}
 		return nil
@@ -94,8 +94,15 @@ func (f *Fixture) ValidateProgression() error {
 			return errors.New("成长合同缺少显式字段：" + name)
 		}
 	}
-	if !regexp.MustCompile(`^[a-zA-Z0-9_.-]{1,96}$`).MatchString(p.CurveVersion) || p.InitialLevelCap != 50 || p.RebirthLevelCapIncrement != 1 || p.RebirthResetProgression || p.RebirthEnabled || p.OperatingLevelCap != p.InitialLevelCap || p.CatalogMaxLevel != p.OperatingLevelCap || len(p.ExpPerLevel) != int(p.CatalogMaxLevel) {
-		return errors.New("开发成长须连续到已定50级上限且转生关闭，不能由表长隐含升到51")
+	var stages uint64 // 每档显式放行一级，经验表长度不能单独开放新等级。
+	if f.Rebirth != nil {
+		stages = uint64(len(f.Rebirth.Stages))
+	}
+	if !regexp.MustCompile(`^[a-zA-Z0-9_.-]{1,96}$`).MatchString(p.CurveVersion) || p.InitialLevelCap != 50 ||
+		p.RebirthLevelCapIncrement != 1 || p.RebirthResetProgression || (p.RebirthEnabled && stages == 0) ||
+		uint64(p.OperatingLevelCap) != uint64(p.InitialLevelCap)+stages ||
+		p.CatalogMaxLevel != p.OperatingLevelCap || len(p.ExpPerLevel) != int(p.CatalogMaxLevel) {
+		return errors.New("成长须从50级起按显式转生档位开放连续等级")
 	}
 	if p.PendingPoolPolicy != "one_next_level" || p.NewOverflowPolicy != "reject_new_with_receipt" || p.LegacyOverflowPolicy != "preserve_frozen" || p.LevelUpResources != "source_full_if_alive_original_birth" {
 		return errors.New("待用池、旧余额和升级恢复必须采用明确受控合同")

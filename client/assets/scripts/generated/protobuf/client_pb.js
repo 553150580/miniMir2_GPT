@@ -815,6 +815,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.EquipmentRefineReceipt.$Properties|null} [equipment_refine] OperationResult equipment_refine
              * @property {minimir.v1.RecycleRefineReceipt.$Properties|null} [recycle_refine] OperationResult recycle_refine
              * @property {minimir.v1.MedalReceipt.$Properties|null} [medal] OperationResult medal
+             * @property {minimir.v1.RebirthReceipt.$Properties|null} [rebirth] OperationResult rebirth
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -999,6 +1000,14 @@ $root.minimir = (function() {
             OperationResult.prototype.medal = null;
 
             /**
+             * OperationResult rebirth.
+             * @member {minimir.v1.RebirthReceipt.$Properties|null|undefined} rebirth
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.rebirth = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1068,6 +1077,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.RecycleRefineReceipt.encode(message.recycle_refine, writer.uint32(/* id 18, wireType 2 =*/146).fork(), _depth + 1).ldelim();
                 if (message.medal != null && $Object.hasOwnProperty.call(message, "medal"))
                     $root.minimir.v1.MedalReceipt.encode(message.medal, writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
+                if (message.rebirth != null && $Object.hasOwnProperty.call(message, "rebirth"))
+                    $root.minimir.v1.RebirthReceipt.encode(message.rebirth, writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1254,6 +1265,12 @@ $root.minimir = (function() {
                             message.medal = $root.minimir.v1.MedalReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.medal);
                             continue;
                         }
+                    case 20: {
+                            if (wireType !== 2)
+                                break;
+                            message.rebirth = $root.minimir.v1.RebirthReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.rebirth);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1387,6 +1404,11 @@ $root.minimir = (function() {
                     if (error)
                         return "medal." + error;
                 }
+                if (message.rebirth != null && $Object.hasOwnProperty.call(message, "rebirth")) {
+                    var error = $root.minimir.v1.RebirthReceipt.verify(message.rebirth, _depth + 1);
+                    if (error)
+                        return "rebirth." + error;
+                }
                 return null;
             };
 
@@ -1405,6 +1427,1004 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.RebirthSpend = (function() {
+
+            /**
+             * Properties of a RebirthSpend.
+             * @typedef {Object} minimir.v1.RebirthSpend.$Properties
+             * @property {Uint8Array|null} [instance_id] RebirthSpend instance_id
+             * @property {number|null} [item_id] RebirthSpend item_id
+             * @property {Long|null} [version] RebirthSpend version
+             * @property {Long|null} [quantity] RebirthSpend quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthSpend.
+             * @memberof minimir.v1
+             * @interface IRebirthSpend
+             * @augments minimir.v1.RebirthSpend.$Properties
+             * @deprecated Use minimir.v1.RebirthSpend.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthSpend.
+             * @typedef {minimir.v1.RebirthSpend.$Properties} minimir.v1.RebirthSpend.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthSpend.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthSpend.
+             * @constructor
+             * @param {minimir.v1.RebirthSpend.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthSpend = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthSpend instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.RebirthSpend
+             * @instance
+             */
+            RebirthSpend.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * RebirthSpend item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.RebirthSpend
+             * @instance
+             */
+            RebirthSpend.prototype.item_id = 0;
+
+            /**
+             * RebirthSpend version.
+             * @member {Long} version
+             * @memberof minimir.v1.RebirthSpend
+             * @instance
+             */
+            RebirthSpend.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RebirthSpend quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.RebirthSpend
+             * @instance
+             */
+            RebirthSpend.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RebirthSpend instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {minimir.v1.RebirthSpend.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthSpend} RebirthSpend instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthSpend.$Shape): minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape;
+             *   (properties?: minimir.v1.RebirthSpend.$Properties): minimir.v1.RebirthSpend;
+             * }}
+             */
+            RebirthSpend.create = function(properties) {
+                return new RebirthSpend(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthSpend message. Does not implicitly {@link minimir.v1.RebirthSpend.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {minimir.v1.RebirthSpend.$Properties} message RebirthSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthSpend.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthSpend message, length delimited. Does not implicitly {@link minimir.v1.RebirthSpend.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {minimir.v1.RebirthSpend.$Properties} message RebirthSpend message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthSpend.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthSpend message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape} RebirthSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthSpend.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthSpend();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthSpend message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape} RebirthSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthSpend.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthSpend message.
+             * @function verify
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthSpend.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthSpend
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthSpend
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthSpend.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthSpend";
+            };
+
+            return RebirthSpend;
+        })();
+
+        v1.RebirthTransition = (function() {
+
+            /**
+             * Properties of a RebirthTransition.
+             * @typedef {Object} minimir.v1.RebirthTransition.$Properties
+             * @property {number|null} [previous_cap] RebirthTransition previous_cap
+             * @property {number|null} [new_cap] RebirthTransition new_cap
+             * @property {number|null} [previous_level] RebirthTransition previous_level
+             * @property {number|null} [new_level] RebirthTransition new_level
+             * @property {number|null} [new_count] RebirthTransition new_count
+             * @property {Long|null} [released_experience] RebirthTransition released_experience
+             * @property {Long|null} [new_experience] RebirthTransition new_experience
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthTransition.
+             * @memberof minimir.v1
+             * @interface IRebirthTransition
+             * @augments minimir.v1.RebirthTransition.$Properties
+             * @deprecated Use minimir.v1.RebirthTransition.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthTransition.
+             * @typedef {minimir.v1.RebirthTransition.$Properties} minimir.v1.RebirthTransition.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthTransition.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthTransition.
+             * @constructor
+             * @param {minimir.v1.RebirthTransition.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthTransition = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthTransition previous_cap.
+             * @member {number} previous_cap
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.previous_cap = 0;
+
+            /**
+             * RebirthTransition new_cap.
+             * @member {number} new_cap
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.new_cap = 0;
+
+            /**
+             * RebirthTransition previous_level.
+             * @member {number} previous_level
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.previous_level = 0;
+
+            /**
+             * RebirthTransition new_level.
+             * @member {number} new_level
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.new_level = 0;
+
+            /**
+             * RebirthTransition new_count.
+             * @member {number} new_count
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.new_count = 0;
+
+            /**
+             * RebirthTransition released_experience.
+             * @member {Long} released_experience
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.released_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RebirthTransition new_experience.
+             * @member {Long} new_experience
+             * @memberof minimir.v1.RebirthTransition
+             * @instance
+             */
+            RebirthTransition.prototype.new_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RebirthTransition instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {minimir.v1.RebirthTransition.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthTransition} RebirthTransition instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthTransition.$Shape): minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape;
+             *   (properties?: minimir.v1.RebirthTransition.$Properties): minimir.v1.RebirthTransition;
+             * }}
+             */
+            RebirthTransition.create = function(properties) {
+                return new RebirthTransition(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthTransition message. Does not implicitly {@link minimir.v1.RebirthTransition.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {minimir.v1.RebirthTransition.$Properties} message RebirthTransition message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthTransition.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.previous_cap != null && $Object.hasOwnProperty.call(message, "previous_cap") && message.previous_cap !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.previous_cap);
+                if (message.new_cap != null && $Object.hasOwnProperty.call(message, "new_cap") && message.new_cap !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.new_cap);
+                if (message.previous_level != null && $Object.hasOwnProperty.call(message, "previous_level") && message.previous_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.previous_level);
+                if (message.new_level != null && $Object.hasOwnProperty.call(message, "new_level") && message.new_level !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.new_level);
+                if (message.new_count != null && $Object.hasOwnProperty.call(message, "new_count") && message.new_count !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.new_count);
+                if (message.released_experience != null && $Object.hasOwnProperty.call(message, "released_experience") && (typeof message.released_experience === "object" ? message.released_experience.low || message.released_experience.high : message.released_experience !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.released_experience);
+                if (message.new_experience != null && $Object.hasOwnProperty.call(message, "new_experience") && (typeof message.new_experience === "object" ? message.new_experience.low || message.new_experience.high : message.new_experience !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.new_experience);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthTransition message, length delimited. Does not implicitly {@link minimir.v1.RebirthTransition.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {minimir.v1.RebirthTransition.$Properties} message RebirthTransition message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthTransition.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthTransition message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape} RebirthTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthTransition.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthTransition();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.previous_cap = value;
+                            else
+                                delete message.previous_cap;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.new_cap = value;
+                            else
+                                delete message.new_cap;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.previous_level = value;
+                            else
+                                delete message.previous_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.new_level = value;
+                            else
+                                delete message.new_level;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.new_count = value;
+                            else
+                                delete message.new_count;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.released_experience = value;
+                            else
+                                delete message.released_experience;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.new_experience = value;
+                            else
+                                delete message.new_experience;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthTransition message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape} RebirthTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthTransition.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthTransition message.
+             * @function verify
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthTransition.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.previous_cap != null && $Object.hasOwnProperty.call(message, "previous_cap"))
+                    if (!$util.isInteger(message.previous_cap))
+                        return "previous_cap: integer expected";
+                if (message.new_cap != null && $Object.hasOwnProperty.call(message, "new_cap"))
+                    if (!$util.isInteger(message.new_cap))
+                        return "new_cap: integer expected";
+                if (message.previous_level != null && $Object.hasOwnProperty.call(message, "previous_level"))
+                    if (!$util.isInteger(message.previous_level))
+                        return "previous_level: integer expected";
+                if (message.new_level != null && $Object.hasOwnProperty.call(message, "new_level"))
+                    if (!$util.isInteger(message.new_level))
+                        return "new_level: integer expected";
+                if (message.new_count != null && $Object.hasOwnProperty.call(message, "new_count"))
+                    if (!$util.isInteger(message.new_count))
+                        return "new_count: integer expected";
+                if (message.released_experience != null && $Object.hasOwnProperty.call(message, "released_experience"))
+                    if (!$util.isInteger(message.released_experience) && !(message.released_experience && $util.isInteger(message.released_experience.low) && $util.isInteger(message.released_experience.high)))
+                        return "released_experience: integer|Long expected";
+                if (message.new_experience != null && $Object.hasOwnProperty.call(message, "new_experience"))
+                    if (!$util.isInteger(message.new_experience) && !(message.new_experience && $util.isInteger(message.new_experience.low) && $util.isInteger(message.new_experience.high)))
+                        return "new_experience: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthTransition
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthTransition
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthTransition.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthTransition";
+            };
+
+            return RebirthTransition;
+        })();
+
+        v1.RebirthReceipt = (function() {
+
+            /**
+             * Properties of a RebirthReceipt.
+             * @typedef {Object} minimir.v1.RebirthReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] RebirthReceipt quote_id
+             * @property {minimir.v1.RebirthTransition.$Properties|null} [transition] RebirthReceipt transition
+             * @property {Uint8Array|null} [challenge_id] RebirthReceipt challenge_id
+             * @property {minimir.v1.RebirthSpend.$Properties|null} [credential] RebirthReceipt credential
+             * @property {Array.<minimir.v1.RebirthSpend.$Properties>|null} [materials] RebirthReceipt materials
+             * @property {Long|null} [gold] RebirthReceipt gold
+             * @property {Long|null} [bound_gold] RebirthReceipt bound_gold
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthReceipt.
+             * @memberof minimir.v1
+             * @interface IRebirthReceipt
+             * @augments minimir.v1.RebirthReceipt.$Properties
+             * @deprecated Use minimir.v1.RebirthReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthReceipt.
+             * @typedef {minimir.v1.RebirthReceipt.$Properties} minimir.v1.RebirthReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthReceipt.
+             * @constructor
+             * @param {minimir.v1.RebirthReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthReceipt = function (properties) {
+                this.materials = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * RebirthReceipt transition.
+             * @member {minimir.v1.RebirthTransition.$Properties|null|undefined} transition
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.transition = null;
+
+            /**
+             * RebirthReceipt challenge_id.
+             * @member {Uint8Array} challenge_id
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.challenge_id = $util.newBuffer([]);
+
+            /**
+             * RebirthReceipt credential.
+             * @member {minimir.v1.RebirthSpend.$Properties|null|undefined} credential
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.credential = null;
+
+            /**
+             * RebirthReceipt materials.
+             * @member {Array.<minimir.v1.RebirthSpend.$Properties>} materials
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.materials = $util.emptyArray;
+
+            /**
+             * RebirthReceipt gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RebirthReceipt bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.RebirthReceipt
+             * @instance
+             */
+            RebirthReceipt.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new RebirthReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {minimir.v1.RebirthReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthReceipt} RebirthReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthReceipt.$Shape): minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape;
+             *   (properties?: minimir.v1.RebirthReceipt.$Properties): minimir.v1.RebirthReceipt;
+             * }}
+             */
+            RebirthReceipt.create = function(properties) {
+                return new RebirthReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthReceipt message. Does not implicitly {@link minimir.v1.RebirthReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {minimir.v1.RebirthReceipt.$Properties} message RebirthReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.transition != null && $Object.hasOwnProperty.call(message, "transition"))
+                    $root.minimir.v1.RebirthTransition.encode(message.transition, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.challenge_id);
+                if (message.credential != null && $Object.hasOwnProperty.call(message, "credential"))
+                    $root.minimir.v1.RebirthSpend.encode(message.credential, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.materials != null && message.materials.length)
+                    for (var i = 0; i < message.materials.length; ++i)
+                        $root.minimir.v1.RebirthSpend.encode(message.materials[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.bound_gold);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthReceipt message, length delimited. Does not implicitly {@link minimir.v1.RebirthReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {minimir.v1.RebirthReceipt.$Properties} message RebirthReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape} RebirthReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.transition = $root.minimir.v1.RebirthTransition.decode(reader, reader.size(), $undefined, _depth + 1, message.transition);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.credential = $root.minimir.v1.RebirthSpend.decode(reader, reader.size(), $undefined, _depth + 1, message.credential);
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.materials && message.materials.length))
+                                message.materials = [];
+                            message.materials.push($root.minimir.v1.RebirthSpend.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape} RebirthReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthReceipt message.
+             * @function verify
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.transition != null && $Object.hasOwnProperty.call(message, "transition")) {
+                    var error = $root.minimir.v1.RebirthTransition.verify(message.transition, _depth + 1);
+                    if (error)
+                        return "transition." + error;
+                }
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!(message.challenge_id && typeof message.challenge_id.length === "number" || $util.isString(message.challenge_id)))
+                        return "challenge_id: buffer expected";
+                if (message.credential != null && $Object.hasOwnProperty.call(message, "credential")) {
+                    var error = $root.minimir.v1.RebirthSpend.verify(message.credential, _depth + 1);
+                    if (error)
+                        return "credential." + error;
+                }
+                if (message.materials != null && $Object.hasOwnProperty.call(message, "materials")) {
+                    if (!$Array.isArray(message.materials))
+                        return "materials: array expected";
+                    for (var i = 0; i < message.materials.length; ++i) {
+                        var error = $root.minimir.v1.RebirthSpend.verify(message.materials[i], _depth + 1);
+                        if (error)
+                            return "materials." + error;
+                    }
+                }
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthReceipt";
+            };
+
+            return RebirthReceipt;
         })();
 
         v1.MedalState = (function() {
@@ -68998,6 +70018,813 @@ $root.minimir = (function() {
             };
 
             return MedalCommitRequest;
+        })();
+
+        v1.RebirthQuoteRequest = (function() {
+
+            /**
+             * Properties of a RebirthQuoteRequest.
+             * @typedef {Object} minimir.v1.RebirthQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] RebirthQuoteRequest scene_epoch
+             * @property {Uint8Array|null} [ui_session_id] RebirthQuoteRequest ui_session_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IRebirthQuoteRequest
+             * @augments minimir.v1.RebirthQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.RebirthQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthQuoteRequest.
+             * @typedef {minimir.v1.RebirthQuoteRequest.$Properties} minimir.v1.RebirthQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.RebirthQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthQuoteRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @instance
+             */
+            RebirthQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RebirthQuoteRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @instance
+             */
+            RebirthQuoteRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new RebirthQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {minimir.v1.RebirthQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthQuoteRequest} RebirthQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthQuoteRequest.$Shape): minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.RebirthQuoteRequest.$Properties): minimir.v1.RebirthQuoteRequest;
+             * }}
+             */
+            RebirthQuoteRequest.create = function(properties) {
+                return new RebirthQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthQuoteRequest message. Does not implicitly {@link minimir.v1.RebirthQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {minimir.v1.RebirthQuoteRequest.$Properties} message RebirthQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ui_session_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.RebirthQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {minimir.v1.RebirthQuoteRequest.$Properties} message RebirthQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape} RebirthQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape} RebirthQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthQuoteRequest";
+            };
+
+            return RebirthQuoteRequest;
+        })();
+
+        v1.RebirthQuote = (function() {
+
+            /**
+             * Properties of a RebirthQuote.
+             * @typedef {Object} minimir.v1.RebirthQuote.$Properties
+             * @property {minimir.v1.RebirthReceipt.$Properties|null} [preview] RebirthQuote preview
+             * @property {Long|null} [scene_epoch] RebirthQuote scene_epoch
+             * @property {Uint8Array|null} [ui_session_id] RebirthQuote ui_session_id
+             * @property {Long|null} [role_revision] RebirthQuote role_revision
+             * @property {Long|null} [expires_at_unix_ms] RebirthQuote expires_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthQuote.
+             * @memberof minimir.v1
+             * @interface IRebirthQuote
+             * @augments minimir.v1.RebirthQuote.$Properties
+             * @deprecated Use minimir.v1.RebirthQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthQuote.
+             * @typedef {minimir.v1.RebirthQuote.$Properties} minimir.v1.RebirthQuote.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthQuote.
+             * @constructor
+             * @param {minimir.v1.RebirthQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthQuote = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthQuote preview.
+             * @member {minimir.v1.RebirthReceipt.$Properties|null|undefined} preview
+             * @memberof minimir.v1.RebirthQuote
+             * @instance
+             */
+            RebirthQuote.prototype.preview = null;
+
+            /**
+             * RebirthQuote scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.RebirthQuote
+             * @instance
+             */
+            RebirthQuote.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RebirthQuote ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.RebirthQuote
+             * @instance
+             */
+            RebirthQuote.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * RebirthQuote role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.RebirthQuote
+             * @instance
+             */
+            RebirthQuote.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RebirthQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.RebirthQuote
+             * @instance
+             */
+            RebirthQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new RebirthQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {minimir.v1.RebirthQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthQuote} RebirthQuote instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthQuote.$Shape): minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape;
+             *   (properties?: minimir.v1.RebirthQuote.$Properties): minimir.v1.RebirthQuote;
+             * }}
+             */
+            RebirthQuote.create = function(properties) {
+                return new RebirthQuote(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthQuote message. Does not implicitly {@link minimir.v1.RebirthQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {minimir.v1.RebirthQuote.$Properties} message RebirthQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.preview != null && $Object.hasOwnProperty.call(message, "preview"))
+                    $root.minimir.v1.RebirthReceipt.encode(message.preview, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.ui_session_id);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.role_revision);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.expires_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthQuote message, length delimited. Does not implicitly {@link minimir.v1.RebirthQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {minimir.v1.RebirthQuote.$Properties} message RebirthQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape} RebirthQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.preview = $root.minimir.v1.RebirthReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.preview);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape} RebirthQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthQuote message.
+             * @function verify
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.preview != null && $Object.hasOwnProperty.call(message, "preview")) {
+                    var error = $root.minimir.v1.RebirthReceipt.verify(message.preview, _depth + 1);
+                    if (error)
+                        return "preview." + error;
+                }
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthQuote";
+            };
+
+            return RebirthQuote;
+        })();
+
+        v1.RebirthCommitRequest = (function() {
+
+            /**
+             * Properties of a RebirthCommitRequest.
+             * @typedef {Object} minimir.v1.RebirthCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] RebirthCommitRequest quote_id
+             * @property {Uint8Array|null} [ui_session_id] RebirthCommitRequest ui_session_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] RebirthCommitRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RebirthCommitRequest.
+             * @memberof minimir.v1
+             * @interface IRebirthCommitRequest
+             * @augments minimir.v1.RebirthCommitRequest.$Properties
+             * @deprecated Use minimir.v1.RebirthCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a RebirthCommitRequest.
+             * @typedef {minimir.v1.RebirthCommitRequest.$Properties} minimir.v1.RebirthCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new RebirthCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a RebirthCommitRequest.
+             * @constructor
+             * @param {minimir.v1.RebirthCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RebirthCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RebirthCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @instance
+             */
+            RebirthCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * RebirthCommitRequest ui_session_id.
+             * @member {Uint8Array} ui_session_id
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @instance
+             */
+            RebirthCommitRequest.prototype.ui_session_id = $util.newBuffer([]);
+
+            /**
+             * RebirthCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @instance
+             */
+            RebirthCommitRequest.prototype.operation = null;
+
+            /**
+             * Creates a new RebirthCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {minimir.v1.RebirthCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RebirthCommitRequest} RebirthCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.RebirthCommitRequest.$Shape): minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape;
+             *   (properties?: minimir.v1.RebirthCommitRequest.$Properties): minimir.v1.RebirthCommitRequest;
+             * }}
+             */
+            RebirthCommitRequest.create = function(properties) {
+                return new RebirthCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified RebirthCommitRequest message. Does not implicitly {@link minimir.v1.RebirthCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {minimir.v1.RebirthCommitRequest.$Properties} message RebirthCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id") && message.ui_session_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.ui_session_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RebirthCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.RebirthCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {minimir.v1.RebirthCommitRequest.$Properties} message RebirthCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RebirthCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RebirthCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape} RebirthCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RebirthCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.ui_session_id = value;
+                            else
+                                delete message.ui_session_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RebirthCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape} RebirthCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RebirthCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RebirthCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RebirthCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.ui_session_id != null && $Object.hasOwnProperty.call(message, "ui_session_id"))
+                    if (!(message.ui_session_id && typeof message.ui_session_id.length === "number" || $util.isString(message.ui_session_id)))
+                        return "ui_session_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for RebirthCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.RebirthCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RebirthCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RebirthCommitRequest";
+            };
+
+            return RebirthCommitRequest;
         })();
 
         return v1;

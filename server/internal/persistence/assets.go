@@ -72,6 +72,10 @@ type AssetRequest struct {
 	MedalGate       uint32                 // 当前场景只对首次成长生效的门禁。
 	MedalAcceptedAt time.Time              `json:"-"` // 原确认到达游戏房间的时刻，排队和重试保持。
 
+	RebirthCommit     *pb.RebirthCommitRequest // 原面板确认的转生报价。
+	RebirthGate       uint32                   // 当前场景对首次转生的门禁。
+	RebirthAcceptedAt time.Time                `json:"-"` // 原确认到达时刻，排队重试沿用。
+
 	TaskCodex            *pb.TaskCodexClaimRequest      // 携带待领取定义及当日资格的完整请求。
 	ChallengeRewardID    string                         // 领取的原挑战待领编号。
 	SkillSlotIDs         []uint32                       // 四个有序技能槽，零为合法空位。
@@ -148,6 +152,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if q.Kind == AssetMedalCommit && q.MedalAcceptedAt.IsZero() {
 		q.MedalAcceptedAt = time.Now()
 	}
+	if q.Kind == AssetRebirthCommit && q.RebirthAcceptedAt.IsZero() {
+		q.RebirthAcceptedAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -210,7 +217,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		revisionValid := matchesAssetRevision(r, &s.Cfg.Fixture, q)
 		switch q.Kind {
-		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit:
+		case AssetMirrorArenaExchange, AssetBuyRoleCard, AssetClaimRoleCardDaily, AssetItemMarket, AssetGoldMarket, AssetSetMiningAutoRecycle, AssetForgeCommit, AssetWeaponOilCommit, AssetWingAction, AssetEquipmentEnhancement, AssetEquipmentRefine, AssetMedalCommit, AssetRebirthCommit:
 			// 自动收益会推进角色修订。这些操作仍核对经济序号和规则，并在业务分支复核当前资源或偏好资格。
 			revisionValid = q.Context.ExpectedRevision > 0 && q.Context.ExpectedRevision <= uint64(r.Revision)
 		}
@@ -241,6 +248,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var enhancement *EquipmentEnhancementReceipt       // 原强化结果和每个已扣石堆。
 		var refine *EquipmentRefineReceipt                 // 原洗炼动作与已付结果的永久确认。
 		var medal *MedalCommitReceipt                      // 原勋章档案与确切碎片消费。
+		var rebirth *RebirthCommitReceipt                  // 原转生、经验释放与确切资产扣除。
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
@@ -289,6 +297,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case AssetMedalCommit:
 			r, businessCode, medal, e = s.commitMedal(tc, a, r, q)
+			if e != nil {
+				return e
+			}
+		case AssetRebirthCommit:
+			r, businessCode, rebirth, e = s.commitRebirth(tc, a, r, q)
 			if e != nil {
 				return e
 			}
@@ -442,6 +455,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.EquipmentEnhancement = enhancement
 		op.EquipmentRefine = refine
 		op.Medal = medal
+		op.Rebirth = rebirth
 		op.TaskCodex = taskCodex
 		op.ChallengeReward = challengeReward
 		if q.Kind == AssetSetSkillSlots && businessCode == 0 {
@@ -522,6 +536,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["medal"] = medal
 			audit["rule_version"] = medal.Rule
 			audit["config_hash"] = medal.Config
+			audit["origin_server_id"] = r.Origin
+		}
+		if rebirth != nil {
+			audit["rebirth"] = rebirth
+			audit["rule_version"] = rebirth.Rule
+			audit["config_hash"] = rebirth.Config
 			audit["origin_server_id"] = r.Origin
 		}
 		if casting != nil {
@@ -618,6 +638,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		result.EquipmentRefine = receipt.EquipmentRefine.Proto()
 		result.Medal = receipt.Medal.Proto()
+		result.Rebirth = receipt.Rebirth.Proto()
 		result.RecycleOil = receipt.Recycling.oilProto()
 		result.RecycleRefine = receipt.Recycling.refineProto()
 	}

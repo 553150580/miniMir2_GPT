@@ -1500,6 +1500,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.23 勋章必成升级、原堆扣减、永久回执"
+    },
+    {
+      "value": 40064,
+      "name": "MsgC2SRebirthQuote",
+      "proto_message": "RebirthQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/5.1 等级上限和转生费用"
+    },
+    {
+      "value": 40065,
+      "name": "MsgS2CRebirthQuote",
+      "proto_message": "RebirthQuote",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/5.1 缴费、挑战凭证和待用经验结果"
+    },
+    {
+      "value": 40066,
+      "name": "MsgC2SRebirthCommit",
+      "proto_message": "RebirthCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/5.1 原转生费用和成长回执"
     }
   ],
   "error_codes": [
@@ -2045,6 +2081,30 @@
       "display_zh": "角色等级或所选碎片不满足本次条件",
       "status": "draft",
       "source_ref": "最终策划案4.23",
+      "active_in_scope": true
+    },
+    {
+      "value": 3976,
+      "name": "CodeRebirthUnavailable",
+      "display_zh": "当前位置或当前等级未开放下一档转生",
+      "status": "draft",
+      "source_ref": "最终策划案4.4/5.1",
+      "active_in_scope": true
+    },
+    {
+      "value": 3977,
+      "name": "CodeRebirthQuoteChanged",
+      "display_zh": "成长、投入或报价已变化，请重新查看转生",
+      "status": "draft",
+      "source_ref": "最终策划案4.4/5.1",
+      "active_in_scope": true
+    },
+    {
+      "value": 3978,
+      "name": "CodeRebirthInputs",
+      "display_zh": "请达到当前等级上限，并备齐通关凭证、绑定材料与金币",
+      "status": "draft",
+      "source_ref": "最终策划案4.4/5.1",
       "active_in_scope": true
     }
   ]

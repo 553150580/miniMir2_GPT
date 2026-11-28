@@ -13,18 +13,20 @@ import (
 
 // assetBinding 为在途资产操作固定房间、授权、代次和操作身份。
 type assetBinding struct {
-	room        *room            // 接受原资产请求的房间实例。
-	auth        persistence.Auth // 发往持久层的原角色会话授权。
-	generation  uint64           // 此房间的资产请求代次。
-	id          string           // 原经济操作的唯一编号。
-	fingerprint string           // 原操作的业务内容指纹。
+	room             *room            // 接受原资产请求的房间实例。
+	auth             persistence.Auth // 发往持久层的原角色会话授权。
+	generation       uint64           // 此房间的资产请求代次。
+	id               string           // 原经济操作的唯一编号。
+	fingerprint      string           // 原操作的业务内容指纹。
+	progressionActor actorRef         // 只有发生转生升级的原出生能恢复资源。
+	commandBefore    int64            // 受理时的经济水位用于排除历史重放。
 }
 
 // submitAsset 冻结原操作，提交事务，队列满时按原任务退避。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，q 记录资产请求，f 记录协议帧，reviveID 标识当前业务使用的复活。
 func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, reviveID string) {
-	// 首领副本只保留战斗快照，不能沿普通背包路径发起任何永久操作。
-	if r.bossBattle != nil {
+	// 首领副本只保留战斗快照。转生的历史原操作可以查询已确定回执。
+	if r.bossBattle != nil && (q.Kind != persistence.AssetRebirthCommit || !historicalGrowthOperation(r, q.Context)) {
 		return
 	}
 	if r.AssetGeneration == math.MaxUint64 {
@@ -37,6 +39,9 @@ func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, 
 	}
 	// binding 初始化用作会话绑定的资产会话绑定。
 	binding := assetBinding{room: r, auth: r.Auth, generation: r.AssetGeneration, id: domain.Hex(q.Context.OpId), fingerprint: q.Fingerprint}
+	if q.Kind == persistence.AssetRebirthCommit {
+		binding.progressionActor, binding.commandBefore = reference(r, &r.Player), r.Role.EconomicSeq
+	}
 	r.Pending = true
 	r.PendingOperationID = binding.id
 	r.PendingFingerprint = binding.fingerprint
@@ -110,8 +115,11 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 		r.Role = role
 		w.acceptRolePrivilege(r, observedAt, previousPrivilege)
 		// 仓储只迁移背包及仓库，不改变已穿属性或任何临时身体状态。
-		if q.Kind != "warehouse" && !autoPotion {
+		if q.Kind != "warehouse" && !autoPotion && (q.Kind != persistence.AssetRebirthCommit || r.bossBattle == nil) {
 			w.refreshPlayerStats(r)
+		}
+		if q.Kind == persistence.AssetRebirthCommit && result.ErrorCode == 0 {
+			w.applyRebirthRecovery(r, b, receipt)
 		}
 	}
 	if err != nil {

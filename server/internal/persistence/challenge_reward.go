@@ -17,11 +17,13 @@ func freezePersonalBossItems(f *devconfig.Fixture, record *personalBossRecord, r
 		return
 	}
 	record.PendingRewardLimit = rewards.PendingLimit
-	for _, line := range rewards.Items {
-		item, _ := f.Item(line.ItemID) // 入场已验证物品存在和堆叠数量合法。
-		asset := domain.Item{ID: domain.ID(), ItemID: line.ItemID, Quantity: line.Quantity, Version: 1,
-			SourceKind: "personal_boss", SourceID: record.ChallengeID, Quality: item.DropQuality}
-		record.KillRewardItems = append(record.KillRewardItems, InitializeItemDurability(asset, f))
+	for group, list := range [][]devconfig.ChallengeRewardItem{rewards.Items, rewards.BoundItems} {
+		for _, line := range list {
+			item, _ := f.Item(line.ItemID) // 入场已验证物品存在和堆叠数量合法。
+			asset := domain.Item{ID: domain.ID(), ItemID: line.ItemID, Quantity: line.Quantity, Version: 1,
+				SourceKind: "personal_boss", SourceID: record.ChallengeID, Quality: item.DropQuality, Bound: group == 1}
+			record.KillRewardItems = append(record.KillRewardItems, InitializeItemDurability(asset, f))
+		}
 	}
 }
 
@@ -33,7 +35,7 @@ func applyPersonalBossItems(r *domain.Role, record *personalBossRecord) error {
 	items := slices.Clone(record.KillRewardItems)
 	bound := record.rewardIsBound()
 	for i := range items {
-		items[i].Bound = bound
+		items[i].Bound = items[i].Bound || bound
 	}
 	record.RewardItems = items
 	if len(items) <= r.Capacity-len(r.Items) {

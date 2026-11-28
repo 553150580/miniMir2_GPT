@@ -31,6 +31,7 @@ run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbjs'), [
   'shared/proto/equipment_enhancement.proto',
   'shared/proto/equipment_refine.proto',
   'shared/proto/medal.proto',
+  'shared/proto/rebirth.proto',
 ]);
 run(path.join(tools, 'node_modules/protobufjs-cli/bin/pbts'), ['-o', 'client/assets/scripts/generated/protobuf/client_pb.d.ts', 'client/assets/scripts/generated/protobuf/client_pb.js']);
 run(path.join(root, 'tools/protocol/verify_client_pb.cjs'), ['--report', 'conf/toolchain/client-pb-verification.json']);

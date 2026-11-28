@@ -401,6 +401,9 @@ export namespace minimir {
             /** OperationResult medal. */
             medal?: (minimir.v1.MedalReceipt.$Properties|null);
 
+            /** OperationResult rebirth. */
+            rebirth?: (minimir.v1.RebirthReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -521,12 +524,393 @@ export namespace minimir {
                 /** OperationResult medal */
                 medal?: (minimir.v1.MedalReceipt.$Properties|null);
 
+                /** OperationResult rebirth */
+                rebirth?: (minimir.v1.RebirthReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthSpend.
+         * @deprecated Use minimir.v1.RebirthSpend.$Properties instead.
+         */
+        interface IRebirthSpend extends minimir.v1.RebirthSpend.$Properties {
+        }
+
+        /** Represents a RebirthSpend. */
+        class RebirthSpend {
+
+            /**
+             * Constructs a new RebirthSpend.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthSpend.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthSpend instance_id. */
+            instance_id: Uint8Array;
+
+            /** RebirthSpend item_id. */
+            item_id: number;
+
+            /** RebirthSpend version. */
+            version: Long;
+
+            /** RebirthSpend quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new RebirthSpend instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthSpend instance
+             */
+            static create(properties: minimir.v1.RebirthSpend.$Shape): minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape;
+            static create(properties?: minimir.v1.RebirthSpend.$Properties): minimir.v1.RebirthSpend;
+
+            /**
+             * Encodes the specified RebirthSpend message. Does not implicitly {@link minimir.v1.RebirthSpend.verify|verify} messages.
+             * @param message RebirthSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthSpend message, length delimited. Does not implicitly {@link minimir.v1.RebirthSpend.verify|verify} messages.
+             * @param message RebirthSpend message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthSpend.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthSpend message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape} RebirthSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape;
+
+            /**
+             * Decodes a RebirthSpend message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape} RebirthSpend
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthSpend & minimir.v1.RebirthSpend.$Shape;
+
+            /**
+             * Verifies a RebirthSpend message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthSpend
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthSpend {
+
+            /** Properties of a RebirthSpend. */
+            interface $Properties {
+
+                /** RebirthSpend instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** RebirthSpend item_id */
+                item_id?: (number|null);
+
+                /** RebirthSpend version */
+                version?: (Long|null);
+
+                /** RebirthSpend quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthSpend. */
+            type $Shape = minimir.v1.RebirthSpend.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthTransition.
+         * @deprecated Use minimir.v1.RebirthTransition.$Properties instead.
+         */
+        interface IRebirthTransition extends minimir.v1.RebirthTransition.$Properties {
+        }
+
+        /** Represents a RebirthTransition. */
+        class RebirthTransition {
+
+            /**
+             * Constructs a new RebirthTransition.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthTransition.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthTransition previous_cap. */
+            previous_cap: number;
+
+            /** RebirthTransition new_cap. */
+            new_cap: number;
+
+            /** RebirthTransition previous_level. */
+            previous_level: number;
+
+            /** RebirthTransition new_level. */
+            new_level: number;
+
+            /** RebirthTransition new_count. */
+            new_count: number;
+
+            /** RebirthTransition released_experience. */
+            released_experience: Long;
+
+            /** RebirthTransition new_experience. */
+            new_experience: Long;
+
+            /**
+             * Creates a new RebirthTransition instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthTransition instance
+             */
+            static create(properties: minimir.v1.RebirthTransition.$Shape): minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape;
+            static create(properties?: minimir.v1.RebirthTransition.$Properties): minimir.v1.RebirthTransition;
+
+            /**
+             * Encodes the specified RebirthTransition message. Does not implicitly {@link minimir.v1.RebirthTransition.verify|verify} messages.
+             * @param message RebirthTransition message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthTransition.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthTransition message, length delimited. Does not implicitly {@link minimir.v1.RebirthTransition.verify|verify} messages.
+             * @param message RebirthTransition message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthTransition.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthTransition message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape} RebirthTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape;
+
+            /**
+             * Decodes a RebirthTransition message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape} RebirthTransition
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthTransition & minimir.v1.RebirthTransition.$Shape;
+
+            /**
+             * Verifies a RebirthTransition message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthTransition
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthTransition {
+
+            /** Properties of a RebirthTransition. */
+            interface $Properties {
+
+                /** RebirthTransition previous_cap */
+                previous_cap?: (number|null);
+
+                /** RebirthTransition new_cap */
+                new_cap?: (number|null);
+
+                /** RebirthTransition previous_level */
+                previous_level?: (number|null);
+
+                /** RebirthTransition new_level */
+                new_level?: (number|null);
+
+                /** RebirthTransition new_count */
+                new_count?: (number|null);
+
+                /** RebirthTransition released_experience */
+                released_experience?: (Long|null);
+
+                /** RebirthTransition new_experience */
+                new_experience?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthTransition. */
+            type $Shape = minimir.v1.RebirthTransition.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthReceipt.
+         * @deprecated Use minimir.v1.RebirthReceipt.$Properties instead.
+         */
+        interface IRebirthReceipt extends minimir.v1.RebirthReceipt.$Properties {
+        }
+
+        /** Represents a RebirthReceipt. */
+        class RebirthReceipt {
+
+            /**
+             * Constructs a new RebirthReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** RebirthReceipt transition. */
+            transition?: (minimir.v1.RebirthTransition.$Properties|null);
+
+            /** RebirthReceipt challenge_id. */
+            challenge_id: Uint8Array;
+
+            /** RebirthReceipt credential. */
+            credential?: (minimir.v1.RebirthSpend.$Properties|null);
+
+            /** RebirthReceipt materials. */
+            materials: minimir.v1.RebirthSpend.$Properties[];
+
+            /** RebirthReceipt gold. */
+            gold: Long;
+
+            /** RebirthReceipt bound_gold. */
+            bound_gold: Long;
+
+            /**
+             * Creates a new RebirthReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthReceipt instance
+             */
+            static create(properties: minimir.v1.RebirthReceipt.$Shape): minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape;
+            static create(properties?: minimir.v1.RebirthReceipt.$Properties): minimir.v1.RebirthReceipt;
+
+            /**
+             * Encodes the specified RebirthReceipt message. Does not implicitly {@link minimir.v1.RebirthReceipt.verify|verify} messages.
+             * @param message RebirthReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthReceipt message, length delimited. Does not implicitly {@link minimir.v1.RebirthReceipt.verify|verify} messages.
+             * @param message RebirthReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape} RebirthReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape;
+
+            /**
+             * Decodes a RebirthReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape} RebirthReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthReceipt & minimir.v1.RebirthReceipt.$Shape;
+
+            /**
+             * Verifies a RebirthReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthReceipt {
+
+            /** Properties of a RebirthReceipt. */
+            interface $Properties {
+
+                /** RebirthReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** RebirthReceipt transition */
+                transition?: (minimir.v1.RebirthTransition.$Properties|null);
+
+                /** RebirthReceipt challenge_id */
+                challenge_id?: (Uint8Array|null);
+
+                /** RebirthReceipt credential */
+                credential?: (minimir.v1.RebirthSpend.$Properties|null);
+
+                /** RebirthReceipt materials */
+                materials?: (minimir.v1.RebirthSpend.$Properties[]|null);
+
+                /** RebirthReceipt gold */
+                gold?: (Long|null);
+
+                /** RebirthReceipt bound_gold */
+                bound_gold?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthReceipt. */
+            type $Shape = minimir.v1.RebirthReceipt.$Properties;
         }
 
         /**
@@ -25931,6 +26315,336 @@ export namespace minimir {
 
             /** Shape of a MedalCommitRequest. */
             type $Shape = minimir.v1.MedalCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthQuoteRequest.
+         * @deprecated Use minimir.v1.RebirthQuoteRequest.$Properties instead.
+         */
+        interface IRebirthQuoteRequest extends minimir.v1.RebirthQuoteRequest.$Properties {
+        }
+
+        /** Represents a RebirthQuoteRequest. */
+        class RebirthQuoteRequest {
+
+            /**
+             * Constructs a new RebirthQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** RebirthQuoteRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /**
+             * Creates a new RebirthQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthQuoteRequest instance
+             */
+            static create(properties: minimir.v1.RebirthQuoteRequest.$Shape): minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.RebirthQuoteRequest.$Properties): minimir.v1.RebirthQuoteRequest;
+
+            /**
+             * Encodes the specified RebirthQuoteRequest message. Does not implicitly {@link minimir.v1.RebirthQuoteRequest.verify|verify} messages.
+             * @param message RebirthQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.RebirthQuoteRequest.verify|verify} messages.
+             * @param message RebirthQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape} RebirthQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape;
+
+            /**
+             * Decodes a RebirthQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape} RebirthQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthQuoteRequest & minimir.v1.RebirthQuoteRequest.$Shape;
+
+            /**
+             * Verifies a RebirthQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthQuoteRequest {
+
+            /** Properties of a RebirthQuoteRequest. */
+            interface $Properties {
+
+                /** RebirthQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** RebirthQuoteRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthQuoteRequest. */
+            type $Shape = minimir.v1.RebirthQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthQuote.
+         * @deprecated Use minimir.v1.RebirthQuote.$Properties instead.
+         */
+        interface IRebirthQuote extends minimir.v1.RebirthQuote.$Properties {
+        }
+
+        /** Represents a RebirthQuote. */
+        class RebirthQuote {
+
+            /**
+             * Constructs a new RebirthQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthQuote preview. */
+            preview?: (minimir.v1.RebirthReceipt.$Properties|null);
+
+            /** RebirthQuote scene_epoch. */
+            scene_epoch: Long;
+
+            /** RebirthQuote ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** RebirthQuote role_revision. */
+            role_revision: Long;
+
+            /** RebirthQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /**
+             * Creates a new RebirthQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthQuote instance
+             */
+            static create(properties: minimir.v1.RebirthQuote.$Shape): minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape;
+            static create(properties?: minimir.v1.RebirthQuote.$Properties): minimir.v1.RebirthQuote;
+
+            /**
+             * Encodes the specified RebirthQuote message. Does not implicitly {@link minimir.v1.RebirthQuote.verify|verify} messages.
+             * @param message RebirthQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthQuote message, length delimited. Does not implicitly {@link minimir.v1.RebirthQuote.verify|verify} messages.
+             * @param message RebirthQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape} RebirthQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape;
+
+            /**
+             * Decodes a RebirthQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape} RebirthQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthQuote & minimir.v1.RebirthQuote.$Shape;
+
+            /**
+             * Verifies a RebirthQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthQuote {
+
+            /** Properties of a RebirthQuote. */
+            interface $Properties {
+
+                /** RebirthQuote preview */
+                preview?: (minimir.v1.RebirthReceipt.$Properties|null);
+
+                /** RebirthQuote scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** RebirthQuote ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** RebirthQuote role_revision */
+                role_revision?: (Long|null);
+
+                /** RebirthQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthQuote. */
+            type $Shape = minimir.v1.RebirthQuote.$Properties;
+        }
+
+        /**
+         * Properties of a RebirthCommitRequest.
+         * @deprecated Use minimir.v1.RebirthCommitRequest.$Properties instead.
+         */
+        interface IRebirthCommitRequest extends minimir.v1.RebirthCommitRequest.$Properties {
+        }
+
+        /** Represents a RebirthCommitRequest. */
+        class RebirthCommitRequest {
+
+            /**
+             * Constructs a new RebirthCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RebirthCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RebirthCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** RebirthCommitRequest ui_session_id. */
+            ui_session_id: Uint8Array;
+
+            /** RebirthCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new RebirthCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RebirthCommitRequest instance
+             */
+            static create(properties: minimir.v1.RebirthCommitRequest.$Shape): minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape;
+            static create(properties?: minimir.v1.RebirthCommitRequest.$Properties): minimir.v1.RebirthCommitRequest;
+
+            /**
+             * Encodes the specified RebirthCommitRequest message. Does not implicitly {@link minimir.v1.RebirthCommitRequest.verify|verify} messages.
+             * @param message RebirthCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RebirthCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RebirthCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.RebirthCommitRequest.verify|verify} messages.
+             * @param message RebirthCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RebirthCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RebirthCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape} RebirthCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape;
+
+            /**
+             * Decodes a RebirthCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape} RebirthCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RebirthCommitRequest & minimir.v1.RebirthCommitRequest.$Shape;
+
+            /**
+             * Verifies a RebirthCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RebirthCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RebirthCommitRequest {
+
+            /** Properties of a RebirthCommitRequest. */
+            interface $Properties {
+
+                /** RebirthCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** RebirthCommitRequest ui_session_id */
+                ui_session_id?: (Uint8Array|null);
+
+                /** RebirthCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RebirthCommitRequest. */
+            type $Shape = minimir.v1.RebirthCommitRequest.$Properties;
         }
     }
 }

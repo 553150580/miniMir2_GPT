@@ -317,6 +317,8 @@ type Fixture struct {
 	EquipmentRefine *EquipmentRefineConfig `json:"equipment_refine,omitempty"`
 	// Medal 提供角色勋章的独立碎片和已验收等级，缺省时保持入口关闭。
 	Medal *MedalConfig `json:"medal,omitempty"`
+	// Rebirth 配置当前开放的连续转生档位与对应挑战。
+	Rebirth *RebirthConfig `json:"rebirth,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -525,6 +527,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateMedal(); err != nil {
+		return err
+	}
+	if err := f.validateRebirth(); err != nil {
 		return err
 	}
 	// err 接收校验装备统计或属性过程中可能产生的错误，供后续失败分支处理。

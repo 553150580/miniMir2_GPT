@@ -27,7 +27,9 @@ func GrowthContract(f devconfig.Fixture) (domain.GrowthContract, error) {
 	rules := f.Progression
 	// c 组装成长规则合同所需的数据。
 	c := domain.GrowthContract{FormatVersion: RoleProgressionFormatVersion, CurveVersion: rules.CurveVersion, InitialLevelCap: rules.InitialLevelCap, RebirthLevelIncrement: rules.RebirthLevelCapIncrement, OperatingLevelCap: rules.OperatingLevelCap, ExpPerLevel: rules.ExpPerLevel}
-	if f.RuleVersion < 20 || rules.CatalogMaxLevel != uint32(len(rules.ExpPerLevel)) || rules.RebirthEnabled || rules.RebirthResetProgression || rules.PendingPoolPolicy != "one_next_level" || rules.NewOverflowPolicy != "reject_new_with_receipt" || rules.LegacyOverflowPolicy != "preserve_frozen" || rules.LevelUpResources != "source_full_if_alive_original_birth" {
+	if f.RuleVersion < 20 || rules.CatalogMaxLevel != uint32(len(rules.ExpPerLevel)) ||
+		rules.RebirthEnabled && (f.Rebirth == nil || len(f.Rebirth.Stages) == 0) || rules.RebirthResetProgression ||
+		rules.PendingPoolPolicy != "one_next_level" || rules.NewOverflowPolicy != "reject_new_with_receipt" || rules.LegacyOverflowPolicy != "preserve_frozen" || rules.LevelUpResources != "source_full_if_alive_original_birth" {
 		return c, Fail(p.CodeOperationConflict, "成长合同不完整或不属于当前开放范围")
 	}
 	return c, c.Validate()
@@ -52,7 +54,12 @@ func ProgressionState(r domain.Role, f devconfig.Fixture) (*pb.ProgressionState,
 	// next 保存由整数“64”取得的下一状态，poolCap 保存从经验“per”等级取出的连接或数值池上限。
 	next, poolCap := int64(0), c.ExpPerLevel[cap-1]
 	// unknown 保存根据成长迁移“required”与成长“curve”版本与“curve”版本的计算结果计算的未知。
-	unknown := r.ProgressionMigrationRequired || r.ProgressionCurveVersion != c.CurveVersion
+	capUnavailable := r.RebirthCount > (c.OperatingLevelCap-c.InitialLevelCap)/c.RebirthLevelIncrement
+	unknown := r.ProgressionMigrationRequired || r.ProgressionCurveVersion != c.CurveVersion || capUnavailable
+	if capUnavailable {
+		// 成功转生的永久上限仍由原次数推得，本配置暂时缺少升级曲线。
+		cap = max(r.Level, c.InitialLevelCap+r.RebirthCount)
+	}
 	if !unknown && r.Level > 0 && uint64(r.Level) <= uint64(len(c.ExpPerLevel)) {
 		next = c.ExpPerLevel[r.Level-1]
 	}

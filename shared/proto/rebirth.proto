@@ -1,0 +1,27 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 根据原场景和面板读取角色当前能够执行的一档转生。
+message RebirthQuoteRequest {
+  uint64 scene_epoch = 1;
+  bytes ui_session_id = 2;
+}
+
+// 报价明确列出本次会消耗的实例、钱包拆分和解锁后的结果。
+message RebirthQuote {
+  RebirthReceipt preview = 1;
+  uint64 scene_epoch = 2;
+  bytes ui_session_id = 3;
+  uint64 role_revision = 4;
+  uint64 expires_at_unix_ms = 5;
+}
+
+// 用原报价和经济序号提交，重连时原样重放。
+message RebirthCommitRequest {
+  bytes quote_id = 1;
+  bytes ui_session_id = 2;
+  OperationContext operation = 3;
+}

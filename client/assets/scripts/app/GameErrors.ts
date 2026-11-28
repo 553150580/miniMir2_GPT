@@ -11,6 +11,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeEquipmentEnhancementUnavailable, CodeEquipmentEnhancementQuoteChanged, CodeEquipmentEnhancementInputs,
     CodeEquipmentRefineUnavailable, CodeEquipmentRefineChanged, CodeEquipmentRefineInputs,
     CodeMedalUnavailable, CodeMedalQuoteChanged, CodeMedalInputs,
+    CodeRebirthUnavailable, CodeRebirthQuoteChanged, CodeRebirthInputs,
     CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -76,6 +77,11 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         if (errorCode === CodeMedalUnavailable) return '当前规则、角色或场景未开放勋章培养';
         if (errorCode === CodeMedalQuoteChanged || errorCode === CodeOperationConflict) return '勋章或碎片已变化，请重新报价';
         if (errorCode === CodeMedalInputs) return '碎片、绑定选择或角色等级不满足条件';
+    }
+    if (messageId === 40064 || messageId === 40065 || messageId === 40066) {
+        if (errorCode === CodeRebirthUnavailable) return '当前场景或等级未开放下一档转生';
+        if (errorCode === CodeRebirthQuoteChanged || errorCode === CodeOperationConflict) return '成长或投入已变化，请重新查看转生';
+        if (errorCode === CodeRebirthInputs) return '请达到当前等级上限，并备齐通关凭证、绑定材料与金币';
     }
     if (messageId === 20028 || messageId === 20029) {
         if (errorCode === CodeEquipmentBagFull) return '背包已满，已停止挖矿';
