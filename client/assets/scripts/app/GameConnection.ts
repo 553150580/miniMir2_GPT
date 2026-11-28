@@ -21,6 +21,7 @@ const codecs: Record<number, MessageType> = {
     10007: pb.EntryTicketRequest, 10008: pb.EntryTicketResult,
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
     10011: pb.ServerDirectoryRequest, 10012: pb.ServerDirectoryResult,
+    10013: pb.RewardedAdRequest, 10014: pb.RewardedAdState,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
     20007: pb.MapTravelPrepare, 20008: pb.MapTravelPlan, 20009: pb.MapTravelCommit, 20010: pb.MapTravelState,
     20011: pb.BindingState,

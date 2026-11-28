@@ -43,7 +43,7 @@ GROUP_PREFIXES = {
     'equipment-refine': ('RefineEquipment',),
     'medal': ('Medal',),
     'rebirth': ('Rebirth',),
-    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery', 'SoulBeast', 'GrowthShop', 'BattlePass'),
+    'body-training': ('BodyTraining', 'BodyHits', 'BodyMastery', 'SoulBeast', 'GrowthShop', 'BattlePass', 'RewardedAd'),
 }
 # 市场的跨进程用例与实际数据库围栏、撮合和清退对账共用一轮隔离验收。
 MARKET_PERSISTENCE_CASES = (
@@ -383,6 +383,18 @@ def run_batch(output, group, cases, timeout, mongo_storage=mongo.DEFAULT_STORAGE
             environment['MINIMIR_BATTLE_PASS_TEST_FIXTURE'] = str(pass_fixture)
             for label, path in (('assembly', pass_assembly), ('fixture', pass_fixture), ('public', pass_public)):
                 report[f'battle_pass_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+            # 激励视频从工作簿读取托管时长，只用隔离渠道和限量完成核验。
+            ad_assembly = destination / 'rewarded-ad-assembly.json'
+            ad_fixture, ad_public = destination / 'rewarded-ad-fixture.json', destination / 'rewarded-ad-gameplay.json'
+            ad_assembly.write_bytes((ROOT / 'tools/resources/testdata/rewarded-ad-isolated.json').read_bytes())
+            ad_export = [sys.executable, '-B', str(ROOT / 'tools/resources/prepare_rewarded_ad.py'), '--assembly', str(ad_assembly),
+                         '--base-fixture', str(pass_fixture), '--base-public', str(pass_public),
+                         '--fixture-out', str(ad_fixture), '--public-out', str(ad_public)]
+            subprocess.run(ad_export, cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            subprocess.run([*ad_export, '--check'], cwd=ROOT, env=environment, check=True, timeout=60, capture_output=True)
+            environment['MINIMIR_REWARDED_AD_TEST_FIXTURE'] = str(ad_fixture)
+            for label, path in (('assembly', ad_assembly), ('fixture', ad_fixture), ('public', ad_public)):
+                report[f'rewarded_ad_{label}_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         expression = '^(' + '|'.join(cases) + ')$'
         packages = ['./internal/integration']
         if group in ('market', 'payments', 'mining', 'forge', 'luck', 'weapon-oil', 'recycle-oil', 'wing', 'wing-oil',

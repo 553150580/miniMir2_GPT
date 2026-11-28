@@ -20,6 +20,8 @@ const (
 	MsgS2CLocalRegister uint16 = 10010
 	MsgC2SServerDirectory uint16 = 10011
 	MsgS2CServerDirectory uint16 = 10012
+	MsgC2SRewardedAd uint16 = 10013
+	MsgS2CRewardedAd uint16 = 10014
 	MsgC2SEnterLine uint16 = 20001
 	MsgS2CEnterLine uint16 = 20002
 	MsgC2SMoveIntent uint16 = 20006
@@ -223,4 +225,10 @@ const (
 	CodeBattlePassUnavailable uint32 = 3987
 	CodeBattlePassChanged uint32 = 3988
 	CodeBattlePassPaymentPending uint32 = 3989
+	CodeRewardedAdUnavailable uint32 = 3990
+	CodeRewardedAdAccountLimit uint32 = 3991
+	CodeRewardedAdDeviceLimit uint32 = 3992
+	CodeRewardedAdNetworkLimit uint32 = 3993
+	CodeRewardedAdPending uint32 = 3994
+	CodeRewardedAdExpired uint32 = 3995
 )

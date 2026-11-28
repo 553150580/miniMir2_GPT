@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 
 module.exports = function normalizeBattlePassLayout(scene) {
+    require('./rewarded_ad_layout.cjs')(scene);
     const parent = scene[407], battlePass = scene[3182];
     assert.equal(parent._name, 'Page1');
     assert.equal(scene[parent._parent.__id__]._name, 'Pages');

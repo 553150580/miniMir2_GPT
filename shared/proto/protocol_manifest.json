@@ -242,6 +242,30 @@
       "source_ref": "最终策划案.md:959-978，账号节点的分区分服响应"
     },
     {
+      "value": 10013,
+      "name": "MsgC2SRewardedAd",
+      "proto_message": "RewardedAdRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 激励视频的原账号和角色观看申请"
+    },
+    {
+      "value": 10014,
+      "name": "MsgS2CRewardedAd",
+      "proto_message": "RewardedAdState",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 独立激励视频托管时长回执"
+    },
+    {
       "value": 20001,
       "name": "MsgC2SEnterLine",
       "proto_message": "EnterLineRequest",
@@ -2313,6 +2337,54 @@
       "display_zh": "已有该档位步骤的支付订单等待确认",
       "status": "draft",
       "source_ref": "最终策划案4.10",
+      "active_in_scope": true
+    },
+    {
+      "value": 3990,
+      "name": "CodeRewardedAdUnavailable",
+      "display_zh": "激励视频渠道当前未开放",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3991,
+      "name": "CodeRewardedAdAccountLimit",
+      "display_zh": "此账号今日的视频奖励额度已用完",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3992,
+      "name": "CodeRewardedAdDeviceLimit",
+      "display_zh": "此设备今日的视频奖励额度已用完",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3993,
+      "name": "CodeRewardedAdNetworkLimit",
+      "display_zh": "此网络地址今日的视频奖励额度已用完",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3994,
+      "name": "CodeRewardedAdPending",
+      "display_zh": "该账号还有一笔激励视频等待核验或到账",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3995,
+      "name": "CodeRewardedAdExpired",
+      "display_zh": "原观看凭据已经到期，请重新开始",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
       "active_in_scope": true
     }
   ]

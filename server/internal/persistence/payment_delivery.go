@@ -16,24 +16,9 @@ import (
 func (s *Store) NextVerifiedPayment(ctx context.Context, after PaymentOrder) (PaymentOrder, error) {
 	ctx, stop := context.WithTimeout(ctx, transactionTimeout)
 	defer stop()
-	if s.Epoch <= 0 || s.Cfg.RunID == 0 {
-		return PaymentOrder{}, Fail(p.CodeRouteChanged, "支付投递需要当前游戏运行服")
-	}
-	cursor, err := s.DB.Collection("origin_routes").Find(ctx, bson.M{"run_server_id": s.Cfg.RunID},
-		options.Find().SetProjection(bson.M{"_id": 1}))
-	if err != nil {
+	origins, err := s.externalDeliveryOrigins(ctx)
+	if err != nil || len(origins) == 0 {
 		return PaymentOrder{}, err
-	}
-	var routes []originRoute
-	if err := cursor.All(ctx, &routes); err != nil {
-		return PaymentOrder{}, err
-	}
-	if len(routes) == 0 {
-		return PaymentOrder{}, nil
-	}
-	origins := make([]uint64, len(routes))
-	for i, route := range routes {
-		origins[i] = route.OriginID
 	}
 	filter := bson.M{"state": PaymentOrderVerified, "origin_server_id": bson.M{"$in": origins},
 		"verified_at": bson.M{"$gt": time.Unix(0, 0)}}

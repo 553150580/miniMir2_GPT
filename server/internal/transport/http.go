@@ -13,6 +13,7 @@ import (
 	"minimir/internal/game"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
+	"minimir/internal/rewardedad"
 	"minimir/internal/wire"
 	"net/http"
 	"net/url"
@@ -23,12 +24,13 @@ import (
 
 // Server 路由当前节点允许的请求，只有游戏节点挂载内存运行时。
 type Server struct {
-	Store        *persistence.Store // 节点使用的专用库连接及身份。
-	Mode         string             // 选择账号、游戏或 GM 路由集合。
-	NodeKey      string             // 内部登记和本机 GM 接口的共享密钥。
-	Engine       *game.Engine       // 游戏节点将已校验的连接交给此运行时。
-	HostedRunIDs []uint64           // 游戏节点启动时确认为可用的运行服身份。
-	active       atomic.Int64       // 游戏连接数，用于升级前的接入配额。
+	Store        *persistence.Store   // 节点使用的专用库连接及身份。
+	Mode         string               // 选择账号、游戏或 GM 路由集合。
+	NodeKey      string               // 内部登记和本机 GM 接口的共享密钥。
+	Engine       *game.Engine         // 游戏节点将已校验的连接交给此运行时。
+	HostedRunIDs []uint64             // 游戏节点启动时确认为可用的运行服身份。
+	AdVerifier   *rewardedad.Verifier // 仅账号节点可装配的可信广告核验能力。
+	active       atomic.Int64         // 游戏连接数，用于升级前的接入配额。
 }
 
 // Handler 只挂载当前节点的路由，并统一约束请求来源和体积。
@@ -53,6 +55,9 @@ func (s *Server) Handler() http.Handler {
 		mux.HandleFunc("GET /api/roles", s.jsonRoles)
 		mux.HandleFunc("POST /api/roles/create", s.jsonCreate)
 		mux.HandleFunc("POST /api/ticket", s.jsonTicket)
+		if s.AdVerifier != nil {
+			mux.HandleFunc("POST /internal/rewarded-ad/{attempt}", s.rewardedAdCallback)
+		}
 	}
 	if s.Mode == "game" {
 		mux.HandleFunc("GET /ws", s.ws)
@@ -221,6 +226,13 @@ func (s *Server) rpc(w http.ResponseWriter, r *http.Request) {
 			out, e = s.Store.IssueTicket(ctx, a, q.Role)
 		}
 		id = p.MsgS2CEntryTicket
+	case p.MsgC2SRewardedAd:
+		var q pb.RewardedAdRequest // 选定角色与原查看或观看请求。
+		e = decode(&q)
+		if e == nil {
+			out, e = s.rewardedAdRPC(r, &q)
+		}
+		id = p.MsgS2CRewardedAd
 	default:
 		e = persistence.Fail(p.CodeInvalidArgument, "此节点不处理该消息")
 	}

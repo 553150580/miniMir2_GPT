@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/mongo"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/payment"
@@ -69,7 +68,7 @@ func (s *Store) FulfillPaymentOrder(ctx context.Context, id string) (domain.Role
 		if order.State != PaymentOrderFulfilled && !order.hasVerifiedPayment() {
 			return Fail(p.CodeOperationConflict, "支付订单尚未完成核验")
 		}
-		fence, err := s.paymentRoleFence(tc, order)
+		fence, err := s.externalDeliveryFence(tc, order.OriginServerID, order.AccountID)
 		if err != nil {
 			return err
 		}
@@ -112,27 +111,6 @@ func (s *Store) FulfillPaymentOrder(ctx context.Context, id string) (domain.Role
 		return domain.Role{}, Operation{}, err
 	}
 	return out, receipt, nil
-}
-
-// paymentRoleFence 在原事务检查权威入口路由，并与当前运行服和永久账号上的其他写入竞争。
-func (s *Store) paymentRoleFence(ctx context.Context, order PaymentOrder) ([]mongo.ClientBulkWrite, error) {
-	current, err := s.liveRoute(ctx, order.OriginServerID)
-	if err != nil {
-		return nil, err
-	}
-	if current.run.ID != s.Cfg.RunID || current.run.Owner != s.Instance || current.run.Epoch != s.Epoch {
-		return nil, Fail(p.CodeRouteChanged, "支付订单需由原入口当前的游戏所有者履约")
-	}
-	runWrite, err := s.runFenceWrite(ctx, runGuardGroup(order.AccountID))
-	if err != nil {
-		return nil, err
-	}
-	// 渠道已付订单依据持久受益账号发放，与玩家是否在线以及其令牌是否已换代独立。
-	writes := make([]mongo.ClientBulkWrite, 1, 5)
-	writes[0] = runWrite
-	writes = append(writes, mongo.ClientBulkWrite{Database: s.DB.Name(), Collection: "accounts", Model: mongo.NewClientUpdateOneModel().
-		SetFilter(bson.M{"_id": order.AccountID}).SetUpdate(bson.M{"$inc": bson.M{"auth_guard_seq": 1}})})
-	return writes, nil
 }
 
 // readPaymentGrant 沿原订单的唯一指针取回已确认结果，任何不一致都停止入账。

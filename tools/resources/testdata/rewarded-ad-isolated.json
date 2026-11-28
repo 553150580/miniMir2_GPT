@@ -1,0 +1,9 @@
+{
+  "provider": "isolated-video",
+  "placement": "hosting-hour",
+  "account_daily": 2,
+  "device_daily": 2,
+  "ip_daily": 3,
+  "watch_seconds": 180,
+  "callback_grace_seconds": 120
+}

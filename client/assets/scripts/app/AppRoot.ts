@@ -23,6 +23,7 @@ import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
 import { GameHosting } from './GameHosting';
+import { GameRewardedAd } from './GameRewardedAd';
 import { GameMining } from './GameMining';
 import { miningSceneKind } from './MiningModel';
 import { GameRoleCards } from './GameRoleCards';
@@ -110,7 +111,7 @@ import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAud
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
     MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote,
     MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction, MsgC2SGrowthShopCommit, MsgC2SGrowthShopQuery,
-    MsgC2SBattlePassClaim, MsgC2SBattlePassQuery } from '../generated/protocol_ids';
+    MsgC2SBattlePassClaim, MsgC2SBattlePassQuery, MsgC2SRewardedAd } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -172,6 +173,8 @@ export class AppRoot extends Component {
     private growthShopEntry?: Node; // 功能页保存的商城入口。
     private battlePass?: GameBattlePass; // 管理战令周期、历史页和原领取回执。
     private battlePassEntry?: Node; // 功能面板成长页中保存的战令入口。
+    private rewardedAd?: GameRewardedAd; // 托管页管理观看凭据和到账结果。
+    private rewardedAdEntry?: Node; // 托管面板中保存的激励视频入口。
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -711,6 +714,18 @@ export class AppRoot extends Component {
             buy: request => this.economic(40007, request), reason: code => protocolErrorMessage(40032, code),
         });
         this.cleanups.push(() => this.hosting?.dispose());
+        this.rewardedAdEntry = safe.getChildByPath('UIMgr/Panels/Hosting/RewardedAd') ?? undefined;
+        this.rewardedAd = new GameRewardedAd({
+            context: () => {
+                const identity = currentEntryIdentity(), role = session.role?.key, account = session.account?.id;
+                if (this.disposed || !this.rewardedAdEntry?.active || !identity || !isCurrentEntry(identity) ||
+                    !role || !account || this.ui?.top?.name !== 'Hosting') return undefined;
+                return { scope: `${account}:${attachmentKey(identity)}`, role };
+            },
+            request: (request, signal) => session.connection.rpc(MsgC2SRewardedAd, request, signal),
+            show: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: this.itemActions.refresh,
+        });
+        this.cleanups.push(() => this.rewardedAd?.dispose());
         this.roleCards = new GameRoleCards(this.find('UIMgr/Panels/Hosting/RoleCards'), this.find('UIMgr/Panels/RoleCards'), this.popup, () => {
             const identity = currentEntryIdentity(), { entry, wallet } = session;
             if (this.disposed || !session.ready || this.attaching || this.leaving || session.travel.blocksInput || session.teleport.blocksInput
@@ -927,6 +942,7 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/Hosting/BuyMinus', () => this.hosting?.adjust(-1));
         this.button('UIMgr/Panels/Hosting/BuyPlus', () => this.hosting?.adjust(1));
         this.button('UIMgr/Panels/Hosting/BuyQuote', () => this.hosting?.confirmPurchase());
+        if (this.rewardedAdEntry) this.button('UIMgr/Panels/Hosting/RewardedAd', () => this.rewardedAd?.open());
         this.button('UIMgr/Panels/Hosting/RoleCards', () => {
             if (!this.roleCards?.available) return;
             this.ui!.open('RoleCards');
@@ -980,6 +996,7 @@ export class AppRoot extends Component {
         this.goldMarket?.sync();
         this.refreshGrowthShopEntry();
         this.refreshBattlePassEntry();
+        this.refreshRewardedAdEntry();
         this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
@@ -1596,6 +1613,7 @@ export class AppRoot extends Component {
         this.goldMarket?.sync();
         this.refreshGrowthShopEntry();
         this.refreshBattlePassEntry();
+        this.refreshRewardedAdEntry();
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -1767,6 +1785,12 @@ export class AppRoot extends Component {
         button.active = this.world?.gameplay.battle_pass === true && this.canSendInput() && [1, 2].includes(session.entry?.sceneKind);
         const placeholder = button.parent?.getChildByName('Text');
         if (placeholder) placeholder.active = !button.active;
+    }
+
+    // refreshRewardedAdEntry 只在原场景和客户端资源允许时显示托管页激励视频按钮。
+    private refreshRewardedAdEntry(): void {
+        const button = this.rewardedAdEntry;
+        if (button) button.active = this.world?.gameplay.rewarded_ad === true && this.canSendInput() && [1, 2].includes(session.entry?.sceneKind);
     }
 
     // growthFunctionContext 让养成入口复用当前角色、场景与规则的检查。

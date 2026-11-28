@@ -39,7 +39,7 @@ func setupPaymentTestRoom(t *testing.T) paymentTestRoom {
 	r.Conn, r.Ready, r.Pending = conn, true, true
 	w.rooms = map[string]*room{r.Role.ID: r}
 	order := persistence.PaymentOrder{ID: domain.ID(), RoleID: r.Role.ID, AccountID: r.Role.AccountID, OriginServerID: r.Role.Origin}
-	r.pendingPaymentID = order.ID
+	r.pendingExternal = paymentDelivery(order)
 	next := r.Role
 	next.Revision++
 	next.Wallet.Yuanbao += 1_000
@@ -54,8 +54,8 @@ func TestPaymentWorkerPublishesOnlyConfirmedAssets(t *testing.T) {
 	w, r, conn := test.w, test.r, test.conn
 	life, hp, mp, pos, scene := r.Player.Life, r.Player.HP, r.Player.MP, r.Player.Pos, r.Scene
 	test.next.Level++ // 部分字段不会被支付通知拷入现场。
-	w.finishPayment(w.e.Store, test.order, r, r.Auth, test.next, test.receipt, nil, test.now)
-	if r.Pending || r.pendingPaymentID != "" || r.Role.Revision != 13 || r.Role.EconomicSeq != 7 || r.Role.SourceSeq != 2 ||
+	w.finishExternal(w.e.Store, paymentDelivery(test.order), r, r.Auth, test.next, test.receipt, nil, test.now)
+	if r.Pending || r.pendingExternal != (externalDelivery{}) || r.Role.Revision != 13 || r.Role.EconomicSeq != 7 || r.Role.SourceSeq != 2 ||
 		r.Role.Wallet != test.next.Wallet || r.Role.Level == test.next.Level || r.Player.HP != hp || r.Player.MP != mp ||
 		r.Player.Life != life || r.Player.Pos != pos || r.Scene != scene {
 		t.Fatal("到账通知没有保存原玩家流水、财务与现场", r.Role, r.Player)
@@ -78,7 +78,7 @@ func TestPaymentWorkerPublishesOnlyConfirmedAssets(t *testing.T) {
 		t.Fatal("原到账未通过已有关联的 WebSocket 钱包消息发送", walletFrames)
 	}
 	before := len(conn.frames)
-	w.finishPayment(w.e.Store, test.order, nil, persistence.Auth{}, test.next, test.receipt, nil, test.now)
+	w.finishExternal(w.e.Store, paymentDelivery(test.order), nil, persistence.Auth{}, test.next, test.receipt, nil, test.now)
 	if len(conn.frames) != before || r.Role.Wallet.Yuanbao != 1_080 {
 		t.Fatal("已到账的原回执对当前房间重复生效")
 	}
@@ -102,7 +102,7 @@ func TestPaymentWorkerDoesNotOverwriteDifferentAttachmentOrRevision(t *testing.T
 			test := setupPaymentTestRoom(t)
 			tc.edit(&test)
 			wallet, revision, frames := test.r.Role.Wallet, test.r.Role.Revision, len(test.conn.frames)
-			test.w.finishPayment(test.w.e.Store, test.order, test.r, test.r.Auth, test.next, test.receipt, nil, test.now)
+			test.w.finishExternal(test.w.e.Store, paymentDelivery(test.order), test.r, test.r.Auth, test.next, test.receipt, nil, test.now)
 			if test.r.Role.Wallet != wallet || test.r.Role.Revision != revision || len(test.conn.frames) != frames {
 				t.Fatal("错配或较旧结果覆盖了目前附着")
 			}
@@ -112,8 +112,8 @@ func TestPaymentWorkerDoesNotOverwriteDifferentAttachmentOrRevision(t *testing.T
 		test := setupPaymentTestRoom(t)
 		original := test.r.Auth
 		test.r.Auth.SessionEpoch++
-		test.w.finishPayment(test.w.e.Store, test.order, test.r, original, test.next, test.receipt, nil, test.now)
-		if !test.r.Pending || test.r.pendingPaymentID != test.order.ID || test.r.Role.Revision != 12 {
+		test.w.finishExternal(test.w.e.Store, paymentDelivery(test.order), test.r, original, test.next, test.receipt, nil, test.now)
+		if !test.r.Pending || test.r.pendingExternal != paymentDelivery(test.order) || test.r.Role.Revision != 12 {
 			t.Fatal("原支付回调释放了重连后的在途任务")
 		}
 	})
@@ -133,7 +133,7 @@ func TestPaymentWorkerPreservesPriorHostingCardForInFlightHit(t *testing.T) {
 		PreviousUntil: oldUntil, ValidSince: oldSince, ValidUntil: test.next.HostingCardUntil}
 	// 离线托管期间只更新权威房间，后续附着会读取已确认的卡期。
 	r.Conn = nil
-	test.w.finishPayment(test.w.e.Store, test.order, r, r.Auth, test.next, test.receipt, nil, test.now.Add(time.Second))
+	test.w.finishExternal(test.w.e.Store, paymentDelivery(test.order), r, r.Auth, test.next, test.receipt, nil, test.now.Add(time.Second))
 	if r.Role.Wallet != test.next.Wallet || !r.Role.HostingCardUntil.Equal(test.next.HostingCardUntil) ||
 		!r.hostingCardUntilAt(test.now.Add(-time.Millisecond)).Equal(oldUntil) ||
 		!r.hostingCardUntilAt(test.now).Equal(test.next.HostingCardUntil) || len(r.hostingCardHistory) != 1 {
@@ -170,32 +170,32 @@ func TestPaymentWorkerRechecksSameOrderAfterTwoUnknownResults(t *testing.T) {
 	w, r := test.w, test.r
 	w.e.jobs = make(chan job, 2)
 	completed := make(chan error, 1)
-	dispatch := &paymentDispatch{store: w.e.Store, order: test.order, room: r, auth: r.Auth, completed: completed, attempts: 1}
-	w.paymentDispatches = map[string]*paymentDispatch{r.Role.ID: dispatch}
+	dispatch := &externalDispatch{store: w.e.Store, delivery: paymentDelivery(test.order), room: r, auth: r.Auth, completed: completed, attempts: 1}
+	w.externalDispatches = map[string]*externalDispatch{r.Role.ID: dispatch}
 	unknown := persistence.Fail(p.CodeOperationPending, "隔离用例暂未确认原提交")
-	w.finishPaymentDispatch(dispatch, domain.Role{}, persistence.Operation{}, unknown, test.now)
-	if !r.Pending || w.paymentDispatches[r.Role.ID] != dispatch || dispatch.retryAt.IsZero() ||
+	w.finishExternalDispatch(dispatch, domain.Role{}, persistence.Operation{}, unknown, test.now)
+	if !r.Pending || w.externalDispatches[r.Role.ID] != dispatch || dispatch.retryAt.IsZero() ||
 		len(completed) != 1 || persistence.Code(<-completed) != p.CodeOperationPending {
 		t.Fatal("未知提交未保留原单，或阻塞运行服继续扫描")
 	}
 	secondAt := dispatch.retryAt
-	w.tickPaymentConfirmations(secondAt)
+	w.tickExternalConfirmations(secondAt)
 	if len(w.e.jobs) != 1 || dispatch.attempts != 2 {
 		t.Fatal("首次待确认未从原角色分片重新投递", dispatch.attempts)
 	}
 	<-w.e.jobs // 本用例从可信持久入口返回第二次原单待确认。
-	w.finishPaymentDispatch(dispatch, domain.Role{}, persistence.Operation{}, unknown, secondAt)
-	if !r.Pending || w.paymentDispatches[r.Role.ID] != dispatch || dispatch.retryAt.IsZero() || len(completed) != 0 {
+	w.finishExternalDispatch(dispatch, domain.Role{}, persistence.Operation{}, unknown, secondAt)
+	if !r.Pending || w.externalDispatches[r.Role.ID] != dispatch || dispatch.retryAt.IsZero() || len(completed) != 0 {
 		t.Fatal("连续两次待确认丢失原单，或重复占用运行服扫描权")
 	}
 	thirdAt := dispatch.retryAt
-	w.tickPaymentConfirmations(thirdAt)
-	if len(w.e.jobs) != 1 || dispatch.attempts != 3 || dispatch.order.ID != test.order.ID {
+	w.tickExternalConfirmations(thirdAt)
+	if len(w.e.jobs) != 1 || dispatch.attempts != 3 || dispatch.delivery.id != test.order.ID {
 		t.Fatal("原支付已不在队列时没有按同一身份继续确认", dispatch.attempts)
 	}
 	<-w.e.jobs
-	w.finishPaymentDispatch(dispatch, test.next, test.receipt, nil, thirdAt)
-	if r.Pending || len(w.paymentDispatches) != 0 || r.Role.Revision != 13 || r.Role.Wallet.Yuanbao != 1_080 {
+	w.finishExternalDispatch(dispatch, test.next, test.receipt, nil, thirdAt)
+	if r.Pending || len(w.externalDispatches) != 0 || r.Role.Revision != 13 || r.Role.Wallet.Yuanbao != 1_080 {
 		t.Fatal("原回执在第三次确认后未应用给匹配的在线房间", r.Role)
 	}
 }
@@ -206,8 +206,8 @@ func TestPaymentWorkerSerializesColdAdmissionInBothOrders(t *testing.T) {
 	w := &worker{e: e, rooms: make(map[string]*room)}
 	order := persistence.PaymentOrder{ID: domain.ID(), RoleID: domain.ID()}
 	completed := make(chan error, 1)
-	w.submitPayment(store, order, completed)
-	dispatch := w.paymentDispatches[order.RoleID]
+	w.submitExternal(store, paymentDelivery(order), completed)
+	dispatch := w.externalDispatches[order.RoleID]
 	if len(e.jobs) != 1 || dispatch == nil || dispatch.room != nil {
 		t.Fatal("无房间时没有保存原支付派送")
 	}
@@ -217,16 +217,16 @@ func TestPaymentWorkerSerializesColdAdmissionInBothOrders(t *testing.T) {
 		t.Fatal("支付尚未确认时提前发起冷入场，可能向玩家发送旧钱包")
 	}
 	<-e.jobs
-	w.finishPaymentDispatch(dispatch, domain.Role{}, persistence.Operation{}, nil, time.Now())
+	w.finishExternalDispatch(dispatch, domain.Role{}, persistence.Operation{}, nil, time.Now())
 	r := w.rooms[order.RoleID]
-	if r == nil || r.entryAttempt == "" || !r.Pending || len(e.jobs) != 1 || len(w.paymentDispatches) != 0 {
+	if r == nil || r.entryAttempt == "" || !r.Pending || len(e.jobs) != 1 || len(w.externalDispatches) != 0 {
 		t.Fatal("已派送原支付没有放行正常入场事务")
 	}
 	if err := <-completed; err != nil {
 		t.Fatal(err)
 	}
-	w.submitPayment(store, order, completed)
-	if len(e.jobs) != 1 || len(w.paymentDispatches) != 0 || len(completed) != 1 {
+	w.submitExternal(store, paymentDelivery(order), completed)
+	if len(e.jobs) != 1 || len(w.externalDispatches) != 0 || len(completed) != 1 {
 		t.Fatal("先进入的冷入场仍在读取持久角色时被支付越过")
 	}
 }
@@ -235,13 +235,13 @@ func TestPaymentWorkerReleasesPendingRetryDuringShutdown(t *testing.T) {
 	test := setupPaymentTestRoom(t)
 	w, r := test.w, test.r
 	w.e.stopped.Store(true)
-	dispatch := &paymentDispatch{store: w.e.Store, order: test.order, room: r, auth: r.Auth, attempts: 1}
-	w.paymentDispatches = map[string]*paymentDispatch{r.Role.ID: dispatch}
-	if !w.drainPaymentDispatches(test.now) || !r.Pending {
+	dispatch := &externalDispatch{store: w.e.Store, delivery: paymentDelivery(test.order), room: r, auth: r.Auth, attempts: 1}
+	w.externalDispatches = map[string]*externalDispatch{r.Role.ID: dispatch}
+	if !w.drainExternalDispatches(test.now) || !r.Pending {
 		t.Fatal("停服未等待已提交的支付任务")
 	}
 	dispatch.retryAt = test.now.Add(time.Second)
-	if w.drainPaymentDispatches(test.now) || r.Pending || len(w.paymentDispatches) != 0 || r.Role.Revision != 12 {
+	if w.drainExternalDispatches(test.now) || r.Pending || len(w.externalDispatches) != 0 || r.Role.Revision != 12 {
 		t.Fatal("等待重试的原单未释放内存槽位，或停服当地再次发放了资产")
 	}
 }

@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 234,
+  "message_count": 237,
   "message_names": [
     "ItemView",
     "EquipmentRefineAffix",
@@ -239,10 +239,13 @@
     "BattlePassTierView",
     "BattlePassDayView",
     "BattlePassState",
-    "BattlePassClaimRequest"
+    "BattlePassClaimRequest",
+    "RewardedAdRequest",
+    "RewardedAdReceipt",
+    "RewardedAdState"
   ],
-  "int64_field_count": 509,
-  "int64_boundary_cases": 1750,
+  "int64_field_count": 512,
+  "int64_boundary_cases": 1762,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -3297,9 +3300,27 @@
       "field": "rule_version",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "RewardedAdReceipt",
+      "field": "balance_seconds",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RewardedAdState",
+      "field": "watch_until_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "RewardedAdState",
+      "field": "callback_until_unix_ms",
+      "type": "int64",
+      "cases": 4
     }
   ],
-  "bytes_field_count": 136,
+  "bytes_field_count": 140,
   "bytes_checks": [
     {
       "message": "ItemView",
@@ -3980,6 +4001,26 @@
       "message": "GrowthShopCommitRequest",
       "field": "quote_id",
       "repeated": false
+    },
+    {
+      "message": "RewardedAdRequest",
+      "field": "request_id",
+      "repeated": false
+    },
+    {
+      "message": "RewardedAdRequest",
+      "field": "attempt_id",
+      "repeated": false
+    },
+    {
+      "message": "RewardedAdReceipt",
+      "field": "attempt_id",
+      "repeated": false
+    },
+    {
+      "message": "RewardedAdState",
+      "field": "attempt_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -4085,18 +4126,22 @@
     {
       "path": "shared/proto/battle_pass.proto",
       "sha256": "78de50636feee6081006c9f82a164c08b527aec04bb3bbad426b0688b18f9d74"
+    },
+    {
+      "path": "shared/proto/rewarded_ad.proto",
+      "sha256": "4ddc3010293c68ff3589e8447be15fd3bcf43e790f98b0efe72809a254e3a46a"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "e7149fe58ad965e802aa31d9030db72cabd0bb9860d2ace66b4f773103c4d357",
-      "bytes": 4118328
+      "sha256": "55167d38373886dbeebe93d9593b37078a1364b9310c3c05f97b7bdd9b6e27fc",
+      "bytes": 4175195
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "d26322e73f653e8dd649bbb3ff341f83d4e15520680d0d0e0786d86fe320b135",
-      "bytes": 1296116
+      "sha256": "b6a5d7d948addc7c5a5e66db0badf6f31d688d7a80c0636ac845c192c342987b",
+      "bytes": 1313538
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

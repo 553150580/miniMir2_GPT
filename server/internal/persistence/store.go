@@ -121,6 +121,7 @@ type Operation struct {
 	CardPurchase      *RoleCardPurchaseReceipt       `bson:"role_card_purchase,omitempty"`     // 首次游戏内购卡的扣款和有效期。
 	CardDaily         *RoleCardDailyReceipt          `bson:"role_card_daily,omitempty"`        // 首次特权按上海运营日领取的绑元。
 	PaymentGrant      *PaymentGrantReceipt           `bson:"payment_grant,omitempty"`          // 渠道成功支付对应的唯一原角色投放或现金卡权益。
+	RewardedAd        *RewardedAdGrantReceipt        `bson:"rewarded_ad,omitempty"`            // 原广告事件带来的独立托管时长。
 	ItemMarket        *ItemMarketReceipt             `bson:"item_market,omitempty"`            // 市场唯一资产操作原回执。
 	GoldMarket        *GoldMarketReceipt             `bson:"gold_market,omitempty"`            // 金币委托原操作回执。
 
@@ -228,6 +229,10 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	if s.Cfg.Fixture.BattlePass != nil {
 		indexes[battlePassSeasons] = battlePassIndexes()
+	}
+	if s.Cfg.Fixture.RewardedAd != nil {
+		indexes[rewardedAdAttempts] = rewardedAdAttemptIndexes()
+		indexes[rewardedAdQuotas] = []mongo.IndexModel{{Keys: bson.D{{Key: "purge_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}
 	}
 	if s.Cfg.Fixture.Forge != nil {
 		indexes[forgeQuoteCollection] = []mongo.IndexModel{{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}}

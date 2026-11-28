@@ -82,20 +82,21 @@ const maxRoomsPerWorker = 256
 
 // worker 独占所属角色房间的状态修改权，避免网络及数据库协程并发改写房间。
 type worker struct {
-	e                  *Engine                     // 当前分片所属的引擎。
-	commands           chan command                // 接收游戏指令、入场请求和逻辑帧。
-	control            chan command                // 优先独立接收断连等控制命令。
-	done               chan func(*worker)          // 接收数据库结果，在分片内串行应用。
-	rooms              map[string]*room            // 该分片持有的角色房间，只有其事件循环改写。
-	roll               func(int64) int64           // 供测试注入可复现掷点的函数。
-	townNavigation     *townNavigationWorker       // 该分片的城镇寻路队列、预算与工作区。
-	personalNavigation personalNavigationWorkspace // 可在分片内跨个人房间复用的寻路数组。
-	worldBossArenas    map[uint64]*worldBossArena  // 本分片唯一拥有的运行服共享首领场次。
-	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
-	mirrorSeasonJobs   []mirrorSeasonJob           // 分配给本分片的运行服赛季封账步骤。
-	marketJobs         []marketJob                 // 分配给本分片的市场到期、退款及撮合步骤。
-	paymentJobs        []paymentJob                // 每个获准运行服独立扫描已核验的原支付。
-	paymentDispatches  map[string]*paymentDispatch // 保留原角色正在履约或待确认的支付单。
+	e                  *Engine                      // 当前分片所属的引擎。
+	commands           chan command                 // 接收游戏指令、入场请求和逻辑帧。
+	control            chan command                 // 优先独立接收断连等控制命令。
+	done               chan func(*worker)           // 接收数据库结果，在分片内串行应用。
+	rooms              map[string]*room             // 该分片持有的角色房间，只有其事件循环改写。
+	roll               func(int64) int64            // 供测试注入可复现掷点的函数。
+	townNavigation     *townNavigationWorker        // 该分片的城镇寻路队列、预算与工作区。
+	personalNavigation personalNavigationWorkspace  // 可在分片内跨个人房间复用的寻路数组。
+	worldBossArenas    map[uint64]*worldBossArena   // 本分片唯一拥有的运行服共享首领场次。
+	worldBossLedgers   map[uint64]*worldBossLedger  // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
+	mirrorSeasonJobs   []mirrorSeasonJob            // 分配给本分片的运行服赛季封账步骤。
+	marketJobs         []marketJob                  // 分配给本分片的市场到期、退款及撮合步骤。
+	paymentJobs        []paymentJob                 // 每个获准运行服独立扫描已核验的原支付。
+	rewardedAdJobs     []rewardedAdJob              // 每个启用广告的运行服独立发现已核验事件。
+	externalDispatches map[string]*externalDispatch // 保留原角色正在派送或待确认的外部资产。
 
 	dungeonParties map[uint64]*dungeonPartyDirectory // 本分片拥有的运行服讨伐链招募目录。
 	dungeonArenas  map[string]*dungeonArena          // 本分片拥有的讨伐队伍独立战斗场。
@@ -227,7 +228,7 @@ type room struct {
 	roleCardQuote        *persistence.RoleCardQuote        // 当前附着为当前场景签发的双月卡报价。
 	growthShopQuote      *persistence.GrowthShopQuote      // 当前附着签发的最后一次商城报价。
 	hostingCardHistory   []hostingCardChange               // 尚可能被在途命中引用的原托管卡期。
-	pendingPaymentID     string                            // 当前房间等候确认的系统支付原单。
+	pendingExternal      externalDelivery                  // 当前房间等候确认的外部资产原凭据。
 	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
 	dungeonStart         *dungeonStartAttempt              // 本原角色正在等待的整队开战确认。
 	dungeonMatch         *dungeonAttachment                // 原角色观察或健康续接的同一讨伐场。
@@ -267,6 +268,7 @@ func newEngine(ctx context.Context, s *persistence.Store, runs map[uint64]*persi
 	e.initializeMirrorSeasonJobs()
 	e.initializeMarketJobs()
 	e.initializePaymentJobs()
+	e.initializeRewardedAdJobs()
 	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
 		e.wg.Go(w.loop)
@@ -478,7 +480,9 @@ func (w *worker) loop() {
 				w.tickWorldBosses(c.tick)
 				w.tickMirrorSeasons(c.tick)
 				w.tickMarketJobs(c.tick)
+				w.tickExternalConfirmations(c.tick)
 				w.tickPaymentJobs(c.tick)
+				w.tickRewardedAdJobs(c.tick)
 				w.tickDungeonParties(c.tick)
 				w.tickDungeonArenas(c.tick)
 				w.beginTownNavigationTick(c.tick)
@@ -527,7 +531,7 @@ func (w *worker) command(c command) {
 		if !c.conn.Alive() {
 			return
 		}
-		if w.deferEntryForPayment(c) {
+		if w.deferEntryForExternal(c) {
 			return
 		}
 		if r != nil && r.worldBossObservation != nil {

@@ -8,6 +8,8 @@
 
 `40032 HostingQuoteRequest` 查询已确认场景的托管补时报价。零秒只查询当前等级档、规则和购买粒度。实际数量由 `40033 HostingQuoteResult` 回传报价编号、精确整数费用、两个钱包各自应扣金额及有效期。`40007 BuyHostingTimeRequest` 用原报价编号、秒数和经济操作身份成交。`40005 OperationResult` 的 `hosting_purchase` 在成交及同一操作重放时返回原报价和原到账余额。没有生效且已审定的价格时，旧版日领和托管流程继续可用。
 
+`10013 RewardedAdRequest` 通过账号 RPC 查询原角色的激励视频。携带 16 字节 `request_id` 发起观看，携带 16 字节 `attempt_id` 重查原观看。两种编号不能同时发送。`10014 RewardedAdState` 返回账号今日额度、原观看窗口、核验阶段和已有入账回执。可信渠道通过独立的服务端回调提交完播。到账后使用 `30005 HostingState` 更新在线余额，时间戳与回执余额在客户端保持 Long。
+
 `40035 RoleCardQuery` 查询原场景角色的双月卡目录和当前期限，指定商品编号时申请 30 秒内的购买报价。`40036 RoleCardState` 返回服务器上海运营日、当日特权领取资格和可购买商品。未装配双月卡规则的服务端返回空目录。购买报价只在当前角色、会话和场景内可用于首次提交。
 
 `40037 BuyRoleCardRequest` 带原报价和商品身份，足额扣除本角色非绑定元宝。`40038 ClaimRoleCardDailyRequest` 带原上海运营日，首次领取增加该角色的绑定元宝。两条请求均保留原经济操作编号。`40005 OperationResult` 的 `role_card_purchase` 和 `role_card_daily` 返回首次确认的原回执，客户端按原报价或运营日核对后清除本地未决请求。服务端在检查当前报价和卡期前先查询已有回执，健康重连可按原请求重查。

@@ -13,7 +13,9 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeMedalUnavailable, CodeMedalQuoteChanged, CodeMedalInputs,
     CodeRebirthUnavailable, CodeRebirthQuoteChanged, CodeRebirthInputs,
     CodeBodyTrainingUnavailable, CodeBodyTrainingQuoteChanged, CodeBodyTrainingInputs,
-    CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
+    CodeRewardedAdUnavailable, CodeRewardedAdAccountLimit, CodeRewardedAdDeviceLimit, CodeRewardedAdNetworkLimit,
+    CodeRewardedAdPending, CodeRewardedAdExpired, CodeMirrorExchangeFunds, CodeRoleSlotOrNameOccupied, CodeRouteChanged,
+    CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
 export const ACCOUNT_AUTHENTICATION_MESSAGE = '登录凭证已失效，请重新登录。';
@@ -35,6 +37,14 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         return '技能槽未保存，请稍后再次点击槽位。';
     }
     if (errorCode === CodeServerBusy) return '服务暂时繁忙，请稍后重试。';
+    if (messageId === 10014) {
+        if (errorCode === CodeRewardedAdUnavailable) return '激励视频渠道暂未开放';
+        if (errorCode === CodeRewardedAdAccountLimit) return '今天的账号视频额度已用完';
+        if (errorCode === CodeRewardedAdDeviceLimit) return '今天的设备视频额度已用完';
+        if (errorCode === CodeRewardedAdNetworkLimit) return '今天的网络地址视频额度已用完';
+        if (errorCode === CodeRewardedAdPending) return '同账号的其他角色仍在等待视频结果';
+        if (errorCode === CodeRewardedAdExpired) return '原观看凭据已过期，可刷新后再试';
+    }
     if (errorCode === CodeRoleSlotOrNameOccupied) return '角色槽位或名称已被占用，请查看角色列表或更换名称后重试';
     if (messageId === 40037 && errorCode === CodeVendorFunds) return '非绑定元宝余额不足';
     if ((messageId === 40035 || messageId === 40036 || messageId === 40037) && errorCode === CodeOperationConflict) return '月卡报价或原资产已变化，请重新报价';

@@ -36,7 +36,6 @@ func (w *worker) tickPaymentJobs(now time.Time) {
 	if w.e.stopped.Load() {
 		return
 	}
-	w.tickPaymentConfirmations(now)
 	for i := range w.paymentJobs {
 		state := &w.paymentJobs[i]
 		if state.inFlight {
@@ -75,16 +74,12 @@ func (w *worker) finishPaymentScan(state *paymentJob, order persistence.PaymentO
 		return
 	}
 	state.after = persistence.PaymentOrder{ID: order.ID, VerifiedAt: order.VerifiedAt}
-	dispatch := func(target *worker) { target.submitPayment(state.store, order, state.result) }
-	target := w.e.worker(order.RoleID)
-	if target == w {
-		dispatch(w)
-		return
-	}
-	// 没能进入原角色分片时还未开始持久写入，下次循环再查。
-	if !w.e.post(target, command{done: dispatch}) {
-		state.result <- nil
-	}
+	w.postExternal(state.store, paymentDelivery(order), state.result)
+}
+
+// paymentDelivery 把原订单身份交给原角色分片，支付金额始终从持久订单读取。
+func paymentDelivery(order persistence.PaymentOrder) externalDelivery {
+	return externalDelivery{externalPayment, order.ID, order.RoleID, order.AccountID, order.OriginServerID}
 }
 
 // logPaymentJobError 仅记录运行服与分类，不把原商户或渠道数据写入日志。

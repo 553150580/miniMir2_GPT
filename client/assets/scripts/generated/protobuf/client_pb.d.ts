@@ -29784,5 +29784,413 @@ export namespace minimir {
             /** Shape of a BattlePassClaimRequest. */
             type $Shape = minimir.v1.BattlePassClaimRequest.$Properties;
         }
+
+        /**
+         * Properties of a RewardedAdRequest.
+         * @deprecated Use minimir.v1.RewardedAdRequest.$Properties instead.
+         */
+        interface IRewardedAdRequest extends minimir.v1.RewardedAdRequest.$Properties {
+        }
+
+        /** Represents a RewardedAdRequest. */
+        class RewardedAdRequest {
+
+            /**
+             * Constructs a new RewardedAdRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RewardedAdRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RewardedAdRequest role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** RewardedAdRequest request_id. */
+            request_id: Uint8Array;
+
+            /** RewardedAdRequest attempt_id. */
+            attempt_id: Uint8Array;
+
+            /**
+             * Creates a new RewardedAdRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RewardedAdRequest instance
+             */
+            static create(properties: minimir.v1.RewardedAdRequest.$Shape): minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape;
+            static create(properties?: minimir.v1.RewardedAdRequest.$Properties): minimir.v1.RewardedAdRequest;
+
+            /**
+             * Encodes the specified RewardedAdRequest message. Does not implicitly {@link minimir.v1.RewardedAdRequest.verify|verify} messages.
+             * @param message RewardedAdRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RewardedAdRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RewardedAdRequest message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdRequest.verify|verify} messages.
+             * @param message RewardedAdRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RewardedAdRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RewardedAdRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape} RewardedAdRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape;
+
+            /**
+             * Decodes a RewardedAdRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape} RewardedAdRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape;
+
+            /**
+             * Verifies a RewardedAdRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RewardedAdRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RewardedAdRequest {
+
+            /** Properties of a RewardedAdRequest. */
+            interface $Properties {
+
+                /** RewardedAdRequest role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** RewardedAdRequest request_id */
+                request_id?: (Uint8Array|null);
+
+                /** RewardedAdRequest attempt_id */
+                attempt_id?: (Uint8Array|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RewardedAdRequest. */
+            type $Shape = minimir.v1.RewardedAdRequest.$Properties;
+        }
+
+        /**
+         * Properties of a RewardedAdReceipt.
+         * @deprecated Use minimir.v1.RewardedAdReceipt.$Properties instead.
+         */
+        interface IRewardedAdReceipt extends minimir.v1.RewardedAdReceipt.$Properties {
+        }
+
+        /** Represents a RewardedAdReceipt. */
+        class RewardedAdReceipt {
+
+            /**
+             * Constructs a new RewardedAdReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RewardedAdReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RewardedAdReceipt attempt_id. */
+            attempt_id: Uint8Array;
+
+            /** RewardedAdReceipt granted_seconds. */
+            granted_seconds: number;
+
+            /** RewardedAdReceipt balance_seconds. */
+            balance_seconds: Long;
+
+            /** RewardedAdReceipt operating_day. */
+            operating_day: string;
+
+            /**
+             * Creates a new RewardedAdReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RewardedAdReceipt instance
+             */
+            static create(properties: minimir.v1.RewardedAdReceipt.$Shape): minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape;
+            static create(properties?: minimir.v1.RewardedAdReceipt.$Properties): minimir.v1.RewardedAdReceipt;
+
+            /**
+             * Encodes the specified RewardedAdReceipt message. Does not implicitly {@link minimir.v1.RewardedAdReceipt.verify|verify} messages.
+             * @param message RewardedAdReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RewardedAdReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RewardedAdReceipt message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdReceipt.verify|verify} messages.
+             * @param message RewardedAdReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RewardedAdReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RewardedAdReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape} RewardedAdReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape;
+
+            /**
+             * Decodes a RewardedAdReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape} RewardedAdReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape;
+
+            /**
+             * Verifies a RewardedAdReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RewardedAdReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RewardedAdReceipt {
+
+            /** Properties of a RewardedAdReceipt. */
+            interface $Properties {
+
+                /** RewardedAdReceipt attempt_id */
+                attempt_id?: (Uint8Array|null);
+
+                /** RewardedAdReceipt granted_seconds */
+                granted_seconds?: (number|null);
+
+                /** RewardedAdReceipt balance_seconds */
+                balance_seconds?: (Long|null);
+
+                /** RewardedAdReceipt operating_day */
+                operating_day?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RewardedAdReceipt. */
+            type $Shape = minimir.v1.RewardedAdReceipt.$Properties;
+        }
+
+        /**
+         * Properties of a RewardedAdState.
+         * @deprecated Use minimir.v1.RewardedAdState.$Properties instead.
+         */
+        interface IRewardedAdState extends minimir.v1.RewardedAdState.$Properties {
+        }
+
+        /** Represents a RewardedAdState. */
+        class RewardedAdState {
+
+            /**
+             * Constructs a new RewardedAdState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RewardedAdState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RewardedAdState role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** RewardedAdState operating_day. */
+            operating_day: string;
+
+            /** RewardedAdState account_remaining. */
+            account_remaining: number;
+
+            /** RewardedAdState reward_seconds. */
+            reward_seconds: number;
+
+            /** RewardedAdState account_daily_limit. */
+            account_daily_limit: number;
+
+            /** RewardedAdState channel_available. */
+            channel_available: boolean;
+
+            /** RewardedAdState other_role_pending. */
+            other_role_pending: boolean;
+
+            /** RewardedAdState attempt_id. */
+            attempt_id: Uint8Array;
+
+            /** RewardedAdState stage. */
+            stage: number;
+
+            /** RewardedAdState provider. */
+            provider: string;
+
+            /** RewardedAdState placement. */
+            placement: string;
+
+            /** RewardedAdState beneficiary. */
+            beneficiary: string;
+
+            /** RewardedAdState watch_until_unix_ms. */
+            watch_until_unix_ms: Long;
+
+            /** RewardedAdState callback_until_unix_ms. */
+            callback_until_unix_ms: Long;
+
+            /** RewardedAdState result_code. */
+            result_code: number;
+
+            /** RewardedAdState receipt. */
+            receipt?: (minimir.v1.RewardedAdReceipt.$Properties|null);
+
+            /**
+             * Creates a new RewardedAdState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RewardedAdState instance
+             */
+            static create(properties: minimir.v1.RewardedAdState.$Shape): minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape;
+            static create(properties?: minimir.v1.RewardedAdState.$Properties): minimir.v1.RewardedAdState;
+
+            /**
+             * Encodes the specified RewardedAdState message. Does not implicitly {@link minimir.v1.RewardedAdState.verify|verify} messages.
+             * @param message RewardedAdState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RewardedAdState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RewardedAdState message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdState.verify|verify} messages.
+             * @param message RewardedAdState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RewardedAdState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RewardedAdState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape} RewardedAdState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape;
+
+            /**
+             * Decodes a RewardedAdState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape} RewardedAdState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape;
+
+            /**
+             * Verifies a RewardedAdState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RewardedAdState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RewardedAdState {
+
+            /** Properties of a RewardedAdState. */
+            interface $Properties {
+
+                /** RewardedAdState role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** RewardedAdState operating_day */
+                operating_day?: (string|null);
+
+                /** RewardedAdState account_remaining */
+                account_remaining?: (number|null);
+
+                /** RewardedAdState reward_seconds */
+                reward_seconds?: (number|null);
+
+                /** RewardedAdState account_daily_limit */
+                account_daily_limit?: (number|null);
+
+                /** RewardedAdState channel_available */
+                channel_available?: (boolean|null);
+
+                /** RewardedAdState other_role_pending */
+                other_role_pending?: (boolean|null);
+
+                /** RewardedAdState attempt_id */
+                attempt_id?: (Uint8Array|null);
+
+                /** RewardedAdState stage */
+                stage?: (number|null);
+
+                /** RewardedAdState provider */
+                provider?: (string|null);
+
+                /** RewardedAdState placement */
+                placement?: (string|null);
+
+                /** RewardedAdState beneficiary */
+                beneficiary?: (string|null);
+
+                /** RewardedAdState watch_until_unix_ms */
+                watch_until_unix_ms?: (Long|null);
+
+                /** RewardedAdState callback_until_unix_ms */
+                callback_until_unix_ms?: (Long|null);
+
+                /** RewardedAdState result_code */
+                result_code?: (number|null);
+
+                /** RewardedAdState receipt */
+                receipt?: (minimir.v1.RewardedAdReceipt.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RewardedAdState. */
+            type $Shape = minimir.v1.RewardedAdState.$Properties;
+        }
     }
 }

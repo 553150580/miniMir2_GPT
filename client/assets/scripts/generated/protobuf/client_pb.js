@@ -79102,6 +79102,1111 @@ $root.minimir = (function() {
             return BattlePassClaimRequest;
         })();
 
+        v1.RewardedAdRequest = (function() {
+
+            /**
+             * Properties of a RewardedAdRequest.
+             * @typedef {Object} minimir.v1.RewardedAdRequest.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] RewardedAdRequest role
+             * @property {Uint8Array|null} [request_id] RewardedAdRequest request_id
+             * @property {Uint8Array|null} [attempt_id] RewardedAdRequest attempt_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RewardedAdRequest.
+             * @memberof minimir.v1
+             * @interface IRewardedAdRequest
+             * @augments minimir.v1.RewardedAdRequest.$Properties
+             * @deprecated Use minimir.v1.RewardedAdRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a RewardedAdRequest.
+             * @typedef {minimir.v1.RewardedAdRequest.$Properties} minimir.v1.RewardedAdRequest.$Shape
+             */
+
+            /**
+             * Constructs a new RewardedAdRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a RewardedAdRequest.
+             * @constructor
+             * @param {minimir.v1.RewardedAdRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RewardedAdRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RewardedAdRequest role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.RewardedAdRequest
+             * @instance
+             */
+            RewardedAdRequest.prototype.role = null;
+
+            /**
+             * RewardedAdRequest request_id.
+             * @member {Uint8Array} request_id
+             * @memberof minimir.v1.RewardedAdRequest
+             * @instance
+             */
+            RewardedAdRequest.prototype.request_id = $util.newBuffer([]);
+
+            /**
+             * RewardedAdRequest attempt_id.
+             * @member {Uint8Array} attempt_id
+             * @memberof minimir.v1.RewardedAdRequest
+             * @instance
+             */
+            RewardedAdRequest.prototype.attempt_id = $util.newBuffer([]);
+
+            /**
+             * Creates a new RewardedAdRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {minimir.v1.RewardedAdRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RewardedAdRequest} RewardedAdRequest instance
+             * @type {{
+             *   (properties: minimir.v1.RewardedAdRequest.$Shape): minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape;
+             *   (properties?: minimir.v1.RewardedAdRequest.$Properties): minimir.v1.RewardedAdRequest;
+             * }}
+             */
+            RewardedAdRequest.create = function(properties) {
+                return new RewardedAdRequest(properties);
+            };
+
+            /**
+             * Encodes the specified RewardedAdRequest message. Does not implicitly {@link minimir.v1.RewardedAdRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {minimir.v1.RewardedAdRequest.$Properties} message RewardedAdRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.request_id != null && $Object.hasOwnProperty.call(message, "request_id") && message.request_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.request_id);
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id") && message.attempt_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.attempt_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RewardedAdRequest message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {minimir.v1.RewardedAdRequest.$Properties} message RewardedAdRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RewardedAdRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape} RewardedAdRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RewardedAdRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.request_id = value;
+                            else
+                                delete message.request_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.attempt_id = value;
+                            else
+                                delete message.attempt_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RewardedAdRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdRequest & minimir.v1.RewardedAdRequest.$Shape} RewardedAdRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RewardedAdRequest message.
+             * @function verify
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RewardedAdRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.request_id != null && $Object.hasOwnProperty.call(message, "request_id"))
+                    if (!(message.request_id && typeof message.request_id.length === "number" || $util.isString(message.request_id)))
+                        return "request_id: buffer expected";
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id"))
+                    if (!(message.attempt_id && typeof message.attempt_id.length === "number" || $util.isString(message.attempt_id)))
+                        return "attempt_id: buffer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RewardedAdRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.RewardedAdRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RewardedAdRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RewardedAdRequest";
+            };
+
+            return RewardedAdRequest;
+        })();
+
+        v1.RewardedAdReceipt = (function() {
+
+            /**
+             * Properties of a RewardedAdReceipt.
+             * @typedef {Object} minimir.v1.RewardedAdReceipt.$Properties
+             * @property {Uint8Array|null} [attempt_id] RewardedAdReceipt attempt_id
+             * @property {number|null} [granted_seconds] RewardedAdReceipt granted_seconds
+             * @property {Long|null} [balance_seconds] RewardedAdReceipt balance_seconds
+             * @property {string|null} [operating_day] RewardedAdReceipt operating_day
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RewardedAdReceipt.
+             * @memberof minimir.v1
+             * @interface IRewardedAdReceipt
+             * @augments minimir.v1.RewardedAdReceipt.$Properties
+             * @deprecated Use minimir.v1.RewardedAdReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a RewardedAdReceipt.
+             * @typedef {minimir.v1.RewardedAdReceipt.$Properties} minimir.v1.RewardedAdReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new RewardedAdReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a RewardedAdReceipt.
+             * @constructor
+             * @param {minimir.v1.RewardedAdReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RewardedAdReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RewardedAdReceipt attempt_id.
+             * @member {Uint8Array} attempt_id
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @instance
+             */
+            RewardedAdReceipt.prototype.attempt_id = $util.newBuffer([]);
+
+            /**
+             * RewardedAdReceipt granted_seconds.
+             * @member {number} granted_seconds
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @instance
+             */
+            RewardedAdReceipt.prototype.granted_seconds = 0;
+
+            /**
+             * RewardedAdReceipt balance_seconds.
+             * @member {Long} balance_seconds
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @instance
+             */
+            RewardedAdReceipt.prototype.balance_seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RewardedAdReceipt operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @instance
+             */
+            RewardedAdReceipt.prototype.operating_day = "";
+
+            /**
+             * Creates a new RewardedAdReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {minimir.v1.RewardedAdReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RewardedAdReceipt} RewardedAdReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.RewardedAdReceipt.$Shape): minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape;
+             *   (properties?: minimir.v1.RewardedAdReceipt.$Properties): minimir.v1.RewardedAdReceipt;
+             * }}
+             */
+            RewardedAdReceipt.create = function(properties) {
+                return new RewardedAdReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified RewardedAdReceipt message. Does not implicitly {@link minimir.v1.RewardedAdReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {minimir.v1.RewardedAdReceipt.$Properties} message RewardedAdReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id") && message.attempt_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.attempt_id);
+                if (message.granted_seconds != null && $Object.hasOwnProperty.call(message, "granted_seconds") && message.granted_seconds !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.granted_seconds);
+                if (message.balance_seconds != null && $Object.hasOwnProperty.call(message, "balance_seconds") && (typeof message.balance_seconds === "object" ? message.balance_seconds.low || message.balance_seconds.high : message.balance_seconds !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.balance_seconds);
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.operating_day);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RewardedAdReceipt message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {minimir.v1.RewardedAdReceipt.$Properties} message RewardedAdReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RewardedAdReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape} RewardedAdReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RewardedAdReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.attempt_id = value;
+                            else
+                                delete message.attempt_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.granted_seconds = value;
+                            else
+                                delete message.granted_seconds;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.balance_seconds = value;
+                            else
+                                delete message.balance_seconds;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RewardedAdReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdReceipt & minimir.v1.RewardedAdReceipt.$Shape} RewardedAdReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RewardedAdReceipt message.
+             * @function verify
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RewardedAdReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id"))
+                    if (!(message.attempt_id && typeof message.attempt_id.length === "number" || $util.isString(message.attempt_id)))
+                        return "attempt_id: buffer expected";
+                if (message.granted_seconds != null && $Object.hasOwnProperty.call(message, "granted_seconds"))
+                    if (!$util.isInteger(message.granted_seconds))
+                        return "granted_seconds: integer expected";
+                if (message.balance_seconds != null && $Object.hasOwnProperty.call(message, "balance_seconds"))
+                    if (!$util.isInteger(message.balance_seconds) && !(message.balance_seconds && $util.isInteger(message.balance_seconds.low) && $util.isInteger(message.balance_seconds.high)))
+                        return "balance_seconds: integer|Long expected";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for RewardedAdReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.RewardedAdReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RewardedAdReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RewardedAdReceipt";
+            };
+
+            return RewardedAdReceipt;
+        })();
+
+        v1.RewardedAdState = (function() {
+
+            /**
+             * Properties of a RewardedAdState.
+             * @typedef {Object} minimir.v1.RewardedAdState.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] RewardedAdState role
+             * @property {string|null} [operating_day] RewardedAdState operating_day
+             * @property {number|null} [account_remaining] RewardedAdState account_remaining
+             * @property {number|null} [reward_seconds] RewardedAdState reward_seconds
+             * @property {number|null} [account_daily_limit] RewardedAdState account_daily_limit
+             * @property {boolean|null} [channel_available] RewardedAdState channel_available
+             * @property {boolean|null} [other_role_pending] RewardedAdState other_role_pending
+             * @property {Uint8Array|null} [attempt_id] RewardedAdState attempt_id
+             * @property {number|null} [stage] RewardedAdState stage
+             * @property {string|null} [provider] RewardedAdState provider
+             * @property {string|null} [placement] RewardedAdState placement
+             * @property {string|null} [beneficiary] RewardedAdState beneficiary
+             * @property {Long|null} [watch_until_unix_ms] RewardedAdState watch_until_unix_ms
+             * @property {Long|null} [callback_until_unix_ms] RewardedAdState callback_until_unix_ms
+             * @property {number|null} [result_code] RewardedAdState result_code
+             * @property {minimir.v1.RewardedAdReceipt.$Properties|null} [receipt] RewardedAdState receipt
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RewardedAdState.
+             * @memberof minimir.v1
+             * @interface IRewardedAdState
+             * @augments minimir.v1.RewardedAdState.$Properties
+             * @deprecated Use minimir.v1.RewardedAdState.$Properties instead.
+             */
+
+            /**
+             * Shape of a RewardedAdState.
+             * @typedef {minimir.v1.RewardedAdState.$Properties} minimir.v1.RewardedAdState.$Shape
+             */
+
+            /**
+             * Constructs a new RewardedAdState.
+             * @memberof minimir.v1
+             * @classdesc Represents a RewardedAdState.
+             * @constructor
+             * @param {minimir.v1.RewardedAdState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RewardedAdState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RewardedAdState role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.role = null;
+
+            /**
+             * RewardedAdState operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.operating_day = "";
+
+            /**
+             * RewardedAdState account_remaining.
+             * @member {number} account_remaining
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.account_remaining = 0;
+
+            /**
+             * RewardedAdState reward_seconds.
+             * @member {number} reward_seconds
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.reward_seconds = 0;
+
+            /**
+             * RewardedAdState account_daily_limit.
+             * @member {number} account_daily_limit
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.account_daily_limit = 0;
+
+            /**
+             * RewardedAdState channel_available.
+             * @member {boolean} channel_available
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.channel_available = false;
+
+            /**
+             * RewardedAdState other_role_pending.
+             * @member {boolean} other_role_pending
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.other_role_pending = false;
+
+            /**
+             * RewardedAdState attempt_id.
+             * @member {Uint8Array} attempt_id
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.attempt_id = $util.newBuffer([]);
+
+            /**
+             * RewardedAdState stage.
+             * @member {number} stage
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.stage = 0;
+
+            /**
+             * RewardedAdState provider.
+             * @member {string} provider
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.provider = "";
+
+            /**
+             * RewardedAdState placement.
+             * @member {string} placement
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.placement = "";
+
+            /**
+             * RewardedAdState beneficiary.
+             * @member {string} beneficiary
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.beneficiary = "";
+
+            /**
+             * RewardedAdState watch_until_unix_ms.
+             * @member {Long} watch_until_unix_ms
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.watch_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RewardedAdState callback_until_unix_ms.
+             * @member {Long} callback_until_unix_ms
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.callback_until_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * RewardedAdState result_code.
+             * @member {number} result_code
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.result_code = 0;
+
+            /**
+             * RewardedAdState receipt.
+             * @member {minimir.v1.RewardedAdReceipt.$Properties|null|undefined} receipt
+             * @memberof minimir.v1.RewardedAdState
+             * @instance
+             */
+            RewardedAdState.prototype.receipt = null;
+
+            /**
+             * Creates a new RewardedAdState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {minimir.v1.RewardedAdState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RewardedAdState} RewardedAdState instance
+             * @type {{
+             *   (properties: minimir.v1.RewardedAdState.$Shape): minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape;
+             *   (properties?: minimir.v1.RewardedAdState.$Properties): minimir.v1.RewardedAdState;
+             * }}
+             */
+            RewardedAdState.create = function(properties) {
+                return new RewardedAdState(properties);
+            };
+
+            /**
+             * Encodes the specified RewardedAdState message. Does not implicitly {@link minimir.v1.RewardedAdState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {minimir.v1.RewardedAdState.$Properties} message RewardedAdState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.operating_day);
+                if (message.account_remaining != null && $Object.hasOwnProperty.call(message, "account_remaining") && message.account_remaining !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.account_remaining);
+                if (message.reward_seconds != null && $Object.hasOwnProperty.call(message, "reward_seconds") && message.reward_seconds !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.reward_seconds);
+                if (message.account_daily_limit != null && $Object.hasOwnProperty.call(message, "account_daily_limit") && message.account_daily_limit !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.account_daily_limit);
+                if (message.channel_available != null && $Object.hasOwnProperty.call(message, "channel_available") && message.channel_available !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.channel_available);
+                if (message.other_role_pending != null && $Object.hasOwnProperty.call(message, "other_role_pending") && message.other_role_pending !== false)
+                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.other_role_pending);
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id") && message.attempt_id.length)
+                    writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.attempt_id);
+                if (message.stage != null && $Object.hasOwnProperty.call(message, "stage") && message.stage !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.stage);
+                if (message.provider != null && $Object.hasOwnProperty.call(message, "provider") && message.provider !== "")
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.provider);
+                if (message.placement != null && $Object.hasOwnProperty.call(message, "placement") && message.placement !== "")
+                    writer.uint32(/* id 11, wireType 2 =*/90).string(message.placement);
+                if (message.beneficiary != null && $Object.hasOwnProperty.call(message, "beneficiary") && message.beneficiary !== "")
+                    writer.uint32(/* id 12, wireType 2 =*/98).string(message.beneficiary);
+                if (message.watch_until_unix_ms != null && $Object.hasOwnProperty.call(message, "watch_until_unix_ms") && (typeof message.watch_until_unix_ms === "object" ? message.watch_until_unix_ms.low || message.watch_until_unix_ms.high : message.watch_until_unix_ms !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).int64(message.watch_until_unix_ms);
+                if (message.callback_until_unix_ms != null && $Object.hasOwnProperty.call(message, "callback_until_unix_ms") && (typeof message.callback_until_unix_ms === "object" ? message.callback_until_unix_ms.low || message.callback_until_unix_ms.high : message.callback_until_unix_ms !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).int64(message.callback_until_unix_ms);
+                if (message.result_code != null && $Object.hasOwnProperty.call(message, "result_code") && message.result_code !== 0)
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint32(message.result_code);
+                if (message.receipt != null && $Object.hasOwnProperty.call(message, "receipt"))
+                    $root.minimir.v1.RewardedAdReceipt.encode(message.receipt, writer.uint32(/* id 16, wireType 2 =*/130).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RewardedAdState message, length delimited. Does not implicitly {@link minimir.v1.RewardedAdState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {minimir.v1.RewardedAdState.$Properties} message RewardedAdState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RewardedAdState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RewardedAdState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape} RewardedAdState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RewardedAdState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.account_remaining = value;
+                            else
+                                delete message.account_remaining;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.reward_seconds = value;
+                            else
+                                delete message.reward_seconds;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.account_daily_limit = value;
+                            else
+                                delete message.account_daily_limit;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.channel_available = value;
+                            else
+                                delete message.channel_available;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.other_role_pending = value;
+                            else
+                                delete message.other_role_pending;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.attempt_id = value;
+                            else
+                                delete message.attempt_id;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.stage = value;
+                            else
+                                delete message.stage;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.provider = value;
+                            else
+                                delete message.provider;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.placement = value;
+                            else
+                                delete message.placement;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.beneficiary = value;
+                            else
+                                delete message.beneficiary;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.watch_until_unix_ms = value;
+                            else
+                                delete message.watch_until_unix_ms;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.callback_until_unix_ms = value;
+                            else
+                                delete message.callback_until_unix_ms;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.result_code = value;
+                            else
+                                delete message.result_code;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 2)
+                                break;
+                            message.receipt = $root.minimir.v1.RewardedAdReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.receipt);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RewardedAdState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RewardedAdState & minimir.v1.RewardedAdState.$Shape} RewardedAdState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RewardedAdState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RewardedAdState message.
+             * @function verify
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RewardedAdState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.account_remaining != null && $Object.hasOwnProperty.call(message, "account_remaining"))
+                    if (!$util.isInteger(message.account_remaining))
+                        return "account_remaining: integer expected";
+                if (message.reward_seconds != null && $Object.hasOwnProperty.call(message, "reward_seconds"))
+                    if (!$util.isInteger(message.reward_seconds))
+                        return "reward_seconds: integer expected";
+                if (message.account_daily_limit != null && $Object.hasOwnProperty.call(message, "account_daily_limit"))
+                    if (!$util.isInteger(message.account_daily_limit))
+                        return "account_daily_limit: integer expected";
+                if (message.channel_available != null && $Object.hasOwnProperty.call(message, "channel_available"))
+                    if (typeof message.channel_available !== "boolean")
+                        return "channel_available: boolean expected";
+                if (message.other_role_pending != null && $Object.hasOwnProperty.call(message, "other_role_pending"))
+                    if (typeof message.other_role_pending !== "boolean")
+                        return "other_role_pending: boolean expected";
+                if (message.attempt_id != null && $Object.hasOwnProperty.call(message, "attempt_id"))
+                    if (!(message.attempt_id && typeof message.attempt_id.length === "number" || $util.isString(message.attempt_id)))
+                        return "attempt_id: buffer expected";
+                if (message.stage != null && $Object.hasOwnProperty.call(message, "stage"))
+                    if (!$util.isInteger(message.stage))
+                        return "stage: integer expected";
+                if (message.provider != null && $Object.hasOwnProperty.call(message, "provider"))
+                    if (!$util.isString(message.provider))
+                        return "provider: string expected";
+                if (message.placement != null && $Object.hasOwnProperty.call(message, "placement"))
+                    if (!$util.isString(message.placement))
+                        return "placement: string expected";
+                if (message.beneficiary != null && $Object.hasOwnProperty.call(message, "beneficiary"))
+                    if (!$util.isString(message.beneficiary))
+                        return "beneficiary: string expected";
+                if (message.watch_until_unix_ms != null && $Object.hasOwnProperty.call(message, "watch_until_unix_ms"))
+                    if (!$util.isInteger(message.watch_until_unix_ms) && !(message.watch_until_unix_ms && $util.isInteger(message.watch_until_unix_ms.low) && $util.isInteger(message.watch_until_unix_ms.high)))
+                        return "watch_until_unix_ms: integer|Long expected";
+                if (message.callback_until_unix_ms != null && $Object.hasOwnProperty.call(message, "callback_until_unix_ms"))
+                    if (!$util.isInteger(message.callback_until_unix_ms) && !(message.callback_until_unix_ms && $util.isInteger(message.callback_until_unix_ms.low) && $util.isInteger(message.callback_until_unix_ms.high)))
+                        return "callback_until_unix_ms: integer|Long expected";
+                if (message.result_code != null && $Object.hasOwnProperty.call(message, "result_code"))
+                    if (!$util.isInteger(message.result_code))
+                        return "result_code: integer expected";
+                if (message.receipt != null && $Object.hasOwnProperty.call(message, "receipt")) {
+                    var error = $root.minimir.v1.RewardedAdReceipt.verify(message.receipt, _depth + 1);
+                    if (error)
+                        return "receipt." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for RewardedAdState
+             * @function getTypeUrl
+             * @memberof minimir.v1.RewardedAdState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RewardedAdState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RewardedAdState";
+            };
+
+            return RewardedAdState;
+        })();
+
         return v1;
     })();
 

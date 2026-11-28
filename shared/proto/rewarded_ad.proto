@@ -1,0 +1,40 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 账号节点按本人角色读取活动。新观看携带稳定请求编号，查看原单携带原凭据。
+message RewardedAdRequest {
+  RoleKey role = 1;
+  bytes request_id = 2;
+  bytes attempt_id = 3;
+}
+
+// 已到账回执沿原角色和广告事件，不重算之后的托管余额。
+message RewardedAdReceipt {
+  bytes attempt_id = 1;
+  uint32 granted_seconds = 2;
+  int64 balance_seconds = 3;
+  string operating_day = 4;
+}
+
+// 阶段为一待播放或核验、二已核验待到账、三已到账、四超额、五凭据已过期。
+message RewardedAdState {
+  RoleKey role = 1;
+  string operating_day = 2;
+  uint32 account_remaining = 3;
+  uint32 reward_seconds = 4;
+  uint32 account_daily_limit = 5;
+  bool channel_available = 6;
+  bool other_role_pending = 7;
+  bytes attempt_id = 8;
+  uint32 stage = 9;
+  string provider = 10;
+  string placement = 11;
+  string beneficiary = 12;
+  int64 watch_until_unix_ms = 13;
+  int64 callback_until_unix_ms = 14;
+  uint32 result_code = 15;
+  RewardedAdReceipt receipt = 16;
+}
