@@ -132,6 +132,9 @@ const (
 	MsgS2CBodyTrainingQuote uint16 = 40068
 	MsgC2SBodyTrainingCommit uint16 = 40069
 	MsgC2SSoulAction uint16 = 40070
+	MsgC2SGrowthShopQuery uint16 = 40071
+	MsgS2CGrowthShopState uint16 = 40072
+	MsgC2SGrowthShopCommit uint16 = 40073
 )
 
 const (
@@ -211,4 +214,7 @@ const (
 	CodeBodyTrainingInputs uint32 = 3981
 	CodeSoulUnavailable uint32 = 3982
 	CodeSoulChanged uint32 = 3983
+	CodeGrowthShopUnavailable uint32 = 3984
+	CodeGrowthShopQuoteChanged uint32 = 3985
+	CodeGrowthShopLimit uint32 = 3986
 )

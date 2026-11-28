@@ -1584,6 +1584,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.22/5.9 魂兽收藏修订、原碎片条款与幂等"
+    },
+    {
+      "value": 40071,
+      "name": "MsgC2SGrowthShopQuery",
+      "proto_message": "GrowthShopQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12/5.8 元宝商城目录与原购买报价"
+    },
+    {
+      "value": 40072,
+      "name": "MsgS2CGrowthShopState",
+      "proto_message": "GrowthShopState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12/5.8 显式币种、角色限购和原报价条款"
+    },
+    {
+      "value": 40073,
+      "name": "MsgC2SGrowthShopCommit",
+      "proto_message": "GrowthShopCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12/5.8 确认购买、绑定到账和原操作重放"
     }
   ],
   "error_codes": [
@@ -2193,6 +2229,30 @@
       "display_zh": "魂兽状态或碎片条件已变化，请重新查看",
       "status": "draft",
       "source_ref": "最终策划案4.22/5.9",
+      "active_in_scope": true
+    },
+    {
+      "value": 3984,
+      "name": "CodeGrowthShopUnavailable",
+      "display_zh": "当前区域或商品未开放商城购买",
+      "status": "draft",
+      "source_ref": "最终策划案4.12/5.8",
+      "active_in_scope": true
+    },
+    {
+      "value": 3985,
+      "name": "CodeGrowthShopQuoteChanged",
+      "display_zh": "商城报价或运营日已变化，请重新报价",
+      "status": "draft",
+      "source_ref": "最终策划案4.12/5.8",
+      "active_in_scope": true
+    },
+    {
+      "value": 3986,
+      "name": "CodeGrowthShopLimit",
+      "display_zh": "此材料已超出今日可购数量",
+      "status": "draft",
+      "source_ref": "最终策划案4.12/5.8",
       "active_in_scope": true
     }
   ]

@@ -144,6 +144,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	w.cancelTownNavigation(r)
 	r.hostingQuote = nil
 	r.roleCardQuote = nil
+	r.growthShopQuote = nil
 	r.Role, r.Auth = role, auth
 	if run := r.personalBoss; run != nil {
 		run.auth = auth

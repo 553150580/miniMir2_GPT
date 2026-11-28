@@ -72,6 +72,9 @@ import { GameBodyTraining, validateBodyTrainingReceipt } from './GameBodyTrainin
 import type { BodyTrainingCommit, BodyTrainingReceipt, BodyTrainingSnapshot } from './GameBodyTraining';
 import { GameSoulBeasts, validateSoulReceipt } from './GameSoulBeasts';
 import type { SoulAction, SoulSnapshot } from './GameSoulBeasts';
+import { GameGrowthShop } from './GameGrowthShop';
+import { validateGrowthShopReceipt } from './GrowthShopProtocol';
+import type { GrowthShopCommit, GrowthShopReceipt } from './GrowthShopProtocol';
 import { weaponOilItemId, weaponOilReceipt, weaponOilReceiptLuck, wingOilContributions } from './WeaponOilModel';
 import type { WeaponOilCommitRequest, WeaponOilReceipt, WeaponOilSnapshot } from './WeaponOilModel';
 import { equipmentRecycleOilConfirmation, equipmentRecycleOilRule, recycleOilResultLines, recycleOilResultSummary, validateRecycleOilReceipt } from './EquipmentRecycleOilModel';
@@ -103,7 +106,7 @@ import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './W
 import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied,
     MsgC2SMedalCommit, MsgC2SMedalQuote, MsgC2SRebirthCommit, MsgC2SRebirthQuote,
-    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction } from '../generated/protocol_ids';
+    MsgC2SBodyTrainingCommit, MsgC2SBodyTrainingQuote, MsgC2SSoulAction, MsgC2SGrowthShopCommit, MsgC2SGrowthShopQuery } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -161,6 +164,8 @@ export class AppRoot extends Component {
     private rebirth?: GameRebirth;
     private bodyTraining?: GameBodyTraining;
     private soulBeasts?: GameSoulBeasts;
+    private growthShop?: GameGrowthShop; // 负责原目录、报价与购买确认。
+    private growthShopEntry?: Node; // 功能页保存的商城入口。
     private medalRulesSource?: unknown;
     private medalRules?: ReturnType<typeof medalRules>;
     private equipmentEnhancement?: GameEquipmentEnhancement;
@@ -586,6 +591,11 @@ export class AppRoot extends Component {
         this.soulBeasts = new GameSoulBeasts({ snapshot: () => this.soulSnapshot(),
             open: read => this.itemActions!.open(read), refresh: () => this.itemActions!.refresh(),
             submit: (request, revision) => this.economic(MsgC2SSoulAction, request, revision) });
+        this.growthShopEntry = safe.getChildByPath('UIMgr/Panels/Functions/Pages/Page2/GrowthShop') ?? undefined;
+        this.growthShop = new GameGrowthShop({ context: () => this.growthShopContext(),
+            open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: this.itemActions.refresh,
+            query: (sceneEpoch, productId, count) => session.connection.request(MsgC2SGrowthShopQuery, { sceneEpoch, productId, count }),
+            submit: (request, revision) => this.economic(MsgC2SGrowthShopCommit, request, revision) });
         this.equipmentEnhancement = new GameEquipmentEnhancement({ snapshot: () => this.equipmentEnhancementSnapshot(), newSession: newOperationId,
             open: read => this.itemActions!.open(read), current: read => this.itemActions!.isCurrent(read), refresh: () => this.itemActions!.refresh(),
             confirm: (title, message, action) => this.popup!.confirm('Confirm', message, title, action),
@@ -914,6 +924,7 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/RoleCards/BuyHosting', () => this.roleCards?.confirmPurchase(2));
         this.button('UIMgr/Panels/RoleCards/Claim', () => this.roleCards?.claimDaily());
         this.button('UIMgr/Panels/Functions/Pages/Page2/ItemMarket', () => this.itemMarket?.open());
+        if (this.growthShopEntry) this.button('UIMgr/Panels/Functions/Pages/Page2/GrowthShop', () => this.growthShop?.open());
         const market = 'UIMgr/Panels/ItemMarket/';
         this.button(market + 'Tabs/Public', () => this.itemMarket?.switchScope(ItemMarketScope.Public));
         this.button(market + 'Tabs/Mine', () => this.itemMarket?.switchScope(ItemMarketScope.Mine));
@@ -954,6 +965,7 @@ export class AppRoot extends Component {
         this.roleCards?.sync();
         this.itemMarket?.sync();
         this.goldMarket?.sync();
+        this.refreshGrowthShopEntry();
         this.mirrorArena?.refresh(this.world?.gameplay.mirror_arena);
         this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
@@ -1568,6 +1580,7 @@ export class AppRoot extends Component {
         this.roleCards?.sync();
         this.itemMarket?.sync();
         this.goldMarket?.sync();
+        this.refreshGrowthShopEntry();
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -1721,6 +1734,27 @@ export class AppRoot extends Component {
 
     private soulName(id: number): string {
         return this.world?.gameplay.soul_beasts?.types?.find((row: { id: number }) => row.id === id)?.name ?? `魂兽 ${id}`;
+    }
+
+    // refreshGrowthShopEntry 让已经确认规则的当前角色进入保存的功能页商城。
+    private refreshGrowthShopEntry(): void {
+        const button = this.growthShopEntry;
+        if (!button) return;
+        button.active = this.world?.gameplay.growth_shop === true && this.canSendInput() && [1, 2].includes(session.entry?.sceneKind);
+        const placeholder = button.active ? button.parent?.getChildByName('Text') : undefined;
+        if (placeholder) placeholder.active = false;
+    }
+
+    // growthShopContext 保证原目录及报价始终绑定在当前的永久角色、场景和规则。
+    private growthShopContext() {
+        const identity = currentEntryIdentity(), { entry, wallet } = session;
+        if (!this.growthShopEntry?.active || this.disposed || !identity || !isCurrentEntry(identity) || !entry || !wallet ||
+            this.ui?.top?.name !== 'Functions') return undefined;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === entry.playerHandle);
+        if (!player || player.hp.isZero()) return undefined;
+        return { scope: attachmentKey(identity), scene: entry.sceneEpoch, rule: entry.resourceVersion,
+            yuanbao: wallet.yuanbaoUnits, boundYuanbao: wallet.boundYuanbaoUnits,
+            blocked: !this.canSendInput() || this.economicBusy || this.unresolved || !!session.pending?.get(roleIdentity()) };
     }
 
     private wingSnapshot(): WingSnapshot | null {
@@ -2433,6 +2467,7 @@ export class AppRoot extends Component {
         let rebirth: { request: RebirthCommitRequest; receipt: RebirthReceipt } | undefined;
         let bodyTraining: { request: BodyTrainingCommit; receipt: BodyTrainingReceipt } | undefined;
         let soulNotice: string | undefined;
+        let growthPurchase: GrowthShopReceipt | undefined;
         let enhanced: { request: EquipmentEnhancementCommit; receipt: EquipmentEnhancementReceipt } | undefined;
         let refined: { request: RefineAction; receipt: RefineReceipt } | undefined;
         let recycleOil: readonly RecycleOilRoll[] = [];
@@ -2490,6 +2525,9 @@ export class AppRoot extends Component {
                 validateSoulReceipt(result.soul, pending.value as unknown as SoulAction);
                 soulNotice = '魂兽状态已更新';
             }
+            if (pending.id === MsgC2SGrowthShopCommit) {
+                growthPurchase = validateGrowthShopReceipt(result.growthShop, pending.value as unknown as GrowthShopCommit, this.growthShop?.confirmedQuote);
+            }
             if (pending.id === 40030 && result.soul) {
                 const receipt = validateSoulReceipt(result.soul);
                 soulNotice = receipt.fragmentDelta.isZero() ? `获得 ${this.soulName(receipt.typeId)}`
@@ -2543,6 +2581,12 @@ export class AppRoot extends Component {
             if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
             this.itemActions?.refresh();
             this.status(soulNotice);
+            return;
+        }
+        if (growthPurchase) {
+            const itemId = growthPurchase.terms.itemId;
+            const item = this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === itemId);
+            this.status(`已购得绑定${item?.name ?? '材料'} ×${growthPurchase.terms.itemQuantity}`);
             return;
         }
         if (enhanced) {

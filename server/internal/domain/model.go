@@ -188,6 +188,7 @@ type Role struct {
 	TasksCodex   *TaskCodexProgress `bson:"tasks_codex,omitempty" json:"tasks_codex,omitempty"`         // 角色的已确认任务、成就和图鉴进度，旧角色从空进度开始。
 	BodyTraining *BodyTrainingState `bson:"body_training,omitempty" json:"body_training,omitempty"`     // 永久炼体等级，旧档缺省视作零级。
 	Soul         *SoulCollection    `bson:"soul_collection,omitempty" json:"soul_collection,omitempty"` // 角色专属魂兽及通用碎片。
+	GrowthShop   *GrowthShopDay     `bson:"growth_shop_day,omitempty" json:"growth_shop_day,omitempty"` // 角色当前运营日的商城限额。
 
 	EquipmentEnhancement *EquipmentEnhancement `bson:"-" json:"equipment_enhancement,omitempty"` // 角色十个强化部位，由独立文档装配。
 

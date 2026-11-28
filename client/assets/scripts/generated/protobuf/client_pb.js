@@ -818,6 +818,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.RebirthReceipt.$Properties|null} [rebirth] OperationResult rebirth
              * @property {minimir.v1.BodyTrainingReceipt.$Properties|null} [body_training] OperationResult body_training
              * @property {minimir.v1.SoulReceipt.$Properties|null} [soul] OperationResult soul
+             * @property {minimir.v1.GrowthShopReceipt.$Properties|null} [growth_shop] OperationResult growth_shop
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -1026,6 +1027,14 @@ $root.minimir = (function() {
             OperationResult.prototype.soul = null;
 
             /**
+             * OperationResult growth_shop.
+             * @member {minimir.v1.GrowthShopReceipt.$Properties|null|undefined} growth_shop
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.growth_shop = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -1101,6 +1110,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.BodyTrainingReceipt.encode(message.body_training, writer.uint32(/* id 21, wireType 2 =*/170).fork(), _depth + 1).ldelim();
                 if (message.soul != null && $Object.hasOwnProperty.call(message, "soul"))
                     $root.minimir.v1.SoulReceipt.encode(message.soul, writer.uint32(/* id 22, wireType 2 =*/178).fork(), _depth + 1).ldelim();
+                if (message.growth_shop != null && $Object.hasOwnProperty.call(message, "growth_shop"))
+                    $root.minimir.v1.GrowthShopReceipt.encode(message.growth_shop, writer.uint32(/* id 23, wireType 2 =*/186).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1305,6 +1316,12 @@ $root.minimir = (function() {
                             message.soul = $root.minimir.v1.SoulReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.soul);
                             continue;
                         }
+                    case 23: {
+                            if (wireType !== 2)
+                                break;
+                            message.growth_shop = $root.minimir.v1.GrowthShopReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.growth_shop);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1453,6 +1470,11 @@ $root.minimir = (function() {
                     if (error)
                         return "soul." + error;
                 }
+                if (message.growth_shop != null && $Object.hasOwnProperty.call(message, "growth_shop")) {
+                    var error = $root.minimir.v1.GrowthShopReceipt.verify(message.growth_shop, _depth + 1);
+                    if (error)
+                        return "growth_shop." + error;
+                }
                 return null;
             };
 
@@ -1471,6 +1493,720 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.GrowthShopTerms = (function() {
+
+            /**
+             * Properties of a GrowthShopTerms.
+             * @typedef {Object} minimir.v1.GrowthShopTerms.$Properties
+             * @property {number|null} [product_id] GrowthShopTerms product_id
+             * @property {number|null} [item_id] GrowthShopTerms item_id
+             * @property {number|null} [currency] GrowthShopTerms currency
+             * @property {Long|null} [unit_price_units] GrowthShopTerms unit_price_units
+             * @property {number|null} [count] GrowthShopTerms count
+             * @property {Long|null} [item_quantity] GrowthShopTerms item_quantity
+             * @property {Long|null} [total_price_units] GrowthShopTerms total_price_units
+             * @property {string|null} [operating_day] GrowthShopTerms operating_day
+             * @property {number|null} [daily_limit] GrowthShopTerms daily_limit
+             * @property {number|null} [daily_bought_before] GrowthShopTerms daily_bought_before
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopTerms.
+             * @memberof minimir.v1
+             * @interface IGrowthShopTerms
+             * @augments minimir.v1.GrowthShopTerms.$Properties
+             * @deprecated Use minimir.v1.GrowthShopTerms.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopTerms.
+             * @typedef {minimir.v1.GrowthShopTerms.$Properties} minimir.v1.GrowthShopTerms.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopTerms.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopTerms.
+             * @constructor
+             * @param {minimir.v1.GrowthShopTerms.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopTerms = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopTerms product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.product_id = 0;
+
+            /**
+             * GrowthShopTerms item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.item_id = 0;
+
+            /**
+             * GrowthShopTerms currency.
+             * @member {number} currency
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.currency = 0;
+
+            /**
+             * GrowthShopTerms unit_price_units.
+             * @member {Long} unit_price_units
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.unit_price_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GrowthShopTerms count.
+             * @member {number} count
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.count = 0;
+
+            /**
+             * GrowthShopTerms item_quantity.
+             * @member {Long} item_quantity
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.item_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GrowthShopTerms total_price_units.
+             * @member {Long} total_price_units
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.total_price_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GrowthShopTerms operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.operating_day = "";
+
+            /**
+             * GrowthShopTerms daily_limit.
+             * @member {number} daily_limit
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.daily_limit = 0;
+
+            /**
+             * GrowthShopTerms daily_bought_before.
+             * @member {number} daily_bought_before
+             * @memberof minimir.v1.GrowthShopTerms
+             * @instance
+             */
+            GrowthShopTerms.prototype.daily_bought_before = 0;
+
+            /**
+             * Creates a new GrowthShopTerms instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {minimir.v1.GrowthShopTerms.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopTerms} GrowthShopTerms instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopTerms.$Shape): minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape;
+             *   (properties?: minimir.v1.GrowthShopTerms.$Properties): minimir.v1.GrowthShopTerms;
+             * }}
+             */
+            GrowthShopTerms.create = function(properties) {
+                return new GrowthShopTerms(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopTerms message. Does not implicitly {@link minimir.v1.GrowthShopTerms.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {minimir.v1.GrowthShopTerms.$Properties} message GrowthShopTerms message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopTerms.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.product_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency") && message.currency !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.currency);
+                if (message.unit_price_units != null && $Object.hasOwnProperty.call(message, "unit_price_units") && (typeof message.unit_price_units === "object" ? message.unit_price_units.low || message.unit_price_units.high : message.unit_price_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.unit_price_units);
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count") && message.count !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.count);
+                if (message.item_quantity != null && $Object.hasOwnProperty.call(message, "item_quantity") && (typeof message.item_quantity === "object" ? message.item_quantity.low || message.item_quantity.high : message.item_quantity !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.item_quantity);
+                if (message.total_price_units != null && $Object.hasOwnProperty.call(message, "total_price_units") && (typeof message.total_price_units === "object" ? message.total_price_units.low || message.total_price_units.high : message.total_price_units !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.total_price_units);
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 8, wireType 2 =*/66).string(message.operating_day);
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit") && message.daily_limit !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.daily_limit);
+                if (message.daily_bought_before != null && $Object.hasOwnProperty.call(message, "daily_bought_before") && message.daily_bought_before !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.daily_bought_before);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopTerms message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopTerms.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {minimir.v1.GrowthShopTerms.$Properties} message GrowthShopTerms message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopTerms.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopTerms message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape} GrowthShopTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopTerms.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopTerms();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.currency = value;
+                            else
+                                delete message.currency;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.unit_price_units = value;
+                            else
+                                delete message.unit_price_units;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.count = value;
+                            else
+                                delete message.count;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_quantity = value;
+                            else
+                                delete message.item_quantity;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.total_price_units = value;
+                            else
+                                delete message.total_price_units;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_limit = value;
+                            else
+                                delete message.daily_limit;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_bought_before = value;
+                            else
+                                delete message.daily_bought_before;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopTerms message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape} GrowthShopTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopTerms.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopTerms message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopTerms.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency"))
+                    if (!$util.isInteger(message.currency))
+                        return "currency: integer expected";
+                if (message.unit_price_units != null && $Object.hasOwnProperty.call(message, "unit_price_units"))
+                    if (!$util.isInteger(message.unit_price_units) && !(message.unit_price_units && $util.isInteger(message.unit_price_units.low) && $util.isInteger(message.unit_price_units.high)))
+                        return "unit_price_units: integer|Long expected";
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count"))
+                    if (!$util.isInteger(message.count))
+                        return "count: integer expected";
+                if (message.item_quantity != null && $Object.hasOwnProperty.call(message, "item_quantity"))
+                    if (!$util.isInteger(message.item_quantity) && !(message.item_quantity && $util.isInteger(message.item_quantity.low) && $util.isInteger(message.item_quantity.high)))
+                        return "item_quantity: integer|Long expected";
+                if (message.total_price_units != null && $Object.hasOwnProperty.call(message, "total_price_units"))
+                    if (!$util.isInteger(message.total_price_units) && !(message.total_price_units && $util.isInteger(message.total_price_units.low) && $util.isInteger(message.total_price_units.high)))
+                        return "total_price_units: integer|Long expected";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit"))
+                    if (!$util.isInteger(message.daily_limit))
+                        return "daily_limit: integer expected";
+                if (message.daily_bought_before != null && $Object.hasOwnProperty.call(message, "daily_bought_before"))
+                    if (!$util.isInteger(message.daily_bought_before))
+                        return "daily_bought_before: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopTerms
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopTerms
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopTerms.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopTerms";
+            };
+
+            return GrowthShopTerms;
+        })();
+
+        v1.GrowthShopReceipt = (function() {
+
+            /**
+             * Properties of a GrowthShopReceipt.
+             * @typedef {Object} minimir.v1.GrowthShopReceipt.$Properties
+             * @property {Uint8Array|null} [quote_id] GrowthShopReceipt quote_id
+             * @property {minimir.v1.GrowthShopTerms.$Properties|null} [terms] GrowthShopReceipt terms
+             * @property {Array.<minimir.v1.ItemView.$Properties>|null} [items] GrowthShopReceipt items
+             * @property {Long|null} [balance_units] GrowthShopReceipt balance_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopReceipt.
+             * @memberof minimir.v1
+             * @interface IGrowthShopReceipt
+             * @augments minimir.v1.GrowthShopReceipt.$Properties
+             * @deprecated Use minimir.v1.GrowthShopReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopReceipt.
+             * @typedef {minimir.v1.GrowthShopReceipt.$Properties} minimir.v1.GrowthShopReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopReceipt.
+             * @constructor
+             * @param {minimir.v1.GrowthShopReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopReceipt = function (properties) {
+                this.items = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopReceipt quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @instance
+             */
+            GrowthShopReceipt.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * GrowthShopReceipt terms.
+             * @member {minimir.v1.GrowthShopTerms.$Properties|null|undefined} terms
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @instance
+             */
+            GrowthShopReceipt.prototype.terms = null;
+
+            /**
+             * GrowthShopReceipt items.
+             * @member {Array.<minimir.v1.ItemView.$Properties>} items
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @instance
+             */
+            GrowthShopReceipt.prototype.items = $util.emptyArray;
+
+            /**
+             * GrowthShopReceipt balance_units.
+             * @member {Long} balance_units
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @instance
+             */
+            GrowthShopReceipt.prototype.balance_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new GrowthShopReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {minimir.v1.GrowthShopReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopReceipt} GrowthShopReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopReceipt.$Shape): minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape;
+             *   (properties?: minimir.v1.GrowthShopReceipt.$Properties): minimir.v1.GrowthShopReceipt;
+             * }}
+             */
+            GrowthShopReceipt.create = function(properties) {
+                return new GrowthShopReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopReceipt message. Does not implicitly {@link minimir.v1.GrowthShopReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {minimir.v1.GrowthShopReceipt.$Properties} message GrowthShopReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms"))
+                    $root.minimir.v1.GrowthShopTerms.encode(message.terms, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.items != null && message.items.length)
+                    for (var i = 0; i < message.items.length; ++i)
+                        $root.minimir.v1.ItemView.encode(message.items[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.balance_units != null && $Object.hasOwnProperty.call(message, "balance_units") && (typeof message.balance_units === "object" ? message.balance_units.low || message.balance_units.high : message.balance_units !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.balance_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopReceipt message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {minimir.v1.GrowthShopReceipt.$Properties} message GrowthShopReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape} GrowthShopReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.terms = $root.minimir.v1.GrowthShopTerms.decode(reader, reader.size(), $undefined, _depth + 1, message.terms);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.items && message.items.length))
+                                message.items = [];
+                            message.items.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.balance_units = value;
+                            else
+                                delete message.balance_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape} GrowthShopReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopReceipt message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms")) {
+                    var error = $root.minimir.v1.GrowthShopTerms.verify(message.terms, _depth + 1);
+                    if (error)
+                        return "terms." + error;
+                }
+                if (message.items != null && $Object.hasOwnProperty.call(message, "items")) {
+                    if (!$Array.isArray(message.items))
+                        return "items: array expected";
+                    for (var i = 0; i < message.items.length; ++i) {
+                        var error = $root.minimir.v1.ItemView.verify(message.items[i], _depth + 1);
+                        if (error)
+                            return "items." + error;
+                    }
+                }
+                if (message.balance_units != null && $Object.hasOwnProperty.call(message, "balance_units"))
+                    if (!$util.isInteger(message.balance_units) && !(message.balance_units && $util.isInteger(message.balance_units.low) && $util.isInteger(message.balance_units.high)))
+                        return "balance_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopReceipt";
+            };
+
+            return GrowthShopReceipt;
         })();
 
         v1.SoulBeast = (function() {
@@ -74258,6 +74994,1550 @@ $root.minimir = (function() {
             };
 
             return SoulActionRequest;
+        })();
+
+        v1.GrowthShopQuery = (function() {
+
+            /**
+             * Properties of a GrowthShopQuery.
+             * @typedef {Object} minimir.v1.GrowthShopQuery.$Properties
+             * @property {Long|null} [scene_epoch] GrowthShopQuery scene_epoch
+             * @property {number|null} [product_id] GrowthShopQuery product_id
+             * @property {number|null} [count] GrowthShopQuery count
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopQuery.
+             * @memberof minimir.v1
+             * @interface IGrowthShopQuery
+             * @augments minimir.v1.GrowthShopQuery.$Properties
+             * @deprecated Use minimir.v1.GrowthShopQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopQuery.
+             * @typedef {minimir.v1.GrowthShopQuery.$Properties} minimir.v1.GrowthShopQuery.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopQuery.
+             * @constructor
+             * @param {minimir.v1.GrowthShopQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.GrowthShopQuery
+             * @instance
+             */
+            GrowthShopQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GrowthShopQuery product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.GrowthShopQuery
+             * @instance
+             */
+            GrowthShopQuery.prototype.product_id = 0;
+
+            /**
+             * GrowthShopQuery count.
+             * @member {number} count
+             * @memberof minimir.v1.GrowthShopQuery
+             * @instance
+             */
+            GrowthShopQuery.prototype.count = 0;
+
+            /**
+             * Creates a new GrowthShopQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {minimir.v1.GrowthShopQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopQuery} GrowthShopQuery instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopQuery.$Shape): minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape;
+             *   (properties?: minimir.v1.GrowthShopQuery.$Properties): minimir.v1.GrowthShopQuery;
+             * }}
+             */
+            GrowthShopQuery.create = function(properties) {
+                return new GrowthShopQuery(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopQuery message. Does not implicitly {@link minimir.v1.GrowthShopQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {minimir.v1.GrowthShopQuery.$Properties} message GrowthShopQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.product_id);
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count") && message.count !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.count);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopQuery message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {minimir.v1.GrowthShopQuery.$Properties} message GrowthShopQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape} GrowthShopQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.count = value;
+                            else
+                                delete message.count;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape} GrowthShopQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopQuery message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count"))
+                    if (!$util.isInteger(message.count))
+                        return "count: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopQuery";
+            };
+
+            return GrowthShopQuery;
+        })();
+
+        v1.GrowthShopOfferView = (function() {
+
+            /**
+             * Properties of a GrowthShopOfferView.
+             * @typedef {Object} minimir.v1.GrowthShopOfferView.$Properties
+             * @property {number|null} [product_id] GrowthShopOfferView product_id
+             * @property {number|null} [item_id] GrowthShopOfferView item_id
+             * @property {string|null} [name] GrowthShopOfferView name
+             * @property {number|null} [currency] GrowthShopOfferView currency
+             * @property {Long|null} [price_units] GrowthShopOfferView price_units
+             * @property {number|null} [item_per_pack] GrowthShopOfferView item_per_pack
+             * @property {number|null} [max_count] GrowthShopOfferView max_count
+             * @property {number|null} [daily_limit] GrowthShopOfferView daily_limit
+             * @property {number|null} [daily_bought] GrowthShopOfferView daily_bought
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopOfferView.
+             * @memberof minimir.v1
+             * @interface IGrowthShopOfferView
+             * @augments minimir.v1.GrowthShopOfferView.$Properties
+             * @deprecated Use minimir.v1.GrowthShopOfferView.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopOfferView.
+             * @typedef {minimir.v1.GrowthShopOfferView.$Properties} minimir.v1.GrowthShopOfferView.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopOfferView.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopOfferView.
+             * @constructor
+             * @param {minimir.v1.GrowthShopOfferView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopOfferView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopOfferView product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.product_id = 0;
+
+            /**
+             * GrowthShopOfferView item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.item_id = 0;
+
+            /**
+             * GrowthShopOfferView name.
+             * @member {string} name
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.name = "";
+
+            /**
+             * GrowthShopOfferView currency.
+             * @member {number} currency
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.currency = 0;
+
+            /**
+             * GrowthShopOfferView price_units.
+             * @member {Long} price_units
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.price_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GrowthShopOfferView item_per_pack.
+             * @member {number} item_per_pack
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.item_per_pack = 0;
+
+            /**
+             * GrowthShopOfferView max_count.
+             * @member {number} max_count
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.max_count = 0;
+
+            /**
+             * GrowthShopOfferView daily_limit.
+             * @member {number} daily_limit
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.daily_limit = 0;
+
+            /**
+             * GrowthShopOfferView daily_bought.
+             * @member {number} daily_bought
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @instance
+             */
+            GrowthShopOfferView.prototype.daily_bought = 0;
+
+            /**
+             * Creates a new GrowthShopOfferView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {minimir.v1.GrowthShopOfferView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopOfferView} GrowthShopOfferView instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopOfferView.$Shape): minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape;
+             *   (properties?: minimir.v1.GrowthShopOfferView.$Properties): minimir.v1.GrowthShopOfferView;
+             * }}
+             */
+            GrowthShopOfferView.create = function(properties) {
+                return new GrowthShopOfferView(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopOfferView message. Does not implicitly {@link minimir.v1.GrowthShopOfferView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {minimir.v1.GrowthShopOfferView.$Properties} message GrowthShopOfferView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopOfferView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.product_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency") && message.currency !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.currency);
+                if (message.price_units != null && $Object.hasOwnProperty.call(message, "price_units") && (typeof message.price_units === "object" ? message.price_units.low || message.price_units.high : message.price_units !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.price_units);
+                if (message.item_per_pack != null && $Object.hasOwnProperty.call(message, "item_per_pack") && message.item_per_pack !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.item_per_pack);
+                if (message.max_count != null && $Object.hasOwnProperty.call(message, "max_count") && message.max_count !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.max_count);
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit") && message.daily_limit !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.daily_limit);
+                if (message.daily_bought != null && $Object.hasOwnProperty.call(message, "daily_bought") && message.daily_bought !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.daily_bought);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopOfferView message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopOfferView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {minimir.v1.GrowthShopOfferView.$Properties} message GrowthShopOfferView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopOfferView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopOfferView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape} GrowthShopOfferView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopOfferView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopOfferView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.currency = value;
+                            else
+                                delete message.currency;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.price_units = value;
+                            else
+                                delete message.price_units;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_per_pack = value;
+                            else
+                                delete message.item_per_pack;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.max_count = value;
+                            else
+                                delete message.max_count;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_limit = value;
+                            else
+                                delete message.daily_limit;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_bought = value;
+                            else
+                                delete message.daily_bought;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopOfferView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape} GrowthShopOfferView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopOfferView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopOfferView message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopOfferView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency"))
+                    if (!$util.isInteger(message.currency))
+                        return "currency: integer expected";
+                if (message.price_units != null && $Object.hasOwnProperty.call(message, "price_units"))
+                    if (!$util.isInteger(message.price_units) && !(message.price_units && $util.isInteger(message.price_units.low) && $util.isInteger(message.price_units.high)))
+                        return "price_units: integer|Long expected";
+                if (message.item_per_pack != null && $Object.hasOwnProperty.call(message, "item_per_pack"))
+                    if (!$util.isInteger(message.item_per_pack))
+                        return "item_per_pack: integer expected";
+                if (message.max_count != null && $Object.hasOwnProperty.call(message, "max_count"))
+                    if (!$util.isInteger(message.max_count))
+                        return "max_count: integer expected";
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit"))
+                    if (!$util.isInteger(message.daily_limit))
+                        return "daily_limit: integer expected";
+                if (message.daily_bought != null && $Object.hasOwnProperty.call(message, "daily_bought"))
+                    if (!$util.isInteger(message.daily_bought))
+                        return "daily_bought: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopOfferView
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopOfferView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopOfferView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopOfferView";
+            };
+
+            return GrowthShopOfferView;
+        })();
+
+        v1.GrowthShopQuote = (function() {
+
+            /**
+             * Properties of a GrowthShopQuote.
+             * @typedef {Object} minimir.v1.GrowthShopQuote.$Properties
+             * @property {Uint8Array|null} [quote_id] GrowthShopQuote quote_id
+             * @property {Long|null} [expires_at_unix_ms] GrowthShopQuote expires_at_unix_ms
+             * @property {minimir.v1.GrowthShopTerms.$Properties|null} [terms] GrowthShopQuote terms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopQuote.
+             * @memberof minimir.v1
+             * @interface IGrowthShopQuote
+             * @augments minimir.v1.GrowthShopQuote.$Properties
+             * @deprecated Use minimir.v1.GrowthShopQuote.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopQuote.
+             * @typedef {minimir.v1.GrowthShopQuote.$Properties} minimir.v1.GrowthShopQuote.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopQuote.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopQuote.
+             * @constructor
+             * @param {minimir.v1.GrowthShopQuote.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopQuote = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopQuote quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.GrowthShopQuote
+             * @instance
+             */
+            GrowthShopQuote.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * GrowthShopQuote expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.GrowthShopQuote
+             * @instance
+             */
+            GrowthShopQuote.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GrowthShopQuote terms.
+             * @member {minimir.v1.GrowthShopTerms.$Properties|null|undefined} terms
+             * @memberof minimir.v1.GrowthShopQuote
+             * @instance
+             */
+            GrowthShopQuote.prototype.terms = null;
+
+            /**
+             * Creates a new GrowthShopQuote instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {minimir.v1.GrowthShopQuote.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopQuote} GrowthShopQuote instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopQuote.$Shape): minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape;
+             *   (properties?: minimir.v1.GrowthShopQuote.$Properties): minimir.v1.GrowthShopQuote;
+             * }}
+             */
+            GrowthShopQuote.create = function(properties) {
+                return new GrowthShopQuote(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopQuote message. Does not implicitly {@link minimir.v1.GrowthShopQuote.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {minimir.v1.GrowthShopQuote.$Properties} message GrowthShopQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopQuote.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.expires_at_unix_ms);
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms"))
+                    $root.minimir.v1.GrowthShopTerms.encode(message.terms, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopQuote message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopQuote.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {minimir.v1.GrowthShopQuote.$Properties} message GrowthShopQuote message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopQuote.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopQuote message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape} GrowthShopQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopQuote.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopQuote();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.terms = $root.minimir.v1.GrowthShopTerms.decode(reader, reader.size(), $undefined, _depth + 1, message.terms);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopQuote message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape} GrowthShopQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopQuote.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopQuote message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopQuote.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.terms != null && $Object.hasOwnProperty.call(message, "terms")) {
+                    var error = $root.minimir.v1.GrowthShopTerms.verify(message.terms, _depth + 1);
+                    if (error)
+                        return "terms." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopQuote
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopQuote
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopQuote.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopQuote";
+            };
+
+            return GrowthShopQuote;
+        })();
+
+        v1.GrowthShopState = (function() {
+
+            /**
+             * Properties of a GrowthShopState.
+             * @typedef {Object} minimir.v1.GrowthShopState.$Properties
+             * @property {Long|null} [scene_epoch] GrowthShopState scene_epoch
+             * @property {Long|null} [role_revision] GrowthShopState role_revision
+             * @property {Long|null} [rule_version] GrowthShopState rule_version
+             * @property {string|null} [operating_day] GrowthShopState operating_day
+             * @property {Array.<minimir.v1.GrowthShopOfferView.$Properties>|null} [offers] GrowthShopState offers
+             * @property {minimir.v1.GrowthShopQuote.$Properties|null} [quote] GrowthShopState quote
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopState.
+             * @memberof minimir.v1
+             * @interface IGrowthShopState
+             * @augments minimir.v1.GrowthShopState.$Properties
+             * @deprecated Use minimir.v1.GrowthShopState.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopState.
+             * @typedef {minimir.v1.GrowthShopState.$Properties} minimir.v1.GrowthShopState.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopState.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopState.
+             * @constructor
+             * @param {minimir.v1.GrowthShopState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopState = function (properties) {
+                this.offers = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GrowthShopState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GrowthShopState rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * GrowthShopState operating_day.
+             * @member {string} operating_day
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.operating_day = "";
+
+            /**
+             * GrowthShopState offers.
+             * @member {Array.<minimir.v1.GrowthShopOfferView.$Properties>} offers
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.offers = $util.emptyArray;
+
+            /**
+             * GrowthShopState quote.
+             * @member {minimir.v1.GrowthShopQuote.$Properties|null|undefined} quote
+             * @memberof minimir.v1.GrowthShopState
+             * @instance
+             */
+            GrowthShopState.prototype.quote = null;
+
+            /**
+             * Creates a new GrowthShopState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {minimir.v1.GrowthShopState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopState} GrowthShopState instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopState.$Shape): minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape;
+             *   (properties?: minimir.v1.GrowthShopState.$Properties): minimir.v1.GrowthShopState;
+             * }}
+             */
+            GrowthShopState.create = function(properties) {
+                return new GrowthShopState(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopState message. Does not implicitly {@link minimir.v1.GrowthShopState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {minimir.v1.GrowthShopState.$Properties} message GrowthShopState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day") && message.operating_day !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.operating_day);
+                if (message.offers != null && message.offers.length)
+                    for (var i = 0; i < message.offers.length; ++i)
+                        $root.minimir.v1.GrowthShopOfferView.encode(message.offers[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote"))
+                    $root.minimir.v1.GrowthShopQuote.encode(message.quote, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopState message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {minimir.v1.GrowthShopState.$Properties} message GrowthShopState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape} GrowthShopState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.operating_day = value;
+                            else
+                                delete message.operating_day;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.offers && message.offers.length))
+                                message.offers = [];
+                            message.offers.push($root.minimir.v1.GrowthShopOfferView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.quote = $root.minimir.v1.GrowthShopQuote.decode(reader, reader.size(), $undefined, _depth + 1, message.quote);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape} GrowthShopState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopState message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.operating_day != null && $Object.hasOwnProperty.call(message, "operating_day"))
+                    if (!$util.isString(message.operating_day))
+                        return "operating_day: string expected";
+                if (message.offers != null && $Object.hasOwnProperty.call(message, "offers")) {
+                    if (!$Array.isArray(message.offers))
+                        return "offers: array expected";
+                    for (var i = 0; i < message.offers.length; ++i) {
+                        var error = $root.minimir.v1.GrowthShopOfferView.verify(message.offers[i], _depth + 1);
+                        if (error)
+                            return "offers." + error;
+                    }
+                }
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote")) {
+                    var error = $root.minimir.v1.GrowthShopQuote.verify(message.quote, _depth + 1);
+                    if (error)
+                        return "quote." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopState
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopState";
+            };
+
+            return GrowthShopState;
+        })();
+
+        v1.GrowthShopCommitRequest = (function() {
+
+            /**
+             * Properties of a GrowthShopCommitRequest.
+             * @typedef {Object} minimir.v1.GrowthShopCommitRequest.$Properties
+             * @property {Uint8Array|null} [quote_id] GrowthShopCommitRequest quote_id
+             * @property {number|null} [product_id] GrowthShopCommitRequest product_id
+             * @property {number|null} [count] GrowthShopCommitRequest count
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] GrowthShopCommitRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a GrowthShopCommitRequest.
+             * @memberof minimir.v1
+             * @interface IGrowthShopCommitRequest
+             * @augments minimir.v1.GrowthShopCommitRequest.$Properties
+             * @deprecated Use minimir.v1.GrowthShopCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a GrowthShopCommitRequest.
+             * @typedef {minimir.v1.GrowthShopCommitRequest.$Properties} minimir.v1.GrowthShopCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new GrowthShopCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a GrowthShopCommitRequest.
+             * @constructor
+             * @param {minimir.v1.GrowthShopCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var GrowthShopCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * GrowthShopCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @instance
+             */
+            GrowthShopCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * GrowthShopCommitRequest product_id.
+             * @member {number} product_id
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @instance
+             */
+            GrowthShopCommitRequest.prototype.product_id = 0;
+
+            /**
+             * GrowthShopCommitRequest count.
+             * @member {number} count
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @instance
+             */
+            GrowthShopCommitRequest.prototype.count = 0;
+
+            /**
+             * GrowthShopCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @instance
+             */
+            GrowthShopCommitRequest.prototype.operation = null;
+
+            /**
+             * Creates a new GrowthShopCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {minimir.v1.GrowthShopCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.GrowthShopCommitRequest} GrowthShopCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.GrowthShopCommitRequest.$Shape): minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape;
+             *   (properties?: minimir.v1.GrowthShopCommitRequest.$Properties): minimir.v1.GrowthShopCommitRequest;
+             * }}
+             */
+            GrowthShopCommitRequest.create = function(properties) {
+                return new GrowthShopCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified GrowthShopCommitRequest message. Does not implicitly {@link minimir.v1.GrowthShopCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {minimir.v1.GrowthShopCommitRequest.$Properties} message GrowthShopCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id") && message.product_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.product_id);
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count") && message.count !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.count);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GrowthShopCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {minimir.v1.GrowthShopCommitRequest.$Properties} message GrowthShopCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GrowthShopCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a GrowthShopCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape} GrowthShopCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.GrowthShopCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.product_id = value;
+                            else
+                                delete message.product_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.count = value;
+                            else
+                                delete message.count;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a GrowthShopCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape} GrowthShopCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GrowthShopCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a GrowthShopCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GrowthShopCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.product_id != null && $Object.hasOwnProperty.call(message, "product_id"))
+                    if (!$util.isInteger(message.product_id))
+                        return "product_id: integer expected";
+                if (message.count != null && $Object.hasOwnProperty.call(message, "count"))
+                    if (!$util.isInteger(message.count))
+                        return "count: integer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for GrowthShopCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.GrowthShopCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            GrowthShopCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.GrowthShopCommitRequest";
+            };
+
+            return GrowthShopCommitRequest;
         })();
 
         return v1;

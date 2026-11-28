@@ -1,0 +1,49 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+import "common.proto";
+
+// 商品和份数都为零时读取目录，否则为指定商品及份数获取原报价。
+message GrowthShopQuery {
+  uint64 scene_epoch = 1;
+  uint32 product_id = 2;
+  uint32 count = 3;
+}
+
+// 同种材料可按不同币种分列，当日购买数量由服务器按材料汇总。
+message GrowthShopOfferView {
+  uint32 product_id = 1;
+  uint32 item_id = 2;
+  string name = 3;
+  uint32 currency = 4;
+  int64 price_units = 5;
+  uint32 item_per_pack = 6;
+  uint32 max_count = 7;
+  uint32 daily_limit = 8;
+  uint32 daily_bought = 9;
+}
+
+// 成交只接受此附着生成的原报价。报价过期或上海日变化后须重新取得报价。
+message GrowthShopQuote {
+  bytes quote_id = 1;
+  int64 expires_at_unix_ms = 2;
+  GrowthShopTerms terms = 3;
+}
+
+message GrowthShopState {
+  uint64 scene_epoch = 1;
+  uint64 role_revision = 2;
+  uint64 rule_version = 3;
+  string operating_day = 4;
+  repeated GrowthShopOfferView offers = 5;
+  GrowthShopQuote quote = 6;
+}
+
+// 首次提交必须持有原报价。已结算请求以原操作身份重放，不要求旧场景仍在。
+message GrowthShopCommitRequest {
+  bytes quote_id = 1;
+  uint32 product_id = 2;
+  uint32 count = 3;
+  OperationContext operation = 4;
+}

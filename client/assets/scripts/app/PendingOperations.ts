@@ -24,7 +24,7 @@ export class PendingOperationError extends Error {
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
 const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026,
-    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 40063, 40066, 40069, 40070, 30002]);
+    40029, 40030, 40031, 40034, 40037, 40038, 40041, 40044, 40045, 40048, 40051, 40054, 40057, 40060, 40063, 40066, 40069, 40070, 40073, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -382,6 +382,11 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['quoteId', 'uiSessionId', 'operation']);
         payload = { quoteId: bytes16(item.quoteId, stored), uiSessionId: bytes16(item.uiSessionId, stored),
             operation: operation(item.operation, stored) };
+    } else if (id === 40073) {
+        const item = record(input.value, ['quoteId', 'productId', 'count', 'operation']);
+        const productId = uint32(item.productId), count = uint32(item.count);
+        if (!productId || !count || count > 1000) return invalid('商城未决请求缺少原商品或份数');
+        payload = { quoteId: bytes16(item.quoteId, stored), productId, count, operation: operation(item.operation, stored) };
     } else if (id === 40070) {
         const item = record(input.value, ['action', 'typeId', 'affixId', 'soulRevision', 'fragmentDelta', 'operation']);
         const action = uint32(item.action), typeId = uint32(item.typeId), affixId = uint32(item.affixId);

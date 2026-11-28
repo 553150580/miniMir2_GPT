@@ -410,6 +410,9 @@ export namespace minimir {
             /** OperationResult soul. */
             soul?: (minimir.v1.SoulReceipt.$Properties|null);
 
+            /** OperationResult growth_shop. */
+            growth_shop?: (minimir.v1.GrowthShopReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -539,12 +542,279 @@ export namespace minimir {
                 /** OperationResult soul */
                 soul?: (minimir.v1.SoulReceipt.$Properties|null);
 
+                /** OperationResult growth_shop */
+                growth_shop?: (minimir.v1.GrowthShopReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopTerms.
+         * @deprecated Use minimir.v1.GrowthShopTerms.$Properties instead.
+         */
+        interface IGrowthShopTerms extends minimir.v1.GrowthShopTerms.$Properties {
+        }
+
+        /** Represents a GrowthShopTerms. */
+        class GrowthShopTerms {
+
+            /**
+             * Constructs a new GrowthShopTerms.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopTerms.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopTerms product_id. */
+            product_id: number;
+
+            /** GrowthShopTerms item_id. */
+            item_id: number;
+
+            /** GrowthShopTerms currency. */
+            currency: number;
+
+            /** GrowthShopTerms unit_price_units. */
+            unit_price_units: Long;
+
+            /** GrowthShopTerms count. */
+            count: number;
+
+            /** GrowthShopTerms item_quantity. */
+            item_quantity: Long;
+
+            /** GrowthShopTerms total_price_units. */
+            total_price_units: Long;
+
+            /** GrowthShopTerms operating_day. */
+            operating_day: string;
+
+            /** GrowthShopTerms daily_limit. */
+            daily_limit: number;
+
+            /** GrowthShopTerms daily_bought_before. */
+            daily_bought_before: number;
+
+            /**
+             * Creates a new GrowthShopTerms instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopTerms instance
+             */
+            static create(properties: minimir.v1.GrowthShopTerms.$Shape): minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape;
+            static create(properties?: minimir.v1.GrowthShopTerms.$Properties): minimir.v1.GrowthShopTerms;
+
+            /**
+             * Encodes the specified GrowthShopTerms message. Does not implicitly {@link minimir.v1.GrowthShopTerms.verify|verify} messages.
+             * @param message GrowthShopTerms message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopTerms.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopTerms message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopTerms.verify|verify} messages.
+             * @param message GrowthShopTerms message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopTerms.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopTerms message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape} GrowthShopTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape;
+
+            /**
+             * Decodes a GrowthShopTerms message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape} GrowthShopTerms
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopTerms & minimir.v1.GrowthShopTerms.$Shape;
+
+            /**
+             * Verifies a GrowthShopTerms message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopTerms
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopTerms {
+
+            /** Properties of a GrowthShopTerms. */
+            interface $Properties {
+
+                /** GrowthShopTerms product_id */
+                product_id?: (number|null);
+
+                /** GrowthShopTerms item_id */
+                item_id?: (number|null);
+
+                /** GrowthShopTerms currency */
+                currency?: (number|null);
+
+                /** GrowthShopTerms unit_price_units */
+                unit_price_units?: (Long|null);
+
+                /** GrowthShopTerms count */
+                count?: (number|null);
+
+                /** GrowthShopTerms item_quantity */
+                item_quantity?: (Long|null);
+
+                /** GrowthShopTerms total_price_units */
+                total_price_units?: (Long|null);
+
+                /** GrowthShopTerms operating_day */
+                operating_day?: (string|null);
+
+                /** GrowthShopTerms daily_limit */
+                daily_limit?: (number|null);
+
+                /** GrowthShopTerms daily_bought_before */
+                daily_bought_before?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopTerms. */
+            type $Shape = minimir.v1.GrowthShopTerms.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopReceipt.
+         * @deprecated Use minimir.v1.GrowthShopReceipt.$Properties instead.
+         */
+        interface IGrowthShopReceipt extends minimir.v1.GrowthShopReceipt.$Properties {
+        }
+
+        /** Represents a GrowthShopReceipt. */
+        class GrowthShopReceipt {
+
+            /**
+             * Constructs a new GrowthShopReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopReceipt quote_id. */
+            quote_id: Uint8Array;
+
+            /** GrowthShopReceipt terms. */
+            terms?: (minimir.v1.GrowthShopTerms.$Properties|null);
+
+            /** GrowthShopReceipt items. */
+            items: minimir.v1.ItemView.$Properties[];
+
+            /** GrowthShopReceipt balance_units. */
+            balance_units: Long;
+
+            /**
+             * Creates a new GrowthShopReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopReceipt instance
+             */
+            static create(properties: minimir.v1.GrowthShopReceipt.$Shape): minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape;
+            static create(properties?: minimir.v1.GrowthShopReceipt.$Properties): minimir.v1.GrowthShopReceipt;
+
+            /**
+             * Encodes the specified GrowthShopReceipt message. Does not implicitly {@link minimir.v1.GrowthShopReceipt.verify|verify} messages.
+             * @param message GrowthShopReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopReceipt message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopReceipt.verify|verify} messages.
+             * @param message GrowthShopReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape} GrowthShopReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape;
+
+            /**
+             * Decodes a GrowthShopReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape} GrowthShopReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopReceipt & minimir.v1.GrowthShopReceipt.$Shape;
+
+            /**
+             * Verifies a GrowthShopReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopReceipt {
+
+            /** Properties of a GrowthShopReceipt. */
+            interface $Properties {
+
+                /** GrowthShopReceipt quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** GrowthShopReceipt terms */
+                terms?: (minimir.v1.GrowthShopTerms.$Properties|null);
+
+                /** GrowthShopReceipt items */
+                items?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** GrowthShopReceipt balance_units */
+                balance_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopReceipt. */
+            type $Shape = minimir.v1.GrowthShopReceipt.$Properties;
         }
 
         /**
@@ -27935,6 +28205,606 @@ export namespace minimir {
 
             /** Shape of a SoulActionRequest. */
             type $Shape = minimir.v1.SoulActionRequest.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopQuery.
+         * @deprecated Use minimir.v1.GrowthShopQuery.$Properties instead.
+         */
+        interface IGrowthShopQuery extends minimir.v1.GrowthShopQuery.$Properties {
+        }
+
+        /** Represents a GrowthShopQuery. */
+        class GrowthShopQuery {
+
+            /**
+             * Constructs a new GrowthShopQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /** GrowthShopQuery product_id. */
+            product_id: number;
+
+            /** GrowthShopQuery count. */
+            count: number;
+
+            /**
+             * Creates a new GrowthShopQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopQuery instance
+             */
+            static create(properties: minimir.v1.GrowthShopQuery.$Shape): minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape;
+            static create(properties?: minimir.v1.GrowthShopQuery.$Properties): minimir.v1.GrowthShopQuery;
+
+            /**
+             * Encodes the specified GrowthShopQuery message. Does not implicitly {@link minimir.v1.GrowthShopQuery.verify|verify} messages.
+             * @param message GrowthShopQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopQuery message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopQuery.verify|verify} messages.
+             * @param message GrowthShopQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape} GrowthShopQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape;
+
+            /**
+             * Decodes a GrowthShopQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape} GrowthShopQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopQuery & minimir.v1.GrowthShopQuery.$Shape;
+
+            /**
+             * Verifies a GrowthShopQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopQuery {
+
+            /** Properties of a GrowthShopQuery. */
+            interface $Properties {
+
+                /** GrowthShopQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** GrowthShopQuery product_id */
+                product_id?: (number|null);
+
+                /** GrowthShopQuery count */
+                count?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopQuery. */
+            type $Shape = minimir.v1.GrowthShopQuery.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopOfferView.
+         * @deprecated Use minimir.v1.GrowthShopOfferView.$Properties instead.
+         */
+        interface IGrowthShopOfferView extends minimir.v1.GrowthShopOfferView.$Properties {
+        }
+
+        /** Represents a GrowthShopOfferView. */
+        class GrowthShopOfferView {
+
+            /**
+             * Constructs a new GrowthShopOfferView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopOfferView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopOfferView product_id. */
+            product_id: number;
+
+            /** GrowthShopOfferView item_id. */
+            item_id: number;
+
+            /** GrowthShopOfferView name. */
+            name: string;
+
+            /** GrowthShopOfferView currency. */
+            currency: number;
+
+            /** GrowthShopOfferView price_units. */
+            price_units: Long;
+
+            /** GrowthShopOfferView item_per_pack. */
+            item_per_pack: number;
+
+            /** GrowthShopOfferView max_count. */
+            max_count: number;
+
+            /** GrowthShopOfferView daily_limit. */
+            daily_limit: number;
+
+            /** GrowthShopOfferView daily_bought. */
+            daily_bought: number;
+
+            /**
+             * Creates a new GrowthShopOfferView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopOfferView instance
+             */
+            static create(properties: minimir.v1.GrowthShopOfferView.$Shape): minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape;
+            static create(properties?: minimir.v1.GrowthShopOfferView.$Properties): minimir.v1.GrowthShopOfferView;
+
+            /**
+             * Encodes the specified GrowthShopOfferView message. Does not implicitly {@link minimir.v1.GrowthShopOfferView.verify|verify} messages.
+             * @param message GrowthShopOfferView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopOfferView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopOfferView message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopOfferView.verify|verify} messages.
+             * @param message GrowthShopOfferView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopOfferView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopOfferView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape} GrowthShopOfferView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape;
+
+            /**
+             * Decodes a GrowthShopOfferView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape} GrowthShopOfferView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopOfferView & minimir.v1.GrowthShopOfferView.$Shape;
+
+            /**
+             * Verifies a GrowthShopOfferView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopOfferView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopOfferView {
+
+            /** Properties of a GrowthShopOfferView. */
+            interface $Properties {
+
+                /** GrowthShopOfferView product_id */
+                product_id?: (number|null);
+
+                /** GrowthShopOfferView item_id */
+                item_id?: (number|null);
+
+                /** GrowthShopOfferView name */
+                name?: (string|null);
+
+                /** GrowthShopOfferView currency */
+                currency?: (number|null);
+
+                /** GrowthShopOfferView price_units */
+                price_units?: (Long|null);
+
+                /** GrowthShopOfferView item_per_pack */
+                item_per_pack?: (number|null);
+
+                /** GrowthShopOfferView max_count */
+                max_count?: (number|null);
+
+                /** GrowthShopOfferView daily_limit */
+                daily_limit?: (number|null);
+
+                /** GrowthShopOfferView daily_bought */
+                daily_bought?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopOfferView. */
+            type $Shape = minimir.v1.GrowthShopOfferView.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopQuote.
+         * @deprecated Use minimir.v1.GrowthShopQuote.$Properties instead.
+         */
+        interface IGrowthShopQuote extends minimir.v1.GrowthShopQuote.$Properties {
+        }
+
+        /** Represents a GrowthShopQuote. */
+        class GrowthShopQuote {
+
+            /**
+             * Constructs a new GrowthShopQuote.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopQuote.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopQuote quote_id. */
+            quote_id: Uint8Array;
+
+            /** GrowthShopQuote expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** GrowthShopQuote terms. */
+            terms?: (minimir.v1.GrowthShopTerms.$Properties|null);
+
+            /**
+             * Creates a new GrowthShopQuote instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopQuote instance
+             */
+            static create(properties: minimir.v1.GrowthShopQuote.$Shape): minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape;
+            static create(properties?: minimir.v1.GrowthShopQuote.$Properties): minimir.v1.GrowthShopQuote;
+
+            /**
+             * Encodes the specified GrowthShopQuote message. Does not implicitly {@link minimir.v1.GrowthShopQuote.verify|verify} messages.
+             * @param message GrowthShopQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopQuote message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopQuote.verify|verify} messages.
+             * @param message GrowthShopQuote message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopQuote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopQuote message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape} GrowthShopQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape;
+
+            /**
+             * Decodes a GrowthShopQuote message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape} GrowthShopQuote
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopQuote & minimir.v1.GrowthShopQuote.$Shape;
+
+            /**
+             * Verifies a GrowthShopQuote message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopQuote
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopQuote {
+
+            /** Properties of a GrowthShopQuote. */
+            interface $Properties {
+
+                /** GrowthShopQuote quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** GrowthShopQuote expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** GrowthShopQuote terms */
+                terms?: (minimir.v1.GrowthShopTerms.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopQuote. */
+            type $Shape = minimir.v1.GrowthShopQuote.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopState.
+         * @deprecated Use minimir.v1.GrowthShopState.$Properties instead.
+         */
+        interface IGrowthShopState extends minimir.v1.GrowthShopState.$Properties {
+        }
+
+        /** Represents a GrowthShopState. */
+        class GrowthShopState {
+
+            /**
+             * Constructs a new GrowthShopState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopState scene_epoch. */
+            scene_epoch: Long;
+
+            /** GrowthShopState role_revision. */
+            role_revision: Long;
+
+            /** GrowthShopState rule_version. */
+            rule_version: Long;
+
+            /** GrowthShopState operating_day. */
+            operating_day: string;
+
+            /** GrowthShopState offers. */
+            offers: minimir.v1.GrowthShopOfferView.$Properties[];
+
+            /** GrowthShopState quote. */
+            quote?: (minimir.v1.GrowthShopQuote.$Properties|null);
+
+            /**
+             * Creates a new GrowthShopState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopState instance
+             */
+            static create(properties: minimir.v1.GrowthShopState.$Shape): minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape;
+            static create(properties?: minimir.v1.GrowthShopState.$Properties): minimir.v1.GrowthShopState;
+
+            /**
+             * Encodes the specified GrowthShopState message. Does not implicitly {@link minimir.v1.GrowthShopState.verify|verify} messages.
+             * @param message GrowthShopState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopState message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopState.verify|verify} messages.
+             * @param message GrowthShopState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape} GrowthShopState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape;
+
+            /**
+             * Decodes a GrowthShopState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape} GrowthShopState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopState & minimir.v1.GrowthShopState.$Shape;
+
+            /**
+             * Verifies a GrowthShopState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopState {
+
+            /** Properties of a GrowthShopState. */
+            interface $Properties {
+
+                /** GrowthShopState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** GrowthShopState role_revision */
+                role_revision?: (Long|null);
+
+                /** GrowthShopState rule_version */
+                rule_version?: (Long|null);
+
+                /** GrowthShopState operating_day */
+                operating_day?: (string|null);
+
+                /** GrowthShopState offers */
+                offers?: (minimir.v1.GrowthShopOfferView.$Properties[]|null);
+
+                /** GrowthShopState quote */
+                quote?: (minimir.v1.GrowthShopQuote.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopState. */
+            type $Shape = minimir.v1.GrowthShopState.$Properties;
+        }
+
+        /**
+         * Properties of a GrowthShopCommitRequest.
+         * @deprecated Use minimir.v1.GrowthShopCommitRequest.$Properties instead.
+         */
+        interface IGrowthShopCommitRequest extends minimir.v1.GrowthShopCommitRequest.$Properties {
+        }
+
+        /** Represents a GrowthShopCommitRequest. */
+        class GrowthShopCommitRequest {
+
+            /**
+             * Constructs a new GrowthShopCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.GrowthShopCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** GrowthShopCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** GrowthShopCommitRequest product_id. */
+            product_id: number;
+
+            /** GrowthShopCommitRequest count. */
+            count: number;
+
+            /** GrowthShopCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new GrowthShopCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GrowthShopCommitRequest instance
+             */
+            static create(properties: minimir.v1.GrowthShopCommitRequest.$Shape): minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape;
+            static create(properties?: minimir.v1.GrowthShopCommitRequest.$Properties): minimir.v1.GrowthShopCommitRequest;
+
+            /**
+             * Encodes the specified GrowthShopCommitRequest message. Does not implicitly {@link minimir.v1.GrowthShopCommitRequest.verify|verify} messages.
+             * @param message GrowthShopCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.GrowthShopCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GrowthShopCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.GrowthShopCommitRequest.verify|verify} messages.
+             * @param message GrowthShopCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.GrowthShopCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GrowthShopCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape} GrowthShopCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape;
+
+            /**
+             * Decodes a GrowthShopCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape} GrowthShopCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.GrowthShopCommitRequest & minimir.v1.GrowthShopCommitRequest.$Shape;
+
+            /**
+             * Verifies a GrowthShopCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for GrowthShopCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace GrowthShopCommitRequest {
+
+            /** Properties of a GrowthShopCommitRequest. */
+            interface $Properties {
+
+                /** GrowthShopCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** GrowthShopCommitRequest product_id */
+                product_id?: (number|null);
+
+                /** GrowthShopCommitRequest count */
+                count?: (number|null);
+
+                /** GrowthShopCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a GrowthShopCommitRequest. */
+            type $Shape = minimir.v1.GrowthShopCommitRequest.$Properties;
         }
     }
 }

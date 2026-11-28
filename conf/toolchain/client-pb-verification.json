@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 219,
+  "message_count": 226,
   "message_names": [
     "ItemView",
     "EquipmentRefineAffix",
@@ -13,6 +13,8 @@
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "GrowthShopTerms",
+    "GrowthShopReceipt",
     "SoulBeast",
     "SoulCollection",
     "SoulReceipt",
@@ -224,10 +226,15 @@
     "BodyTrainingQuoteRequest",
     "BodyTrainingQuote",
     "BodyTrainingCommitRequest",
-    "SoulActionRequest"
+    "SoulActionRequest",
+    "GrowthShopQuery",
+    "GrowthShopOfferView",
+    "GrowthShopQuote",
+    "GrowthShopState",
+    "GrowthShopCommitRequest"
   ],
-  "int64_field_count": 488,
-  "int64_boundary_cases": 1674,
+  "int64_field_count": 498,
+  "int64_boundary_cases": 1710,
   "int64_checks": [
     {
       "message": "ItemView",
@@ -300,6 +307,30 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "GrowthShopTerms",
+      "field": "unit_price_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GrowthShopTerms",
+      "field": "item_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GrowthShopTerms",
+      "field": "total_price_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GrowthShopReceipt",
+      "field": "balance_units",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "SoulCollection",
@@ -3156,9 +3187,45 @@
       "field": "fragment_delta",
       "type": "sint64",
       "cases": 4
+    },
+    {
+      "message": "GrowthShopQuery",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GrowthShopOfferView",
+      "field": "price_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GrowthShopQuote",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "GrowthShopState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GrowthShopState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "GrowthShopState",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 133,
+  "bytes_field_count": 136,
   "bytes_checks": [
     {
       "message": "ItemView",
@@ -3183,6 +3250,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "GrowthShopReceipt",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -3824,6 +3896,16 @@
       "message": "BodyTrainingCommitRequest",
       "field": "ui_session_id",
       "repeated": false
+    },
+    {
+      "message": "GrowthShopQuote",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "GrowthShopCommitRequest",
+      "field": "quote_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -3836,7 +3918,7 @@
     },
     {
       "path": "shared/proto/common.proto",
-      "sha256": "b5ffa419042ea51b7d041a1bf74da1ec8949404a0ce37321e828af23641fdac3"
+      "sha256": "0259d9692d722994e441850350d6f72f4721e397d489bae4a938342d3fd2835b"
     },
     {
       "path": "shared/proto/account.proto",
@@ -3921,18 +4003,22 @@
     {
       "path": "shared/proto/soul_beast.proto",
       "sha256": "e0dca668b1110201bdd3252421c3ebb28bc79557d7fcc64a8c03845c667dbd21"
+    },
+    {
+      "path": "shared/proto/growth_shop.proto",
+      "sha256": "467d89fa427ba0447c1407fea73727da541653bc30b321d502955e6a130bfd1d"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "c8ce4bef39be4d53506cb06ca6d44a23e0d0d82b4ca0aa2a92753b02c84d0ae6",
-      "bytes": 3871593
+      "sha256": "b8d1b9e930ac3caf6caa29cebaa0dac48bd349f626e7465be19b214159968408",
+      "bytes": 3987867
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "225fd98a5df7ad07f459d849237e0033486724580c27890914ed3f140ad95ebd",
-      "bytes": 1215048
+      "sha256": "920c105d9a6e68205be1cc375de090cbb64f65533914c46f9090d7a4a3dc837e",
+      "bytes": 1253075
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

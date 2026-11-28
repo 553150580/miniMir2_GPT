@@ -225,6 +225,7 @@ type room struct {
 
 	hostingQuote         *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
 	roleCardQuote        *persistence.RoleCardQuote        // 当前附着为当前场景签发的双月卡报价。
+	growthShopQuote      *persistence.GrowthShopQuote      // 当前附着签发的最后一次商城报价。
 	hostingCardHistory   []hostingCardChange               // 尚可能被在途命中引用的原托管卡期。
 	pendingPaymentID     string                            // 当前房间等候确认的系统支付原单。
 	dungeonPartyPresence *dungeonPartyPresence             // 原角色向招募目录发布的会话观察。
@@ -585,6 +586,7 @@ func (w *worker) command(c command) {
 			r.PreviewInFlight = false
 			r.hostingQuote = nil
 			r.roleCardQuote = nil
+			r.growthShopQuote = nil
 			r.Conn = nil
 			r.Ready = false
 			r.PetBornReady = nil
@@ -780,6 +782,8 @@ func (w *worker) roomCommand(r *room, c command) {
 		w.queryGoldMarket(r, c.frame)
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
+	case p.MsgC2SGrowthShopQuery:
+		w.queryGrowthShop(r, c.frame, now)
 	case p.MsgC2STaskCodexState:
 		w.taskCodexQuery(r, c.frame)
 	case p.MsgC2SMoveIntent:
@@ -861,7 +865,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			}
 		}
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange, p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction,
-		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction, p.MsgC2SEquipmentEnhancementCommit, p.MsgC2SEquipmentRefineAction, p.MsgC2SMedalCommit, p.MsgC2SRebirthCommit, p.MsgC2SBodyTrainingCommit, p.MsgC2SSoulAction:
+		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction, p.MsgC2SEquipmentEnhancementCommit, p.MsgC2SEquipmentRefineAction, p.MsgC2SMedalCommit, p.MsgC2SRebirthCommit, p.MsgC2SBodyTrainingCommit, p.MsgC2SSoulAction, p.MsgC2SGrowthShopCommit:
 		w.asset(r, c.frame, c.at)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -1181,6 +1185,11 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: assetCommandFingerprint(f)}
 	switch f.ID {
+	case p.MsgC2SGrowthShopCommit:
+		if !w.readGrowthShopAsset(r, f, &q) {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
 	case p.MsgC2SSoulAction:
 		request, valid := readSoulAction(f)
 		if !valid {
@@ -1502,7 +1511,7 @@ func (w *worker) asset(r *room, f wire.Frame, acceptedAt time.Time) {
 func economic(id uint16) bool {
 	switch id {
 	case p.MsgC2SBuyRoleCard, p.MsgC2SClaimRoleCardDaily, p.MsgC2SItemMarketAction, p.MsgC2SGoldMarketAction,
-		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction, p.MsgC2SEquipmentEnhancementCommit, p.MsgC2SEquipmentRefineAction, p.MsgC2SMedalCommit, p.MsgC2SRebirthCommit, p.MsgC2SBodyTrainingCommit, p.MsgC2SSoulAction:
+		p.MsgC2SSetMiningAutoRecycle, p.MsgC2SForgeCommit, p.MsgC2SWeaponOilCommit, p.MsgC2SWingAction, p.MsgC2SEquipmentEnhancementCommit, p.MsgC2SEquipmentRefineAction, p.MsgC2SMedalCommit, p.MsgC2SRebirthCommit, p.MsgC2SBodyTrainingCommit, p.MsgC2SSoulAction, p.MsgC2SGrowthShopCommit:
 		return true
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward, p.MsgC2SSetSkillSlots, p.MsgC2SMirrorArenaExchange:
 		return true
@@ -1516,6 +1525,10 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SGrowthShopCommit:
+		if request, valid := readGrowthShopCommit(f); valid {
+			op = request.Operation
+		}
 	case p.MsgC2SSoulAction:
 		if request, valid := readSoulAction(f); valid {
 			op = request.Operation

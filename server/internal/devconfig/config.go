@@ -331,6 +331,8 @@ type Fixture struct {
 	MasteryCombat *MasteryCombat `json:"mastery_combat,omitempty"`
 	// Souls 提供角色专属收藏、三池和原首领配置，默认规则缺省。
 	Souls *SoulRules `json:"soul_beasts,omitempty"`
+	// GrowthShop 保存独立的绑定材料商品，缺省时沿用原技能与 NPC 入口。
+	GrowthShop *GrowthShop `json:"growth_shop,omitempty"`
 	// Binding 记录会话绑定，使用会话绑定规则集合表示。
 	Binding *BindingRules `json:"binding,omitempty"`
 	// TownTravel 记录城镇地图切换，使用城镇地图切换配置表示。
@@ -551,6 +553,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateSouls(); err != nil {
+		return err
+	}
+	if err := f.validateGrowthShop(); err != nil {
 		return err
 	}
 	if err := f.validateBodyTraining(); err != nil {

@@ -36,6 +36,29 @@ message OperationResult {
   RebirthReceipt rebirth = 20;
   BodyTrainingReceipt body_training = 21;
   SoulReceipt soul = 22;
+  GrowthShopReceipt growth_shop = 23;
+}
+
+// 已确认报价固定原商品、币种、限购水位与到账条款。币种 1 为元宝，2 为绑定元宝。
+message GrowthShopTerms {
+  uint32 product_id = 1;
+  uint32 item_id = 2;
+  uint32 currency = 3;
+  int64 unit_price_units = 4;
+  uint32 count = 5;
+  int64 item_quantity = 6;
+  int64 total_price_units = 7;
+  string operating_day = 8;
+  uint32 daily_limit = 9;
+  uint32 daily_bought_before = 10;
+}
+
+// 原购买结果记录确切资产实例和扣款后所选币种的余额。
+message GrowthShopReceipt {
+  bytes quote_id = 1;
+  GrowthShopTerms terms = 2;
+  repeated ItemView items = 3;
+  int64 balance_units = 4;
 }
 
 // 魂兽记录固定归属当前角色，随库存修订下发。

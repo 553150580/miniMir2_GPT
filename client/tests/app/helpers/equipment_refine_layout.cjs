@@ -1,7 +1,8 @@
-// 历史布局只剥离洗炼阶段明确增加的两个 PopupView 挂接。
+// 在当前场景中剥离后续入口，再还原洗炼阶段之前的两个挂接位置。
 const assert = require('node:assert/strict');
 
 module.exports = function normalizeEquipmentRefineLayout(scene) {
+    require('./growth_shop_layout.cjs')(scene);
     const parent = scene[450];
     assert.equal(parent._name, 'Panels');
     assert.equal(scene[parent._parent.__id__]._name, 'PopupView');

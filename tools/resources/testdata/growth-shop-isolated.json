@@ -1,0 +1,4 @@
+{
+  "max_count": 32,
+  "sample_daily_limits": {"oil": 3, "page": 8}
+}
